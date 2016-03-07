@@ -17,6 +17,7 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
+import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
@@ -71,8 +72,8 @@ public class FredBoat {
         scanner.close();
         
         fredboat.util.HttpUtils.init();
-        jda = new JDABuilder().setEmail(accountEmail).setPassword(accountPassword).buildBlocking();
-        jda.addEventListener(new ChannelListener());
+        jda = new JDABuilder().addListener(new ChannelListener()).setEmail(accountEmail).setPassword(accountPassword).buildAsync();
+        System.out.println("JDA version:\t"+JDAInfo.VERSION);
     }
 
     static void init() {
