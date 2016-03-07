@@ -54,7 +54,7 @@ public class FredBoat {
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException {
         //Load credentials file
-        InputStream is = new FredBoat().getClass().getClassLoader().getResourceAsStream("fredboat/credentials.json");
+        InputStream is = new FredBoat().getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         

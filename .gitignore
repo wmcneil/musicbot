@@ -56,3 +56,5 @@ manifest.mf
 nbproject/private/
 tokens.json
 run.bat
+target/
+.nb-gradle/
