@@ -21,7 +21,7 @@ public class UptimeCommand implements ICommand {
         int mins = (int) ((totalSecs / 60) % 60);
         int secs = (int) (totalSecs % 60);
 
-        String str = " This bot has been running for "
+        String str = " This boat has been floating for "
                 + days + " days, "
                 + hours + " hours, "
                 + mins + " minutes and "
