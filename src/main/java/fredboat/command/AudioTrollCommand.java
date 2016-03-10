@@ -25,17 +25,23 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel c, User invoker, Message message, String[] args) {
+        String arg = "";
+        for (int i = 1; i < args.length; i++) {
+            arg = arg+" "+args[i];
+        }
+        arg = arg.substring(1);
+        
         JDA JDA = c.getJDA();
         List<VoiceChannel> channels = guild.getVoiceChannels();
         VoiceChannel foundChannel = null;
         for (VoiceChannel ch : channels) {
-            if (ch.getName().equals(args[1])) {
+            if (ch.getName().equals(arg)) {
                 foundChannel = ch;
                 break;
             }
         }
         if (foundChannel == null) {
-            TextUtils.replyWithMention(c, invoker, " Couldn't find channel \"" + args[1] + "\"");
+            TextUtils.replyWithMention(c, invoker, " Couldn't find channel \"" + arg + "\"");
         } else {
             ChannelListener.toRunOnConnectingToVoice.put(foundChannel, onConnected);
             JDA.getAudioManager().openAudioConnection(foundChannel);
