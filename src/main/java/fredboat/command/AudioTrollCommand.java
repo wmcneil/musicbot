@@ -36,7 +36,7 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
         List<VoiceChannel> channels = guild.getVoiceChannels();
         VoiceChannel foundChannel = null;
         for (VoiceChannel ch : channels) {
-            if (ch.getName().equals(arg)) {
+            if (ch.getName().equalsIgnoreCase(arg)) {
                 foundChannel = ch;
                 break;
             }
@@ -58,7 +58,7 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
             try {
                 URL dir_url = ClassLoader.getSystemResource("Troll.mp3");
                 System.out.println(dir_url);
-                File audioFile = new File(uri);
+                File audioFile = new File(dir_url.toURI());
                 
                 FilePlayer player = new FilePlayer(audioFile);
                 am.setSendingHandler(player);
@@ -69,7 +69,7 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
                     }
                 //}
                 System.out.println("Audio ended");
-            } catch (IOException | UnsupportedAudioFileException | InterruptedException ex) {
+            } catch (IOException | UnsupportedAudioFileException | InterruptedException | URISyntaxException ex) {
                 throw new RuntimeException(ex);
             } finally {
                 if(am.getConnectedChannel() == ch || am.getConnectedChannel() == null){
