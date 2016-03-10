@@ -7,6 +7,7 @@ import fredboat.command.meta.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,8 +56,9 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
             AudioManager am = JDA.getAudioManager();
             VoiceChannel ch = am.getConnectedChannel();
             try {
-                URL dir_url = ClassLoader.getSystemResource("Trololo.mp3");
-                File audioFile = new File(dir_url.toURI());
+                URL dir_url = ClassLoader.getSystemResource("Troll.mp3");
+                System.out.println(dir_url);
+                File audioFile = new File(uri);
                 
                 FilePlayer player = new FilePlayer(audioFile);
                 am.setSendingHandler(player);
@@ -70,7 +72,7 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
             } catch (IOException | UnsupportedAudioFileException | InterruptedException | URISyntaxException ex) {
                 throw new RuntimeException(ex);
             } finally {
-                if(am.getConnectedChannel() == ch){
+                if(am.getConnectedChannel() == ch || am.getConnectedChannel() == null){
                     am.closeAudioConnection();
                 }
             }
