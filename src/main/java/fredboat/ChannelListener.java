@@ -11,15 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.Event;
+import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.InviteReceivedEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ReconnectedEvent;
+import net.dv8tion.jda.events.audio.AudioConnectEvent;
 import net.dv8tion.jda.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
-import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.utils.InviteUtil;
@@ -27,6 +25,7 @@ import net.dv8tion.jda.utils.InviteUtil;
 public class ChannelListener extends ListenerAdapter {
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
+    public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -102,18 +101,18 @@ public class ChannelListener extends ListenerAdapter {
     }
 
     public HashMap<String, ArrayList<Integer>> recentTableFlips = new HashMap<>();
-    
-    public void pruneRecentTableflips(Guild guild, int seconds){
+
+    public void pruneRecentTableflips(Guild guild, int seconds) {
         ArrayList<Integer> recent = recentTableFlips.containsKey(guild.getId()) ? recentTableFlips.get(guild.getId()) : new ArrayList<>();
-        for(int time : recent){
-            
+        for (int time : recent) {
+
         }
     }
-    
-    public void getRecentTableflips(Guild guild, int seconds){
-        
+
+    public void getRecentTableflips(Guild guild, int seconds) {
+
     }
-    
+
     public void tableflip(MessageReceivedEvent event) {
         //System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
         //event.getChannel().sendMessage("┬─┬﻿ ノ( ゜-゜ノ)");
@@ -124,10 +123,23 @@ public class ChannelListener extends ListenerAdapter {
         FredBoat.init();
         jda.getAccountManager().setGame("Say ;;help");
     }
-    
+
     @Override
     public void onReconnect(ReconnectedEvent event) {
         jda.getAccountManager().setGame("Say ;;help");
+    }
+
+    public static Runnable onUnrequestedConnection = new Runnable() {
+        @Override
+        public void run() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
+
+    @Override
+    public void onAudioConnect(AudioConnectEvent event) {
+        Runnable run = toRunOnConnectingToVoice.getOrDefault(event.getConnectedChannel(), onUnrequestedConnection);
+        run.run();
     }
 
 }

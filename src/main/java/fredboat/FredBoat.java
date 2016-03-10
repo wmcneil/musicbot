@@ -1,9 +1,11 @@
 package fredboat;
 
+import fredboat.command.AudioTrollCommand;
 import fredboat.command.AvatarCommand;
 import fredboat.command.BrainfuckCommand;
 import fredboat.command.meta.CommandManager;
 import fredboat.command.DBGetCommand;
+import fredboat.command.EndTrollCommand;
 import fredboat.command.ExitCommand;
 import fredboat.command.HelpCommand;
 import fredboat.command.JokeCommand;
@@ -107,5 +109,7 @@ public class FredBoat {
         CommandManager.registerCommand("leet", new LeetCommand());
         CommandManager.registerAlias("1337", "leet");
         CommandManager.registerAlias("l33t", "leet");
+        CommandManager.registerCommand("troll", new AudioTrollCommand());
+        CommandManager.registerCommand("endtroll", new EndTrollCommand());
     }
 }
