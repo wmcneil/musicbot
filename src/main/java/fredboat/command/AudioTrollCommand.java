@@ -69,7 +69,7 @@ public class AudioTrollCommand implements ICommandOwnerRestricted {
                     }
                 //}
                 System.out.println("Audio ended");
-            } catch (IOException | UnsupportedAudioFileException | InterruptedException | URISyntaxException ex) {
+            } catch (IOException | UnsupportedAudioFileException | InterruptedException ex) {
                 throw new RuntimeException(ex);
             } finally {
                 if(am.getConnectedChannel() == ch || am.getConnectedChannel() == null){
