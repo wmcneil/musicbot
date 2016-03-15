@@ -29,7 +29,7 @@ public class FindCommand implements ICommand {
                 .appendString(" searching in ")
                 .appendString(String.valueOf(toSearch), MessageBuilder.Formatting.BLOCK)
                 .appendString(" messages from ")
-                .appendString(selected.getName(), MessageBuilder.Formatting.BLOCK)
+                .appendString("#"+selected.getName(), MessageBuilder.Formatting.BLOCK)
                 .appendString(" containing ")
                 .appendString(searchTerm, MessageBuilder.Formatting.BLOCK)
                 .appendString(".")
