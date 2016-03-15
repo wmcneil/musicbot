@@ -7,6 +7,7 @@ import fredboat.command.meta.CommandManager;
 import fredboat.command.DBGetCommand;
 import fredboat.command.EndTrollCommand;
 import fredboat.command.ExitCommand;
+import fredboat.command.FindCommand;
 import fredboat.command.HelpCommand;
 import fredboat.command.JokeCommand;
 import fredboat.command.LeetCommand;
@@ -113,5 +114,6 @@ public class FredBoat {
         CommandManager.registerCommand("troll", new AudioTrollCommand());
         CommandManager.registerCommand("endtroll", new EndTrollCommand());
         CommandManager.registerCommand("restart", new RestartCommand());
+        CommandManager.registerCommand("find", new FindCommand());
     }
 }
