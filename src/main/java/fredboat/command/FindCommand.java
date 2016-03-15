@@ -1,6 +1,8 @@
 package fredboat.command;
 
 import fredboat.command.meta.ICommand;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -94,8 +96,12 @@ public class FindCommand implements ICommand {
     }
 
     public String formatTimestamp(OffsetDateTime t) {
-        String str = "[" + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
-        
+        String str;
+        if(LocalDateTime.now(Clock.systemUTC()).getDayOfYear() != t.getDayOfYear()){
+            str = "[" + t.getMonth().name().substring(0, 0) + t.getMonth().name().substring(1, 2).toLowerCase() + " " + t.getDayOfMonth() + " " + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
+        } else {
+            str = "[" + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
+        }
         return str;
     }
 }
