@@ -23,7 +23,7 @@ public class FindCommand implements ICommand {
 
         String searchTerm = args[1].toLowerCase();
         TextChannel selected = channel;
-        if (!message.getMentionedChannels().isEmpty()) {
+        if (message.getMentionedChannels().isEmpty() == false) {
             selected = message.getMentionedChannels().get(0);
         }
         int toSearch = 1337;
@@ -39,7 +39,7 @@ public class FindCommand implements ICommand {
                 .appendString(".")
                 .build();
 
-        MessageHistory history = new MessageHistory(jda, channel);
+        MessageHistory history = new MessageHistory(jda, selected);
         ArrayList<Message> msgs = new ArrayList<>();
         
         try {
