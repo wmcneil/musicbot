@@ -1,6 +1,7 @@
 package fredboat.command;
 
 import fredboat.command.meta.ICommand;
+import java.time.OffsetDateTime;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -29,7 +30,7 @@ public class FindCommand implements ICommand {
                 .appendString(" searching in ")
                 .appendString(String.valueOf(toSearch), MessageBuilder.Formatting.BLOCK)
                 .appendString(" messages from ")
-                .appendString("#"+selected.getName(), MessageBuilder.Formatting.BLOCK)
+                .appendString("#" + selected.getName(), MessageBuilder.Formatting.BLOCK)
                 .appendString(" containing ")
                 .appendString(searchTerm, MessageBuilder.Formatting.BLOCK)
                 .appendString(".")
@@ -37,14 +38,14 @@ public class FindCommand implements ICommand {
 
         MessageHistory history = new MessageHistory(jda, selected);
         ArrayList<Message> msgs = new ArrayList<>();
-        
+
         try {
             for (int i = 0; i < Math.ceil(toSearch / 100); i++) {
                 msgs.addAll(history.retrieve(Math.min(100, toSearch - (i * 100))));
             }
         } catch (NullPointerException ex) {//End of chat - ignore
         }
-        
+
         channel.sendMessage(startMsg);
         ArrayList<Message> matches = new ArrayList<>();
 
@@ -63,23 +64,38 @@ public class FindCommand implements ICommand {
         int truncated = 0;
         for (Message msg : matches) {
             i++;
-            if (endMsg.getLength() > 1000 || msg.getContent().length() > 500) {
+            if (endMsg.getLength() > 1600 || msg.getContent().length() > 400) {
                 truncated++;
             } else {
                 endMsg.appendString("\n")
-                        .appendString("["+i+"] " + msg.getTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), MessageBuilder.Formatting.BLOCK)
+                        .appendString("[" + forceTwoDigits(i) + "] " + formatTimestamp(msg.getTime()), MessageBuilder.Formatting.BLOCK)
                         .appendString(" ")
                         .appendString(msg.getAuthor().getUsername(), MessageBuilder.Formatting.BLOCK)
                         .appendString(" ")
                         .appendString(msg.getContent());
             }
         }
-        
-        if (truncated > 0){
-            endMsg.appendString("\n[Truncated "+truncated+"]");
+
+        if (truncated > 0) {
+            endMsg.appendString("\n[Truncated " + truncated + "]");
         }
         channel.sendMessage(endMsg.build());
 
     }
+    
+    private String forceTwoDigits(int i){
+        String str = String.valueOf(i);
+        
+        if (str.length() == 1){
+            str = "0" + str;
+        }
+        
+        return str;
+    }
 
+    public String formatTimestamp(OffsetDateTime t) {
+        String str = "[" + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
+        
+        return str;
+    }
 }
