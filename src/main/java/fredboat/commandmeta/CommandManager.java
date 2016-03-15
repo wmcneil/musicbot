@@ -1,4 +1,4 @@
-package fredboat.command.meta;
+package fredboat.commandmeta;
 
 import fredboat.FredBoat;
 import fredboat.util.TextUtils;

@@ -1,8 +1,8 @@
-package fredboat.command;
+package fredboat.command.maintenance;
 
-import fredboat.command.meta.ICommand;
+import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
-import fredboat.command.meta.ICommandOwnerRestricted;
+import fredboat.commandmeta.ICommandOwnerRestricted;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,4 +1,4 @@
-package fredboat.command.meta;
+package fredboat.commandmeta;
 
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

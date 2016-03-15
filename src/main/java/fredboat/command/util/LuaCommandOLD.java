@@ -1,9 +1,9 @@
-package fredboat.command;
+package fredboat.command.util;
 
-import fredboat.command.meta.CommandManager;
-import fredboat.command.meta.ICommand;
+import fredboat.commandmeta.CommandManager;
+import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
-import fredboat.command.meta.ICommandOwnerRestricted;
+import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.lua.LuaDiscordLib;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

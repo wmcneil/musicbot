@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fredboat.command.meta;
+package fredboat.commandmeta;
 
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

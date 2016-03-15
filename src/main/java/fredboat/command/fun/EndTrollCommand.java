@@ -1,6 +1,6 @@
-package fredboat.command;
+package fredboat.command.fun;
 
-import fredboat.command.meta.ICommand;
+import fredboat.commandmeta.ICommand;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

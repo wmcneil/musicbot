@@ -6,7 +6,7 @@
 package fredboat;
 
 import static fredboat.FredBoat.jda;
-import fredboat.command.meta.CommandManager;
+import fredboat.commandmeta.CommandManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;

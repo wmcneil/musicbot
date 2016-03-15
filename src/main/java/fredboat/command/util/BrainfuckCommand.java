@@ -1,6 +1,6 @@
-package fredboat.command;
+package fredboat.command.util;
 
-import fredboat.command.meta.ICommand;
+import fredboat.commandmeta.ICommand;
 import fredboat.util.TextUtils;
 import java.nio.ByteBuffer;
 import java.util.*;

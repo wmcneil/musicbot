@@ -1,9 +1,9 @@
-package fredboat.command;
+package fredboat.command.fun;
 
 import fredboat.ChannelListener;
 import fredboat.FredBoat;
-import fredboat.command.meta.ICommand;
-import fredboat.command.meta.ICommandOwnerRestricted;
+import fredboat.commandmeta.ICommand;
+import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
 import java.io.File;
 import java.io.IOException;

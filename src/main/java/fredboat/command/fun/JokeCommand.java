@@ -1,6 +1,6 @@
-package fredboat.command;
+package fredboat.command.fun;
 
-import fredboat.command.meta.ICommand;
+import fredboat.commandmeta.ICommand;
 import fredboat.util.HttpUtils;
 import java.io.IOException;
 import java.util.logging.Level;
