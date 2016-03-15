@@ -1,19 +1,15 @@
 package fredboat.command;
 
 import fredboat.command.meta.ICommand;
-import fredboat.FredBoat;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import fredboat.util.TextUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.MessageHistory;
-import org.omg.CORBA.MARSHAL;
 
 public class FindCommand implements ICommand {
 
@@ -33,7 +29,7 @@ public class FindCommand implements ICommand {
                 .appendString(" searching in ")
                 .appendString(String.valueOf(toSearch), MessageBuilder.Formatting.BLOCK)
                 .appendString(" messages from ")
-                .appendString(channel.getName(), MessageBuilder.Formatting.BLOCK)
+                .appendString(selected.getName(), MessageBuilder.Formatting.BLOCK)
                 .appendString(" containing ")
                 .appendString(searchTerm, MessageBuilder.Formatting.BLOCK)
                 .appendString(".")
