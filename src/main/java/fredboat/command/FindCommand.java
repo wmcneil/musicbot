@@ -59,7 +59,7 @@ public class FindCommand implements ICommand {
 
         MessageBuilder endMsg = new MessageBuilder();
         endMsg.appendString("Found a total of ")
-                .appendString(String.valueOf(matches.size()), MessageBuilder.Formatting.BLOCK)
+                .appendString(String.valueOf(matches.size()), MessageBuilder.Formatting.BOLD)
                 .appendString(" matches:");
 
         int i = 0;
@@ -69,12 +69,21 @@ public class FindCommand implements ICommand {
             if (endMsg.getLength() > 1600 || msg.getContent().length() > 400) {
                 truncated++;
             } else {
-                endMsg.appendString("\n")
-                        .appendString("[" + forceTwoDigits(i) + "] " + formatTimestamp(msg.getTime()), MessageBuilder.Formatting.BLOCK)
-                        .appendString(" ")
-                        .appendString(msg.getAuthor().getUsername(), MessageBuilder.Formatting.BLOCK)
-                        .appendString(" ")
-                        .appendString(msg.getContent());
+                try {
+                    endMsg.appendString("\n")
+                            .appendString("[" + forceTwoDigits(i) + "] " + formatTimestamp(msg.getTime()), MessageBuilder.Formatting.BLOCK)
+                            .appendString(" ")
+                            .appendString(msg.getAuthor().getUsername(), MessageBuilder.Formatting.BOLD)
+                            .appendString(" ")
+                            .appendString(msg.getContent());
+                } catch (NullPointerException e) {
+                    endMsg.appendString("\n")
+                            .appendString("[" + forceTwoDigits(i) + "] " + formatTimestamp(msg.getTime()), MessageBuilder.Formatting.BLOCK)
+                            .appendString(" ")
+                            .appendString("[Got NullPointerException]", MessageBuilder.Formatting.BOLD)
+                            .appendString(" ")
+                            .appendString("[Got NullPointerException]", MessageBuilder.Formatting.BLOCK);
+                }
             }
         }
 
@@ -98,7 +107,7 @@ public class FindCommand implements ICommand {
     public String formatTimestamp(OffsetDateTime t) {
         String str;
         if(LocalDateTime.now(Clock.systemUTC()).getDayOfYear() != t.getDayOfYear()){
-            str = "[" + t.getMonth().name().substring(0, 0) + t.getMonth().name().substring(1, 2).toLowerCase() + " " + t.getDayOfMonth() + " " + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
+            str = "[" + t.getMonth().name().substring(0, 3).toLowerCase() + " " + t.getDayOfMonth() + " " + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
         } else {
             str = "[" + forceTwoDigits(t.getHour()) + ":" + forceTwoDigits(t.getMinute()) + "]";
         }
