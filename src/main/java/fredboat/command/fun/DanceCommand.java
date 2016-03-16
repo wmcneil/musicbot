@@ -1,5 +1,6 @@
 package fredboat.command.fun;
 
+import fredboat.ChannelListener;
 import fredboat.commandmeta.ICommand;
 import fredboat.util.HttpUtils;
 import java.io.IOException;
@@ -20,17 +21,18 @@ public class DanceCommand implements ICommand {
             public void run() {
                 synchronized (channel) {
                     Message msg = channel.sendMessage("\\o\\");
+                    ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
                     long start = System.currentTimeMillis();
                     try {
                         synchronized (this) {
-                            while (start + 20000 > System.currentTimeMillis()) {
+                            while (start + 60000 > System.currentTimeMillis()) {
                                 wait(1000);
                                 msg = msg.updateMessage("/o/");
                                 wait(1000);
                                 msg = msg.updateMessage("\\o\\");
                             }
                         }
-                    } catch (InterruptedException interruptedException) {
+                    } catch (InterruptedException ex) {
                     }
                 }
             }
