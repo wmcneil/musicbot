@@ -1,6 +1,7 @@
 package fredboat;
 
 import fredboat.command.fun.AudioTrollCommand;
+import fredboat.command.fun.DanceCommand;
 import fredboat.command.util.AvatarCommand;
 import fredboat.command.util.BrainfuckCommand;
 import fredboat.commandmeta.CommandManager;
@@ -115,5 +116,6 @@ public class FredBoat {
         CommandManager.registerCommand("endtroll", new EndTrollCommand());
         CommandManager.registerCommand("restart", new RestartCommand());
         CommandManager.registerCommand("find", new FindCommand());
+        CommandManager.registerCommand("dance", new DanceCommand());
     }
 }
