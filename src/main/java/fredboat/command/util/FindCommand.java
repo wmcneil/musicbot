@@ -25,7 +25,7 @@ public class FindCommand implements ICommand {
         if (message.getMentionedChannels().isEmpty() == false) {
             selected = message.getMentionedChannels().get(0);
         }
-        int toSearch = 1337;
+        int toSearch = 1500;
         channel.sendTyping();
 
         Message startMsg = new MessageBuilder().appendMention(invoker)
