@@ -25,7 +25,7 @@ public class SayCommand implements ICommand {
             res = res+" "+args[i];
         }
         res = res.substring(1);
-        Message myMsg = channel.sendMessage(res);
+        Message myMsg = channel.sendMessage('\u200b' + res);
         
         ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
     }

@@ -20,7 +20,7 @@ public class DanceCommand implements ICommand {
             @Override
             public void run() {
                 synchronized (channel) {
-                    Message msg = channel.sendMessage("\\o\\");
+                    Message msg = channel.sendMessage('\u200b' + "\\o\\");
                     ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
                     long start = System.currentTimeMillis();
                     try {
