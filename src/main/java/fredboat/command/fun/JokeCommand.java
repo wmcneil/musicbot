@@ -1,5 +1,6 @@
 package fredboat.command.fun;
 
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.util.HttpUtils;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONObject;
 
-public class JokeCommand implements ICommand {
+public class JokeCommand extends Command implements ICommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

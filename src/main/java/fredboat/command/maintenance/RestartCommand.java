@@ -1,5 +1,6 @@
 package fredboat.command.maintenance;
 
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.entities.Guild;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author frederik
  */
-public class RestartCommand implements ICommandOwnerRestricted {
+public class RestartCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

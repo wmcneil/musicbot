@@ -1,5 +1,6 @@
 package fredboat.command.util;
 
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.lua.LuaParser;
 import fredboat.lua.LuaParser.Outcome;
@@ -11,7 +12,7 @@ import fredboat.util.TextUtils;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-public class LuaCommand implements ICommand {
+public class LuaCommand extends Command {
 
     public static final int MAX_COMPUTATION_TIME = 5;
 

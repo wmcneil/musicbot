@@ -1,5 +1,6 @@
 package fredboat.command.util;
 
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.util.TextUtils;
 import java.nio.ByteBuffer;
@@ -9,7 +10,7 @@ import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
-public class BrainfuckCommand implements ICommand {
+public class BrainfuckCommand extends Command {
 
     ByteBuffer bytes = null;
     char[] code;

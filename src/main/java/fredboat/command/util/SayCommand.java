@@ -7,6 +7,7 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.ICommand;
 import fredboat.ChannelListener;
+import fredboat.commandmeta.Command;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.entities.User;
  *
  * @author frederik
  */
-public class SayCommand implements ICommand {
+public class SayCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

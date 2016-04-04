@@ -3,6 +3,7 @@ package fredboat.command.maintenance;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
+import fredboat.commandmeta.Command;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -11,7 +12,7 @@ import fredboat.util.TextUtils;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.Permission;
 
-public class UptimeCommand implements ICommand {
+public class UptimeCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

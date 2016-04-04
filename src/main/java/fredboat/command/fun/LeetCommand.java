@@ -7,6 +7,7 @@ package fredboat.command.fun;
 
 import fredboat.commandmeta.ICommand;
 import fredboat.ChannelListener;
+import fredboat.commandmeta.Command;
 import fredboat.util.HttpUtils;
 import fredboat.util.TextUtils;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import net.dv8tion.jda.entities.User;
  *
  * @author frederik
  */
-public class LeetCommand implements ICommand {
+public class LeetCommand extends Command implements ICommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

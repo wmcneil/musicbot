@@ -2,6 +2,7 @@ package fredboat.command.fun;
 
 import fredboat.ChannelListener;
 import fredboat.FredBoat;
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
@@ -22,7 +23,7 @@ import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.managers.AudioManager;
 
-public class AudioTrollCommand implements ICommandOwnerRestricted {
+public class AudioTrollCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel c, User invoker, Message message, String[] args) {

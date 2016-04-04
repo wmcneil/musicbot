@@ -2,6 +2,7 @@ package fredboat.command.maintenance;
 
 import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommandOwnerRestricted;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,7 +19,7 @@ import fredboat.util.TextUtils;
  *
  * @author frederik
  */
-public class ExitCommand implements ICommandOwnerRestricted {
+public class ExitCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

@@ -1,5 +1,6 @@
 package fredboat.command.util;
 
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.MessageHistory;
 
-public class FindCommand implements ICommand {
+public class FindCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
