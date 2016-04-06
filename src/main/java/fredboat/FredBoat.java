@@ -12,6 +12,7 @@ import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
+import fredboat.command.mafia.MafiaStartCommand;
 import fredboat.command.util.LuaCommand;
 import fredboat.command.maintenance.RestartCommand;
 import fredboat.command.util.SayCommand;
@@ -31,7 +32,7 @@ import org.json.JSONObject;
 public class FredBoat {
 
     public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
-    public static JDA jda;
+    public static volatile JDA jda;
     public static final String PREFIX = IS_BETA ? "¤" : ";;";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
@@ -55,7 +56,7 @@ public class FredBoat {
             + "You cannot send this bot commands though DM.\n"
             + "Bot created by Frederikam";
     public static String myUserId = "";
-    public static User myUser;
+    public static volatile User myUser;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException {
         //Load credentials file
@@ -94,8 +95,8 @@ public class FredBoat {
             }
         }
 
-        myUser = jda.getUserById(myUserId);
         myUserId = jda.getSelfInfo().getId();
+        myUser = jda.getUserById(myUserId);
 
         //Commands
         CommandManager.registerCommand("help", new HelpCommand());
@@ -117,5 +118,6 @@ public class FredBoat {
         CommandManager.registerCommand("restart", new RestartCommand());
         CommandManager.registerCommand("find", new FindCommand());
         CommandManager.registerCommand("dance", new DanceCommand());
+        CommandManager.registerCommand("mafiastart", new MafiaStartCommand());
     }
 }
