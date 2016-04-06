@@ -1,6 +1,8 @@
 package fredboat.mafia;
 
 import fredboat.FredBoat;
+import fredboat.mafia.roleset.Roleset;
+import fredboat.mafia.roleset.RolesetClassic;
 import fredboat.util.TextUtils;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -8,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.Permission;
+import net.dv8tion.jda.entities.MessageChannel;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.utils.PermissionUtil;
@@ -24,6 +27,7 @@ public class MafiaGame extends Thread {
     private String gameName;
     private TextChannel townChannel;
     private TextChannel mafiaChannel;
+    private Roleset roleset = new RolesetClassic();
 
     public MafiaGame(PlayerMessage initMsg, JDA jda, String name) {
         this.initMsg = initMsg;
@@ -60,7 +64,7 @@ public class MafiaGame extends Thread {
             return;
         }
 
-        TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Now starting game setup with name " + gameName + ".\n"
+        TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Now starting game setup with name `" + gameName + "`.\n"
                 + "Say " + FredBoat.PREFIX + "endsetup to stop setting up this game.\n"
                 + "First you must configure where the game will be held.\n"
                 + "Would you like me to generate a temporary channel? Y/n");
@@ -78,19 +82,42 @@ public class MafiaGame extends Thread {
                     return;
                 }
             }
-            
+
+            status = MafiaGameStatus.REGISTRATION;
+
             MessageBuilder mb = new MessageBuilder();
             mb.appendString("Registration is now active. Say ")
-                    .appendString(FredBoat.PREFIX+";;register "+gameName, MessageBuilder.Formatting.BLOCK)
+                    .appendString(FredBoat.PREFIX + "register " + gameName, MessageBuilder.Formatting.BLOCK)
                     .appendString(" to participate.\nSay ")
-                    .appendString(FredBoat.PREFIX+";;unregister", MessageBuilder.Formatting.BLOCK)
-                    .appendString("to unregister.");//todo
-            
-            status = MafiaGameStatus.REGISTRATION;
+                    .appendString(FredBoat.PREFIX + "unregister", MessageBuilder.Formatting.BLOCK)
+                    .appendString("to unregister.");
+            initMsg.getChannel().sendMessage(mb.build());
+
+            printRegistrationList(initMsg.getChannel());
+
+            while (players.size() < roleset.getSize()) {
+                PlayerMessage newMsg = queue.take();
+                if (newMsg.getMsg().getContent().equalsIgnoreCase(FredBoat.PREFIX + "register " + gameName)) {
+                    if (MafiaGameRegistry.isPlayerAlreadyInGame(newMsg.getPlayer())) {
+                        TextUtils.replyWithMention((TextChannel) newMsg.getChannel(), newMsg.getPlayer(), " You are already in a game!");
+                    } else {
+                        players.add(newMsg.getPlayer());
+                        printRegistrationList(newMsg.getChannel());
+                    }
+                } else if (newMsg.getMsg().getContent().equalsIgnoreCase("y")) {
+                    if (players.remove(newMsg.getPlayer())) {
+                        printRegistrationList(newMsg.getChannel());//Successfully removed!
+                    }
+                }
+            }
+
+            roleset.assignRoles(this, players);
+
+            for (MafiaPlayer plr : players){
+                plr.gameRole.sendRolePM(plr, this);
+            }
             
             //TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Attempting to create new channels...");
-            
-
         } catch (InterruptedException ex) {
             shutdown();
             return;
@@ -99,25 +126,29 @@ public class MafiaGame extends Thread {
         shutdown();//Reached end of function
     }
 
-    private void printRegistrationList(TextChannel channel){
+    private void printRegistrationList(MessageChannel channel) {
         MessageBuilder b = new MessageBuilder();
-        b.appendString("Registration list for "+gameName, MessageBuilder.Formatting.BOLD);
-        int i = 0;
-        for(MafiaPlayer p : players){
-            i++;
-            b.appendString(i+". "+p.getUsername());
+        b.appendString("Registration list for " + gameName + ":", MessageBuilder.Formatting.UNDERLINE);
+        for (int i = 0; i < roleset.getSize(); i++) {
+            if (i < players.size()) {
+                b.appendString("\n   " + (i + 1) + ".  ").appendString(players.get(i).getUsername(), MessageBuilder.Formatting.BOLD);
+            } else {
+                b.appendString("\n   " + (i + 1) + ".  ").appendString("Vacant", MessageBuilder.Formatting.ITALICS);
+            }
         }
-        
+
         channel.sendMessage(b.build());
     }
-    
+
     public void shutdown() {
         MafiaGameRegistry.activeGames.remove(this);
-        if(hasTemporaryChannels){
-            try{
+        status = MafiaGameStatus.ENDED;
+        if (hasTemporaryChannels) {
+            try {
                 townChannel.getManager().delete();
                 mafiaChannel.getManager().delete();
-            }catch(Exception ex){}
+            } catch (Exception ex) {
+            }
         }
         interrupt();
     }

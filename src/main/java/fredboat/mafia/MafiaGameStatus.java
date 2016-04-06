@@ -5,5 +5,5 @@ public enum MafiaGameStatus {
     REGISTRATION,
     DAY,
     NIGTH,
-    END;
+    ENDED;
 }
