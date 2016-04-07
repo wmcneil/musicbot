@@ -33,7 +33,7 @@ public class FredBoat {
 
     public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
     public static volatile JDA jda;
-    public static final String PREFIX = IS_BETA ? "::" : ";;";
+    public static final String PREFIX = IS_BETA ? "__" : ";;";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
     public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";

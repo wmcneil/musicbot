@@ -42,21 +42,7 @@ public class CommandManager {
         try {
             invoked.onInvoke(guild, channel, invoker, message, args);
         } catch (Exception e) {
-            MessageBuilder builder = new MessageBuilder();
-
-            builder.appendMention(invoker);
-            builder.appendString(" an error occured :anger: ```java\n" + e.toString() + "\n");
-
-            //builder.appendString("```java\n");
-            for (StackTraceElement ste : e.getStackTrace()) {
-                builder.appendString("\t" + ste.toString() + "\n");
-                if ("prefixCalled".equals(ste.getMethodName())) {
-                    break;
-                }
-            }
-            builder.appendString("\t...```");
-
-            channel.sendMessage(builder.build());
+            TextUtils.handleException(e, channel, invoker);
         }
 
     }

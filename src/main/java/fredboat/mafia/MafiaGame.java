@@ -201,9 +201,11 @@ public class MafiaGame extends Thread {
             }
 
             //Deny the right to speak for non-players
-            PermissionOverrideManager pomPublic = townChannel.getOverrideForRole(townChannel.getGuild().getPublicRole()).getManager();
-            if (pomPublic == null) {
+            PermissionOverrideManager pomPublic;
+            if (townChannel.getOverrideForRole(townChannel.getGuild().getPublicRole()) == null) {
                 pomPublic = townChannel.createPermissionOverride(townChannel.getGuild().getPublicRole());
+            } else {
+                pomPublic = townChannel.getOverrideForRole(townChannel.getGuild().getPublicRole()).getManager();
             }
             pomPublic.deny(Permission.MESSAGE_WRITE)
                     .update();
@@ -231,6 +233,10 @@ public class MafiaGame extends Thread {
 
             //TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Attempting to create new channels...");
         } catch (InterruptedException ex) {
+            shutdown();
+            return;
+        } catch (Exception ex) {
+            TextUtils.handleException(ex, initMsg.getChannel(), initMsg.getPlayer());
             shutdown();
             return;
         }
@@ -283,7 +289,7 @@ public class MafiaGame extends Thread {
     private Message printAlivePlayersList() {
         return printAlivePlayersList(true);
     }
-    
+
     private Message printAlivePlayersList(boolean doSend) {
         MessageBuilder b = new MessageBuilder();
         b.appendString("**__Alive players `D" + phase + "`:__**\n");
