@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
+import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.InviteReceivedEvent;
 import net.dv8tion.jda.events.ReadyEvent;
@@ -26,6 +27,7 @@ public class ChannelListener extends ListenerAdapter {
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
+    public static User lastUserToReceiveHelp;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -72,8 +74,14 @@ public class ChannelListener extends ListenerAdapter {
         if (event.getMessage().getContent().contains("discord.gg")) {
             return;
         }
+        
+        if(event.getAuthor() == lastUserToReceiveHelp){
+            //Ignore, just got help!
+            return;
+        }
 
         event.getChannel().sendMessage(FredBoat.helpMsg);
+        lastUserToReceiveHelp = event.getAuthor();
     }
 
     @Override
