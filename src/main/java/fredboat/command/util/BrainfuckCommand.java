@@ -2,6 +2,7 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
+import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -14,13 +15,19 @@ public class BrainfuckCommand extends Command {
 
     ByteBuffer bytes = null;
     char[] code;
+    public static final int MAX_CYCLE_COUNT = 10000;
 
     public String process(String input) {
         int data = 0;
         char[] inChars = input.toCharArray();
         int inChar = 0;
         StringBuilder output = new StringBuilder();
+        int cycleCount = 0;
         for (int instruction = 0; instruction < code.length; ++instruction) {
+            cycleCount++;
+            if (cycleCount > MAX_CYCLE_COUNT) {
+                throw new BrainfuckException("Program exceeded the maximum cycle count of " + MAX_CYCLE_COUNT);
+            }
             char command = code[instruction];
             switch (command) {
                 case '>':
@@ -39,8 +46,12 @@ public class BrainfuckCommand extends Command {
                     output.append((char) bytes.get(data));
                     break;
                 case ',':
-                    bytes.put(data, (byte) inChars[inChar++]);
-                    break;
+                    try {
+                        bytes.put(data, (byte) inChars[inChar++]);
+                        break;
+                    } catch (IndexOutOfBoundsException ex) {
+                        throw new BrainfuckException("Input out of bounds at position: " + (inChar - 1), ex);
+                    }
                 case '[':
                     if (bytes.get(data) == 0) {
                         int depth = 1;
@@ -91,11 +102,13 @@ public class BrainfuckCommand extends Command {
         String out2 = "";
         for (char c : out.toCharArray()) {
             int sh = (short) c;
-            //if(sh < 0){
-            //    sh=sh+128;
-            //}
             out2 = out2 + "," + sh;
         }
-        TextUtils.replyWithMention(channel, invoker, " " + out + "\n-------\n" + out2.substring(1));
+        try {
+            TextUtils.replyWithMention(channel, invoker, " " + out + "\n-------\n" + out2.substring(1));
+        } catch (IndexOutOfBoundsException ex) {
+TextUtils.replyWithMention(channel, invoker, " There was no output");
+        }
     }
+
 }
