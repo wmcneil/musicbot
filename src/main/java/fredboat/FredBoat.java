@@ -118,6 +118,9 @@ public class FredBoat {
         CommandManager.registerCommand("restart", new RestartCommand());
         CommandManager.registerCommand("find", new FindCommand());
         CommandManager.registerCommand("dance", new DanceCommand());
-        CommandManager.registerCommand("mafiastart", new MafiaStartCommand());
+        CommandManager.registerCommand("mafia", new MafiaStartCommand());
+        CommandManager.registerAlias("startmafia", "mafia");
+        CommandManager.registerAlias("werewolf", "mafia");
+        CommandManager.registerAlias("startwerewolf", "mafia");
     }
 }

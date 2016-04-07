@@ -140,7 +140,7 @@ public class MafiaGame extends Thread {
                         players.add(newMsg.getPlayer());
                         printRegistrationList(newMsg.getChannel());
                     }
-                } else if (newMsg.getMsg().getContent().toLowerCase().startsWith(FredBoat.PREFIX + "unregister")) {
+                } else if (newMsg.getMsg().getContent().toLowerCase().startsWith(FredBoat.PREFIX + " unregister")) {
                     if (players.remove(newMsg.getPlayer())) {
                         printRegistrationList(newMsg.getChannel());//Successfully removed!
                     }
