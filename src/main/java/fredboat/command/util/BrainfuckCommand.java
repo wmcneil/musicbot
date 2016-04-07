@@ -35,6 +35,9 @@ public class BrainfuckCommand extends Command {
                     break;
                 case '<':
                     --data;
+                    if(data < 0){
+                        throw new BrainfuckException("Data pointer out of bounds: "+data);
+                    }
                     break;
                 case '+':
                     bytes.put(data, (byte) (bytes.get(data) + 1));
