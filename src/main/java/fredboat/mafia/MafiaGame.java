@@ -4,6 +4,8 @@ import fredboat.FredBoat;
 import fredboat.mafia.roleset.Roleset;
 import fredboat.mafia.roleset.RolesetClassic;
 import fredboat.util.TextUtils;
+import fredboat.util.voting.Election;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -40,6 +42,8 @@ public class MafiaGame extends Thread {
     public TextChannel mafiaChannel;
     private GuildManager tempGameGuildManager;
     private Roleset roleset = new RolesetClassic();
+    public int dayLength = 12 * 60 * 1000;
+    public int nightLength = 4 * 60 * 1000;
     public int phase = 0;
 
     public MafiaGame(PlayerMessage initMsg, JDA jda, String name) {
@@ -233,6 +237,7 @@ public class MafiaGame extends Thread {
 
             //TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Attempting to create new channels...");
         } catch (InterruptedException ex) {
+            System.out.println("Game "+gameName+" got interrupted.");
             shutdown();
             return;
         } catch (Exception ex) {
@@ -254,6 +259,9 @@ public class MafiaGame extends Thread {
                 townChannel.getOverrideForUser(plr).getManager().grant(Permission.MESSAGE_WRITE);
                 sleep(1000);//Negates rate limiting
             }
+            
+            ArrayList<MafiaPlayer> alivePlayers = getAlivePlayers();
+            Election lynchVotes = new Election(alivePlayers);
         }
     }
 
@@ -303,6 +311,18 @@ public class MafiaGame extends Thread {
             townChannel.sendMessage(b.build());
         }
         return msg;
+    }
+    
+    public ArrayList<MafiaPlayer> getAlivePlayers(){
+        ArrayList<MafiaPlayer> alive = new ArrayList<>();
+        
+        for (MafiaPlayer plr : players) {
+            if(plr.status == MafiaPlayerStatus.ALIVE){
+                alive.add(plr);
+            }
+        }
+        
+        return alive;
     }
 
     public void shutdown() {
