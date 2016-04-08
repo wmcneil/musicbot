@@ -1,4 +1,4 @@
-package fredboat.util.voting;
+package fredboat.util.mafia;
 
 import java.util.ArrayList;
 import java.util.Collections;

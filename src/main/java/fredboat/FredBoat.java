@@ -13,6 +13,7 @@ import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
 import fredboat.command.mafia.MafiaStartCommand;
+import fredboat.command.maintenance.EvalCommand;
 import fredboat.command.util.LuaCommand;
 import fredboat.command.maintenance.RestartCommand;
 import fredboat.command.util.SayCommand;
@@ -122,5 +123,6 @@ public class FredBoat {
         CommandManager.registerAlias("startmafia", "mafia");
         CommandManager.registerAlias("werewolf", "mafia");
         CommandManager.registerAlias("startwerewolf", "mafia");
+        CommandManager.registerCommand("eval", new EvalCommand());
     }
 }

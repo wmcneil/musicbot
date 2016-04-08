@@ -1,16 +1,17 @@
 package fredboat.mafia;
 
 import fredboat.FredBoat;
+import fredboat.mafia.role.Alignment;
 import fredboat.mafia.roleset.Roleset;
 import fredboat.mafia.roleset.RolesetClassic;
 import fredboat.util.TextUtils;
-import fredboat.util.voting.Election;
+import fredboat.util.mafia.Election;
+import fredboat.util.mafia.MafiaUtil;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.Permission;
@@ -29,6 +30,9 @@ import net.dv8tion.jda.utils.PermissionUtil;
 
 public class MafiaGame extends Thread {
 
+    public final Guild scumChatGuild;
+    public final String SCUM_CHAT_GUILD_ID = "167885978227310592";
+
     public volatile MafiaGameStatus status = MafiaGameStatus.SETUP;
     public CopyOnWriteArrayList<MafiaPlayer> players = new CopyOnWriteArrayList<>();
     private final PlayerMessage initMsg;
@@ -36,11 +40,9 @@ public class MafiaGame extends Thread {
     private final AtomicReference<JDA> jda;
     private User myUser;
     private boolean hasTemporaryChannels = false;
-    private boolean hasTemporaryGuild = false;
     private String gameName;
     private TextChannel townChannel;
     public TextChannel mafiaChannel;
-    private GuildManager tempGameGuildManager;
     private Roleset roleset = new RolesetClassic();
     public int dayLength = 12 * 60 * 1000;
     public int nightLength = 4 * 60 * 1000;
@@ -50,6 +52,7 @@ public class MafiaGame extends Thread {
         this.initMsg = initMsg;
         this.jda = new AtomicReference<>(jda);
         this.gameName = name;
+        this.scumChatGuild = jda.getGuildById(SCUM_CHAT_GUILD_ID);
     }
 
     public MafiaPlayer getPlayerFromUser(User usr) {
@@ -157,7 +160,7 @@ public class MafiaGame extends Thread {
             }
 
             initMsg.getChannel().sendMessage("Now setting up game and generating channels. This may take some time because of rate limiting...");
-            final CountDownLatch guildCompletionLatch = new CountDownLatch(1);
+            /*final CountDownLatch guildCompletionLatch = new CountDownLatch(1);
 
             //Generate guilds/channels
             jda.get().createGuildAsync("Temporary Mafia Guild: " + gameName, Region.AMSTERDAM, (GuildManager t) -> {
@@ -166,20 +169,23 @@ public class MafiaGame extends Thread {
             });
 
             guildCompletionLatch.await();
-            for (VoiceChannel vc : tempGameGuildManager.getGuild().getVoiceChannels()) {
+            for (VoiceChannel vc : scumGuildManager.getGuild().getVoiceChannels()) {
                 vc.getManager().delete();
             }
 
-            hasTemporaryGuild = true;
-            mafiaChannel = tempGameGuildManager.getGuild().getTextChannels().get(0);
-            mafiaChannel.getManager().setName("Mafia_Game_Chat")
-                    .setTopic("Private chat for members of the mafia.")
-                    .update();
+            
 
             //Set guild perms for @everyone
             PermissionOverrideManager pom = mafiaChannel.createPermissionOverride(mafiaChannel.getGuild().getPublicRole());
             pom.deny(Permission.CREATE_INSTANT_INVITE);
-            pom.update();
+            pom.update();*/
+
+            mafiaChannel = (TextChannel) scumChatGuild.createTextChannel("mafia_channel_" + gameName.replace(' ', '_')).getChannel();
+            mafiaChannel.getManager()
+                    .setTopic("Private chat for members of the mafia.")
+                    .update();
+
+            MafiaUtil.refreshAllMafiaChatPermissions(this);
 
             roleset.assignRoles(this, players);
 
@@ -237,7 +243,7 @@ public class MafiaGame extends Thread {
 
             //TextUtils.replyWithMention((TextChannel) initMsg.getChannel(), initMsg.getPlayer(), " Attempting to create new channels...");
         } catch (InterruptedException ex) {
-            System.out.println("Game "+gameName+" got interrupted.");
+            System.out.println("Game " + gameName + " got interrupted.");
             shutdown();
             return;
         } catch (Exception ex) {
@@ -250,6 +256,7 @@ public class MafiaGame extends Thread {
     }
 
     private void onDayStart() throws InterruptedException {
+        checkForGameEnded();
         status = MafiaGameStatus.DAY;
         phase = phase + 1;
         printAlivePlayersList();
@@ -259,17 +266,75 @@ public class MafiaGame extends Thread {
                 townChannel.getOverrideForUser(plr).getManager().grant(Permission.MESSAGE_WRITE);
                 sleep(1000);//Negates rate limiting
             }
-            
+
             ArrayList<MafiaPlayer> alivePlayers = getAlivePlayers();
             Election lynchVotes = new Election(alivePlayers);
         }
     }
 
     private void onNightStart() throws InterruptedException {
+        checkForGameEnded();
+        status = MafiaGameStatus.NIGTH;
+        MafiaUtil.refreshAllMafiaChatPermissions(this);
         for (MafiaPlayer plr : players) {
             townChannel.getOverrideForUser(plr).getManager().deny(Permission.MESSAGE_WRITE);
             sleep(1000);//Negates rate limiting
         }
+    }
+
+    private void checkForGameEnded() throws InterruptedException {
+        ArrayList<MafiaPlayer> mafia = getAlivePlayersByAlignment(Alignment.MAFIA);
+        ArrayList<MafiaPlayer> town = getAlivePlayersByAlignment(Alignment.TOWNIES);
+
+        if (mafia.size() >= town.size()) {
+            onMafiaWin();
+        } else if (mafia.isEmpty()) {
+            onTownWin();
+        }
+    }
+
+    private void onMafiaWin() throws InterruptedException {
+        status = MafiaGameStatus.ENDED;
+
+        MessageBuilder b = new MessageBuilder();
+        b.appendString("__The village has been eliminated. The **Mafia** wins! Members of the mafia:__\n");
+        for (MafiaPlayer plr : getAlivePlayersByAlignment(Alignment.MAFIA)) {
+            b.appendString("\n")
+                    .appendMention(plr);
+        }
+        b.appendString("\n\nPost-game discussion starts now.");
+        Message msg = b.build();
+        townChannel.sendMessage(b.build());
+
+        players.clear();
+        wait(60*5*100);
+        
+        shutdown();
+    }
+
+    private void onTownWin() throws InterruptedException {
+        status = MafiaGameStatus.ENDED;
+        shutdown();
+    }
+
+    public ArrayList<MafiaPlayer> getPlayersByAlignment(Alignment align) {
+        ArrayList<MafiaPlayer> plrs = new ArrayList<>();
+        for (MafiaPlayer plr : plrs) {
+            if (plr.gameRole.getAlignment() == align) {
+                plrs.add(plr);
+            }
+        }
+        return plrs;
+    }
+
+    public ArrayList<MafiaPlayer> getAlivePlayersByAlignment(Alignment align) {
+        ArrayList<MafiaPlayer> plrs = getAlivePlayers();
+        for (MafiaPlayer plr : plrs) {
+            if (plr.gameRole.getAlignment() == align) {
+                plrs.add(plr);
+            }
+        }
+        return plrs;
     }
 
     private Message printRegistrationList(MessageChannel channel) {
@@ -312,16 +377,16 @@ public class MafiaGame extends Thread {
         }
         return msg;
     }
-    
-    public ArrayList<MafiaPlayer> getAlivePlayers(){
+
+    public ArrayList<MafiaPlayer> getAlivePlayers() {
         ArrayList<MafiaPlayer> alive = new ArrayList<>();
-        
+
         for (MafiaPlayer plr : players) {
-            if(plr.status == MafiaPlayerStatus.ALIVE){
+            if (plr.status == MafiaPlayerStatus.ALIVE) {
                 alive.add(plr);
             }
         }
-        
+
         return alive;
     }
 
@@ -331,7 +396,7 @@ public class MafiaGame extends Thread {
         if (hasTemporaryChannels) {
             try {
                 townChannel.getManager().delete();
-                //mafiaChannel.getManager().delete();
+                mafiaChannel.getManager().delete();
             } catch (Exception ex) {
             }
         }
