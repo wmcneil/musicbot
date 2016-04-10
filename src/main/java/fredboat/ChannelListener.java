@@ -87,6 +87,9 @@ public class ChannelListener extends ListenerAdapter {
     @Override
     public void onInviteReceived(InviteReceivedEvent event) {
         if (event.getMessage().isPrivate()) {
+            event.getAuthor().getPrivateChannel().sendMessage("Sorry! Since the release of the official API, registered bots must now be invited by someone with Manage **Server permissions**. If you have permissions, you can invite me at:\n"
+            +"https://discordapp.com/oauth2/authorize?&client_id="+FredBoat.CLIENT_ID+"&scope=bot");
+            /*
             //System.out.println(event.getInvite().getUrl());
             //InviteUtil.join(event.getInvite(), FredBoat.jda);
             Guild guild = null;
@@ -101,10 +104,11 @@ public class ChannelListener extends ListenerAdapter {
 
             if (isNotInGuild) {
                 event.getAuthor().getPrivateChannel().sendMessage("Invite accepted!");
-                InviteUtil.join(event.getInvite(), FredBoat.jda);
+                InviteUtil.join(event.getInvite(), FredBoat.jda, null);
             } else {
                 event.getAuthor().getPrivateChannel().sendMessage("Already in that channel!");
             }
+            */
         }
     }
 

@@ -28,6 +28,8 @@ import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.requests.Requester;
+import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
 
 public class FredBoat {
@@ -37,10 +39,13 @@ public class FredBoat {
     public static final String PREFIX = IS_BETA ? "__" : ";;";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
-    public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
-    public static final String ACCOUNT_PASSWORD_KEY = IS_BETA ? "passwordBeta" : "passwordProduction";
-    public static String accountEmail = IS_BETA ? "frederikmikkelsen2@outlook.com" : "frederikmikkelsen@outlook.com";
-    private static String accountPassword;
+    //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
+    //public static final String ACCOUNT_PASSWORD_KEY = IS_BETA ? "passwordBeta" : "passwordProduction";
+    public static final String ACCOUNT_TOKEN_KEY = IS_BETA ? "tokenBeta" : "tokenProduction";
+    private static String accountToken;
+    public static String CLIENT_ID = IS_BETA ? "168672778860494849" : "168686772216135681";
+    //public static String accountEmail = IS_BETA ? "frederikmikkelsen2@outlook.com" : "frederikmikkelsen@outlook.com";
+    //private static String accountPassword;
     public static String mashapeKey;
     public static String helpMsg = "Current commands:\n"
             + "```"
@@ -53,7 +58,8 @@ public class FredBoat {
             + ";;brainfuck <src> [input] **experimental**\n"
             + ";;leet <text>\n"
             + "```\n"
-            + "Want to add FredBoat to your server? Send it an invite link!\n"
+            + "Want to add FredBoat to your server? If you have Manage Server permissions for your guild, you can invite it here:\n"
+            +"https://discordapp.com/oauth2/authorize?&client_id="+FredBoat.CLIENT_ID+"&scope=bot\n"
             + "You cannot send this bot commands though DM.\n"
             + "Bot created by Frederikam";
     public static String myUserId = "";
@@ -65,8 +71,9 @@ public class FredBoat {
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         
-        accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
-        accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
+        //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
+        //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
+        accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         
         if(credsjson.has("scopePasswords")){
@@ -79,13 +86,13 @@ public class FredBoat {
         scanner.close();
         
         fredboat.util.HttpUtils.init();
-        jda = new JDABuilder().addListener(new ChannelListener()).setEmail(accountEmail).setPassword(accountPassword).buildAsync();
+        jda = new JDABuilder().addListener(new ChannelListener()).setBotToken(accountToken).buildAsync();
         System.out.println("JDA version:\t"+JDAInfo.VERSION);
     }
 
     static void init() {
         if (IS_BETA) {
-            helpMsg = helpMsg + "\n**This is the beta version of Fredboat. Are you sure you are not looking for the non-beta version \"FredBoat\"?**";
+            helpMsg = helpMsg + "\n\n**This is the beta version of Fredboat. Are you sure you are not looking for the non-beta version \"FredBoat\"?**";
         }
 
         for (Guild guild : jda.getGuilds()) {
