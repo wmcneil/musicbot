@@ -1,5 +1,6 @@
 package fredboat.command.maintenance;
 
+import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
@@ -43,8 +44,10 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         final String source = message.getRawContent().substring(args[0].length() + 1);
 
         engine.put("jda", jda);
+        engine.put("api", jda);
         engine.put("channel", channel);
         engine.put("author", author);
+        engine.put("bot", FredBoat.myUser);
         engine.put("message", message);
         engine.put("guild", guild);
 
@@ -59,20 +62,20 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                         + "})();");
 
             } catch (Exception ex) {
-                TextUtils.handleException(ex, channel, author);
+                channel.sendMessage("`"+ex.getMessage()+"`");
                 return;
             }
 
             String outputS;
             if (out == null) {
-                outputS = ":ok_hand:";
+                outputS = ":ok_hand::skin-tone-3:";
             } else if (out.toString().contains("\n")) {
-                outputS = "Eval: ```\n" + out.toString() + "```";
+                outputS = "\nEval: ```\n" + out.toString() + "```";
             } else {
-                outputS = "Eval: `" + out.toString() + "`";
+                outputS = "\nEval: `" + out.toString() + "`";
             }
 
-            channel.sendMessage("```java\n"+source+"```" + "\n\n" + outputS);
+            channel.sendMessage("```java\n"+source+"```" + "\n" + outputS);
 
         }, 0, TimeUnit.MILLISECONDS);
 
@@ -85,8 +88,8 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                 } catch (TimeoutException ex) {
                     future.cancel(true);
                     channel.sendMessage("Task exceeded time limit.");
-                } catch (ExecutionException | InterruptedException ex) {
-                    TextUtils.handleException(ex, channel, author);
+                } catch (Exception ex) {
+                    channel.sendMessage("`"+ex.getMessage()+"`");
                 }
             }
         };
