@@ -19,6 +19,8 @@ import fredboat.command.maintenance.RestartCommand;
 import fredboat.command.util.SayCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
+import frederikam.jca.JCA;
+import frederikam.jca.JCABuilder;
 import java.io.InputStream;
 import java.util.Scanner;
 import javax.security.auth.login.LoginException;
@@ -28,14 +30,13 @@ import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.requests.Requester;
-import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
 
 public class FredBoat {
 
     public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
     public static volatile JDA jda;
+    public static JCA jca;
     public static final String PREFIX = IS_BETA ? "__" : ";;";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
@@ -75,6 +76,8 @@ public class FredBoat {
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
+        String cbUser = credsjson.getString("cbUser");
+        String cbKey = credsjson.getString("cbKey");
         
         if(credsjson.has("scopePasswords")){
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -88,6 +91,9 @@ public class FredBoat {
         fredboat.util.HttpUtils.init();
         jda = new JDABuilder().addListener(new ChannelListener()).setBotToken(accountToken).buildAsync();
         System.out.println("JDA version:\t"+JDAInfo.VERSION);
+        
+        //Initialise JCA
+        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).setNick("FredBoat").buildBlocking();
     }
 
     static void init() {

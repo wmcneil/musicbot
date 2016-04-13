@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
+import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.InviteReceivedEvent;
@@ -22,6 +23,7 @@ import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.utils.InviteUtil;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class ChannelListener extends ListenerAdapter {
 
@@ -53,7 +55,22 @@ public class ChannelListener extends ListenerAdapter {
         if (event.getMessage().getContent().substring(0, fredboat.FredBoat.PREFIX.length()).equals(fredboat.FredBoat.PREFIX)) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.prefixCalled(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
+        } else if (event.getMessage().getContent().startsWith("@" + FredBoat.myUser.getUsername())) {
+            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
+        } else if (event.getMessage().getContent().startsWith(FredBoat.PREFIX + "talk")) {
+            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.PREFIX.length() + 5));
         }
+    }
+
+    public void cleverbotTalk(User user, TextChannel channel, String question) {
+        CommandManager.commandsExecuted++;
+
+        //Clerverbot integration
+        String response = FredBoat.jca.getResponse(question);
+        response = user.getUsername() + ": " + StringEscapeUtils.unescapeHtml4(response);
+        channel.sendMessage(response);
     }
 
     @Override
@@ -74,8 +91,8 @@ public class ChannelListener extends ListenerAdapter {
         if (event.getMessage().getContent().contains("discord.gg")) {
             return;
         }
-        
-        if(event.getAuthor() == lastUserToReceiveHelp){
+
+        if (event.getAuthor() == lastUserToReceiveHelp) {
             //Ignore, just got help!
             return;
         }
@@ -88,7 +105,7 @@ public class ChannelListener extends ListenerAdapter {
     public void onInviteReceived(InviteReceivedEvent event) {
         if (event.getMessage().isPrivate()) {
             event.getAuthor().getPrivateChannel().sendMessage("Sorry! Since the release of the official API, registered bots must now be invited by someone with Manage **Server permissions**. If you have permissions, you can invite me at:\n"
-            +"https://discordapp.com/oauth2/authorize?&client_id="+FredBoat.CLIENT_ID+"&scope=bot");
+                    + "https://discordapp.com/oauth2/authorize?&client_id=" + FredBoat.CLIENT_ID + "&scope=bot");
             /*
             //System.out.println(event.getInvite().getUrl());
             //InviteUtil.join(event.getInvite(), FredBoat.jda);
@@ -108,7 +125,7 @@ public class ChannelListener extends ListenerAdapter {
             } else {
                 event.getAuthor().getPrivateChannel().sendMessage("Already in that channel!");
             }
-            */
+             */
         }
     }
 
