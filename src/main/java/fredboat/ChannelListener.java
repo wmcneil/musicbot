@@ -55,10 +55,10 @@ public class ChannelListener extends ListenerAdapter {
         if (event.getMessage().getContent().substring(0, fredboat.FredBoat.PREFIX.length()).equals(fredboat.FredBoat.PREFIX)) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.prefixCalled(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
-        } else if (event.getMessage().getContent().startsWith("@" + FredBoat.myUser.getUsername())) {
+        } else if (event.getMessage().getRawContent().startsWith("@" + FredBoat.myUser.getUsername())) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
-        } else if (event.getMessage().getContent().startsWith(FredBoat.PREFIX + "talk")) {
+        } else if (event.getMessage().getRawContent().startsWith(FredBoat.PREFIX + "talk")) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.PREFIX.length() + 5));
         }
