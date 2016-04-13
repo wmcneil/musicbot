@@ -3,15 +3,10 @@ package fredboat.command.fun;
 import fredboat.ChannelListener;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
-import fredboat.util.HttpUtils;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import org.json.JSONObject;
 
 public class DanceCommand extends Command implements ICommand {
 
