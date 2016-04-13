@@ -33,6 +33,14 @@
             <name>jcenter-bintray</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-frederikam-JCA</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/frederikam/JCA</url>
+        </repository>
     </repositories>
     <build>
         <plugins>
