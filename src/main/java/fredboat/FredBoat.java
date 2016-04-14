@@ -93,7 +93,7 @@ public class FredBoat {
         System.out.println("JDA version:\t"+JDAInfo.VERSION);
         
         //Initialise JCA
-        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
+        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).setNick("FredBoat").buildBlocking();
     }
 
     static void init() {
