@@ -20,9 +20,15 @@ import fredboat.command.maintenance.RestartCommand;
 import fredboat.command.util.SayCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
+import fredboat.command.util.ClearCommand;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
@@ -38,7 +44,7 @@ public class FredBoat {
     public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
     public static volatile JDA jda;
     public static JCA jca;
-    public static final String PREFIX = IS_BETA ? "__" : ";;";
+    public static final String PREFIX = IS_BETA ? "¤" : ";;";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
     //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
@@ -49,7 +55,8 @@ public class FredBoat {
     //public static String accountEmail = IS_BETA ? "frederikmikkelsen2@outlook.com" : "frederikmikkelsen@outlook.com";
     //private static String accountPassword;
     public static String mashapeKey;
-    public static String helpMsg = "Current commands:\n"
+    public static String helpMsg = "";
+    /*"Current commands:\n"
             + "```"
             + ";;help\n"
             + ";;say <text>\n"
@@ -63,36 +70,47 @@ public class FredBoat {
             + "Want to add FredBoat to your server? If you have Manage Server permissions for your guild, you can invite it here:\n"
             +"https://discordapp.com/oauth2/authorize?&client_id="+FredBoat.CLIENT_ID+"&scope=bot\n"
             + "You cannot send this bot commands though DM.\n"
-            + "Bot created by Frederikam";
+            + "Bot created by Frederikam";*/
     public static String myUserId = "";
     public static volatile User myUser;
 
-    public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException {
+    public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
         InputStream is = new FredBoat().getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
+
+        URL helpUrl = new FredBoat().getClass().getClassLoader().getResource("help.md");
+        BufferedReader in = new BufferedReader(new InputStreamReader(helpUrl.openStream()));
         
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            helpMsg = helpMsg + inputLine + "\n";
+        }
+        in.close();
+        helpMsg = helpMsg.replace("%CLIENT_ID%", CLIENT_ID);
+        helpMsg = helpMsg.replace("%SHRUG%", "¯\\_(ツ)_/¯");
+
         //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String cbUser = credsjson.getString("cbUser");
         String cbKey = credsjson.getString("cbKey");
-        
-        if(credsjson.has("scopePasswords")){
+
+        if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
-            for (String k : scopePasswords.keySet()){
+            for (String k : scopePasswords.keySet()) {
                 scopePasswords.put(k, scopePasswords.getString(k));
             }
         }
-        
+
         scanner.close();
-        
+
         fredboat.util.HttpUtils.init();
         jda = new JDABuilder().addListener(new ChannelListener()).setBotToken(accountToken).buildAsync();
-        System.out.println("JDA version:\t"+JDAInfo.VERSION);
-        
+        System.out.println("JDA version:\t" + JDAInfo.VERSION);
+
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).setNick("FredBoat").buildBlocking();
     }
@@ -138,7 +156,8 @@ public class FredBoat {
         CommandManager.registerAlias("werewolf", "mafia");
         CommandManager.registerAlias("startwerewolf", "mafia");
         CommandManager.registerCommand("eval", new EvalCommand());
-        
+
         CommandManager.registerCommand("s", new TextCommand("¯\\_(ツ)_/¯"));
+        CommandManager.registerCommand("clear", new ClearCommand());
     }
 }
