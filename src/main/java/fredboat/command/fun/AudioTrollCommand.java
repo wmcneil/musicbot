@@ -16,6 +16,8 @@ import java.util.List;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.audio.player.FilePlayer;
+import net.dv8tion.jda.audio.player.Player;
+import net.dv8tion.jda.audio.player.URLPlayer;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -59,9 +61,9 @@ public class AudioTrollCommand extends Command implements ICommandOwnerRestricte
             try {
                 URL dir_url = ClassLoader.getSystemResource("Troll.mp3");
                 System.out.println(dir_url);
-                File audioFile = new File(dir_url.toURI());
+                //File audioFile = new File(dir_url.toURI());
                 
-                FilePlayer player = new FilePlayer(audioFile);
+                URLPlayer player = new URLPlayer(JDA, dir_url);
                 am.setSendingHandler(player);
                 player.play();
                 //synchronized (Thread.currentThread()) {
@@ -70,7 +72,7 @@ public class AudioTrollCommand extends Command implements ICommandOwnerRestricte
                     }
                 //}
                 System.out.println("Audio ended");
-            } catch (IOException | UnsupportedAudioFileException | InterruptedException | URISyntaxException ex) {
+            } catch (IOException | UnsupportedAudioFileException | InterruptedException ex) {
                 throw new RuntimeException(ex);
             } finally {
                 if(am.getConnectedChannel() == ch || am.getConnectedChannel() == null){
