@@ -6,6 +6,7 @@
 package fredboat;
 
 import static fredboat.FredBoat.jda;
+import fredboat.command.fun.TalkCommand;
 import fredboat.commandmeta.CommandManager;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,26 +52,15 @@ public class ChannelListener extends ListenerAdapter {
             tableflip(event);
             return;
         }
-
+        
         if (event.getMessage().getContent().substring(0, fredboat.FredBoat.PREFIX.length()).equals(fredboat.FredBoat.PREFIX)) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.prefixCalled(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
-        } else if (event.getMessage().getRawContent().startsWith("@" + FredBoat.myUser.getUsername())) {
+        } else if (event.getMessage().getRawContent().startsWith("<@" + FredBoat.myUser.getId()+">")) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
-            cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
-        } else if (event.getMessage().getRawContent().startsWith(FredBoat.PREFIX + "talk")) {
-            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
-            cleverbotTalk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.PREFIX.length() + 5));
+            CommandManager.commandsExecuted++;
+            TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
         }
-    }
-
-    public void cleverbotTalk(User user, TextChannel channel, String question) {
-        CommandManager.commandsExecuted++;
-
-        //Clerverbot integration
-        String response = FredBoat.jca.getResponse(question);
-        response = user.getUsername() + ": " + StringEscapeUtils.unescapeHtml4(response);
-        channel.sendMessage(response);
     }
 
     @Override

@@ -12,6 +12,7 @@ import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
+import fredboat.command.fun.TalkCommand;
 import fredboat.command.fun.TextCommand;
 import fredboat.command.mafia.MafiaStartCommand;
 import fredboat.command.maintenance.EvalCommand;
@@ -76,12 +77,13 @@ public class FredBoat {
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
-        InputStream is = new FredBoat().getClass().getClassLoader().getResourceAsStream("credentials.json");
+        FredBoat instance = new FredBoat();
+        InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
 
-        URL helpUrl = new FredBoat().getClass().getClassLoader().getResource("help.md");
-        BufferedReader in = new BufferedReader(new InputStreamReader(helpUrl.openStream()));
+        InputStream helpIS = instance.getClass().getClassLoader().getResourceAsStream("help.txt");
+        BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
         
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
@@ -112,7 +114,7 @@ public class FredBoat {
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
-        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).setNick("FredBoat").buildBlocking();
+        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
     }
 
     static void init() {
@@ -158,6 +160,8 @@ public class FredBoat {
         CommandManager.registerCommand("eval", new EvalCommand());
 
         CommandManager.registerCommand("s", new TextCommand("¯\\_(ツ)_/¯"));
+        CommandManager.registerCommand("lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
         CommandManager.registerCommand("clear", new ClearCommand());
+        CommandManager.registerCommand("talk", new TalkCommand());
     }
 }
