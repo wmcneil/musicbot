@@ -6,15 +6,13 @@
 package fredboat.command.fun;
 
 import fredboat.commandmeta.ICommand;
-import fredboat.ChannelListener;
 import fredboat.commandmeta.Command;
+import fredboat.event.EventListenerBoat;
 import fredboat.util.HttpUtils;
 import fredboat.util.TextUtils;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -44,7 +42,7 @@ public class LeetCommand extends Command implements ICommand {
         }
         Message myMsg = channel.sendMessage(res);
         
-        ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
     }
     
 }

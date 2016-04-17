@@ -1,11 +1,9 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommand;
 import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
 import java.nio.ByteBuffer;
-import java.util.*;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;

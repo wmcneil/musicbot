@@ -1,12 +1,9 @@
 package fredboat;
 
-import fredboat.command.fun.AudioTrollCommand;
 import fredboat.command.fun.DanceCommand;
 import fredboat.command.util.AvatarCommand;
 import fredboat.command.util.BrainfuckCommand;
-import fredboat.commandmeta.CommandManager;
 import fredboat.command.maintenance.DBGetCommand;
-import fredboat.command.fun.EndTrollCommand;
 import fredboat.command.maintenance.ExitCommand;
 import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
@@ -22,14 +19,15 @@ import fredboat.command.util.SayCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
 import fredboat.command.util.ClearCommand;
+import fredboat.commandmeta.CommandRegistry;
+import fredboat.event.EventListenerBoat;
+import fredboat.event.EventListenerSelf;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
@@ -43,9 +41,11 @@ import org.json.JSONObject;
 public class FredBoat {
 
     public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
-    public static volatile JDA jda;
+    public static volatile JDA jdaBot;
+    public static volatile JDA jdaSelf;
     public static JCA jca;
     public static final String PREFIX = IS_BETA ? "¤" : ";;";
+    public static final String SELF_PREFIX = IS_BETA ? "::" : "<<";
     public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
     //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
@@ -57,23 +57,15 @@ public class FredBoat {
     //private static String accountPassword;
     public static String mashapeKey;
     public static String helpMsg = "";
-    /*"Current commands:\n"
-            + "```"
-            + ";;help\n"
-            + ";;say <text>\n"
-            + ";;uptime or ;;stats\n"
-            + ";;avatar @<username>\n"
-            + ";;joke [name of main character]\n"
-            + ";;lua <src> **experimental**\n"
-            + ";;brainfuck <src> [input] **experimental**\n"
-            + ";;leet <text>\n"
-            + "```\n"
-            + "Want to add FredBoat to your server? If you have Manage Server permissions for your guild, you can invite it here:\n"
-            +"https://discordapp.com/oauth2/authorize?&client_id="+FredBoat.CLIENT_ID+"&scope=bot\n"
-            + "You cannot send this bot commands though DM.\n"
-            + "Bot created by Frederikam";*/
+
     public static String myUserId = "";
     public static volatile User myUser;
+
+    public static int readyEvents = 0;
+    public static final int READY_EVENTS_REQUIRED = 2;
+
+    public static EventListenerBoat listenerBot;
+    public static EventListenerSelf listenerSelf;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
@@ -84,7 +76,7 @@ public class FredBoat {
 
         InputStream helpIS = instance.getClass().getClassLoader().getResourceAsStream("help.txt");
         BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
-        
+
         String inputLine;
         while ((inputLine = in.readLine()) != null) {
             helpMsg = helpMsg + inputLine + "\n";
@@ -99,6 +91,8 @@ public class FredBoat {
         mashapeKey = credsjson.getString("mashapeKey");
         String cbUser = credsjson.getString("cbUser");
         String cbKey = credsjson.getString("cbKey");
+        String accountEmail = credsjson.getString("email");
+        String accountPassword = credsjson.getString("password");
 
         if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -109,20 +103,33 @@ public class FredBoat {
 
         scanner.close();
 
+        //Initialise event listeners
+        listenerBot = new EventListenerBoat(0x01, PREFIX);
+        listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
+
         fredboat.util.HttpUtils.init();
-        jda = new JDABuilder().addListener(new ChannelListener()).setBotToken(accountToken).buildAsync();
+        jdaBot = new JDABuilder().addListener(listenerBot).setBotToken(accountToken).buildAsync();
+        jdaSelf = new JDABuilder().addListener(listenerSelf).setEmail(accountEmail).setPassword(accountPassword).buildAsync();
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
     }
 
-    static void init() {
+    public static void init() {
+        readyEvents = readyEvents + 1;
+
+        System.out.println("INIT: " + readyEvents);
+
+        if (readyEvents < READY_EVENTS_REQUIRED) {
+            return;
+        }
+
         if (IS_BETA) {
             helpMsg = helpMsg + "\n\n**This is the beta version of Fredboat. Are you sure you are not looking for the non-beta version \"FredBoat\"?**";
         }
 
-        for (Guild guild : jda.getGuilds()) {
+        for (Guild guild : jdaBot.getGuilds()) {
             System.out.println(guild.getName());
 
             for (TextChannel channel : guild.getTextChannels()) {
@@ -130,38 +137,37 @@ public class FredBoat {
             }
         }
 
-        myUserId = jda.getSelfInfo().getId();
-        myUser = jda.getUserById(myUserId);
+        myUserId = jdaBot.getSelfInfo().getId();
+        myUser = jdaBot.getUserById(myUserId);
 
         //Commands
-        CommandManager.registerCommand("help", new HelpCommand());
-        CommandManager.registerCommand("dbget", new DBGetCommand());
-        CommandManager.registerCommand("say", new SayCommand());
-        CommandManager.registerCommand("uptime", new UptimeCommand());
-        CommandManager.registerAlias("stats", "uptime");
-        CommandManager.registerCommand("exit", new ExitCommand());
-        CommandManager.registerCommand("avatar", new AvatarCommand());
-        CommandManager.registerCommand("test", new TestCommand());
-        CommandManager.registerCommand("lua", new LuaCommand());
-        CommandManager.registerCommand("brainfuck", new BrainfuckCommand());
-        CommandManager.registerCommand("joke", new JokeCommand());
-        CommandManager.registerCommand("leet", new LeetCommand());
-        CommandManager.registerAlias("1337", "leet");
-        CommandManager.registerAlias("l33t", "leet");
-        CommandManager.registerCommand("troll", new AudioTrollCommand());
-        CommandManager.registerCommand("endtroll", new EndTrollCommand());
-        CommandManager.registerCommand("restart", new RestartCommand());
-        CommandManager.registerCommand("find", new FindCommand());
-        CommandManager.registerCommand("dance", new DanceCommand());
-        CommandManager.registerCommand("mafia", new MafiaStartCommand());
-        CommandManager.registerAlias("startmafia", "mafia");
-        CommandManager.registerAlias("werewolf", "mafia");
-        CommandManager.registerAlias("startwerewolf", "mafia");
-        CommandManager.registerCommand("eval", new EvalCommand());
-
-        CommandManager.registerCommand("s", new TextCommand("¯\\_(ツ)_/¯"));
-        CommandManager.registerCommand("lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
-        CommandManager.registerCommand("clear", new ClearCommand());
-        CommandManager.registerCommand("talk", new TalkCommand());
+        CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
+        CommandRegistry.registerCommand(0x11, "dbget", new DBGetCommand());
+        CommandRegistry.registerCommand(0x11, "say", new SayCommand());
+        CommandRegistry.registerCommand(0x11, "uptime", new UptimeCommand());
+        CommandRegistry.registerAlias("uptime", "stats");
+        CommandRegistry.registerCommand(0x11, "exit", new ExitCommand());
+        CommandRegistry.registerCommand(0x11, "avatar", new AvatarCommand());
+        CommandRegistry.registerCommand(0x11, "test", new TestCommand());
+        CommandRegistry.registerCommand(0x11, "lua", new LuaCommand());
+        CommandRegistry.registerCommand(0x11, "brainfuck", new BrainfuckCommand());
+        CommandRegistry.registerCommand(0x11, "joke", new JokeCommand());
+        CommandRegistry.registerCommand(0x11, "leet", new LeetCommand());
+        CommandRegistry.registerAlias("leet", "1337");
+        CommandRegistry.registerAlias("leet", "l33t");
+        //CommandRegistry.registerCommand(0x11, "troll", new AudioTrollCommand());
+        //CommandRegistry.registerCommand(0x11, "endtroll", new EndTrollCommand());
+        CommandRegistry.registerCommand(0x11, "restart", new RestartCommand());
+        CommandRegistry.registerCommand(0x11, "find", new FindCommand());
+        CommandRegistry.registerCommand(0x11, "dance", new DanceCommand());
+        CommandRegistry.registerCommand(0x11, "mafia", new MafiaStartCommand());
+        CommandRegistry.registerAlias("mafia", "startmafia");
+        CommandRegistry.registerAlias("mafia", "werewolf");
+        CommandRegistry.registerAlias("mafia", "startwerewolf");
+        CommandRegistry.registerCommand(0x11, "eval", new EvalCommand());
+        CommandRegistry.registerCommand(0x11, "s", new TextCommand("¯\\_(ツ)_/¯"));
+        CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
+        CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
+        CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
     }
 }
