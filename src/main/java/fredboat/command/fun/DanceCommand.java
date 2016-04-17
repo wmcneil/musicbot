@@ -1,8 +1,8 @@
 package fredboat.command.fun;
 
-import fredboat.ChannelListener;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
+import fredboat.event.EventListenerBoat;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -17,7 +17,7 @@ public class DanceCommand extends Command implements ICommand {
             public void run() {
                 synchronized (channel) {
                     Message msg = channel.sendMessage('\u200b' + "\\o\\");
-                    ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
+                    EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
                     long start = System.currentTimeMillis();
                     try {
                         synchronized (this) {

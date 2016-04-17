@@ -5,8 +5,7 @@
  */
 package fredboat.command.util;
 
-import fredboat.commandmeta.ICommand;
-import fredboat.ChannelListener;
+import fredboat.event.EventListenerBoat;
 import fredboat.commandmeta.Command;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -28,7 +27,7 @@ public class SayCommand extends Command {
         res = res.substring(1);
         Message myMsg = channel.sendMessage('\u200b' + res);
         
-        ChannelListener.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
     }
     
 }

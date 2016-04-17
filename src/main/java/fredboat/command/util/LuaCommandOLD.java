@@ -1,17 +1,13 @@
 package fredboat.command.util;
 
-import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
-import fredboat.commandmeta.ICommandOwnerRestricted;
 import fredboat.lua.LuaDiscordLib;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import fredboat.util.TextUtils;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LoadState;
 import org.luaj.vm2.LuaError;
@@ -28,11 +24,8 @@ import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
 import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JseBaseLib;
-import org.luaj.vm2.lib.jse.JseIoLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 import org.luaj.vm2.lib.jse.JseOsLib;
-import org.luaj.vm2.lib.jse.JsePlatform;
-import org.luaj.vm2.lib.jse.LuajavaLib;
 
 public class LuaCommandOLD implements ICommand {
 
@@ -50,7 +43,7 @@ public class LuaCommandOLD implements ICommand {
         //globals.load(new JseIoLib());
         globals.load(new JseOsLib());
         //globals.load(new LuajavaLib());
-        globals.load(new LuaDiscordLib(FredBoat.jda));
+        globals.load(new LuaDiscordLib(FredBoat.jdaBot));
 
         globals.set("require", LuaValue.NIL);
         globals.set("load", LuaValue.NIL);

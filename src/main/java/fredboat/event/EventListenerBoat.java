@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fredboat;
+package fredboat.event;
 
-import static fredboat.FredBoat.jda;
 import fredboat.command.fun.TalkCommand;
+import fredboat.commandmeta.Command;
 import fredboat.commandmeta.CommandManager;
+import fredboat.commandmeta.CommandRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.InviteReceivedEvent;
@@ -23,14 +24,24 @@ import net.dv8tion.jda.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
-import net.dv8tion.jda.utils.InviteUtil;
-import org.apache.commons.lang3.StringEscapeUtils;
+import fredboat.FredBoat;
+import static fredboat.FredBoat.jdaBot;
+import java.util.regex.Matcher;
 
-public class ChannelListener extends ListenerAdapter {
+public class EventListenerBoat extends ListenerAdapter {
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
-    public static User lastUserToReceiveHelp;
+    public User lastUserToReceiveHelp;
+    public final int scope;
+    public final String prefix;
+    private final Pattern commandNamePrefix;
+
+    public EventListenerBoat(int scope, String prefix) {
+        this.scope = scope;
+        this.prefix = prefix;
+        this.commandNamePrefix = Pattern.compile("(\\w+)");
+    }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -44,7 +55,7 @@ public class ChannelListener extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContent().length() < FredBoat.PREFIX.length()) {
+        if (event.getMessage().getContent().length() < prefix.length()) {
             return;
         }
 
@@ -52,11 +63,26 @@ public class ChannelListener extends ListenerAdapter {
             tableflip(event);
             return;
         }
-        
-        if (event.getMessage().getContent().substring(0, fredboat.FredBoat.PREFIX.length()).equals(fredboat.FredBoat.PREFIX)) {
-            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
-            CommandManager.prefixCalled(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
-        } else if (event.getMessage().getRawContent().startsWith("<@" + FredBoat.myUser.getId()+">")) {
+
+        if (event.getMessage().getContent().substring(0, prefix.length()).equals(prefix)) {
+            String cmdName;
+            Command invoked = null;
+            try {
+                System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+                Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
+                matcher.find();
+                
+                invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
+            } catch (NullPointerException ex) {
+
+            }
+            
+            if (invoked == null) {
+                return;
+            }
+            
+            CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
+        } else if (FredBoat.myUser != null && event.getMessage().getRawContent().startsWith("<@" + FredBoat.myUser.getId() + ">")) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
             TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
@@ -140,12 +166,12 @@ public class ChannelListener extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
         FredBoat.init();
-        jda.getAccountManager().setGame("Say ;;help");
+        jdaBot.getAccountManager().setGame("Say ;;help");
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        jda.getAccountManager().setGame("Say ;;help");
+        jdaBot.getAccountManager().setGame("Say ;;help");
     }
 
     public static Runnable onUnrequestedConnection = new Runnable() {

@@ -1,10 +1,10 @@
 package fredboat.command.fun;
 
-import fredboat.ChannelListener;
 import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.event.EventListenerBoat;
 import fredboat.util.TextUtils;
 import java.io.File;
 import java.io.IOException;
@@ -47,15 +47,15 @@ public class AudioTrollCommand extends Command implements ICommandOwnerRestricte
         if (foundChannel == null) {
             TextUtils.replyWithMention(c, invoker, " Couldn't find channel \"" + arg + "\"");
         } else {
-            ChannelListener.toRunOnConnectingToVoice.put(foundChannel, onConnected);
-            JDA.getAudioManager().openAudioConnection(foundChannel);
+            EventListenerBoat.toRunOnConnectingToVoice.put(foundChannel, onConnected);
+            guild.getJDA().getAudioManager().openAudioConnection(foundChannel);
         }
     }
 
     public static Runnable onConnected = new Runnable() {
         @Override
         public synchronized void run() {
-            JDA JDA = FredBoat.jda;
+            /*JDA JDA = FredBoat.jdaBot;
             AudioManager am = JDA.getAudioManager();
             VoiceChannel ch = am.getConnectedChannel();
             try {
@@ -78,7 +78,7 @@ public class AudioTrollCommand extends Command implements ICommandOwnerRestricte
                 if(am.getConnectedChannel() == ch || am.getConnectedChannel() == null){
                     am.closeAudioConnection();
                 }
-            }
+            }*/
         }
     };
 }
