@@ -35,10 +35,10 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONObject;
+import redis.clients.jedis.Client;
+import redis.clients.jedis.Jedis;
 
 public class FredBoat {
 
@@ -49,6 +49,7 @@ public class FredBoat {
     public static final String PREFIX = IS_BETA ? "¤" : ";;";
     public static final String SELF_PREFIX = IS_BETA ? "::" : "<<";
     public static final String OWNER_ID = "81011298891993088";
+    public static Jedis jedis;
     public static final long START_TIME = System.currentTimeMillis();
     //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
     //public static final String ACCOUNT_PASSWORD_KEY = IS_BETA ? "passwordBeta" : "passwordProduction";
@@ -95,6 +96,7 @@ public class FredBoat {
         String cbKey = credsjson.getString("cbKey");
         String accountEmail = credsjson.getString("email");
         String accountPassword = credsjson.getString("password");
+        String redisPassword = credsjson.getString("redisPassword");
 
         if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -116,6 +118,9 @@ public class FredBoat {
 
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
+        
+        jedis = new Jedis("frednet3.revgamesrblx.com", 6379);
+        jedis.auth(redisPassword);
     }
 
     public static void init() {
