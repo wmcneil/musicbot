@@ -9,6 +9,7 @@ import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
+import fredboat.command.fun.RemoteFileCommand;
 import fredboat.command.fun.TalkCommand;
 import fredboat.command.fun.TextCommand;
 import fredboat.command.mafia.MafiaStartCommand;
@@ -130,13 +131,13 @@ public class FredBoat {
             helpMsg = helpMsg + "\n\n**This is the beta version of Fredboat. Are you sure you are not looking for the non-beta version \"FredBoat\"?**";
         }
 
-        for (Guild guild : jdaBot.getGuilds()) {
+        /*for (Guild guild : jdaBot.getGuilds()) {
             System.out.println(guild.getName());
 
             for (TextChannel channel : guild.getTextChannels()) {
                 System.out.println("\t" + channel.getName());
             }
-        }
+        }*/
 
         myUserId = jdaBot.getSelfInfo().getId();
         myUser = jdaBot.getUserById(myUserId);
@@ -170,5 +171,6 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
         CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
         CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
+        CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/176587676093251585/2f16d4b6d0.png"));
     }
 }
