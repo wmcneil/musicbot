@@ -178,5 +178,8 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
         CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/176587676093251585/2f16d4b6d0.png"));
         CommandRegistry.registerCommand(0x11, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
+        CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
+        CommandRegistry.registerCommand(0x11, "idc", new RemoteFileCommand("http://i.imgur.com/0ZPjpNg.png"));
+        CommandRegistry.registerCommand(0x11, "beingraped", new RemoteFileCommand("http://i.imgur.com/dPsYRYV.png"));
     }
 }
