@@ -71,16 +71,16 @@ public class EventListenerBoat extends ListenerAdapter {
                 System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
                 matcher.find();
-                
+
                 invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
             } catch (NullPointerException ex) {
 
             }
-            
+
             if (invoked == null) {
                 return;
             }
-            
+
             CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
         } else if (FredBoat.myUser != null && event.getMessage().getRawContent().startsWith("<@" + FredBoat.myUser.getId() + ">")) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
@@ -92,7 +92,10 @@ public class EventListenerBoat extends ListenerAdapter {
     @Override
     public void onMessageDelete(MessageDeleteEvent event) {
         if (messagesToDeleteIfIdDeleted.containsKey(event.getMessageId())) {
-            messagesToDeleteIfIdDeleted.get(event.getMessageId()).deleteMessage();
+            Message msg = messagesToDeleteIfIdDeleted.remove(event.getMessageId());
+            if (msg.getJDA() == jdaBot) {
+                msg.deleteMessage();
+            }
         }
     }
 
