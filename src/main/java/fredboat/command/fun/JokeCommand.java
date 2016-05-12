@@ -1,5 +1,7 @@
 package fredboat.command.fun;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommand;
 import fredboat.util.HttpUtils;
@@ -17,11 +19,10 @@ public class JokeCommand extends Command implements ICommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         try {
-            String response = HttpUtils.httpGet("http://api.icndb.com/jokes/random");
-            JSONObject object = new JSONObject(response);
+            JSONObject object = Unirest.get("http://api.icndb.com/jokes/random").asJson().getBody().getObject();
 
             if (!"success".equals(object.getString("type"))) {
-                throw new IOException("Couldn't gather joke ;|");
+                throw new RuntimeException("Couldn't gather joke ;|");
             }
             
             String joke = object.getJSONObject("value").getString("joke");
@@ -36,7 +37,7 @@ public class JokeCommand extends Command implements ICommand {
             joke = joke.replaceAll("&quot;", "\"");
             
             channel.sendMessage(joke);
-        } catch (IOException ex) {
+        } catch (UnirestException ex) {
             Logger.getLogger(JokeCommand.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
