@@ -181,5 +181,8 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
         CommandRegistry.registerCommand(0x11, "idc", new RemoteFileCommand("http://i.imgur.com/0ZPjpNg.png"));
         CommandRegistry.registerCommand(0x11, "beingraped", new RemoteFileCommand("http://i.imgur.com/dPsYRYV.png"));
+        CommandRegistry.registerCommand(0x11, "suicide", new RemoteFileCommand("http://nekomata.moe/i/S3g6D0.png"));
+        CommandRegistry.registerCommand(0x11, "die", new RemoteFileCommand("http://nekomata.moe/i/k2B0f6.png"));
+        CommandRegistry.registerCommand(0x11, "stupid", new RemoteFileCommand("http://nekomata.moe/i/c056y7.png"));
     }
 }
