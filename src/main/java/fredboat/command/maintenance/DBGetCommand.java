@@ -1,12 +1,9 @@
 package fredboat.command.maintenance;
 
-import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommandOwnerRestricted;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

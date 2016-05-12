@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+@Deprecated
 public class HttpUtils {
 
     public static final HashMap<String, String> scopePasswords = new HashMap<>();
