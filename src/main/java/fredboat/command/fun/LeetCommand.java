@@ -5,14 +5,20 @@
  */
 package fredboat.command.fun;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import fredboat.FredBoat;
 import fredboat.commandmeta.ICommand;
 import fredboat.commandmeta.Command;
 import fredboat.event.EventListenerBoat;
 import fredboat.util.HttpUtils;
 import fredboat.util.TextUtils;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -33,12 +39,12 @@ public class LeetCommand extends Command implements ICommand {
         }
         res = res.substring(1);
         try {
-            HashMap<String, String> headers = new HashMap<>();
-            //headers.put("Accept", "text/plain");
-            res = HttpUtils.httpGetMashape("https://montanaflynn-l33t-sp34k.p.mashape.com/encode?text=" + URLEncoder.encode(res, "UTF-8").replace("+", "%20"), headers);
-        } catch (IOException ex) {
+            res = Unirest.get("https://montanaflynn-l33t-sp34k.p.mashape.com/encode?text=" + URLEncoder.encode(res, "UTF-8").replace("+", "%20")).header("X-Mashape-Key", FredBoat.mashapeKey).asString().getBody();
+        } catch (UnirestException ex) {
             Message myMsg = TextUtils.replyWithMention(channel, invoker, " Could not connect to API! "+ex.getMessage());
             return;
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
         }
         Message myMsg = channel.sendMessage(res);
         
