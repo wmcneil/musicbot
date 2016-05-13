@@ -187,6 +187,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "suicide", new RemoteFileCommand("http://nekomata.moe/i/S3g6D0.png"));
         CommandRegistry.registerCommand(0x11, "die", new RemoteFileCommand("http://nekomata.moe/i/k2B0f6.png"));
         CommandRegistry.registerCommand(0x11, "stupid", new RemoteFileCommand("http://nekomata.moe/i/c056y7.png"));
-        
+        CommandRegistry.registerCommand(0x11, "stop", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
+        CommandRegistry.registerAlias("stop", "cancer");
     }
 }
