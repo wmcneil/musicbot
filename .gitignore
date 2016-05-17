@@ -59,3 +59,4 @@ run.bat
 target/
 .nb-gradle/
 /dependency-reduced-pom.xml
+/credentials.json
