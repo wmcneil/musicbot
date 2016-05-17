@@ -26,6 +26,8 @@ import fredboat.event.EventListenerSelf;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,7 +43,7 @@ import redis.clients.jedis.Jedis;
 
 public class FredBoat {
 
-    public static final boolean IS_BETA = "Windows 10".equals(System.getProperty("os.name"));
+    public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
     public static JCA jca;
@@ -72,7 +74,8 @@ public class FredBoat {
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
         FredBoat instance = new FredBoat();
-        InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
+        InputStream is = new FileInputStream(new File("./credentials.json"));
+        //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
 
