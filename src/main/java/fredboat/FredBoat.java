@@ -21,6 +21,7 @@ import fredboat.command.util.SayCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
 import fredboat.command.util.ClearCommand;
+import fredboat.command.util.UpdateCommand;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
@@ -166,6 +167,7 @@ public class FredBoat {
         CommandRegistry.registerAlias("leet", "1337");
         CommandRegistry.registerAlias("leet", "l33t");
         CommandRegistry.registerCommand(0x11, "riot", new RiotCommand());
+        CommandRegistry.registerCommand(0x11, "update", new UpdateCommand());
         //CommandRegistry.registerCommand(0x11, "troll", new AudioTrollCommand());
         //CommandRegistry.registerCommand(0x11, "endtroll", new EndTrollCommand());
         CommandRegistry.registerCommand(0x11, "restart", new RestartCommand());
