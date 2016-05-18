@@ -198,4 +198,11 @@ public class FredBoat {
         CommandRegistry.registerAlias("stop", "cancer");
         CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
     }
+    
+    public static void shutdown(int code){
+        jdaBot.shutdown(true);
+        jdaSelf.shutdown(true);
+        jedis.shutdown();
+        System.exit(code);
+    }
 }
