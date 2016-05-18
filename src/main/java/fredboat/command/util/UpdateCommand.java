@@ -41,21 +41,21 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
 
             Process gitClone = rt.exec("git clone https://github.com/Frederikam/FredBoat.git --branch " + branch + " --single-branch update");
             if (gitClone.waitFor(120, TimeUnit.SECONDS) == false) {
-                msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
+                msg = msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
                 throw new RuntimeException("Operation timed out: git clone");
             } else if (gitClone.exitValue() != 0) {
-                msg.updateMessage(msg.getRawContent() + "[:anger: returned code " + gitClone.exitValue() + "]\n\n");
+                msg = msg.updateMessage(msg.getRawContent() + "[:anger: returned code " + gitClone.exitValue() + "]\n\n");
                 throw new RuntimeException("Bad response code");
             }
 
-            msg.updateMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ");
+            msg = msg.updateMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ");
             File updateDir = new File("./update");
             Process mvnBuild = rt.exec("/home/frederik/mvn/bin/mvn -f " + updateDir.getAbsolutePath() + "/pom.xml package shade:shade");
             if (mvnBuild.waitFor(300, TimeUnit.SECONDS) == false) {
-                msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
+                msg = msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
                 throw new RuntimeException("Operation timed out: mvn package shade:shade");
             } else if (mvnBuild.exitValue() != 0) {
-                msg.updateMessage(msg.getRawContent() + "[:anger: returned code " + mvnBuild.exitValue() + "]\n\n");
+                msg = msg.updateMessage(msg.getRawContent() + "[:anger: returned code " + mvnBuild.exitValue() + "]\n\n");
                 throw new RuntimeException("Bad response code");
             }
             
@@ -72,7 +72,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
             rt.exec(source);*/
             
             //Shutdown for update
-            msg.updateMessage(msg.getRawContent() + "👌🏽\n\nNow restarting...");
+            msg = msg.updateMessage(msg.getRawContent() + "👌🏽\n\nNow restarting...");
             FredBoat.shutdown(ExitCodes.EXIT_CODE_UPDATE);
         } catch (InterruptedException | IOException ex) {
             throw new RuntimeException(ex);
