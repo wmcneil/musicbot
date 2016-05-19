@@ -197,6 +197,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "stop", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
         CommandRegistry.registerAlias("stop", "cancer");
         CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
+        CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
     }
     
     public static void shutdown(int code){
