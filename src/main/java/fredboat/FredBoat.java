@@ -203,7 +203,16 @@ public class FredBoat {
         
         String[] pats = {
             "http://i.imgur.com/wF1ohrH.gif",
-            "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif"
+            "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif",
+            "http://i4.photobucket.com/albums/y131/quentinlau/Blog/sola-02-Large15.jpg",
+            "http://i.imgur.com/OYiSZWX.gif",
+            "https://cdn.discordapp.com/attachments/132490115137142784/182502254400503809/tumblr_nb0gnw9qgh1tbewqgo1_500.gif",
+            "https://cdn.discordapp.com/attachments/132490115137142784/182502347493212161/tumblr_nb8orpea161qa94xto1_500.gif",
+            "http://31.media.tumblr.com/e759f2da1f07de37832fc8269e99f1e7/tumblr_n3w02z954N1swm6rso1_500.gif",
+            "https://media1.giphy.com/media/ye7OTQgwmVuVy/200.gif",
+            "http://data.whicdn.com/images/224314340/large.gif",
+            "https://cdn.discordapp.com/attachments/143976784545841161/182504493760380930/tumblr_m24qp6UAfe1qcyi3ao1_500.gif",
+            "https://cdn.discordapp.com/attachments/143976784545841161/182505413982289922/cc9d7b5849745daff691a0b7c4bb9d23.jpg",
         };
         CommandRegistry.registerCommand(0x11, "pat", new RandomImageCommand(pats));
     }
