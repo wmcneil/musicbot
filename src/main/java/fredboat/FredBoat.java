@@ -9,6 +9,7 @@ import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
+import fredboat.command.fun.RandomImageCommand;
 import fredboat.command.fun.RemoteFileCommand;
 import fredboat.command.fun.RiotCommand;
 import fredboat.command.fun.TalkCommand;
@@ -199,6 +200,12 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
         CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
         CommandRegistry.registerCommand(0x11, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
+        
+        String[] pats = {
+            "http://i.imgur.com/wF1ohrH.gif",
+            "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif"
+        };
+        CommandRegistry.registerCommand(0x11, "pat", new RandomImageCommand(pats));
     }
     
     public static void shutdown(int code){
