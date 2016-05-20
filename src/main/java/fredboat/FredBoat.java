@@ -214,6 +214,8 @@ public class FredBoat {
             "http://data.whicdn.com/images/224314340/large.gif",
             "https://cdn.discordapp.com/attachments/143976784545841161/182504493760380930/tumblr_m24qp6UAfe1qcyi3ao1_500.gif",
             "https://cdn.discordapp.com/attachments/143976784545841161/182505413982289922/cc9d7b5849745daff691a0b7c4bb9d23.jpg",
+            "http://i.imgur.com/eOJlnwP.gif",
+            "http://i.imgur.com/i7bklkm.gif",
         };
         CommandRegistry.registerCommand(0x11, "pat", new RandomImageCommand(pats));
     }
