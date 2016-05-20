@@ -9,7 +9,7 @@ import fredboat.command.util.FindCommand;
 import fredboat.command.util.HelpCommand;
 import fredboat.command.fun.JokeCommand;
 import fredboat.command.fun.LeetCommand;
-import fredboat.command.fun.RandomImageCommand;
+import fredboat.command.fun.PatCommand;
 import fredboat.command.fun.RemoteFileCommand;
 import fredboat.command.fun.RiotCommand;
 import fredboat.command.fun.TalkCommand;
@@ -217,7 +217,7 @@ public class FredBoat {
             "http://i.imgur.com/eOJlnwP.gif",
             "http://i.imgur.com/i7bklkm.gif",
         };
-        CommandRegistry.registerCommand(0x11, "pat", new RandomImageCommand(pats));
+        CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
     }
     
     public static void shutdown(int code){
