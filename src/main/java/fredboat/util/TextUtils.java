@@ -1,5 +1,7 @@
 package fredboat.util;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.MessageChannel;
@@ -36,5 +38,17 @@ public class TextUtils {
         builder.appendString("\t...```");
 
         channel.sendMessage(builder.build());
+    }
+    
+    public static String postToHastebin(String body) throws UnirestException {
+        return Unirest.post("http://hastebin.com/documents").body(body).asJson().getBody().getObject().getString("key");
+    }
+    
+    public static String postToHastebin(String body, boolean asURL) throws UnirestException {
+        if(asURL){
+            return "http://hastebin.com/" + postToHastebin(body);
+        } else {
+            return postToHastebin(body);
+        }
     }
 }
