@@ -38,7 +38,7 @@ public class DumpCommand extends Command {
             int availableMessages = mh.getRecent().size();
 
             while (availableMessages < realDumpSize) {
-                int nextMessages =  Math.min(100, realDumpSize - availableMessages);
+                int nextMessages = Math.min(100, realDumpSize - availableMessages);
                 availableMessages = nextMessages + availableMessages;
                 mh.retrieve(nextMessages);
             }
@@ -51,8 +51,27 @@ public class DumpCommand extends Command {
 
             int i = 1;
             for (Message msg : messages) {
-                dump = dump + "--Msg #" + i + " by " + msg.getAuthor().getUsername() + "#" + msg.getAuthor().getDiscriminator()
-                        + " at " + formatTimestamp(message.getTime()) + "--\n" + msg.getRawContent() + "\n";
+                String authr = "[UNKNOWN USER]";
+                String time = "[UNKNOWN TIME]";
+                String content = "[COULD NOT DISPLAY CONTENT!]";
+
+                try {
+                    authr = msg.getAuthor().getUsername() + "#" + msg.getAuthor().getDiscriminator();
+                } catch (NullPointerException ex) {
+                }
+                
+                try {
+                    time = formatTimestamp(message.getTime());
+                } catch (NullPointerException ex) {
+                }
+                
+                try {
+                    content = msg.getRawContent();
+                } catch (NullPointerException ex) {
+                }
+
+                dump = dump + "--Msg #" + i + " by " + authr
+                        + " at " + time + "--\n" + content + "\n";
                 if (msg.getAttachments().size() > 0) {
                     dump = dump + "Attachments:\n";
                     int j = 1;
