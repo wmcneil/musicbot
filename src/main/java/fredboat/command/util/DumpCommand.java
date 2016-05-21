@@ -80,10 +80,11 @@ public class DumpCommand extends Command {
                 dump = dump + "\n\n";
                 i++;
             }
+            dump = dump + "**------END DUMP------**\n";
 
             MessageBuilder mb = new MessageBuilder();
             mb.appendString("Successfully found and dumped `" + messages.size() + "` messages.\n");
-            mb.appendString(TextUtils.postToHastebin(dump, true) + ".md\n");
+            mb.appendString(TextUtils.postToHastebin(dump, true) + ".txt\n");
             if (!isQuiet) {
                 mb.appendString("Hint: You can call this with `-q` to instead get the dump in a DM\n");
             }
