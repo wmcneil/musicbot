@@ -9,8 +9,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.MessageHistory;
 import net.dv8tion.jda.entities.Guild;
@@ -61,7 +59,7 @@ public class DumpCommand extends Command {
                 }
                 
                 try {
-                    time = formatTimestamp(message.getTime());
+                    time = formatTimestamp(msg.getTime());
                 } catch (NullPointerException ex) {
                 }
                 
