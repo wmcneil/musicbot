@@ -64,7 +64,7 @@ public class DumpCommand extends Command {
                 }
                 
                 try {
-                    content = msg.getRawContent();
+                    content = msg.getContent();
                 } catch (NullPointerException ex) {
                 }
 
