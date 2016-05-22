@@ -53,10 +53,11 @@ public class MALCommand extends Command {
             data = root.getJSONObject("anime").getJSONObject("entry");
         }
         
-        System.out.println("Anime search deviation: " + data.getString("title").replace(' ', '+').trim().compareToIgnoreCase(terms));
+        /*System.out.println("Anime search deviation: " + data.getString("title").replace(' ', '+').trim().compareToIgnoreCase(terms));
+        
         if(data.getString("title").replace(' ', '+').trim().compareToIgnoreCase(terms) > 3){
             return false;
-        }
+        }*/
         
         msg = data.has("title") ? msg + "**Title: **" + data.get("title") + "\n" : msg;
         msg = data.has("english") ? msg + "**English: **" + data.get("english") + "\n" : msg;
