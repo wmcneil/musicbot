@@ -37,7 +37,12 @@ public class TextUtils {
         }
         builder.appendString("\t...```");
 
-        channel.sendMessage(builder.build());
+        try {
+            channel.sendMessage(builder.build());
+        } catch (UnsupportedOperationException tooLongEx) {
+            channel.sendMessage("An error occured :anger: Error was too long to display.");
+            e.printStackTrace();
+        }
     }
     
     public static String postToHastebin(String body) throws UnirestException {
