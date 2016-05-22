@@ -79,7 +79,7 @@ public class MALCommand extends Command {
         
         System.out.println("Anime search deviation: " + minDeviation);
         
-        if(minDeviation < 3){
+        if(minDeviation > 3){
             return false;
         }
         
