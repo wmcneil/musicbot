@@ -4,6 +4,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.entities.Guild;
@@ -53,11 +55,33 @@ public class MALCommand extends Command {
             data = root.getJSONObject("anime").getJSONObject("entry");
         }
         
-        /*System.out.println("Anime search deviation: " + data.getString("title").replace(' ', '+').trim().compareToIgnoreCase(terms));
+        ArrayList<String> titles = new ArrayList<>();
+        titles.add(data.getString("title"));
         
-        if(data.getString("title").replace(' ', '+').trim().compareToIgnoreCase(terms) > 3){
+        if(data.has("synonyms")){
+            titles.addAll(Arrays.asList(data.getString("synonyms").split(";")));
+        }
+        
+        if(data.has("english")){
+            titles.add(data.getString("english"));
+        }
+        
+        int minDeviation = Integer.MAX_VALUE;
+        for(String str : titles){
+            str = str.replace(' ', '+').trim();
+            int deviation = str.compareToIgnoreCase(terms);
+            deviation = deviation - Math.abs(str.length() - terms.length());
+            if(deviation < minDeviation){
+                minDeviation = deviation;
+            }
+        }
+        
+        
+        System.out.println("Anime search deviation: " + minDeviation);
+        
+        if(minDeviation < 3){
             return false;
-        }*/
+        }
         
         msg = data.has("title") ? msg + "**Title: **" + data.get("title") + "\n" : msg;
         msg = data.has("english") ? msg + "**English: **" + data.get("english") + "\n" : msg;
