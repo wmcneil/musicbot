@@ -23,6 +23,7 @@ import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
 import fredboat.command.util.ClearCommand;
 import fredboat.command.util.DumpCommand;
+import fredboat.command.util.MALCommand;
 import fredboat.command.util.UpdateCommand;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.event.EventListenerBoat;
@@ -65,6 +66,7 @@ public class FredBoat {
     //private static String accountPassword;
     public static String mashapeKey;
     public static String helpMsg = "";
+    public static String MALPassword;
 
     public static String myUserId = "";
     public static volatile User myUser;
@@ -74,6 +76,7 @@ public class FredBoat {
 
     public static EventListenerBoat listenerBot;
     public static EventListenerSelf listenerSelf;
+    
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
@@ -102,6 +105,7 @@ public class FredBoat {
         String cbKey = credsjson.getString("cbKey");
         String accountEmail = credsjson.getString("email");
         String accountPassword = credsjson.getString("password");
+        MALPassword = credsjson.getString("password");
         String redisPassword = credsjson.getString("redisPassword");
 
         if (credsjson.has("scopePasswords")) {
@@ -185,6 +189,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
         CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
         CommandRegistry.registerCommand(0x11, "dump", new DumpCommand());
+        CommandRegistry.registerCommand(0x11, "mal", new MALCommand());
         
         //Begin sergi memes//
         
