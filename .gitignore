@@ -60,3 +60,7 @@ target/
 .nb-gradle/
 /dependency-reduced-pom.xml
 /credentials.json
+/ffmpeg.exe
+/ffplay.exe
+/ffprobe.exe
+/youtube-dl
