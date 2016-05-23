@@ -21,6 +21,7 @@ import fredboat.command.maintenance.RestartCommand;
 import fredboat.command.util.SayCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.UptimeCommand;
+import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.util.ClearCommand;
 import fredboat.command.util.DumpCommand;
 import fredboat.command.util.MALCommand;
@@ -159,6 +160,7 @@ public class FredBoat {
 
         //Commands
         CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
+        CommandRegistry.registerCommand(0x11, "version", new VersionCommand());
         CommandRegistry.registerCommand(0x11, "dbget", new DBGetCommand());
         CommandRegistry.registerCommand(0x11, "say", new SayCommand());
         CommandRegistry.registerCommand(0x11, "uptime", new UptimeCommand());
