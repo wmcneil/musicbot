@@ -30,6 +30,12 @@ public class DumpCommand extends Command {
         int realDumpSize = Math.min(dumpSize, MAX_DUMP_SIZE);
         MessageChannel outputChannel = isQuiet ? invoker.getPrivateChannel() : channel;
         outputChannel.sendTyping();
+        
+        //Quick hack to allow infinite messages if invoked by owner:
+        if(invoker.getId().equals(fredboat.FredBoat.OWNER_ID)){
+            realDumpSize = dumpSize;
+        }
+        
         try {
 
             MessageHistory mh = new MessageHistory(channel);
