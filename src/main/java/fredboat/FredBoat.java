@@ -228,6 +228,7 @@ public class FredBoat {
             "https://cdn.discordapp.com/attachments/143976784545841161/182505413982289922/cc9d7b5849745daff691a0b7c4bb9d23.jpg",
             "http://i.imgur.com/eOJlnwP.gif",
             "http://i.imgur.com/i7bklkm.gif",
+            "https://cdn.discordapp.com/attachments/132490115137142784/187129177848152066/lytB09W.jpg",
         };
         CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
     }
