@@ -1,6 +1,7 @@
 package fredboat;
 
 import fredboat.command.fun.DanceCommand;
+import fredboat.command.fun.FacedeskCommand;
 import fredboat.command.util.AvatarCommand;
 import fredboat.command.util.BrainfuckCommand;
 import fredboat.command.maintenance.DBGetCommand;
@@ -12,6 +13,7 @@ import fredboat.command.fun.LeetCommand;
 import fredboat.command.fun.PatCommand;
 import fredboat.command.fun.RemoteFileCommand;
 import fredboat.command.fun.RiotCommand;
+import fredboat.command.fun.RollCommand;
 import fredboat.command.fun.TalkCommand;
 import fredboat.command.fun.TextCommand;
 import fredboat.command.mafia.MafiaStartCommand;
@@ -77,7 +79,6 @@ public class FredBoat {
 
     public static EventListenerBoat listenerBot;
     public static EventListenerSelf listenerSelf;
-    
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
@@ -129,7 +130,7 @@ public class FredBoat {
 
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
-        
+
         jedis = new Jedis("frednet3.revgamesrblx.com", 6379);
         jedis.auth(redisPassword);
     }
@@ -154,7 +155,6 @@ public class FredBoat {
                 System.out.println("\t" + channel.getName());
             }
         }*/
-
         myUserId = jdaBot.getSelfInfo().getId();
         myUser = jdaBot.getUserById(myUserId);
 
@@ -192,9 +192,8 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
         CommandRegistry.registerCommand(0x11, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x11, "mal", new MALCommand());
-        
+
         //Begin sergi memes//
-        
         CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/176587676093251585/2f16d4b6d0.png"));
         CommandRegistry.registerCommand(0x11, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
         CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
@@ -213,7 +212,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
         CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
         CommandRegistry.registerCommand(0x11, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
-        
+
         String[] pats = {
             "http://i.imgur.com/wF1ohrH.gif",
             "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif",
@@ -231,9 +230,40 @@ public class FredBoat {
             "https://cdn.discordapp.com/attachments/132490115137142784/187129177848152066/lytB09W.jpg",
         };
         CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
+
+        String[] facedesk = {
+            "https://45.media.tumblr.com/tumblr_lpzn2uFp4D1qew6kmo1_500.gif",
+            "http://i862.photobucket.com/albums/ab181/Shadow_Milez/Animu/kuroko-facedesk.gif",
+            "http://2.bp.blogspot.com/-Uw0i2Xv8r-M/UhyYzSHIiCI/AAAAAAAAAdg/hcI1-V7Y3A4/s1600/facedesk.gif",
+            "https://67.media.tumblr.com/dfa4f3c1b65da06d76a271feef0d08f0/tumblr_inline_o6zkkh6VsK1u293td_500.gif",
+            "http://stream1.gifsoup.com/webroot/animatedgifs/57302_o.gif",
+            "http://img.neoseeker.com/mgv/59301/301/26/facedesk_display.gif"
+        };
+
+        CommandRegistry.registerCommand(0x11, "facedesk", new FacedeskCommand(facedesk));
+
+        String[] roll = {
+            "https://media.giphy.com/media/3xz2BCBXokf7rag0Ba/giphy.gif",
+            "http://i.imgur.com/IWQZaHD.gif",
+            "https://warosu.org/data/cgl/img/0077/57/1408042492433.gif",
+            "https://media.giphy.com/media/tso0dniqIDWwg/giphy.gif",
+            "http://s19.postimg.org/lg5x9zx8z/Hakase_Roll_anime_32552527_500_282.gif",
+            "http://i.imgur.com/UJxrB.gif",
+            "http://25.media.tumblr.com/tumblr_m4k42bwzNy1qj0i6io1_500.gif",
+            "http://i.giphy.com/3o6LXfWUBTdBcccgSc.gif",
+            "http://66.media.tumblr.com/23dec349d26317df439099fdcb4c75a4/tumblr_mld6epWdgR1riizqco1_500.gif",
+            "https://images-2.discordapp.net/eyJ1cmwiOiJodHRwOi8vZmFybTguc3RhdGljZmxpY2tyLmNvbS83NDUxLzEyMjY4NDM2MjU1XzgwZGIxOWNlOGZfby5naWYifQ.1e8OKozMAx22ZGELeNzRkqT3v-Q.gif",
+            "https://images-1.discordapp.net/eyJ1cmwiOiJodHRwOi8vaS5pbWd1ci5jb20vS2VHY1lYSi5naWYifQ.4dCItRLO5l91JuDw-8ls-fi8wWc.gif",
+            "http://i.imgur.com/s2TL7A8.gif",
+            "http://i.imgur.com/vqTAjp5.gif",
+            "https://data.desustorage.org/a/image/1456/58/1456582568150.gif"
+
+        };
+
+        CommandRegistry.registerCommand(0x11, "roll", new RollCommand(roll));
     }
     
-    public static void shutdown(int code){
+    public static void shutdown(int code) {
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
         jedis.shutdown();
