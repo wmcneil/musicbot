@@ -1,5 +1,6 @@
 package fredboat;
 
+import fredboat.agent.CarbonAgent;
 import fredboat.command.fun.DanceCommand;
 import fredboat.command.fun.FacedeskCommand;
 import fredboat.command.util.AvatarCommand;
@@ -131,8 +132,17 @@ public class FredBoat {
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
-        jedis = new Jedis("frednet3.revgamesrblx.com", 6379);
-        jedis.auth(redisPassword);
+        try {
+            jedis = new Jedis("frednet3.revgamesrblx.com", 6379);
+            jedis.auth(redisPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if(!IS_BETA){
+            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, credsjson.getString("carbonKey"));
+            carbonAgent.start();
+        }
     }
 
     public static void init() {
