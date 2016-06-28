@@ -222,6 +222,9 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
         CommandRegistry.registerCommand(0x11, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
 
+        CommandRegistry.registerCommand(0x11, "github", new TextCommand("https://github.com/Frederikam"));
+        CommandRegistry.registerCommand(0x11, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
+        
         String[] pats = {
             "http://i.imgur.com/wF1ohrH.gif",
             "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif",
