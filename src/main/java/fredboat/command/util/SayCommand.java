@@ -20,6 +20,10 @@ public class SayCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+        if (args.length < 2) {
+            channel.sendMessage("Proper syntax: ;;say <text>");
+            return;
+        }
         String res = "";
         for (int i = 1; i < args.length; i++) {
             res = res+" "+args[i];
