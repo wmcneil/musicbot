@@ -6,14 +6,13 @@ import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import fredboat.util.TextUtils;
 
 public class HelpCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         invoker.getPrivateChannel().sendMessage(FredBoat.helpMsg);
-        channel.sendMessage(invoker.getUsername() + " documentation has been sent to your direct messages!");
+        channel.sendMessage(invoker.getUsername() + ": documentation has been sent to your direct messages!");
     }
     
 }
