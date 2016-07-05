@@ -12,7 +12,7 @@ public class HelpCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         invoker.getPrivateChannel().sendMessage(FredBoat.helpMsg);
-        channel.sendMessage(invoker.getUsername() + ": documentation has been sent to your direct messages!");
+        channel.sendMessage(invoker.getUsername() + ": Documentation has been sent to your direct messages!");
     }
     
 }
