@@ -40,7 +40,7 @@ public class CarbonAgent extends Thread {
             socket.connect();
             socket.sendText(path + " " + value + " " + System.currentTimeMillis());
             socket.disconnect();*/
-            String output = path + " " + value + " " + System.currentTimeMillis()/1000;
+            String output = path + " " + value + " " + System.currentTimeMillis()/1000 + "\n";
             Socket socket = new Socket(CARBON_HOST, CARBON_PORT);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.writeBytes(output);
