@@ -15,9 +15,11 @@ public class CarbonAgent extends Thread {
     public static final int CARBON_PORT = 2003;
     private int commandsExecutedLastSubmission = 0;
     public final JDA jda;
+    public final String buildStream;
 
     public CarbonAgent(JDA jda) {
         this.jda = jda;
+        buildStream = FredBoat.IS_BETA ? "beta" : "production";
     }
 
     @Override
@@ -27,11 +29,9 @@ public class CarbonAgent extends Thread {
                 try {
                     this.wait(1000 * 60);//Only send statistics each minute
 
-                    submitData(FredBoat.IS_BETA ? "carbon.fredboat.commandsExecuted.beta" : "carbon.fredboat.commandsExecuted.production", String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
-                    if (!FredBoat.IS_BETA) {
-                        submitData("carbon.fredboat.users", String.valueOf(jda.getUsers().size()));
-                        submitData("carbon.fredboat.guilds", String.valueOf(jda.getGuilds().size()));
-                    }
+                    submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
+                    submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
+                    submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
                     commandsExecutedLastSubmission = CommandManager.commandsExecuted;
                     //Track command usage
                 } catch (InterruptedException ex) {
