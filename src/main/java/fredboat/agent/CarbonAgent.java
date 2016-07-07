@@ -27,11 +27,14 @@ public class CarbonAgent extends Thread {
         while (true) {
             synchronized (this) {
                 try {
-                    this.wait(1000 * 60);//Only send statistics each minute
+                    this.wait(1000 * 300);//Only send statistics every 5 minutes
 
                     submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
                     submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
                     submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
+                    if(!FredBoat.IS_BETA){
+                        submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+                    }
                     commandsExecutedLastSubmission = CommandManager.commandsExecuted;
                     //Track command usage
                 } catch (InterruptedException ex) {
