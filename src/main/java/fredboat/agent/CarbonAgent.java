@@ -16,6 +16,7 @@ public class CarbonAgent extends Thread {
     private int commandsExecutedLastSubmission = 0;
     public final JDA jda;
     public final String buildStream;
+    private int timesSubmitted = 0;
 
     public CarbonAgent(JDA jda) {
         this.jda = jda;
@@ -27,15 +28,17 @@ public class CarbonAgent extends Thread {
         while (true) {
             synchronized (this) {
                 try {
-                    this.wait(1000 * 300);//Only send statistics every 5 minutes
+                    this.wait(1000 * 60);//Only tick once per minute
 
-                    submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
-                    submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
-                    submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
-                    if(!FredBoat.IS_BETA){
-                        submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+                    timesSubmitted++;
+                    if(timesSubmitted%5 == 0){
+                        handleEvery5Minutes();
                     }
-                    commandsExecutedLastSubmission = CommandManager.commandsExecuted;
+                    
+                    if(timesSubmitted%60 == 0){
+                        handleHourly();
+                    }
+                    
                     //Track command usage
                 } catch (InterruptedException ex) {
                     Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
@@ -44,6 +47,19 @@ public class CarbonAgent extends Thread {
             }
 
         }
+    }
+
+    private void handleEvery5Minutes() {
+        submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
+        submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
+        if (!FredBoat.IS_BETA) {
+            submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+        }
+    }
+
+    private void handleHourly() {
+        submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
+        commandsExecutedLastSubmission = CommandManager.commandsExecuted;
     }
 
     public static void submitData(String path, String value) {
