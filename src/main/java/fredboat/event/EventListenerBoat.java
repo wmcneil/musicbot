@@ -36,6 +36,8 @@ public class EventListenerBoat extends ListenerAdapter {
     public final int scope;
     public final String prefix;
     private final Pattern commandNamePrefix;
+    
+    public static int messagesReceived = 0;
 
     public EventListenerBoat(int scope, String prefix) {
         this.scope = scope;
@@ -45,6 +47,13 @@ public class EventListenerBoat extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        /*System.out.println(event.getJDA().getSelfInfo().getUsername());
+        System.out.println(event);
+        System.out.println(event.getAuthor());
+        System.out.println(event.getAuthor().getId());*/
+        
+        messagesReceived++;
+        
         if (event.getPrivateChannel() != null) {
             System.out.println("PRIVATE" + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             return;

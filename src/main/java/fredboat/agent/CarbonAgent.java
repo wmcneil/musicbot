@@ -2,6 +2,7 @@ package fredboat.agent;
 
 import fredboat.FredBoat;
 import fredboat.commandmeta.CommandManager;
+import fredboat.event.EventListenerBoat;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -14,6 +15,7 @@ public class CarbonAgent extends Thread {
     public static final String CARBON_HOST = "192.210.193.136";
     public static final int CARBON_PORT = 2003;
     private int commandsExecutedLastSubmission = 0;
+    private int messagesReceivedLastSubmission = 0;
     public final JDA jda;
     public final String buildStream;
     private int timesSubmitted = 0;
@@ -31,14 +33,14 @@ public class CarbonAgent extends Thread {
                     this.wait(1000 * 60);//Only tick once per minute
 
                     timesSubmitted++;
-                    if(timesSubmitted%5 == 0){
+                    if (timesSubmitted % 5 == 0) {
                         handleEvery5Minutes();
                     }
-                    
-                    if(timesSubmitted%60 == 0){
+
+                    if (timesSubmitted % 60 == 0) {
                         handleHourly();
                     }
-                    
+
                     //Track command usage
                 } catch (InterruptedException ex) {
                     Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,6 +54,10 @@ public class CarbonAgent extends Thread {
     private void handleEvery5Minutes() {
         submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
         submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
+        
+        submitData("carbon.fredboat.messagesReceived." + buildStream, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
+        messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
+        
         if (!FredBoat.IS_BETA) {
             submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         }
