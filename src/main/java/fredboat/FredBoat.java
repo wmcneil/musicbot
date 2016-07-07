@@ -146,7 +146,7 @@ public class FredBoat {
             carbonitexAgent.start();
         }
         
-        CarbonAgent carbonAgent = new CarbonAgent();
+        CarbonAgent carbonAgent = new CarbonAgent(jdaBot);
         carbonAgent.setDaemon(true);
         carbonAgent.start();
     }
