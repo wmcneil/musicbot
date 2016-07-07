@@ -55,9 +55,6 @@ public class CarbonAgent extends Thread {
         submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
         submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
         
-        submitData("carbon.fredboat.messagesReceived." + buildStream, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
-        messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
-        
         if (!FredBoat.IS_BETA) {
             submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         }
@@ -66,6 +63,8 @@ public class CarbonAgent extends Thread {
     private void handleHourly() {
         submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
         commandsExecutedLastSubmission = CommandManager.commandsExecuted;
+        submitData("carbon.fredboat.messagesReceived." + buildStream, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
+        messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
     }
 
     public static void submitData(String path, String value) {
