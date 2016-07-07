@@ -1,6 +1,6 @@
 package fredboat;
 
-import fredboat.agent.CarbonAgent;
+import fredboat.agent.CarbonitexAgent;
 import fredboat.command.fun.DanceCommand;
 import fredboat.command.fun.FacedeskCommand;
 import fredboat.command.util.AvatarCommand;
@@ -140,7 +140,7 @@ public class FredBoat {
         }
         
         if(!IS_BETA){
-            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, credsjson.getString("carbonKey"));
+            CarbonitexAgent carbonAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
             carbonAgent.start();
         }
     }

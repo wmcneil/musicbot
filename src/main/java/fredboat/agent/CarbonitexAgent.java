@@ -3,12 +3,12 @@ package fredboat.agent;
 import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.JDA;
 
-public class CarbonAgent extends Thread {
+public class CarbonitexAgent extends Thread {
 
     private final String key;
     public final JDA jda;
 
-    public CarbonAgent(JDA jda, String key) {
+    public CarbonitexAgent(JDA jda, String key) {
         this.jda = jda;
         this.key = key;
     }
