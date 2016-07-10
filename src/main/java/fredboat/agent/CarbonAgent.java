@@ -1,6 +1,5 @@
 package fredboat.agent;
 
-import fredboat.FredBoat;
 import fredboat.commandmeta.CommandManager;
 import fredboat.event.EventListenerBoat;
 import java.io.DataOutputStream;
@@ -14,15 +13,17 @@ public class CarbonAgent extends Thread {
 
     public static final String CARBON_HOST = "192.210.193.136";
     public static final int CARBON_PORT = 2003;
+    public final boolean logProductionStats;
     private int commandsExecutedLastSubmission = 0;
     private int messagesReceivedLastSubmission = 0;
     public final JDA jda;
     public final String buildStream;
     private int timesSubmitted = 0;
 
-    public CarbonAgent(JDA jda) {
+    public CarbonAgent(JDA jda, String buildStream, boolean logProductionStats) {
         this.jda = jda;
-        buildStream = FredBoat.IS_BETA ? "beta" : "production";
+        this.buildStream = buildStream;
+        this.logProductionStats = logProductionStats;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class CarbonAgent extends Thread {
         submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
         submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
         
-        if (!FredBoat.IS_BETA) {
+        if (logProductionStats) {
             submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         }
     }
