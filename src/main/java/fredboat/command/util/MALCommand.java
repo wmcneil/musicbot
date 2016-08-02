@@ -12,6 +12,7 @@ import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,10 +92,16 @@ public class MALCommand extends Command {
         msg = data.has("type") ? msg + "**Type: **" + data.get("type") + "\n" : msg;
         msg = data.has("status") ? msg + "**Status: **" + data.get("status") + "\n" : msg;
         msg = data.has("start_date") ? msg + "**Start date: **" + data.get("start_date") + "\n" : msg;
-        msg = data.has("end_date") ? msg + "**End date;: **" + data.get("end_date") + "\n" : msg;
-        //msg = data.has("synopsis") ? msg + "**Score: **" + data.get("synopsis") + "\n" : msg;
-        msg = data.has("image") ? msg + data.get("image") : msg;
+        msg = data.has("end_date") ? msg + "**End date: **" + data.get("end_date") + "\n" : msg;
+        
+        if(data.has("synopsis")){
+            Matcher m = Pattern.compile("^[^\\n\\r<]+").matcher(StringEscapeUtils.unescapeHtml4(data.getString("synopsis")));
+            m.find();
+            msg = data.has("synopsis") ? msg + "\n**Synpsis: **\"" + m.group(0) + "\"\n" : msg;
+        }
 
+        msg = data.has("id") ? msg + "http://myanimelist.net/anime/" + data.get("id") + "/" : msg;
+        
         channel.sendMessage(msg);
         return true;
     }
