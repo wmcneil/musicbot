@@ -288,7 +288,7 @@ public class FredBoat {
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
         System.out.println("Shutdown JDA");
-        jedis.shutdown();
+        //jedis.shutdown();
         System.exit(code);
     }
 }
