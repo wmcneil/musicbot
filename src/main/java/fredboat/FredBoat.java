@@ -284,8 +284,10 @@ public class FredBoat {
     }
     
     public static void shutdown(int code) {
+        System.out.println("Shutting down with exit code " + code);
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
+        System.out.println("Shutdown JDA");
         jedis.shutdown();
         System.exit(code);
     }
