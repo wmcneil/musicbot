@@ -221,8 +221,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "pun", new RemoteFileCommand("http://i.imgur.com/2hFMrjt.png"));
         CommandRegistry.registerCommand(0x11, "die", new RemoteFileCommand("http://nekomata.moe/i/k2B0f6.png"));
         CommandRegistry.registerCommand(0x11, "stupid", new RemoteFileCommand("http://nekomata.moe/i/c056y7.png"));
-        CommandRegistry.registerCommand(0x11, "stop", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
-        CommandRegistry.registerAlias("stop", "cancer");
+        CommandRegistry.registerCommand(0x11, "cancer", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
         CommandRegistry.registerCommand(0x11, "stupidbot", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/183171963399700481/unknown.png"));
         CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
         CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
