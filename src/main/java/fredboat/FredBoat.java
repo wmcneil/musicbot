@@ -204,6 +204,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "eval", new EvalCommand());
         CommandRegistry.registerCommand(0x11, "s", new TextCommand("¯\\_(ツ)_/¯"));
         CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
+        CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("This command is useless."));
         CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
         CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
         CommandRegistry.registerCommand(0x11, "dump", new DumpCommand());
