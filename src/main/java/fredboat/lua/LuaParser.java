@@ -63,6 +63,7 @@ public class LuaParser {
         globals.load(new LuaDiscordLib(FredBoat.jdaBot));
 
         globals.set("require", LuaValue.NIL);
+        globals.set("package", LuaValue.NIL);
         globals.set("load", LuaValue.NIL);
         globals.set("loadfile", LuaValue.NIL);
         globals.set("dofile", LuaValue.NIL);
