@@ -33,7 +33,7 @@ public class EventLogger extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         getChannel().sendMessage(new MessageBuilder()
-                .appendString("[:white_check_mark:] Entered new guild " + event.getGuild() + ".")
+                .appendString("[:white_check_mark:] Entered new guild `" + event.getGuild() + "`.")
                 .build()
         );
     }
@@ -41,9 +41,13 @@ public class EventLogger extends ListenerAdapter {
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         getChannel().sendMessage(new MessageBuilder()
-                .appendString("[:x:] Left guild " + event.getGuild() + ".")
+                .appendString("[:x:] Left guild `" + event.getGuild() + "`.")
                 .build()
         );
+    }
+    
+    public void onExit(int code){
+        getChannel().sendMessage("Exiting with code `" + code + "`.");
     }
 
 }

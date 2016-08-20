@@ -49,6 +49,7 @@ import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.impl.JDAImpl;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
@@ -300,6 +301,13 @@ public class FredBoat {
     
     public static void shutdown(int code) {
         System.out.println("Shutting down with exit code " + code);
+        
+        for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()){
+            if(listener instanceof EventLogger){
+                ((EventLogger) listener).onExit(code);
+            }
+        }
+        
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
         System.out.println("Shutdown JDA");
