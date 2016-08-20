@@ -107,9 +107,8 @@ public class FredBoat {
         mashapeKey = credsjson.getString("mashapeKey");
         String cbUser = credsjson.getString("cbUser");
         String cbKey = credsjson.getString("cbKey");
-        String accountEmail = credsjson.getString("email");
-        String accountPassword = credsjson.getString("password");
-        MALPassword = credsjson.getString("password");
+        String clientToken = credsjson.getString("clientToken");
+        MALPassword = credsjson.getString("malPassword");
         String redisPassword = credsjson.getString("redisPassword");
 
         if (credsjson.has("scopePasswords")) {
@@ -127,7 +126,7 @@ public class FredBoat {
 
         fredboat.util.HttpUtils.init();
         jdaBot = new JDABuilder().addListener(listenerBot).setBotToken(accountToken).buildAsync();
-        jdaSelf = new JDAClientBuilder().addListener(listenerSelf).setEmail(accountEmail).setPassword(accountPassword).buildAsync();
+        jdaSelf = new JDAClientBuilder().addListener(listenerSelf).setClientToken(clientToken).buildAsync();
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
