@@ -53,6 +53,12 @@ import redis.clients.jedis.Jedis;
 
 public class FredBoat {
 
+    public static final String MAIN_BOT_ID = "150376112944447488";
+    public static final String MUSIC_BOT_ID = "150376112944447488";
+    public static final String BETA_BOT_ID = "152691313123393536";
+    
+    public static final String OTHER_BOT_ID = MUSIC_BOT_ID;
+    
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
