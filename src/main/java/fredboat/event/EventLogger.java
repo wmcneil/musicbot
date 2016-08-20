@@ -47,7 +47,7 @@ public class EventLogger extends ListenerAdapter {
     }
     
     public void onExit(int code){
-        getChannel().sendMessage("Exiting with code `" + code + "`.");
+        getChannel().sendMessage("[:zzz:] Exiting with code `" + code + "`.");
     }
 
 }
