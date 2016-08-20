@@ -33,6 +33,7 @@ import fredboat.command.util.UpdateCommand;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
+import fredboat.event.EventLogger;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.BufferedReader;
@@ -131,8 +132,17 @@ public class FredBoat {
         listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
 
         fredboat.util.HttpUtils.init();
-        jdaBot = new JDABuilder().addListener(listenerBot).setBotToken(accountToken).buildAsync();
-        jdaSelf = new JDAClientBuilder().addListener(listenerSelf).setClientToken(clientToken).buildAsync();
+        jdaBot = new JDABuilder()
+                .addListener(listenerBot)
+                .addListener(new EventLogger("216689009110417408"))
+                .setBotToken(accountToken)
+                .buildAsync();
+        
+        jdaSelf = new JDAClientBuilder()
+                .addListener(listenerSelf)
+                .setClientToken(clientToken)
+                .buildAsync();
+        
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
