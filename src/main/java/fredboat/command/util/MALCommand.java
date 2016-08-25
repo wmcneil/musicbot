@@ -97,7 +97,7 @@ public class MALCommand extends Command {
         if(data.has("synopsis")){
             Matcher m = Pattern.compile("^[^\\n\\r<]+").matcher(StringEscapeUtils.unescapeHtml4(data.getString("synopsis")));
             m.find();
-            msg = data.has("synopsis") ? msg + "\n**Synpsis: **\"" + m.group(0) + "\"\n" : msg;
+            msg = data.has("synopsis") ? msg + "\n**Synopsis: **\"" + m.group(0) + "\"\n" : msg;
         }
 
         msg = data.has("id") ? msg + "http://myanimelist.net/anime/" + data.get("id") + "/" : msg;
