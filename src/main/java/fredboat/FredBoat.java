@@ -227,7 +227,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "mal", new MALCommand());
 
         //Begin sergi memes//
-        CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("http://i.imgur.com/9g6SdtH.png"));
+        CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("http://i.imgur.com/yjpmmBk.gif"));
         CommandRegistry.registerCommand(0x11, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
         CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
         CommandRegistry.registerCommand(0x11, "idc", new RemoteFileCommand("http://i.imgur.com/0ZPjpNg.png"));
