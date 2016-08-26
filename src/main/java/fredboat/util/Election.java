@@ -1,4 +1,4 @@
-package fredboat.util.mafia;
+package fredboat.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
