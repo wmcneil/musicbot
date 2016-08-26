@@ -18,7 +18,6 @@ import fredboat.command.fun.RiotCommand;
 import fredboat.command.fun.RollCommand;
 import fredboat.command.fun.TalkCommand;
 import fredboat.command.fun.TextCommand;
-import fredboat.command.mafia.MafiaStartCommand;
 import fredboat.command.maintenance.EvalCommand;
 import fredboat.command.util.LuaCommand;
 import fredboat.command.maintenance.RestartCommand;
@@ -213,7 +212,6 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "restart", new RestartCommand());
         CommandRegistry.registerCommand(0x11, "find", new FindCommand());
         CommandRegistry.registerCommand(0x11, "dance", new DanceCommand());
-        CommandRegistry.registerCommand(0x11, "mafia", new MafiaStartCommand());
         CommandRegistry.registerAlias("mafia", "startmafia");
         CommandRegistry.registerAlias("mafia", "werewolf");
         CommandRegistry.registerAlias("mafia", "startwerewolf");
