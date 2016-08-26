@@ -11,8 +11,8 @@ import net.dv8tion.jda.JDA;
 
 public class CarbonAgent extends Thread {
 
-    public static final String CARBON_HOST = "192.210.193.136";
-    public static final int CARBON_PORT = 2003;
+    public final String carbonHost;
+    public final int CARBON_PORT = 2003;
     public final boolean logProductionStats;
     private int commandsExecutedLastSubmission = 0;
     private int messagesReceivedLastSubmission = 0;
@@ -20,8 +20,10 @@ public class CarbonAgent extends Thread {
     public final String buildStream;
     private int timesSubmitted = 0;
 
-    public CarbonAgent(JDA jda, String buildStream, boolean logProductionStats) {
+    
+    public CarbonAgent(JDA jda, String carbonHost, String buildStream, boolean logProductionStats) {
         this.jda = jda;
+        this.carbonHost = carbonHost;
         this.buildStream = buildStream;
         this.logProductionStats = logProductionStats;
     }
@@ -68,10 +70,10 @@ public class CarbonAgent extends Thread {
         messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
     }
 
-    public static void submitData(String path, String value) {
+    public void submitData(String path, String value) {
         try {
             String output = path + " " + value + " " + System.currentTimeMillis() / 1000;
-            Socket socket = new Socket(CARBON_HOST, CARBON_PORT);
+            Socket socket = new Socket(carbonHost, CARBON_PORT);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.writeBytes(output + "\n");
             dos.flush();

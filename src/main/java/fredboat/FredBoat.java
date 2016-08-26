@@ -117,6 +117,7 @@ public class FredBoat {
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
         String redisPassword = credsjson.getString("redisPassword");
+        String carbonHost = credsjson.optString("carbonHost");
 
         if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -161,9 +162,14 @@ public class FredBoat {
             carbonitexAgent.start();
         }
         
-        CarbonAgent carbonAgent = new CarbonAgent(jdaBot, IS_BETA ? "beta" : "production", !IS_BETA);
-        carbonAgent.setDaemon(true);
-        carbonAgent.start();
+        if(!carbonHost.equals("")){
+            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, IS_BETA ? "beta" : "production", !IS_BETA);
+            carbonAgent.setDaemon(true);
+            carbonAgent.start();
+            System.out.println("Started reporting to carbon-cache at " + carbonHost + ".");
+        } else {
+            System.out.println("No carbon host configured. Skipping carbon daemon.");
+        }
     }
 
     public static void init() {
