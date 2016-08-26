@@ -114,6 +114,7 @@ public class MALCommand extends Command {
         JSONArray items = root.getJSONArray("categories").getJSONObject(0).getJSONArray("items");
         if(items.length() == 0){
             channel.sendMessage(invoker.getUsername() + ": No results.");
+            return false;
         }
         
         JSONObject data = items.getJSONObject(0);
