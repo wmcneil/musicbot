@@ -249,7 +249,8 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
         CommandRegistry.registerCommand(0x11, "noods", new RemoteFileCommand("http://i.imgur.com/CUE3gm2.png"));
         CommandRegistry.registerCommand(0x11, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
-
+        CommandRegistry.registerCommand(0x11, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
+        
         CommandRegistry.registerCommand(0x11, "github", new TextCommand("https://github.com/Frederikam"));
         CommandRegistry.registerCommand(0x11, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
         
