@@ -213,16 +213,12 @@ public class FredBoat {
         CommandRegistry.registerAlias("leet", "l33t");
         CommandRegistry.registerCommand(0x11, "riot", new RiotCommand());
         CommandRegistry.registerCommand(0x11, "update", new UpdateCommand());
-        //CommandRegistry.registerCommand(0x11, "troll", new AudioTrollCommand());
-        //CommandRegistry.registerCommand(0x11, "endtroll", new EndTrollCommand());
         CommandRegistry.registerCommand(0x11, "restart", new RestartCommand());
         CommandRegistry.registerCommand(0x11, "find", new FindCommand());
         CommandRegistry.registerCommand(0x11, "dance", new DanceCommand());
-        CommandRegistry.registerAlias("mafia", "startmafia");
-        CommandRegistry.registerAlias("mafia", "werewolf");
-        CommandRegistry.registerAlias("mafia", "startwerewolf");
         CommandRegistry.registerCommand(0x11, "eval", new EvalCommand());
         CommandRegistry.registerCommand(0x11, "s", new TextCommand("¯\\_(ツ)_/¯"));
+        CommandRegistry.registerAlias("s", "shrug");
         CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
         CommandRegistry.registerCommand(0x11, "useless", new TextCommand("This command is useless."));
         CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
