@@ -258,16 +258,17 @@ public class FredBoat {
             "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif",
             "http://i4.photobucket.com/albums/y131/quentinlau/Blog/sola-02-Large15.jpg",
             "http://i.imgur.com/OYiSZWX.gif",
-            "https://cdn.discordapp.com/attachments/132490115137142784/182502254400503809/tumblr_nb0gnw9qgh1tbewqgo1_500.gif",
-            "https://cdn.discordapp.com/attachments/132490115137142784/182502347493212161/tumblr_nb8orpea161qa94xto1_500.gif",
+            "http://i.imgur.com/tmidE9Q.gif",
+            "http://i.imgur.com/CoW20gH.gif",
             "http://31.media.tumblr.com/e759f2da1f07de37832fc8269e99f1e7/tumblr_n3w02z954N1swm6rso1_500.gif",
             "https://media1.giphy.com/media/ye7OTQgwmVuVy/200.gif",
             "http://data.whicdn.com/images/224314340/large.gif",
-            "https://cdn.discordapp.com/attachments/143976784545841161/182504493760380930/tumblr_m24qp6UAfe1qcyi3ao1_500.gif",
-            "https://cdn.discordapp.com/attachments/143976784545841161/182505413982289922/cc9d7b5849745daff691a0b7c4bb9d23.jpg",
+            "http://i.imgur.com/BNiNMWC.gifv",
+            "http://i.imgur.com/9q6fkSK.jpg",
             "http://i.imgur.com/eOJlnwP.gif",
             "http://i.imgur.com/i7bklkm.gif",
-            "https://cdn.discordapp.com/attachments/132490115137142784/187129177848152066/lytB09W.jpg",
+            "http://i.imgur.com/fSDbKwf.jpg",
+            "https://66.media.tumblr.com/ec7472fef28b2cdf394dc85132c22ed8/tumblr_mx1asbwrBv1qbvovho1_500.gif",
         };
         CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
 
