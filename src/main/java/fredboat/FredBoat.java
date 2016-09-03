@@ -89,6 +89,8 @@ public class FredBoat {
     public static EventListenerBoat listenerBot;
     public static EventListenerSelf listenerSelf;
 
+    //TODO: google api key
+    
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
         FredBoat instance = new FredBoat();

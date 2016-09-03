@@ -27,6 +27,7 @@ import net.dv8tion.jda.hooks.ListenerAdapter;
 import fredboat.FredBoat;
 import static fredboat.FredBoat.jdaBot;
 import java.util.regex.Matcher;
+import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 
 public class EventListenerBoat extends ListenerAdapter {
 
@@ -197,6 +198,26 @@ public class EventListenerBoat extends ListenerAdapter {
     public void onAudioConnect(AudioConnectEvent event) {
         Runnable run = toRunOnConnectingToVoice.getOrDefault(event.getConnectedChannel(), onUnrequestedConnection);
         run.run();
+    }
+    
+    /* music related */
+    @Override
+    public void onVoiceLeave(VoiceLeaveEvent event) {
+        GuildPlayer player = PlayerRegistry.getExisting(event.getGuild());
+        
+        if(player == null) return;
+        
+        if (player.getUsersInVC().isEmpty()
+                && player.getUserCurrentVoiceChannel(jdaBot.getSelfInfo()) == event.getOldChannel()
+                && player.isPaused() == false
+                && player.isStopped() == false) {
+            try {
+                player.pause();
+            } catch (Exception ex) {
+
+            }
+            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.");
+        }
     }
 
 }
