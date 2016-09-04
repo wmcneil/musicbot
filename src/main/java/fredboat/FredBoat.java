@@ -7,7 +7,7 @@ import fredboat.audio.MusicPersistenceHandler;
 import fredboat.command.fun.*;
 import fredboat.command.util.*;
 import fredboat.command.maintenance.*;
-//import fredboat.command.music.*;
+import fredboat.command.music.*;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
@@ -35,9 +35,10 @@ public class FredBoat {
     public static final String MAIN_BOT_ID = "150376112944447488";
     public static final String MUSIC_BOT_ID = "150376112944447488";
     public static final String BETA_BOT_ID = "152691313123393536";
-    
+
     public static final String OTHER_BOT_ID = MUSIC_BOT_ID;
-    
+
+    public static int scopes = 0;
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
@@ -61,9 +62,20 @@ public class FredBoat {
     public static String myUserId = "";
 
     public static int readyEvents = 0;
-    public static final int READY_EVENTS_REQUIRED = 2;
-    
+    public static int readyEventsRequired = 0;
+
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
+        try {
+            scopes = Integer.parseInt(args[0]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+            System.out.println("Invalid arguments: " + args + ", defaulting to scopes 0x101");
+            scopes = 0x101;
+        }
+        System.out.println("Starting with scopes:"
+                + "\n\tMain: " + ((scopes & 0x100) == 0x100)
+                + "\n\tSelf: " + ((scopes & 0x010) == 0x010)
+                + "\n\tMusic: " + ((scopes & 0x001) == 0x001));
+
         //Load credentials file
         FredBoat instance = new FredBoat();
         InputStream is = new FileInputStream(new File("./credentials.json"));
@@ -84,7 +96,6 @@ public class FredBoat {
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
-        String cbUser = credsjson.getString("cbUser");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
         String carbonHost = credsjson.optString("carbonHost");
@@ -100,23 +111,41 @@ public class FredBoat {
         scanner.close();
 
         //Initialise event listeners
-        EventListenerBoat listenerBot = new EventListenerBoat(0x01, PREFIX);
-        EventListenerSelf listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
+        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x010, PREFIX);
+        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x101, SELF_PREFIX);
 
-        jdaBot = new JDABuilder()
-                .addListener(listenerBot)
-                .addListener(new EventLogger("216689009110417408"))
-                .setBotToken(accountToken)
-                .buildAsync();
         
-        jdaSelf = new JDAClientBuilder()
-                .addListener(listenerSelf)
-                .setClientToken(clientToken)
-                .buildAsync();
+        /* Init JDA */
+        //Doing increments here because concurrency
+        if ((scopes & 0x101) != 0) {
+            readyEventsRequired++;
+        }
         
+        if ((scopes & 0x010) != 0) {
+            readyEventsRequired++;
+        }
+        
+        if ((scopes & 0x101) != 0) {
+            jdaBot = new JDABuilder()
+                    .addListener(listenerBot)
+                    .addListener(new EventLogger("216689009110417408"))
+                    .setBotToken(accountToken)
+                    .buildAsync();
+        }
+
+        if ((scopes & 0x010) != 0) {
+            jdaSelf = new JDAClientBuilder()
+                    .addListener(listenerSelf)
+                    .setClientToken(clientToken)
+                    .buildAsync();
+        }
+        
+        /* JDA initialising */
+
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
+        String cbUser = credsjson.getString("cbUser");
         String cbKey = credsjson.getString("cbKey");
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
@@ -124,14 +153,14 @@ public class FredBoat {
         String redisHost = credsjson.getString("redisPassword");
         String redisPassword = credsjson.getString("redisPassword");
         RedisCache.init(redisHost, redisPassword);
-        
-        if(!IS_BETA){
+
+        if (!IS_BETA) {
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
-        
-        if(!carbonHost.equals("")){
+
+        if (!carbonHost.equals("")) {
             CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, IS_BETA ? "beta" : "production", !IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
@@ -139,11 +168,11 @@ public class FredBoat {
         } else {
             System.out.println("No carbon host configured. Skipping carbon daemon.");
         }
-        
+
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
         mgc.start();
-        
+
         MusicPersistenceHandler.reloadPlaylists();
     }
 
@@ -152,7 +181,7 @@ public class FredBoat {
 
         System.out.println("INIT: " + readyEvents);
 
-        if (readyEvents < READY_EVENTS_REQUIRED) {
+        if (readyEvents < readyEventsRequired) {
             return;
         }
 
@@ -167,7 +196,6 @@ public class FredBoat {
                 System.out.println("\t" + channel.getName());
             }
         }*/
-
         //Commands
         CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
         CommandRegistry.registerCommand(0x11, "version", new VersionCommand());
@@ -218,13 +246,13 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "noods", new RemoteFileCommand("http://i.imgur.com/CUE3gm2.png"));
         CommandRegistry.registerCommand(0x11, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
         CommandRegistry.registerCommand(0x11, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
-        
+
         //Other Anime Discord memes//
         CommandRegistry.registerCommand(0x11, "ram", new RemoteFileCommand("http://imgur.com/jeGVLk3"));
 
         CommandRegistry.registerCommand(0x11, "github", new TextCommand("https://github.com/Frederikam"));
         CommandRegistry.registerCommand(0x11, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
-        
+
         String[] pats = {
             "http://i.imgur.com/wF1ohrH.gif",
             "http://cdn.photonesta.com/images/i.imgur.com/I3yvqFL.gif",
@@ -240,8 +268,7 @@ public class FredBoat {
             "http://i.imgur.com/eOJlnwP.gif",
             "http://i.imgur.com/i7bklkm.gif",
             "http://i.imgur.com/fSDbKwf.jpg",
-            "https://66.media.tumblr.com/ec7472fef28b2cdf394dc85132c22ed8/tumblr_mx1asbwrBv1qbvovho1_500.gif",
-        };
+            "https://66.media.tumblr.com/ec7472fef28b2cdf394dc85132c22ed8/tumblr_mx1asbwrBv1qbvovho1_500.gif",};
         CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
 
         String[] facedesk = {
@@ -275,23 +302,23 @@ public class FredBoat {
 
         CommandRegistry.registerCommand(0x11, "roll", new RollCommand(roll));
     }
-    
+
     public static void shutdown(int code) {
         System.out.println("Shutting down with exit code " + code);
-        
+
         try {
             MusicPersistenceHandler.handlePreShutdown(code);
         } catch (Exception e) {
             System.out.println("Critical error while handling music persistence: ");
             e.printStackTrace();
         }
-        
-        for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()){
-            if(listener instanceof EventLogger){
+
+        for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()) {
+            if (listener instanceof EventLogger) {
                 ((EventLogger) listener).onExit(code);
             }
         }
-        
+
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
         System.exit(code);

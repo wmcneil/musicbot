@@ -18,7 +18,7 @@ public class CommandRegistry {
 
     public static CommandEntry getCommandFromScope(int scope, String name) {
         CommandEntry entry = registry.get(name);
-        if (entry != null && (entry.getScope() & scope) == scope) {
+        if (entry != null && (entry.getScope() & scope) != 0) {
             return entry;
         }
         return null;
