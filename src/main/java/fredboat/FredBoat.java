@@ -80,8 +80,6 @@ public class FredBoat {
             helpMsg = helpMsg + inputLine + "\n";
         }
         in.close();
-        helpMsg = helpMsg.replace("%CLIENT_ID%", CLIENT_ID);
-        helpMsg = helpMsg.replace("%SHRUG%", "¯\\_(ツ)_/¯");
 
         //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
@@ -285,8 +283,6 @@ public class FredBoat {
         
         jdaBot.shutdown(true);
         jdaSelf.shutdown(true);
-        System.out.println("Shutdown JDA");
-        //jedis.shutdown();
         System.exit(code);
     }
 }
