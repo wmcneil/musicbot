@@ -2,34 +2,12 @@ package fredboat;
 
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
-import fredboat.command.fun.DanceCommand;
-import fredboat.command.fun.FacedeskCommand;
-import fredboat.command.util.AvatarCommand;
-import fredboat.command.util.BrainfuckCommand;
-import fredboat.command.maintenance.DBGetCommand;
-import fredboat.command.maintenance.ExitCommand;
-import fredboat.command.util.FindCommand;
-import fredboat.command.util.HelpCommand;
-import fredboat.command.fun.JokeCommand;
-import fredboat.command.fun.LeetCommand;
-import fredboat.command.fun.PatCommand;
-import fredboat.command.fun.RemoteFileCommand;
-import fredboat.command.fun.RiotCommand;
-import fredboat.command.fun.RollCommand;
-import fredboat.command.fun.TalkCommand;
-import fredboat.command.fun.TextCommand;
-import fredboat.command.maintenance.EvalCommand;
-import fredboat.command.util.LuaCommand;
-import fredboat.command.maintenance.RestartCommand;
-import fredboat.command.util.SayCommand;
-import fredboat.command.maintenance.TestCommand;
-import fredboat.command.maintenance.UptimeCommand;
-import fredboat.command.maintenance.VersionCommand;
-import fredboat.command.util.ClearCommand;
-import fredboat.command.util.DumpCommand;
-import fredboat.command.util.MALCommand;
-import fredboat.command.util.UpdateCommand;
+import fredboat.command.fun.*;
+import fredboat.command.util.*;
+import fredboat.command.maintenance.*;
+//import fredboat.command.music.*;
 import fredboat.commandmeta.CommandRegistry;
+import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
@@ -50,7 +28,6 @@ import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import org.json.JSONObject;
-import redis.clients.jedis.Jedis;
 
 public class FredBoat {
 
@@ -79,6 +56,7 @@ public class FredBoat {
     public static String mashapeKey;
     public static String helpMsg = "";
     public static String MALPassword;
+    public static String googleServerKey = "";
 
     public static String myUserId = "";
     public static volatile User myUser;
@@ -118,8 +96,10 @@ public class FredBoat {
         String cbKey = credsjson.getString("cbKey");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
+        String redisHost = credsjson.getString("redisPassword");
         String redisPassword = credsjson.getString("redisPassword");
         String carbonHost = credsjson.optString("carbonHost");
+        googleServerKey = credsjson.optString("googleServerKey");
 
         if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -151,12 +131,7 @@ public class FredBoat {
         //Initialise JCA
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
-        try {
-            jedis = new Jedis("frednet3.revgamesrblx.com", 6379);
-            jedis.auth(redisPassword);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        RedisCache.init(credsjson.getString("redisHost"), credsjson.getString("redisPass"));
         
         if(!IS_BETA){
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
