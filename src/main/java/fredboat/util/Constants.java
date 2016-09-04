@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class CommonConstants {
+public class Constants {
     
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static final String DEFAULT_BOT_PREFIX = IS_BETA ? "¤" : ";;";
@@ -24,7 +24,7 @@ public class CommonConstants {
         try {
             String str = "";
             
-            InputStream helpIS = new CommonConstants().getClass().getClassLoader().getResourceAsStream("help.txt");
+            InputStream helpIS = new Constants().getClass().getClassLoader().getResourceAsStream("help.txt");
             BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
             
             String inputLine;
