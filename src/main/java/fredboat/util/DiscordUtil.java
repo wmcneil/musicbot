@@ -23,13 +23,13 @@ public class DiscordUtil {
     
     public static boolean isMainBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
-        User other = jda.getUserById(FredBoat.MAIN_BOT_ID);
+        User other = jda.getUserById(BotConstants.MAIN_BOT_ID);
         return guild.getUsers().contains(other);
     }
     
     public static boolean isMusicBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
-        User other = jda.getUserById(FredBoat.MUSIC_BOT_ID);
+        User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
         return guild.getUsers().contains(other);
     }
     

@@ -13,14 +13,13 @@ import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
+import fredboat.util.BotConstants;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
@@ -33,30 +32,21 @@ import org.json.JSONObject;
 
 public class FredBoat {
 
-    public static final String MAIN_BOT_ID = "150376112944447488";
-    public static final String MUSIC_BOT_ID = "150376112944447488";
-    public static final String BETA_BOT_ID = "152691313123393536";
-
     public static String otherBotId = "";
 
     public static int scopes = 0;
-    public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
     public static JCA jca;
-    public static final String PREFIX = IS_BETA ? "¤" : ";;";
-    public static final String SELF_PREFIX = IS_BETA ? "::" : "<<";
-    public static final String OWNER_ID = "81011298891993088";
     public static final long START_TIME = System.currentTimeMillis();
     //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
     //public static final String ACCOUNT_PASSWORD_KEY = IS_BETA ? "passwordBeta" : "passwordProduction";
-    public static final String ACCOUNT_TOKEN_KEY = IS_BETA ? "tokenBeta" : "tokenProduction";
+    public static final String ACCOUNT_TOKEN_KEY = BotConstants.IS_BETA ? "tokenBeta" : "tokenProduction";
     private static String accountToken;
-    public static String CLIENT_ID = IS_BETA ? "168672778860494849" : "168686772216135681";
     //public static String accountEmail = IS_BETA ? "frederikmikkelsen2@outlook.com" : "frederikmikkelsen@outlook.com";
     //private static String accountPassword;
     public static String mashapeKey;
-    public static String helpMsg = "";
+    
     public static String MALPassword;
     public static String googleServerKey = "";
 
@@ -78,7 +68,7 @@ public class FredBoat {
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
         //Determine what the "other bot" is
-        otherBotId = ((scopes & 0x010) == 0x010) ? MAIN_BOT_ID : MUSIC_BOT_ID;
+        otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
 
         //Load credentials file
         FredBoat instance = new FredBoat();
@@ -86,15 +76,6 @@ public class FredBoat {
         //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
-
-        InputStream helpIS = instance.getClass().getClassLoader().getResourceAsStream("help.txt");
-        BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
-
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            helpMsg = helpMsg + inputLine + "\n";
-        }
-        in.close();
 
         //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
@@ -115,8 +96,8 @@ public class FredBoat {
         scanner.close();
 
         //Initialise event listeners
-        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, PREFIX);
-        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, SELF_PREFIX);
+        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
+        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
 
         /* Init JDA */
         //Doing increments here because concurrency
@@ -156,14 +137,14 @@ public class FredBoat {
         String redisPassword = credsjson.getString("redisPass");
         RedisCache.init(redisHost, redisPassword);
 
-        if (!IS_BETA) {
+        if (!BotConstants.IS_BETA) {
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
 
         if (!carbonHost.equals("")) {
-            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, IS_BETA ? "beta" : "production", !IS_BETA);
+            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, BotConstants.IS_BETA ? "beta" : "production", !BotConstants.IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
             System.out.println("Started reporting to carbon-cache at " + carbonHost + ".");
@@ -185,10 +166,6 @@ public class FredBoat {
 
         if (readyEvents < readyEventsRequired) {
             return;
-        }
-
-        if (IS_BETA) {
-            helpMsg = helpMsg + "\n\n**This is the beta version of Fredboat. Are you sure you are not looking for the non-beta version \"FredBoat\"?**";
         }
 
         /*for (Guild guild : jdaBot.getGuilds()) {

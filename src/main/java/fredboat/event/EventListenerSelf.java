@@ -11,6 +11,7 @@ import fredboat.commandmeta.CommandRegistry;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import fredboat.FredBoat;
+import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.ReadyEvent;
 
@@ -26,7 +27,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().getId().equals(FredBoat.OWNER_ID)) {
+        if (!event.getAuthor().getId().equals(BotConstants.OWNER_ID)) {
             return;
         }
 

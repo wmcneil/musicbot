@@ -1,6 +1,7 @@
 package fredboat.commandmeta;
 
 import fredboat.FredBoat;
+import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class CommandManager {
         if (invoked instanceof ICommandOwnerRestricted) {
             //This command is restricted to only Frederikam
             //Check if invoker is actually Frederikam
-            if (!invoker.getId().equals(FredBoat.OWNER_ID)) {
+            if (!invoker.getId().equals(BotConstants.OWNER_ID)) {
                 channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!"));
                 return;
             }

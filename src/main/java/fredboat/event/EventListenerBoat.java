@@ -26,6 +26,7 @@ import fredboat.FredBoat;
 import static fredboat.FredBoat.jdaBot;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
+import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 
@@ -121,7 +122,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        event.getChannel().sendMessage(FredBoat.helpMsg);
+        event.getChannel().sendMessage(BotConstants.HELP_TEXT);
         lastUserToReceiveHelp = event.getAuthor();
     }
 
@@ -129,7 +130,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     public void onInviteReceived(InviteReceivedEvent event) {
         if (event.getMessage().isPrivate()) {
             event.getAuthor().getPrivateChannel().sendMessage("Sorry! Since the release of the official API, registered bots must now be invited by someone with Manage **Server permissions**. If you have permissions, you can invite me at:\n"
-                    + "https://discordapp.com/oauth2/authorize?&client_id=" + FredBoat.CLIENT_ID + "&scope=bot");
+                    + "https://discordapp.com/oauth2/authorize?&client_id=" + BotConstants.CLIENT_ID + "&scope=bot");
             /*
             //System.out.println(event.getInvite().getUrl());
             //InviteUtil.join(event.getInvite(), FredBoat.jda);
