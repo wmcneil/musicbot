@@ -14,15 +14,12 @@ import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.events.InviteReceivedEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ReconnectedEvent;
-import net.dv8tion.jda.events.audio.AudioConnectEvent;
 import net.dv8tion.jda.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
-import fredboat.FredBoat;
 import static fredboat.FredBoat.jdaBot;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
@@ -33,7 +30,6 @@ import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 public class EventListenerBoat extends AbstractScopedEventListener {
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
-    public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
     public User lastUserToReceiveHelp;
 
     public static int messagesReceived = 0;
@@ -181,19 +177,6 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     @Override
     public void onReconnect(ReconnectedEvent event) {
         jdaBot.getAccountManager().setGame("Say ;;help");
-    }
-
-    public static Runnable onUnrequestedConnection = new Runnable() {
-        @Override
-        public void run() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    };
-
-    @Override
-    public void onAudioConnect(AudioConnectEvent event) {
-        Runnable run = toRunOnConnectingToVoice.getOrDefault(event.getConnectedChannel(), onUnrequestedConnection);
-        run.run();
     }
 
     /* music related */
