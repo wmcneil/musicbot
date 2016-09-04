@@ -97,7 +97,7 @@ public class FredBoat {
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
-        MALPassword = credsjson.getString("malPassword");
+        MALPassword = credsjson.getString("malPass");
         String carbonHost = credsjson.optString("carbonHost");
         googleServerKey = credsjson.optString("googleServerKey");
 
