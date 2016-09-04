@@ -73,8 +73,8 @@ public class FredBoat {
         }
         System.out.println("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
-                + "\n\tSelf: " + ((scopes & 0x010) == 0x010)
-                + "\n\tMusic: " + ((scopes & 0x001) == 0x001));
+                + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
+                + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
         //Load credentials file
         FredBoat instance = new FredBoat();
@@ -111,21 +111,21 @@ public class FredBoat {
         scanner.close();
 
         //Initialise event listeners
-        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x010, PREFIX);
-        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x101, SELF_PREFIX);
+        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, PREFIX);
+        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, SELF_PREFIX);
 
         
         /* Init JDA */
         //Doing increments here because concurrency
-        if ((scopes & 0x101) != 0) {
+        if ((scopes & 0x110) != 0) {
             readyEventsRequired++;
         }
         
-        if ((scopes & 0x010) != 0) {
+        if ((scopes & 0x001) != 0) {
             readyEventsRequired++;
         }
         
-        if ((scopes & 0x101) != 0) {
+        if ((scopes & 0x110) != 0) {
             jdaBot = new JDABuilder()
                     .addListener(listenerBot)
                     .addListener(new EventLogger("216689009110417408"))
@@ -133,7 +133,7 @@ public class FredBoat {
                     .buildAsync();
         }
 
-        if ((scopes & 0x010) != 0) {
+        if ((scopes & 0x001) != 0) {
             jdaSelf = new JDAClientBuilder()
                     .addListener(listenerSelf)
                     .setClientToken(clientToken)
@@ -226,7 +226,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x11, "mal", new MALCommand());
 
-        //Begin sergi memes//
+        /* Begin sergi memes */
         CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("http://i.imgur.com/yjpmmBk.gif"));
         CommandRegistry.registerCommand(0x11, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
         CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
@@ -247,7 +247,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x11, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
         CommandRegistry.registerCommand(0x11, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
 
-        //Other Anime Discord memes//
+        /* Other Anime Discord memes */
         CommandRegistry.registerCommand(0x11, "ram", new RemoteFileCommand("http://imgur.com/jeGVLk3"));
 
         CommandRegistry.registerCommand(0x11, "github", new TextCommand("https://github.com/Frederikam"));
