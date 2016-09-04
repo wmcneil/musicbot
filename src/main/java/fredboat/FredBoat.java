@@ -85,11 +85,8 @@ public class FredBoat {
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String cbUser = credsjson.getString("cbUser");
-        String cbKey = credsjson.getString("cbKey");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
-        String redisHost = credsjson.getString("redisPassword");
-        String redisPassword = credsjson.getString("redisPassword");
         String carbonHost = credsjson.optString("carbonHost");
         googleServerKey = credsjson.optString("googleServerKey");
 
@@ -106,7 +103,6 @@ public class FredBoat {
         EventListenerBoat listenerBot = new EventListenerBoat(0x01, PREFIX);
         EventListenerSelf listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
 
-        fredboat.util.HttpUtils.init();
         jdaBot = new JDABuilder()
                 .addListener(listenerBot)
                 .addListener(new EventLogger("216689009110417408"))
@@ -121,9 +117,13 @@ public class FredBoat {
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
+        String cbKey = credsjson.getString("cbKey");
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
-        RedisCache.init(credsjson.getString("redisHost"), credsjson.getString("redisPass"));
+        //Redis
+        String redisHost = credsjson.getString("redisPassword");
+        String redisPassword = credsjson.getString("redisPassword");
+        RedisCache.init(redisHost, redisPassword);
         
         if(!IS_BETA){
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
@@ -171,7 +171,6 @@ public class FredBoat {
         //Commands
         CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
         CommandRegistry.registerCommand(0x11, "version", new VersionCommand());
-        CommandRegistry.registerCommand(0x11, "dbget", new DBGetCommand());
         CommandRegistry.registerCommand(0x11, "say", new SayCommand());
         CommandRegistry.registerCommand(0x11, "uptime", new UptimeCommand());
         CommandRegistry.registerAlias("uptime", "stats");
