@@ -62,9 +62,6 @@ public class FredBoat {
 
     public static int readyEvents = 0;
     public static final int READY_EVENTS_REQUIRED = 2;
-
-    public static EventListenerBoat listenerBot;
-    public static EventListenerSelf listenerSelf;
     
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
@@ -106,8 +103,8 @@ public class FredBoat {
         scanner.close();
 
         //Initialise event listeners
-        listenerBot = new EventListenerBoat(0x01, PREFIX);
-        listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
+        EventListenerBoat listenerBot = new EventListenerBoat(0x01, PREFIX);
+        EventListenerSelf listenerSelf = new EventListenerSelf(0x10, SELF_PREFIX);
 
         fredboat.util.HttpUtils.init();
         jdaBot = new JDABuilder()
