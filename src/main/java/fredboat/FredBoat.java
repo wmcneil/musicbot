@@ -97,7 +97,7 @@ public class FredBoat {
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
-        MALPassword = credsjson.getString("malPass");
+        MALPassword = credsjson.getString("malPassword");
         String carbonHost = credsjson.optString("carbonHost");
         googleServerKey = credsjson.optString("googleServerKey");
 
@@ -150,8 +150,8 @@ public class FredBoat {
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
         //Redis
-        String redisHost = credsjson.getString("redisPassword");
-        String redisPassword = credsjson.getString("redisPassword");
+        String redisHost = credsjson.getString("redisHost");
+        String redisPassword = credsjson.getString("redisPass");
         RedisCache.init(redisHost, redisPassword);
 
         if (!IS_BETA) {
