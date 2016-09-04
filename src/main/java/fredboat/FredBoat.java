@@ -5,6 +5,7 @@ import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.MusicGC;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.MusicQueueProcessor;
 import fredboat.command.fun.*;
 import fredboat.command.util.*;
 import fredboat.command.maintenance.*;
@@ -149,6 +150,10 @@ public class FredBoat {
             System.out.println("No carbon host configured. Skipping carbon daemon.");
         }
 
+        MusicQueueProcessor mqp = new MusicQueueProcessor();
+        mqp.setDaemon(true);
+        mqp.start();
+        
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
         mgc.start();
