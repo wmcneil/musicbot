@@ -31,6 +31,7 @@ public class CommandManager {
         }
         if(invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)){
             System.out.println("Ignored command because main bot is present");
+            return;
         }
         try {
             invoked.onInvoke(guild, channel, invoker, message, args);
