@@ -11,7 +11,6 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.User;
@@ -23,7 +22,6 @@ import net.dv8tion.jda.events.audio.AudioConnectEvent;
 import net.dv8tion.jda.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
 import fredboat.FredBoat;
 import static fredboat.FredBoat.jdaBot;
 import fredboat.audio.GuildPlayer;
@@ -31,21 +29,16 @@ import fredboat.audio.PlayerRegistry;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 
-public class EventListenerBoat extends ListenerAdapter {
+public class EventListenerBoat extends AbstractScopedEventListener {
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
     public User lastUserToReceiveHelp;
-    public final int scope;
-    public final String prefix;
-    private final Pattern commandNamePrefix;
-    
+
     public static int messagesReceived = 0;
 
-    public EventListenerBoat(int scope, String prefix) {
-        this.scope = scope;
-        this.prefix = prefix;
-        this.commandNamePrefix = Pattern.compile("(\\w+)");
+    public EventListenerBoat(int scope, String defaultPrefix) {
+        super(scope, defaultPrefix);
     }
 
     @Override
@@ -54,9 +47,9 @@ public class EventListenerBoat extends ListenerAdapter {
         System.out.println(event);
         System.out.println(event.getAuthor());
         System.out.println(event.getAuthor().getId());*/
-        
+
         messagesReceived++;
-        
+
         if (event.getPrivateChannel() != null) {
             System.out.println("PRIVATE" + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             return;
@@ -67,7 +60,7 @@ public class EventListenerBoat extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContent().length() < prefix.length()) {
+        if (event.getMessage().getContent().length() < defaultPrefix.length()) {
             return;
         }
 
@@ -76,7 +69,7 @@ public class EventListenerBoat extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContent().substring(0, prefix.length()).equals(prefix)) {
+        if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
             String cmdName;
             Command invoked = null;
             try {
@@ -180,7 +173,7 @@ public class EventListenerBoat extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        FredBoat.init();
+        super.onReady(event);
         jdaBot.getAccountManager().setGame("Say ;;help");
     }
 
@@ -201,14 +194,16 @@ public class EventListenerBoat extends ListenerAdapter {
         Runnable run = toRunOnConnectingToVoice.getOrDefault(event.getConnectedChannel(), onUnrequestedConnection);
         run.run();
     }
-    
+
     /* music related */
     @Override
     public void onVoiceLeave(VoiceLeaveEvent event) {
         GuildPlayer player = PlayerRegistry.getExisting(event.getGuild());
-        
-        if(player == null) return;
-        
+
+        if (player == null) {
+            return;
+        }
+
         if (player.getUsersInVC().isEmpty()
                 && player.getUserCurrentVoiceChannel(jdaBot.getSelfInfo()) == event.getOldChannel()
                 && player.isPaused() == false

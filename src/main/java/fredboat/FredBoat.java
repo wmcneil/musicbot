@@ -28,6 +28,7 @@ import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.entities.impl.JDAImpl;
+import net.dv8tion.jda.events.ReadyEvent;
 import org.json.JSONObject;
 
 public class FredBoat {
@@ -69,7 +70,7 @@ public class FredBoat {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             System.out.println("Invalid arguments: " + args + ", defaulting to scopes 0x101");
-            scopes = 0x101;
+            scopes = 0x110;
         }
         System.out.println("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
@@ -176,10 +177,10 @@ public class FredBoat {
         MusicPersistenceHandler.reloadPlaylists();
     }
 
-    public static void init() {
+    public static void init(ReadyEvent event) {
         readyEvents = readyEvents + 1;
 
-        System.out.println("INIT: " + readyEvents);
+        System.out.println("INIT: " + readyEvents + "/" + readyEventsRequired);
 
         if (readyEvents < readyEventsRequired) {
             return;
