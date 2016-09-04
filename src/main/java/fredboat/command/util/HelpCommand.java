@@ -6,8 +6,9 @@ import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import fredboat.commandmeta.IMusicBackupCommand;
 
-public class HelpCommand extends Command {
+public class HelpCommand extends Command implements IMusicBackupCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {

@@ -37,7 +37,7 @@ public class FredBoat {
     public static final String MUSIC_BOT_ID = "150376112944447488";
     public static final String BETA_BOT_ID = "152691313123393536";
 
-    public static final String OTHER_BOT_ID = MUSIC_BOT_ID;
+    public static String otherBotId = "";
 
     public static int scopes = 0;
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
@@ -77,6 +77,9 @@ public class FredBoat {
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
+        //Determine what the "other bot" is
+        otherBotId = ((scopes & 0x010) == 0x010) ? MAIN_BOT_ID : MUSIC_BOT_ID;
+
         //Load credentials file
         FredBoat instance = new FredBoat();
         InputStream is = new FileInputStream(new File("./credentials.json"));
@@ -115,17 +118,16 @@ public class FredBoat {
         EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, PREFIX);
         EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, SELF_PREFIX);
 
-        
         /* Init JDA */
         //Doing increments here because concurrency
         if ((scopes & 0x110) != 0) {
             readyEventsRequired++;
         }
-        
+
         if ((scopes & 0x001) != 0) {
             readyEventsRequired++;
         }
-        
+
         if ((scopes & 0x110) != 0) {
             jdaBot = new JDABuilder()
                     .addListener(listenerBot)
@@ -140,9 +142,8 @@ public class FredBoat {
                     .setClientToken(clientToken)
                     .buildAsync();
         }
-        
-        /* JDA initialising */
 
+        /* JDA initialising */
         System.out.println("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
