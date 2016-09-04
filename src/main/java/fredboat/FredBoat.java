@@ -4,6 +4,7 @@ import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.MusicGC;
 import fredboat.audio.MusicPersistenceHandler;
+import fredboat.audio.PlayerRegistry;
 import fredboat.command.fun.*;
 import fredboat.command.util.*;
 import fredboat.command.maintenance.*;
@@ -56,7 +57,7 @@ public class FredBoat {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             System.out.println("Invalid arguments: " + args + ", defaulting to scopes 0x101");
-            scopes = 0x110;
+            scopes = 0x010;
         }
         System.out.println("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
@@ -163,6 +164,9 @@ public class FredBoat {
         if (readyEvents < readyEventsRequired) {
             return;
         }
+        
+        //Init music system
+        PlayerRegistry.init(jdaBot);
 
         /*for (Guild guild : jdaBot.getGuilds()) {
             System.out.println(guild.getName());
