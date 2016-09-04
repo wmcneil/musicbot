@@ -1,7 +1,9 @@
 package fredboat.agent;
 
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.event.EventListenerBoat;
+import fredboat.util.DiscordUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -60,6 +62,9 @@ public class CarbonAgent extends Thread {
         
         if (logProductionStats) {
             submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+            if(DiscordUtil.isMusicBot()){
+                submitData("carbon.fredboat.playersPlaying.music", String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
+            }
         }
     }
 
