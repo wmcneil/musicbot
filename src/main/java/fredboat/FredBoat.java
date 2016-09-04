@@ -3,6 +3,7 @@ package fredboat;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.MusicGC;
+import fredboat.audio.MusicPersistenceHandler;
 import fredboat.command.fun.*;
 import fredboat.command.util.*;
 import fredboat.command.maintenance.*;
@@ -145,6 +146,8 @@ public class FredBoat {
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
         mgc.start();
+        
+        MusicPersistenceHandler.reloadPlaylists();
     }
 
     public static void init() {
@@ -279,6 +282,13 @@ public class FredBoat {
     
     public static void shutdown(int code) {
         System.out.println("Shutting down with exit code " + code);
+        
+        try {
+            MusicPersistenceHandler.handlePreShutdown(code);
+        } catch (Exception e) {
+            System.out.println("Critical error while handling music persistence: ");
+            e.printStackTrace();
+        }
         
         for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()){
             if(listener instanceof EventLogger){
