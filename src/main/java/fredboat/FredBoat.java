@@ -197,61 +197,82 @@ public class FredBoat {
             }
         }*/
         //Commands
-        CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
-        CommandRegistry.registerCommand(0x11, "version", new VersionCommand());
-        CommandRegistry.registerCommand(0x11, "say", new SayCommand());
-        CommandRegistry.registerCommand(0x11, "uptime", new UptimeCommand());
+        CommandRegistry.registerCommand(0x110, "help", new HelpCommand());
+        CommandRegistry.registerCommand(0x101, "version", new VersionCommand());
+        CommandRegistry.registerCommand(0x101, "say", new SayCommand());
+        CommandRegistry.registerCommand(0x101, "uptime", new StatsCommand());
         CommandRegistry.registerAlias("uptime", "stats");
-        CommandRegistry.registerCommand(0x11, "exit", new ExitCommand());
-        CommandRegistry.registerCommand(0x11, "avatar", new AvatarCommand());
-        CommandRegistry.registerCommand(0x11, "test", new TestCommand());
-        CommandRegistry.registerCommand(0x11, "lua", new LuaCommand());
-        CommandRegistry.registerCommand(0x11, "brainfuck", new BrainfuckCommand());
-        CommandRegistry.registerCommand(0x11, "joke", new JokeCommand());
-        CommandRegistry.registerCommand(0x11, "leet", new LeetCommand());
+        CommandRegistry.registerCommand(0x101, "exit", new ExitCommand());
+        CommandRegistry.registerCommand(0x101, "avatar", new AvatarCommand());
+        CommandRegistry.registerCommand(0x101, "test", new TestCommand());
+        CommandRegistry.registerCommand(0x101, "lua", new LuaCommand());
+        CommandRegistry.registerCommand(0x101, "brainfuck", new BrainfuckCommand());
+        CommandRegistry.registerCommand(0x101, "joke", new JokeCommand());
+        CommandRegistry.registerCommand(0x101, "leet", new LeetCommand());
         CommandRegistry.registerAlias("leet", "1337");
         CommandRegistry.registerAlias("leet", "l33t");
-        CommandRegistry.registerCommand(0x11, "riot", new RiotCommand());
-        CommandRegistry.registerCommand(0x11, "update", new UpdateCommand());
-        CommandRegistry.registerCommand(0x11, "restart", new RestartCommand());
-        CommandRegistry.registerCommand(0x11, "find", new FindCommand());
-        CommandRegistry.registerCommand(0x11, "dance", new DanceCommand());
-        CommandRegistry.registerCommand(0x11, "eval", new EvalCommand());
-        CommandRegistry.registerCommand(0x11, "s", new TextCommand("¯\\_(ツ)_/¯"));
+        CommandRegistry.registerCommand(0x101, "riot", new RiotCommand());
+        CommandRegistry.registerCommand(0x101, "update", new UpdateCommand());
+        CommandRegistry.registerCommand(0x101, "restart", new RestartCommand());
+        CommandRegistry.registerCommand(0x101, "find", new FindCommand());
+        CommandRegistry.registerCommand(0x101, "dance", new DanceCommand());
+        CommandRegistry.registerCommand(0x101, "eval", new EvalCommand());
+        CommandRegistry.registerCommand(0x101, "s", new TextCommand("¯\\_(ツ)_/¯"));
         CommandRegistry.registerAlias("s", "shrug");
-        CommandRegistry.registerCommand(0x11, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
-        CommandRegistry.registerCommand(0x11, "useless", new TextCommand("This command is useless."));
-        CommandRegistry.registerCommand(0x11, "clear", new ClearCommand());
-        CommandRegistry.registerCommand(0x11, "talk", new TalkCommand());
-        CommandRegistry.registerCommand(0x11, "dump", new DumpCommand());
-        CommandRegistry.registerCommand(0x11, "mal", new MALCommand());
+        CommandRegistry.registerCommand(0x101, "lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
+        CommandRegistry.registerCommand(0x101, "useless", new TextCommand("This command is useless."));
+        CommandRegistry.registerCommand(0x101, "clear", new ClearCommand());
+        CommandRegistry.registerCommand(0x101, "talk", new TalkCommand());
+        CommandRegistry.registerCommand(0x101, "dump", new DumpCommand());
+        CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
 
-        /* Begin sergi memes */
-        CommandRegistry.registerCommand(0x11, "welcome", new RemoteFileCommand("http://i.imgur.com/yjpmmBk.gif"));
-        CommandRegistry.registerCommand(0x11, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
-        CommandRegistry.registerCommand(0x11, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
-        CommandRegistry.registerCommand(0x11, "idc", new RemoteFileCommand("http://i.imgur.com/0ZPjpNg.png"));
-        CommandRegistry.registerCommand(0x11, "beingraped", new RemoteFileCommand("http://i.imgur.com/dPsYRYV.png"));
-        CommandRegistry.registerCommand(0x11, "anime", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/177751190333816834/animeeee.png"));
-        CommandRegistry.registerCommand(0x11, "wow", new RemoteFileCommand("http://img.prntscr.com/img?url=http://i.imgur.com/aexiMAG.png"));
-        CommandRegistry.registerCommand(0x11, "what", new RemoteFileCommand("http://i.imgur.com/CTLraK4.png"));
-        CommandRegistry.registerCommand(0x11, "pun", new RemoteFileCommand("http://i.imgur.com/2hFMrjt.png"));
-        CommandRegistry.registerCommand(0x11, "die", new RemoteFileCommand("http://nekomata.moe/i/k2B0f6.png"));
-        CommandRegistry.registerCommand(0x11, "stupid", new RemoteFileCommand("http://nekomata.moe/i/c056y7.png"));
-        CommandRegistry.registerCommand(0x11, "cancer", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
-        CommandRegistry.registerCommand(0x11, "stupidbot", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/183171963399700481/unknown.png"));
-        CommandRegistry.registerCommand(0x11, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
-        CommandRegistry.registerCommand(0x11, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
-        CommandRegistry.registerCommand(0x11, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
-        CommandRegistry.registerCommand(0x11, "noods", new RemoteFileCommand("http://i.imgur.com/CUE3gm2.png"));
-        CommandRegistry.registerCommand(0x11, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
-        CommandRegistry.registerCommand(0x11, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
+        /* Music commands */
+        CommandRegistry.registerCommand(0x010, "mexit", new ExitCommand());
+        CommandRegistry.registerCommand(0x010, "mrestart", new RestartCommand());
+        CommandRegistry.registerCommand(0x010, "mstats", new StatsCommand());
+        CommandRegistry.registerCommand(0x010, "play", new PlayCommand());
+        CommandRegistry.registerCommand(0x010, "minfo", new MusicInfoCommand());
+        CommandRegistry.registerCommand(0x010, "meval", new EvalCommand());
+        CommandRegistry.registerCommand(0x010, "skip", new SkipCommand());
+        CommandRegistry.registerCommand(0x010, "join", new JoinCommand());
+        CommandRegistry.registerCommand(0x010, "nowplaying", new NowplayingCommand());
+        CommandRegistry.registerCommand(0x010, "leave", new LeaveCommand());
+        CommandRegistry.registerCommand(0x010, "list", new ListCommand());
+        CommandRegistry.registerCommand(0x010, "mupdate", new UpdateCommand());
+        CommandRegistry.registerCommand(0x010, "select", new SelectCommand());
+        CommandRegistry.registerCommand(0x010, "stop", new StopCommand());
+        CommandRegistry.registerCommand(0x010, "pause", new PauseCommand());
+        CommandRegistry.registerCommand(0x010, "unpause", new UnpauseCommand());
+        CommandRegistry.registerCommand(0x010, "getid", new GetIdCommand());
+        CommandRegistry.registerCommand(0x010, "shuffle", new ShuffleCommand());
+        CommandRegistry.registerCommand(0x010, "repeat", new RepeatCommand());
+        CommandRegistry.registerCommand(0x010, "volume", new VolumeCommand());
+        CommandRegistry.registerCommand(0x010, "playerdebug", new PlayerDebugCommand());
 
-        /* Other Anime Discord memes */
-        CommandRegistry.registerCommand(0x11, "ram", new RemoteFileCommand("http://imgur.com/jeGVLk3"));
+        /* Other Anime Discord or Sergi memes */
+        CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://imgur.com/jeGVLk3"));
+        CommandRegistry.registerCommand(0x101, "welcome", new RemoteFileCommand("http://i.imgur.com/yjpmmBk.gif"));
+        CommandRegistry.registerCommand(0x101, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
+        CommandRegistry.registerCommand(0x101, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
+        CommandRegistry.registerCommand(0x101, "idc", new RemoteFileCommand("http://i.imgur.com/0ZPjpNg.png"));
+        CommandRegistry.registerCommand(0x101, "beingraped", new RemoteFileCommand("http://i.imgur.com/dPsYRYV.png"));
+        CommandRegistry.registerCommand(0x101, "anime", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/177751190333816834/animeeee.png"));
+        CommandRegistry.registerCommand(0x101, "wow", new RemoteFileCommand("http://img.prntscr.com/img?url=http://i.imgur.com/aexiMAG.png"));
+        CommandRegistry.registerCommand(0x101, "what", new RemoteFileCommand("http://i.imgur.com/CTLraK4.png"));
+        CommandRegistry.registerCommand(0x101, "pun", new RemoteFileCommand("http://i.imgur.com/2hFMrjt.png"));
+        CommandRegistry.registerCommand(0x101, "die", new RemoteFileCommand("http://nekomata.moe/i/k2B0f6.png"));
+        CommandRegistry.registerCommand(0x101, "stupid", new RemoteFileCommand("http://nekomata.moe/i/c056y7.png"));
+        CommandRegistry.registerCommand(0x101, "cancer", new RemoteFileCommand("http://puu.sh/oQN2j/8e09872842.jpg"));
+        CommandRegistry.registerCommand(0x101, "stupidbot", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/183171963399700481/unknown.png"));
+        CommandRegistry.registerCommand(0x101, "escape", new RemoteFileCommand("http://i.imgur.com/kk7Zu3C.png"));
+        CommandRegistry.registerCommand(0x101, "explosion", new RemoteFileCommand("https://cdn.discordapp.com/attachments/143976784545841161/182893975965794306/megumin7.gif"));
+        CommandRegistry.registerCommand(0x101, "gif", new RemoteFileCommand("https://cdn.discordapp.com/attachments/132490115137142784/182907929765085185/spacer.gif"));
+        CommandRegistry.registerCommand(0x101, "noods", new RemoteFileCommand("http://i.imgur.com/CUE3gm2.png"));
+        CommandRegistry.registerCommand(0x101, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
+        CommandRegistry.registerCommand(0x101, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
 
-        CommandRegistry.registerCommand(0x11, "github", new TextCommand("https://github.com/Frederikam"));
-        CommandRegistry.registerCommand(0x11, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
+        CommandRegistry.registerCommand(0x101, "github", new TextCommand("https://github.com/Frederikam"));
+        CommandRegistry.registerCommand(0x101, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
 
         String[] pats = {
             "http://i.imgur.com/wF1ohrH.gif",
@@ -269,7 +290,7 @@ public class FredBoat {
             "http://i.imgur.com/i7bklkm.gif",
             "http://i.imgur.com/fSDbKwf.jpg",
             "https://66.media.tumblr.com/ec7472fef28b2cdf394dc85132c22ed8/tumblr_mx1asbwrBv1qbvovho1_500.gif",};
-        CommandRegistry.registerCommand(0x11, "pat", new PatCommand(pats));
+        CommandRegistry.registerCommand(0x101, "pat", new PatCommand(pats));
 
         String[] facedesk = {
             "https://45.media.tumblr.com/tumblr_lpzn2uFp4D1qew6kmo1_500.gif",
@@ -280,7 +301,7 @@ public class FredBoat {
             "http://img.neoseeker.com/mgv/59301/301/26/facedesk_display.gif"
         };
 
-        CommandRegistry.registerCommand(0x11, "facedesk", new FacedeskCommand(facedesk));
+        CommandRegistry.registerCommand(0x101, "facedesk", new FacedeskCommand(facedesk));
 
         String[] roll = {
             "https://media.giphy.com/media/3xz2BCBXokf7rag0Ba/giphy.gif",
@@ -300,7 +321,7 @@ public class FredBoat {
 
         };
 
-        CommandRegistry.registerCommand(0x11, "roll", new RollCommand(roll));
+        CommandRegistry.registerCommand(0x101, "roll", new RollCommand(roll));
     }
 
     public static void shutdown(int code) {
