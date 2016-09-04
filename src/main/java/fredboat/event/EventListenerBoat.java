@@ -26,6 +26,8 @@ import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import fredboat.FredBoat;
 import static fredboat.FredBoat.jdaBot;
+import fredboat.audio.GuildPlayer;
+import fredboat.audio.PlayerRegistry;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 

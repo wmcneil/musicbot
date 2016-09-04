@@ -1,6 +1,6 @@
 package fredboat.audio;
 
-import fredboat.MusicFredBoat;
+import fredboat.FredBoat;
 import fredboat.util.ExitCodes;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +28,7 @@ public class MusicPersistenceHandler {
     private static boolean isFirst = true;//Used for loading songs
     
     public static void handlePreShutdown(int code) {
-        JDA jda = MusicFredBoat.jdaBot;
+        JDA jda = FredBoat.jdaBot;
 
         File dir = new File("music_persistence");
         if (!dir.exists()) {
@@ -86,7 +86,7 @@ public class MusicPersistenceHandler {
     }
 
     public static void reloadPlaylists() {
-        JDA jda = MusicFredBoat.jdaBot;
+        JDA jda = FredBoat.jdaBot;
 
         File dir = new File("music_persistence");
         if (!dir.exists()) {
