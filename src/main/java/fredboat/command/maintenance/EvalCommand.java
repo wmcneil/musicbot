@@ -47,10 +47,9 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         engine.put("api", jda);
         engine.put("channel", channel);
         engine.put("author", author);
-        engine.put("bot", FredBoat.myUser);
+        engine.put("bot", jda.getSelfInfo());
         engine.put("message", message);
         engine.put("guild", guild);
-        engine.put("redis", FredBoat.jedis);
 
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> future = service.schedule(() -> {

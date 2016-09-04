@@ -92,10 +92,10 @@ public class EventListenerBoat extends ListenerAdapter {
             }
 
             CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
-        } else if (FredBoat.myUser != null && event.getMessage().getRawContent().startsWith("<@" + FredBoat.myUser.getId() + ">")) {
+        } else if (event.getMessage().getRawContent().startsWith("<@" + jdaBot.getSelfInfo().getId() + ">")) {
             System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
-            TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(FredBoat.myUser.getAsMention().length() + 1));
+            TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(jdaBot.getSelfInfo().getAsMention().length() + 1));
         }
     }
 

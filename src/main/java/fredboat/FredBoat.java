@@ -25,7 +25,6 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import org.json.JSONObject;
 
@@ -44,7 +43,6 @@ public class FredBoat {
     public static final String PREFIX = IS_BETA ? "¤" : ";;";
     public static final String SELF_PREFIX = IS_BETA ? "::" : "<<";
     public static final String OWNER_ID = "81011298891993088";
-    public static Jedis jedis;
     public static final long START_TIME = System.currentTimeMillis();
     //public static final String ACCOUNT_EMAIL_KEY = IS_BETA ? "emailBeta" : "emailProduction";
     //public static final String ACCOUNT_PASSWORD_KEY = IS_BETA ? "passwordBeta" : "passwordProduction";
@@ -59,15 +57,12 @@ public class FredBoat {
     public static String googleServerKey = "";
 
     public static String myUserId = "";
-    public static volatile User myUser;
 
     public static int readyEvents = 0;
     public static final int READY_EVENTS_REQUIRED = 2;
 
     public static EventListenerBoat listenerBot;
     public static EventListenerSelf listenerSelf;
-
-    //TODO: google api key
     
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Load credentials file
@@ -169,8 +164,6 @@ public class FredBoat {
                 System.out.println("\t" + channel.getName());
             }
         }*/
-        myUserId = jdaBot.getSelfInfo().getId();
-        myUser = jdaBot.getUserById(myUserId);
 
         //Commands
         CommandRegistry.registerCommand(0x01, "help", new HelpCommand());
