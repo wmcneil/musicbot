@@ -18,7 +18,7 @@ import net.dv8tion.jda.Permission;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UptimeCommand extends Command {
+public class StatsCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
