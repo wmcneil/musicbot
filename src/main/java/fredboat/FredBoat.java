@@ -17,6 +17,7 @@ import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
 import fredboat.util.BotConstants;
+import fredboat.util.DiscordUtil;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.File;
@@ -143,7 +144,13 @@ public class FredBoat {
         }
 
         if (!carbonHost.equals("")) {
-            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, BotConstants.IS_BETA ? "beta" : "production", !BotConstants.IS_BETA);
+            //Determine metric name
+            String metricName = "beta";
+            if(!BotConstants.IS_BETA){
+                metricName = DiscordUtil.isMusicBot() ? "music" : "production";
+            }
+            
+            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, metricName, !BotConstants.IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
             System.out.println("Started reporting to carbon-cache at " + carbonHost + ".");
