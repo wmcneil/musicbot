@@ -1,5 +1,6 @@
 package fredboat;
 
+import fredboat.command.maintenance.UpdateCommand;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.MusicGC;
