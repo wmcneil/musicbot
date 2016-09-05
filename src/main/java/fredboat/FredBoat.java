@@ -332,8 +332,8 @@ public class FredBoat {
             }
         }
 
-        jdaBot.shutdown(true);
-        jdaSelf.shutdown(true);
+        //jdaBot.shutdown(true);
+        //jdaSelf.shutdown(true);
         System.exit(code);
     }
 }
