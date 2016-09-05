@@ -132,7 +132,7 @@ public class FredBoat {
 
         //Redis
         String redisHost = credsjson.getString("redisHost");
-        String redisPassword = credsjson.getString("redisPass");
+        String redisPassword = credsjson.getString("redisPassword");
         RedisCache.init(redisHost, redisPassword);
 
         if (!BotConstants.IS_BETA) {
