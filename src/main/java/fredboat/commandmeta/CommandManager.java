@@ -4,23 +4,25 @@ import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommand;
 import fredboat.commandmeta.abs.IMusicBackupCommand;
-import fredboat.FredBoat;
+import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
+import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.utils.PermissionUtil;
 
 public class CommandManager {
 
     public static HashMap<String, ICommand> commands = new HashMap<>();
     public static ICommand defaultCmd = new UnknownCommand();
     public static int commandsExecuted = 0;
-    
+
     public static void prefixCalled(Command invoked, Guild guild, TextChannel channel, User invoker, Message message) {
         //String[] args = message.getRawContent().replace("\n", " ").split(" ");
         String[] args = commandToArguments(message.getRawContent());
@@ -33,10 +35,18 @@ public class CommandManager {
                 return;
             }
         }
-        if(invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)){
+
+        if (invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)) {
             System.out.println("Ignored command because main bot is present");
             return;
         }
+
+        if (invoked instanceof IMusicCommand
+                && PermissionUtil.checkPermission(channel, guild.getJDA().getSelfInfo(), Permission.MESSAGE_WRITE) == false) {
+            System.out.println("Ignored command because it was a music command, and this bot cannot write in that channel");
+            return;
+        }
+
         try {
             invoked.onInvoke(guild, channel, invoker, message, args);
         } catch (Exception e) {
@@ -89,7 +99,7 @@ public class CommandManager {
         } else {
             a.set(argi, arg + ch);
         }
-        
+
         return a;
     }
 }
