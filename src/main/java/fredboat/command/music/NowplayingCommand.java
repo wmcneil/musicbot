@@ -3,23 +3,23 @@ package fredboat.command.music;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.IMusicCommand;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.player.MusicPlayer;
 
-public class NowplayingCommand extends Command {
+public class NowplayingCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.currentTC = channel;
-        if(player.isPlaying()){
+        if (player.isPlaying()) {
             channel.sendMessage("Now playing " + player.getCurrentAudioSource().getInfo().getTitle());
         } else {
             channel.sendMessage("Not currently playing anything");
         }
     }
-    
+
 }

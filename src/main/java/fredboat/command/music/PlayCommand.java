@@ -4,6 +4,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.entities.SelfInfo;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
-public class PlayCommand extends Command {
+public class PlayCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
@@ -44,14 +45,14 @@ public class PlayCommand extends Command {
 
         }
     }
-    
-    private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message){
+
+    private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        if(player.getCurrentAudioSource() == null && player.getAudioQueue().isEmpty()){
+        if (player.getCurrentAudioSource() == null && player.getAudioQueue().isEmpty()) {
             channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
-        } else if(player.isPlaying()){
+        } else if (player.isPlaying()) {
             channel.sendMessage("The player is already playing.");
-        } else if(player.getUsersInVC().isEmpty()){
+        } else if (player.getUsersInVC().isEmpty()) {
             channel.sendMessage("There are no users in the voice chat.");
         } else {
             player.play();
@@ -87,7 +88,7 @@ public class PlayCommand extends Command {
             }
 
             outMsg.updateMessage(builder.build().getRawContent());
-            
+
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.currentTC = channel;
             player.selections.put(invoker.getId(), new VideoSelection(vids, outMsg));

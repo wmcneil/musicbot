@@ -4,6 +4,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -11,7 +12,7 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.exceptions.PermissionException;
 
-public class SelectCommand extends Command {
+public class SelectCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
@@ -28,11 +29,11 @@ public class SelectCommand extends Command {
                     player.selections.remove(invoker.getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
                     selection.getOutMsg().updateMessage(msg);
-                    player.playOrQueueSong("https://www.youtube.com/watch?v="+selected.id, channel, invoker);
-                    try{
+                    player.playOrQueueSong("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
+                    try {
                         message.deleteMessage();
-                    } catch(PermissionException ex){
-                        
+                    } catch (PermissionException ex) {
+
                     }
                 }
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException numberFormatException) {
