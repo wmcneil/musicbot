@@ -71,7 +71,6 @@ public class FredBoat {
         otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
 
         //Load credentials file
-        FredBoat instance = new FredBoat();
         InputStream is = new FileInputStream(new File("./credentials.json"));
         //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
@@ -153,7 +152,7 @@ public class FredBoat {
             CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, metricName, !BotConstants.IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
-            System.out.println("Started reporting to carbon-cache at " + carbonHost + ".");
+            System.out.println("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName +  ".");
         } else {
             System.out.println("No carbon host configured. Skipping carbon daemon.");
         }
