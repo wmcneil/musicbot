@@ -8,40 +8,34 @@ package fredboat.event;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
-import java.util.regex.Pattern;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
 import fredboat.FredBoat;
+import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.ReadyEvent;
 
-public class EventListenerSelf extends ListenerAdapter {
+public class EventListenerSelf extends AbstractScopedEventListener {
 
     //public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     //public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
     public User lastUserToReceiveHelp;
-    public final int scope;
-    public final String prefix;
-    private final Pattern commandNamePrefix;
 
-    public EventListenerSelf(int scope, String prefix) {
-        this.scope = scope;
-        this.prefix = prefix;
-        this.commandNamePrefix = Pattern.compile("(\\w+)");
+    public EventListenerSelf(int scope, String defaultPrefix) {
+        super(scope, defaultPrefix);
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().getId().equals(FredBoat.OWNER_ID)) {
+        if (!event.getAuthor().getId().equals(BotConstants.OWNER_ID)) {
             return;
         }
 
-        if (event.getMessage().getContent().length() < prefix.length()) {
+        if (event.getMessage().getContent().length() < defaultPrefix.length()) {
             return;
         }
 
-        if (event.getMessage().getContent().substring(0, prefix.length()).equals(prefix)) {
+        if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
             String cmdName;
             Command invoked = null;
             try {
@@ -66,11 +60,6 @@ public class EventListenerSelf extends ListenerAdapter {
             }
 
         }
-    }
-
-    @Override
-    public void onReady(ReadyEvent event) {
-        FredBoat.init();
     }
 
 }

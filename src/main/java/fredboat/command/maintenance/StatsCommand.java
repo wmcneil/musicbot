@@ -6,6 +6,7 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.ICommand;
 import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
+import fredboat.util.BotConstants;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -18,7 +19,7 @@ import net.dv8tion.jda.Permission;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UptimeCommand extends Command {
+public class StatsCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
@@ -57,7 +58,7 @@ public class UptimeCommand extends Command {
         str = str + "Known servers:             " + guild.getJDA().getGuilds().size() + "\n";
         str = str + "Known text channels:       " + guild.getJDA().getTextChannels().size() + "\n";
         str = str + "Known users in servers:    " + guild.getJDA().getUsers().size() + "\n";
-        str = str + "Is beta:                   " + FredBoat.IS_BETA + "\n";
+        str = str + "Is beta:                   " + BotConstants.IS_BETA + "\n";
         str = str + "JDA responses total:       " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:               " + JDAInfo.VERSION;
         

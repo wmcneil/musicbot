@@ -2,6 +2,7 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Message;
@@ -23,16 +24,23 @@ public class TextUtils {
         return mes;
     }
 
+    public static void handleException(Exception e, MessageChannel channel) {
+        handleException(e, channel, null);
+    }
+    
     public static void handleException(Exception e, MessageChannel channel, User invoker) {
         if (e instanceof MessagingException){
             channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
             return;
         }
-        
         MessageBuilder builder = new MessageBuilder();
 
-        builder.appendMention(invoker);
-        builder.appendString(" an error occured :anger: ```java\n" + e.toString() + "\n");
+        if(invoker != null){
+            builder.appendMention(invoker);
+            builder.appendString(" an error occured :anger: ```java\n" + e.toString().replace(FredBoat.googleServerKey, "GOOGLE_SERVER_KEY") + "\n");
+        } else {
+            builder.appendString("An error occured :anger: ```java\n" + e.toString().replace(FredBoat.googleServerKey, "GOOGLE_SERVER_KEY") + "\n");
+        }
 
         //builder.appendString("```java\n");
         for (StackTraceElement ste : e.getStackTrace()) {

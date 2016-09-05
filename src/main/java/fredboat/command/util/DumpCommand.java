@@ -2,6 +2,7 @@ package fredboat.command.util;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.Command;
+import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class DumpCommand extends Command {
         outputChannel.sendTyping();
         
         //Quick hack to allow infinite messages if invoked by owner:
-        if(invoker.getId().equals(fredboat.FredBoat.OWNER_ID)){
+        if(invoker.getId().equals(BotConstants.OWNER_ID)){
             realDumpSize = dumpSize;
         }
         

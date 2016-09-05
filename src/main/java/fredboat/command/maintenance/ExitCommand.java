@@ -3,6 +3,7 @@ package fredboat.command.maintenance;
 import fredboat.FredBoat;
 import fredboat.commandmeta.Command;
 import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.util.BotConstants;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -18,7 +19,7 @@ public class ExitCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        if (invoker.getId().equals(FredBoat.OWNER_ID)) {
+        if (invoker.getId().equals(BotConstants.OWNER_ID)) {
             channel.sendMessage(TextUtils.prefaceWithMention(invoker, " goodbye!!"));
             FredBoat.shutdown(ExitCodes.EXIT_CODE_NORMAL);
         } else {
