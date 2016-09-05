@@ -1,6 +1,6 @@
 package fredboat.command.util;
 
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.lua.LuaParser;
 import fredboat.lua.LuaParser.Outcome;
 import net.dv8tion.jda.entities.Guild;

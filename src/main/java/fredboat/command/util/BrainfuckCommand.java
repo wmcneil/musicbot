@@ -1,6 +1,6 @@
 package fredboat.command.util;
 
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
 import java.nio.ByteBuffer;

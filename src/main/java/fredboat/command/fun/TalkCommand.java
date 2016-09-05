@@ -6,7 +6,7 @@
 package fredboat.command.fun;
 
 import fredboat.FredBoat;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

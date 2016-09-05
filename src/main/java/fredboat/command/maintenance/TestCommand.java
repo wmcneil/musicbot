@@ -1,7 +1,7 @@
 package fredboat.command.maintenance;
 
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;

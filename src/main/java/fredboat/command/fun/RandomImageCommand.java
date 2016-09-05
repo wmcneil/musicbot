@@ -1,6 +1,6 @@
 package fredboat.command.fun;
 
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.CacheUtil;
 import java.lang.reflect.Array;
 import java.util.Random;

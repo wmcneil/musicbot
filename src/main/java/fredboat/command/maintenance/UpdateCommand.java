@@ -2,8 +2,8 @@ package fredboat.command.maintenance;
 
 import fredboat.FredBoat;
 import fredboat.event.EventListenerBoat;
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.ExitCodes;
 import java.io.BufferedReader;
 import java.io.File;

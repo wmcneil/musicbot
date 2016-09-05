@@ -6,7 +6,7 @@
 package fredboat.event;
 
 import fredboat.command.fun.TalkCommand;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package fredboat.command.util;
 
 import fredboat.FredBoat;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.entities.Guild;

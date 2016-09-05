@@ -1,8 +1,8 @@
 package fredboat.command.maintenance;
 
 import fredboat.FredBoat;
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.BotConstants;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.entities.Guild;

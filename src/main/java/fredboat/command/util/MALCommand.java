@@ -3,7 +3,7 @@ package fredboat.command.util;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;

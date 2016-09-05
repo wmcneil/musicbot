@@ -1,4 +1,4 @@
-package fredboat.commandmeta;
+package fredboat.commandmeta.abs;
 
 import java.util.ArrayList;
 import net.dv8tion.jda.JDA;

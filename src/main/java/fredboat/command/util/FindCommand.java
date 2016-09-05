@@ -1,7 +1,7 @@
 package fredboat.command.util;
 
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommand;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommand;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;

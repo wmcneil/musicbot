@@ -1,7 +1,7 @@
 package fredboat.command.util;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import java.time.Clock;

@@ -2,7 +2,7 @@ package fredboat.command.fun;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import fredboat.commandmeta.Command;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.CacheUtil;
 import java.awt.image.RenderedImage;
 import java.io.File;

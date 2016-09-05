@@ -2,8 +2,8 @@ package fredboat.command.fun;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommand;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommand;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;

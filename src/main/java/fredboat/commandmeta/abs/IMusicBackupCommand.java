@@ -1,4 +1,4 @@
-package fredboat.commandmeta;
+package fredboat.commandmeta.abs;
 
 public interface IMusicBackupCommand {
     

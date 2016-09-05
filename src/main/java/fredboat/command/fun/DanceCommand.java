@@ -1,7 +1,7 @@
 package fredboat.command.fun;
 
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommand;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommand;
 import fredboat.event.EventListenerBoat;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;

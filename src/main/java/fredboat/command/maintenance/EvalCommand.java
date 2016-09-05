@@ -1,8 +1,8 @@
 package fredboat.command.maintenance;
 
 import fredboat.FredBoat;
-import fredboat.commandmeta.Command;
-import fredboat.commandmeta.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;

@@ -1,5 +1,9 @@
 package fredboat.commandmeta;
 
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommand;
+import fredboat.commandmeta.abs.IMusicBackupCommand;
 import fredboat.FredBoat;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
