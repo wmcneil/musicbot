@@ -165,8 +165,6 @@ public class FredBoat {
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
         mgc.start();
-
-        MusicPersistenceHandler.reloadPlaylists();
     }
 
     public static void init(ReadyEvent event) {
@@ -314,6 +312,8 @@ public class FredBoat {
         };
 
         CommandRegistry.registerCommand(0x101, "roll", new RollCommand(roll));
+        
+        MusicPersistenceHandler.reloadPlaylists();
     }
 
     public static void shutdown(int code) {
