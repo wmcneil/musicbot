@@ -1,6 +1,7 @@
 package fredboat.command.maintenance;
 
 import fredboat.FredBoat;
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
@@ -50,6 +51,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         engine.put("bot", jda.getSelfInfo());
         engine.put("message", message);
         engine.put("guild", guild);
+        engine.put("player", PlayerRegistry.getExisting(guild));
 
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> future = service.schedule(() -> {
