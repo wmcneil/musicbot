@@ -36,17 +36,35 @@ public class ListCommand extends Command implements IMusicCommand {
                 }
                 i++;
             }
-            
+
             int add = player.getCurrentAudioSource() != null ? 1 : 0;
 
-            mb.appendString("\n\nThere are a total of ")
+            //Now add a timestamp for how much is remaining
+            int t = player.getTotalRemainingMusicTimeSeconds();
+            int sec = t % 60;
+            int min = (t % 3600) / 60;
+            int hrs = t / 3600;
+            
+            String timestamp;
+            
+            if (hrs != 0){
+                timestamp = forceTwoDigits(hrs) +":"+ forceTwoDigits(min) +":"+ forceTwoDigits(sec);
+            } else {
+                timestamp = forceTwoDigits(min) +":"+ forceTwoDigits(sec);
+            }
+
+            mb.appendString("\n\nThere are a total of **")
                     .appendString(String.valueOf(player.getAudioQueue().size() + add), MessageBuilder.Formatting.BOLD)
-                    .appendString(" queued songs.");
+                    .appendString("** queued songs with a remaining length of **" + timestamp + "**.");
 
             channel.sendMessage(mb.build());
         } else {
             channel.sendMessage("Not currently playing anything");
         }
+    }
+
+    public String forceTwoDigits(int i) {
+        return i < 10 ? "0" + i : Integer.toString(i);
     }
 
 }

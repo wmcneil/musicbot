@@ -61,11 +61,11 @@ public class GuildPlayer extends MusicPlayer {
         /*if (guild.getVoiceStatusOfUser(self).inVoiceChannel()) {
             throw new MessagingException("I need to leave my current channel first.");
         }*/
-        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT) == false){
+        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT) == false) {
             throw new MessagingException("I am not permitted to connect to that voice channel.");
         }
 
-        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK) == false){
+        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK) == false) {
             throw new MessagingException("I am not permitted to play music in that voice channel.");
         }
 
@@ -146,7 +146,7 @@ public class GuildPlayer extends MusicPlayer {
             }
         } else if (playlist.getSources().size() == 1) {
             AudioSource source = playlist.getSources().get(0);
-            
+
             QueueItem item = new QueueItem(invoker, channel, source);
             MusicQueueProcessor.add(item);
         } else {
@@ -184,18 +184,18 @@ public class GuildPlayer extends MusicPlayer {
             playlistTimeoutEnds = System.currentTimeMillis() + 20000 * playlist.getSources().size();
         }
     }
-    
+
     //Includes currently playing song
-    public List<AudioSource> getAllRemainingSources(){
+    public List<AudioSource> getAllRemainingSources() {
         LinkedList<AudioSource> list = new LinkedList<>();
-        
+
         AudioSource current = getCurrentAudioSource();
         if (current != null) {
             list.add(current);
         }
-        
+
         list.addAll(getAudioQueue());
-        
+
         return list;
     }
 
@@ -209,9 +209,18 @@ public class GuildPlayer extends MusicPlayer {
 
         return count;
     }
-    
-    public int getTotalRemainingMusicTime() {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+    public int getTotalRemainingMusicTimeSeconds() {
+        int seconds = 0;
+        for (AudioSource as : getAllRemainingSources()) {
+            seconds = +as.getInfo().getDuration().getTotalSeconds();
+        }
+
+        if (getCurrentTimestamp() != null) {
+            seconds = seconds - getCurrentTimestamp().getSeconds();
+        }
+
+        return seconds;
     }
 
     public VoiceChannel getChannel() {
@@ -229,7 +238,7 @@ public class GuildPlayer extends MusicPlayer {
     }
 
     /**
-     * Returns users who are not bots
+     * @return Users who are not bots
      */
     public ArrayList<User> getUsersInVC() {
         VoiceChannel vc = getChannel();
