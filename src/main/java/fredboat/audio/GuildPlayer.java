@@ -5,6 +5,7 @@ import fredboat.audio.queue.QueueItem;
 import fredboat.commandmeta.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
@@ -60,11 +61,11 @@ public class GuildPlayer extends MusicPlayer {
         /*if (guild.getVoiceStatusOfUser(self).inVoiceChannel()) {
             throw new MessagingException("I need to leave my current channel first.");
         }*/
-        if (PermissionUtil.checkPermission(jda.getSelfInfo(), Permission.VOICE_CONNECT, targetChannel) == false) {
+        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT) == false){
             throw new MessagingException("I am not permitted to connect to that voice channel.");
         }
 
-        if (PermissionUtil.checkPermission(jda.getSelfInfo(), Permission.VOICE_SPEAK, targetChannel) == false) {
+        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK) == false){
             throw new MessagingException("I am not permitted to play music in that voice channel.");
         }
 
@@ -183,6 +184,20 @@ public class GuildPlayer extends MusicPlayer {
             playlistTimeoutEnds = System.currentTimeMillis() + 20000 * playlist.getSources().size();
         }
     }
+    
+    //Includes currently playing song
+    public List<AudioSource> getAllRemainingSources(){
+        LinkedList<AudioSource> list = new LinkedList<>();
+        
+        AudioSource current = getCurrentAudioSource();
+        if (current != null) {
+            list.add(current);
+        }
+        
+        list.addAll(getAudioQueue());
+        
+        return list;
+    }
 
     public int getSongCount() {
         int count = 0;
@@ -193,6 +208,10 @@ public class GuildPlayer extends MusicPlayer {
         count += getAudioQueue().size();
 
         return count;
+    }
+    
+    public int getTotalRemainingMusicTime() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public VoiceChannel getChannel() {
