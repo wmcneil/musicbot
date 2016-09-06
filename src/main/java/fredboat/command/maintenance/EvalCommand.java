@@ -47,6 +47,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         engine.put("jda", jda);
         engine.put("api", jda);
         engine.put("channel", channel);
+        engine.put("vc", PlayerRegistry.getExisting(guild) != null ? PlayerRegistry.getExisting(guild).getChannel() : null);
         engine.put("author", author);
         engine.put("bot", jda.getSelfInfo());
         engine.put("message", message);
