@@ -213,7 +213,7 @@ public class GuildPlayer extends MusicPlayer {
     public int getTotalRemainingMusicTimeSeconds() {
         int seconds = 0;
         for (AudioSource as : getAllRemainingSources()) {
-            seconds = +as.getInfo().getDuration().getTotalSeconds();
+            seconds += as.getInfo().getDuration().getTotalSeconds();
         }
 
         if (getCurrentTimestamp() != null) {
