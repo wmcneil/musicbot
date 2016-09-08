@@ -15,6 +15,9 @@
 
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/debug.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/debug.%d{yyyyMMdd}.log.gz</fileNamePattern>
             <maxHistory>5</maxHistory>
@@ -24,19 +27,21 @@
         </encoder>
     </appender>
 
-    <logger name="fredboat" level="DEBUG" additivity="false">
-        <appender-ref ref="DEBUG"/>
-        <appender-ref ref="FILE"/>
-    </logger>
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
         <encoder>
-            <pattern>%d %-5level [%thread] %logger{35} - %msg%n</pattern>
+            <pattern>[%d] [ %-5level] [%thread] %logger{35}: %msg%n</pattern>
         </encoder>
     </appender>
 
+    <logger name="fredboat" level="DEBUG" additivity="true">
+        <appender-ref ref="DEBUG"/>
+    </logger>
+
     <root level="INFO">
-        <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

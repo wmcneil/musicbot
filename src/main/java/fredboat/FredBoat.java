@@ -1,8 +1,5 @@
 package fredboat;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.status.OnConsoleStatusListener;
-import ch.qos.logback.core.status.StatusManager;
 import fredboat.command.maintenance.UpdateCommand;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
@@ -38,10 +35,13 @@ import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FredBoat {
 
+    private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
+    
     public static String otherBotId = "";
 
     public static int scopes = 0;
@@ -62,22 +62,26 @@ public class FredBoat {
     public static int readyEventsRequired = 0;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
-        try {
-            scopes = Integer.parseInt(args[0]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-            System.out.println("Invalid arguments: " + args + ", defaulting to scopes 0x101");
-            scopes = 0x100;
-        }
-        System.out.println("Starting with scopes:"
-                + "\n\tMain: " + ((scopes & 0x100) == 0x100)
-                + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
-                + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
-
+        log.debug("TEST");
+        log.debug("TEST2");
+        log.debug("TEST3");
+        
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
 
         //Make JDA not print to console, we have Logback for that
         SimpleLog.LEVEL = SimpleLog.Level.OFF;
+        
+        try {
+            scopes = Integer.parseInt(args[0]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+            log.info("Invalid arguments: " + args + ", defaulting to scopes 0x101");
+            scopes = 0x100;
+        }
+        log.info("Starting with scopes:"
+                + "\n\tMain: " + ((scopes & 0x100) == 0x100)
+                + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
+                + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
         //Determine what the "other bot" is
         otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
@@ -136,7 +140,7 @@ public class FredBoat {
         }
 
         /* JDA initialising */
-        System.out.println("JDA version:\t" + JDAInfo.VERSION);
+        log.info("JDA version:\t" + JDAInfo.VERSION);
 
         //Initialise JCA
         String cbUser = credsjson.getString("cbUser");
@@ -164,9 +168,9 @@ public class FredBoat {
             CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, metricName, !BotConstants.IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
-            System.out.println("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName + ".");
+            log.info("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName + ".");
         } else {
-            System.out.println("No carbon host configured. Skipping carbon daemon.");
+            log.info("No carbon host configured. Skipping carbon daemon.");
         }
 
         MusicQueueProcessor mqp = new MusicQueueProcessor();
@@ -181,7 +185,7 @@ public class FredBoat {
     public static void init(ReadyEvent event) {
         readyEvents = readyEvents + 1;
 
-        System.out.println("INIT: " + readyEvents + "/" + readyEventsRequired);
+        log.info("INIT: " + readyEvents + "/" + readyEventsRequired);
 
         if (readyEvents < readyEventsRequired) {
             return;
@@ -191,10 +195,10 @@ public class FredBoat {
         PlayerRegistry.init(jdaBot);
 
         /*for (Guild guild : jdaBot.getGuilds()) {
-            System.out.println(guild.getName());
+            log.info(guild.getName());
 
             for (TextChannel channel : guild.getTextChannels()) {
-                System.out.println("\t" + channel.getName());
+                log.info("\t" + channel.getName());
             }
         }*/
         //Commands
@@ -328,12 +332,12 @@ public class FredBoat {
     }
 
     public static void shutdown(int code) {
-        System.out.println("Shutting down with exit code " + code);
+        log.info("Shutting down with exit code " + code);
 
         try {
             MusicPersistenceHandler.handlePreShutdown(code);
         } catch (Exception e) {
-            System.out.println("Critical error while handling music persistence: ");
+            log.info("Critical error while handling music persistence: ");
             e.printStackTrace();
         }
 

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * @author sedmelluq
  */
 public class SimpleLogToSLF4JAdapter implements SimpleLog.LogListener {
-  private static final Logger log = LoggerFactory.getLogger(JDA.class);
+  private static final Logger log = LoggerFactory.getLogger(SimpleLogToSLF4JAdapter.class);
 
   @Override
   public void onLog(SimpleLog simpleLog, SimpleLog.Level logLevel, Object message) {
