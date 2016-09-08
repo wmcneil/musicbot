@@ -18,6 +18,7 @@ import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
+import fredboat.util.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.File;
@@ -32,6 +33,7 @@ import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.events.ReadyEvent;
+import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
 
 public class FredBoat {
@@ -60,13 +62,16 @@ public class FredBoat {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             System.out.println("Invalid arguments: " + args + ", defaulting to scopes 0x101");
-            scopes = 0x010;
+            scopes = 0x100;
         }
         System.out.println("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
+        //Attach log adapter
+        SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
+        
         //Determine what the "other bot" is
         otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
 
