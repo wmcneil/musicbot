@@ -1,35 +1,42 @@
-<configuration debug="true">
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
-    <file>logs/fredboat.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/fredboat.%d{yyyyMMdd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <pattern>%d %-5level [%thread] %logger{35} - %msg%n</pattern>
-    </encoder>
-  </appender>
+<configuration debug="false">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <file>logs/fredboat.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/fredboat.%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d] [ %-5level] [%thread] %logger{35}: %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/debug.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>logs/debug.%d{yyyyMMdd}.log.gz</fileNamePattern>
-      <maxHistory>5</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <pattern>%d %-5level [%thread] %logger{35} - %msg%n</pattern>
-    </encoder>
-  </appender>
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/debug.%d{yyyyMMdd}.log.gz</fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d] [ %-5level] [%thread] %logger{35}: %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <logger name="fredboat" level="DEBUG" additivity="false">
-    <appender-ref ref="DEBUG"/>
-    <appender-ref ref="FILE"/>
-  </logger>
+    <logger name="fredboat" level="DEBUG" additivity="false">
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="FILE"/>
+    </logger>
 
-  <root level="INFO">
-    <appender-ref ref="FILE"/>
-  </root>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %-5level [%thread] %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
 </configuration>

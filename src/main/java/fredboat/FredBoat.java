@@ -1,5 +1,8 @@
 package fredboat;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.status.OnConsoleStatusListener;
+import ch.qos.logback.core.status.StatusManager;
 import fredboat.command.maintenance.UpdateCommand;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
@@ -35,6 +38,7 @@ import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 public class FredBoat {
 
@@ -48,7 +52,7 @@ public class FredBoat {
     public static final String ACCOUNT_TOKEN_KEY = BotConstants.IS_BETA ? "tokenBeta" : "tokenProduction";
     private static String accountToken;
     public static String mashapeKey;
-    
+
     public static String MALPassword;
     public static String googleServerKey = "";
 
@@ -71,7 +75,10 @@ public class FredBoat {
 
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
-        
+
+        //Make JDA not print to console, we have Logback for that
+        SimpleLog.LEVEL = SimpleLog.Level.OFF;
+
         //Determine what the "other bot" is
         otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
 
@@ -150,14 +157,14 @@ public class FredBoat {
         if (!carbonHost.equals("")) {
             //Determine metric name
             String metricName = "beta";
-            if(!BotConstants.IS_BETA){
+            if (!BotConstants.IS_BETA) {
                 metricName = DiscordUtil.isMusicBot() ? "music" : "production";
             }
-            
+
             CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, metricName, !BotConstants.IS_BETA);
             carbonAgent.setDaemon(true);
             carbonAgent.start();
-            System.out.println("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName +  ".");
+            System.out.println("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName + ".");
         } else {
             System.out.println("No carbon host configured. Skipping carbon daemon.");
         }
@@ -165,7 +172,7 @@ public class FredBoat {
         MusicQueueProcessor mqp = new MusicQueueProcessor();
         mqp.setDaemon(true);
         mqp.start();
-        
+
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
         mgc.start();
@@ -179,7 +186,7 @@ public class FredBoat {
         if (readyEvents < readyEventsRequired) {
             return;
         }
-        
+
         //Init music system
         PlayerRegistry.init(jdaBot);
 
@@ -316,7 +323,7 @@ public class FredBoat {
         };
 
         CommandRegistry.registerCommand(0x101, "roll", new RollCommand(roll));
-        
+
         MusicPersistenceHandler.reloadPlaylists();
     }
 
