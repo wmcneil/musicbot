@@ -62,10 +62,6 @@ public class FredBoat {
     public static int readyEventsRequired = 0;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
-        log.debug("TEST");
-        log.debug("TEST2");
-        log.debug("TEST3");
-        
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
 
