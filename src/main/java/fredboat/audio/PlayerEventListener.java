@@ -9,9 +9,12 @@ import net.dv8tion.jda.player.hooks.events.PlayEvent;
 import net.dv8tion.jda.player.hooks.events.SkipEvent;
 import net.dv8tion.jda.player.source.AudioSource;
 import net.dv8tion.jda.player.source.RemoteSource;
+import org.slf4j.LoggerFactory;
 
 public class PlayerEventListener extends PlayerListenerAdapter {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayerEventListener.class);
+    
     public final GuildPlayer player;
     public Pattern youtubeIdPattern = Pattern.compile("youtube.com\\/watch\\?v=(.+)");
 
@@ -37,19 +40,19 @@ public class PlayerEventListener extends PlayerListenerAdapter {
     @Override
     public void onPlay(PlayEvent event) {
         onNewTrackPlaying();
-        System.out.println("Play!");
+        log.debug("Play!");
     }
 
     @Override
     public void onNext(NextEvent event) {
         onNewTrackPlaying();
-        System.out.println("Next!");
+        log.debug("Next!");
     }
 
     @Override
     public void onSkip(SkipEvent event) {
         onNewTrackPlaying();
-        System.out.println("Skip!");
+        log.debug("Skip!");
     }
     
 }

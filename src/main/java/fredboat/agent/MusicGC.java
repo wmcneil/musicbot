@@ -4,9 +4,11 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import java.util.HashMap;
 import net.dv8tion.jda.JDA;
+import org.slf4j.LoggerFactory;
 
 public class MusicGC extends Thread {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MusicGC.class);
     private final JDA jda;
 
     public MusicGC(JDA jda) {
@@ -16,7 +18,7 @@ public class MusicGC extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Music GC running");
+        log.info("Music GC running");
         while(true){
             synchronized(this){
                 try {
@@ -33,7 +35,7 @@ public class MusicGC extends Thread {
                             && player.isStopped() == false
                             && player.getMillisSincePause() > 60000){
                         player.stop();
-                        System.out.println("Stopped player: " + player);
+                        log.info("Stopped player: " + player);
                     }
                     
                     if(player.getChannel() != null){
@@ -41,7 +43,7 @@ public class MusicGC extends Thread {
                     } else if(player.isStopped() == false
                             && player.getMillisSinceInVC() > 300000) {
                         player.stop();
-                        System.out.println("Stopped player for not being in a VC last 5 minutes: " + player);
+                        log.info("Stopped player for not being in a VC last 5 minutes: " + player);
                     }
                 }
             }

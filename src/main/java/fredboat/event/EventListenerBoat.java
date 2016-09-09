@@ -26,9 +26,13 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventListenerBoat extends AbstractScopedEventListener {
 
+    private static final Logger log = LoggerFactory.getLogger(EventListenerBoat.class);
+    
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     public User lastUserToReceiveHelp;
 
@@ -40,20 +44,20 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        /*System.out.println(event.getJDA().getSelfInfo().getUsername());
-        System.out.println(event);
-        System.out.println(event.getAuthor());
-        System.out.println(event.getAuthor().getId());*/
+        /*log.info(event.getJDA().getSelfInfo().getUsername());
+        log.info(event);
+        log.info(event.getAuthor());
+        log.info(event.getAuthor().getId());*/
 
         messagesReceived++;
 
         if (event.getPrivateChannel() != null) {
-            System.out.println("PRIVATE" + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            log.info("PRIVATE" + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             return;
         }
 
         if (event.getAuthor().getUsername().equals(event.getJDA().getSelfInfo().getUsername())) {
-            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             return;
         }
 
@@ -67,10 +71,9 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         }
 
         if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
-            String cmdName;
             Command invoked = null;
             try {
-                System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
                 matcher.find();
 
@@ -85,7 +88,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
             CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
         } else if (event.getMessage().getRawContent().startsWith("<@" + jdaBot.getSelfInfo().getId() + ">")) {
-            System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
             TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(jdaBot.getSelfInfo().getAsMention().length() + 1));
         }
@@ -128,7 +131,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             event.getAuthor().getPrivateChannel().sendMessage("Sorry! Since the release of the official API, registered bots must now be invited by someone with Manage **Server permissions**. If you have permissions, you can invite me at:\n"
                     + "https://discordapp.com/oauth2/authorize?&client_id=" + BotConstants.CLIENT_ID + "&scope=bot");
             /*
-            //System.out.println(event.getInvite().getUrl());
+            //log.info(event.getInvite().getUrl());
             //InviteUtil.join(event.getInvite(), FredBoat.jda);
             Guild guild = null;
             try {
@@ -164,7 +167,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     }
 
     public void tableflip(MessageReceivedEvent event) {
-        //System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+        //log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
         //event.getChannel().sendMessage("┬─┬﻿ ノ( ゜-゜ノ)");
     }
 

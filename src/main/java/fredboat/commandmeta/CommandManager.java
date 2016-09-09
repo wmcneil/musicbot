@@ -16,9 +16,12 @@ import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.utils.PermissionUtil;
+import org.slf4j.LoggerFactory;
 
 public class CommandManager {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CommandManager.class);
+    
     public static HashMap<String, ICommand> commands = new HashMap<>();
     public static ICommand defaultCmd = new UnknownCommand();
     public static int commandsExecuted = 0;
@@ -37,13 +40,13 @@ public class CommandManager {
         }
 
         if (invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)) {
-            System.out.println("Ignored command because main bot is present");
+            log.info("Ignored command because main bot is present");
             return;
         }
 
         if (invoked instanceof IMusicCommand
                 && PermissionUtil.checkPermission(channel, guild.getJDA().getSelfInfo(), Permission.MESSAGE_WRITE) == false) {
-            System.out.println("Ignored command because it was a music command, and this bot cannot write in that channel");
+            log.info("Ignored command because it was a music command, and this bot cannot write in that channel");
             return;
         }
 

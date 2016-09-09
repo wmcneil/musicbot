@@ -21,9 +21,11 @@ import net.dv8tion.jda.player.source.RemoteSource;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
 
 public class MusicPersistenceHandler {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MusicPersistenceHandler.class);
     private static boolean isFirst = true;//Used for loading songs
     
     public static void handlePreShutdown(int code) {
@@ -79,7 +81,7 @@ public class MusicPersistenceHandler {
                     player.getActiveTextChannel().sendMessage("Error occured when saving persistence file: " + ex.getMessage());
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error("Error when saving persistence file", ex);
             }
         }
     }
@@ -91,7 +93,7 @@ public class MusicPersistenceHandler {
         if (!dir.exists()) {
             return;
         }
-        System.out.println("Found persistence data: "+Arrays.toString(dir.listFiles()));
+        log.info("Found persistence data: "+Arrays.toString(dir.listFiles()));
 
         for (File file : dir.listFiles()) {
             InputStream is = null;
@@ -117,7 +119,7 @@ public class MusicPersistenceHandler {
                     String src = (String) t;
                     AudioSource aud = new RemoteSource(src);
                     
-                    //System.out.println(player.getAudioQueue().toString()+ " : " + (player.isPlaying() == false));
+                    //log.info(player.getAudioQueue().toString()+ " : " + (player.isPlaying() == false));
                     player.getAudioQueue().add(aud);
                     
                     if(isFirst){
@@ -135,19 +137,19 @@ public class MusicPersistenceHandler {
                 isFirst = true;
                 tc.sendMessage("Finished reloading playlist.:ok_hand::skin-tone-3:");
             } catch (Exception ex) {
-                Logger.getLogger(MusicPersistenceHandler.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("Error when loading persistence file", ex);
             } finally {
                 try {
                     is.close();
                 } catch (Exception ex) {
-                    Logger.getLogger(MusicPersistenceHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Error when closing InputStream after error", ex);
                 }
             }
         }
 
         for(File f : dir.listFiles()){
             boolean deleted = f.delete();
-            System.out.println(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
+            log.info(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
         }
         
         dir.delete();

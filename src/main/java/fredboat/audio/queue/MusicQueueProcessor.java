@@ -10,8 +10,11 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.managers.AudioManager;
 import net.dv8tion.jda.player.source.AudioInfo;
 import net.dv8tion.jda.player.source.AudioSource;
+import org.slf4j.LoggerFactory;
 
 public class MusicQueueProcessor extends Thread {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MusicQueueProcessor.class);
 
     public static LinkedBlockingQueue<QueueItem> queue = new LinkedBlockingQueue<>();
 
@@ -24,12 +27,12 @@ public class MusicQueueProcessor extends Thread {
         String lastPlaylistId = "";
         int successfullyAdded = 0;
 
-        System.out.println("Started audio queue processor");
+        log.info("Started audio queue processor");
         
         while (true) {
             try {
                 QueueItem item = queue.take();
-                System.out.println("Took item from queue: " + item);
+                log.info("Took item from queue: " + item);
                 TextChannel channel = item.getTextChannel();
 
                 try {
@@ -104,7 +107,7 @@ public class MusicQueueProcessor extends Thread {
     }
 
     public static void add(QueueItem item) {
-        System.out.println("Added item to queue: " + item);
+        log.info("Added item to queue: " + item);
         queue.add(item);
     }
 

@@ -17,9 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
+import org.slf4j.LoggerFactory;
 
 public class MALCommand extends Command {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MALCommand.class);
     private static Pattern regex = Pattern.compile("^\\S+\\s+([\\W\\w]*)");
 
     @Override
@@ -27,7 +29,7 @@ public class MALCommand extends Command {
         Matcher matcher = regex.matcher(message.getContent());
         matcher.find();
         String term = matcher.group(1).replace(' ', '+').trim();
-        System.out.println("TERM:"+term);
+        log.debug("TERM:"+term);
 
         try {
             String body = Unirest.get("http://myanimelist.net/api/anime/search.xml?q=" + term).basicAuth("FredBoat", FredBoat.MALPassword).asString().getBody();
@@ -78,7 +80,7 @@ public class MALCommand extends Command {
         }
         
         
-        System.out.println("Anime search deviation: " + minDeviation);
+        log.debug("Anime search deviation: " + minDeviation);
         
         if(minDeviation > 3){
             return false;
@@ -123,7 +125,7 @@ public class MALCommand extends Command {
         msg = data.has("url") ? msg + "**URL: **" + data.get("url") + "\n" : msg;
         msg = data.has("image_url") ? msg + data.get("image_url") : msg;
 
-        System.out.println(msg);
+        log.debug(msg);
 
         channel.sendMessage(msg);
         return true;

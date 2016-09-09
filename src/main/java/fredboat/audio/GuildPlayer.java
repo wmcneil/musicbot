@@ -21,9 +21,12 @@ import net.dv8tion.jda.player.source.AudioSource;
 import net.dv8tion.jda.player.source.RemoteSource;
 import net.dv8tion.jda.utils.PermissionUtil;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.LoggerFactory;
 
 public class GuildPlayer extends MusicPlayer {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
+    
     public static final int MAX_PLAYLIST_ENTRIES = 20;
 
     public final JDA jda;
@@ -77,7 +80,7 @@ public class GuildPlayer extends MusicPlayer {
         }
 
         /*while (manager.isAttemptingToConnect() == true && manager.isConnected() == false) {
-             System.out.println(manager.isAttemptingToConnect() + " : " + manager.isConnected());
+             log.info(manager.isAttemptingToConnect() + " : " + manager.isConnected());
             synchronized (this) {
                 try {
                     wait(100);
@@ -85,7 +88,7 @@ public class GuildPlayer extends MusicPlayer {
                 }
             }
         }*/
-        System.out.println("Connected to voice channel " + targetChannel);
+        log.info("Connected to voice channel " + targetChannel);
     }
 
     public void leaveVoiceChannelRequest(TextChannel channel, boolean silent) {

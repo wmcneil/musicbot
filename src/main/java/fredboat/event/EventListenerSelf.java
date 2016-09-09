@@ -10,13 +10,15 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import fredboat.FredBoat;
 import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
-import net.dv8tion.jda.events.ReadyEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventListenerSelf extends AbstractScopedEventListener {
 
+    private static final Logger log = LoggerFactory.getLogger(EventListenerSelf.class);
+    
     //public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     //public static HashMap<VoiceChannel, Runnable> toRunOnConnectingToVoice = new HashMap<>();
     public User lastUserToReceiveHelp;
@@ -36,10 +38,9 @@ public class EventListenerSelf extends AbstractScopedEventListener {
         }
 
         if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
-            String cmdName;
             Command invoked = null;
             try {
-                System.out.println(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
                 matcher.find();
 

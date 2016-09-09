@@ -10,9 +10,12 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.dv8tion.jda.JDA;
+import org.slf4j.LoggerFactory;
 
 public class CarbonAgent extends Thread {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CarbonAgent.class);
+    
     public final String carbonHost;
     public final int CARBON_PORT = 2003;
     public final boolean logProductionStats;
@@ -84,7 +87,7 @@ public class CarbonAgent extends Thread {
             dos.flush();
             socket.close();
 
-            System.out.println("Submitted data: " + output);
+            log.info("Submitted data: " + output);
         } catch (IOException ex) {
             Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
         }

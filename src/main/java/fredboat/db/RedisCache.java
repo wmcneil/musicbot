@@ -2,17 +2,20 @@ package fredboat.db;
 
 import java.util.HashMap;
 import net.dv8tion.jda.entities.Guild;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 public class RedisCache {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RedisCache.class);
+    
     public static Jedis jedis = null;
     public static HashMap<String, RedisGuildCache> guildCaches = new HashMap<>();
 
     public static void init(String host, String password) {
         jedis = new Jedis(host);
         jedis.auth(password);
-        System.out.println("Connected to Redis at " + host);
+        log.info("Connected to Redis at " + host);
     }
 
     public static RedisGuildCache getGuild(Guild guild) {

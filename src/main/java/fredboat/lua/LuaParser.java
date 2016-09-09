@@ -18,7 +18,6 @@ import java.util.concurrent.TimeoutException;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LoadState;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -34,12 +33,15 @@ import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JseBaseLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 import org.luaj.vm2.lib.jse.JseOsLib;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Frederik
  */
 public class LuaParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(LuaParser.class);
     
     public static Globals sandboxGlobals(HashMap<String, String> args) {
         Globals globals = new Globals();
@@ -93,7 +95,7 @@ public class LuaParser {
             public Varargs invoke(Varargs args) {
                 String newLine = "";
 
-                //System.out.println(args);
+                //log.info(args);
 
                 for (int i = 1; i < args.narg() + 1; i++) {
                     newLine = newLine + " " + LuaUtil.tostring(args.arg(i));
@@ -113,7 +115,7 @@ public class LuaParser {
             public Varargs invoke(Varargs args) {
                 String newLine = "";
 
-                System.out.println(args);
+                log.info(args);
 
                 for (int i = 1; i < args.narg() + 1; i++) {
                     newLine = newLine + " " + args.arg(i);
@@ -161,13 +163,13 @@ public class LuaParser {
         Future<Outcome> future = executor.submit(new LuaTask(source, args));
 
         try {
-            //System.out.println("Started..");
+            //log.info("Started..");
             return future.get(timeout, TimeUnit.MILLISECONDS);
 
-            //System.out.println("Finished!");
+            //log.info("Finished!");
         } catch (TimeoutException e) {
             future.cancel(true);
-            //System.out.println("Terminated!");
+            //log.info("Terminated!");
         }
 
         executor.shutdownNow();
