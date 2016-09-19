@@ -1,13 +1,11 @@
 package fredboat.command.util;
 
-import fredboat.commandmeta.abs.ICommand;
-import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import fredboat.util.TextUtils;
 
 public class AvatarCommand extends Command {
 

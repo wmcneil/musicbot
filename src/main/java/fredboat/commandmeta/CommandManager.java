@@ -1,8 +1,8 @@
 package fredboat.commandmeta;
 
-import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommand;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.commandmeta.abs.IMusicBackupCommand;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.BotConstants;

@@ -1,14 +1,12 @@
 package fredboat.lua;
 
 import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.TwoArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
 
 public class LuaUser extends LuaTable {
 

@@ -5,8 +5,8 @@
  */
 package fredboat.command.util;
 
-import fredboat.event.EventListenerBoat;
 import fredboat.commandmeta.abs.Command;
+import fredboat.event.EventListenerBoat;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;

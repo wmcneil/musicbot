@@ -5,13 +5,13 @@
  */
 package fredboat.event;
 
-import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
+import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import java.util.regex.Matcher;
+import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

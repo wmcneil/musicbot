@@ -1,12 +1,12 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.IMusicBackupCommand;
+import fredboat.util.BotConstants;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import fredboat.commandmeta.abs.IMusicBackupCommand;
-import fredboat.util.BotConstants;
 
 public class HelpCommand extends Command implements IMusicBackupCommand {
 
