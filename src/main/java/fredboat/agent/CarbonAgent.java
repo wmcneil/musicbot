@@ -51,7 +51,10 @@ public class CarbonAgent extends Thread {
 
                     //Track command usage
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Carbon agent was interrupted", ex);
+                    return;
+                }  catch (Exception ex) {
+                    log.error("Carbon agent caught an exception", ex);
                     return;
                 }
             }
