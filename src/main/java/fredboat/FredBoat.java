@@ -1,6 +1,5 @@
 package fredboat;
 
-import fredboat.command.maintenance.UpdateCommand;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.MusicGC;
@@ -8,9 +7,9 @@ import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.MusicQueueProcessor;
 import fredboat.command.fun.*;
-import fredboat.command.util.*;
 import fredboat.command.maintenance.*;
 import fredboat.command.music.*;
+import fredboat.command.util.*;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
