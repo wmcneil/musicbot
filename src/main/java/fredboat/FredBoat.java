@@ -198,11 +198,13 @@ public class FredBoat {
         try {
             //Init the REST server
             FredBoatAPI.start(
+                    jdaBot,
                     credsjson.optString("fredboatToken", "NOT_SET"),
                     new String[0]
             );
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            log.error("Failed to start Spring Boot server", ex);
+            System.exit(-1);
         }
 
         //Init music system
