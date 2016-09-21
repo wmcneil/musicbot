@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.logging.Level;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
@@ -62,6 +61,9 @@ public class FredBoat {
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
     
+    public static int shard = 0;
+    public static int shardsTotal = 1;
+    
     private static JSONObject credsjson = null;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
@@ -74,14 +76,25 @@ public class FredBoat {
         try {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-            log.info("Invalid arguments: " + args + ", defaulting to scopes 0x101");
+            log.info("Invalid scope, defaulting to scopes 0x101");
             scopes = 0x100;
         }
+        
+        try {
+            shard = Integer.parseInt(args[1]);
+            shardsTotal = Integer.parseInt(args[2]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+            log.info("Invalid shards, defaulting to 0 of 1 shards");
+            scopes = 0x100;
+        }
+        
         log.info("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
+        log.info("Starting as shard " + shard + " of " + shardsTotal);
+        
         //Determine what the "other bot" is
         otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
 
