@@ -15,6 +15,7 @@ import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
+import fredboat.sharding.FredBoatAPI;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.SimpleLogToSLF4JAdapter;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
+import java.util.logging.Level;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
@@ -59,6 +61,8 @@ public class FredBoat {
 
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
+    
+    private static JSONObject credsjson = null;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Attach log adapter
@@ -85,7 +89,8 @@ public class FredBoat {
         InputStream is = new FileInputStream(new File("./credentials.json"));
         //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
-        JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
+        credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
+        scanner.close();
 
         //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
@@ -102,8 +107,6 @@ public class FredBoat {
                 scopePasswords.put(k, scopePasswords.getString(k));
             }
         }
-
-        scanner.close();
 
         //Initialise event listeners
         EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
@@ -190,6 +193,16 @@ public class FredBoat {
 
         if (readyEvents < readyEventsRequired) {
             return;
+        }
+        
+        try {
+            //Init the REST server
+            FredBoatAPI.start(
+                    credsjson.optString("fredboatToken", "NOT_SET"),
+                    new String[0]
+            );
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
 
         //Init music system
