@@ -60,7 +60,7 @@ public class FredBoat {
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
 
-    public static int shard = 0;
+    public static int shardId = 0;
     public static int numShards = 1;
 
     private static JSONObject credsjson = null;
@@ -81,7 +81,7 @@ public class FredBoat {
         }
 
         try {
-            shard = Integer.parseInt(args[1]);
+            shardId = Integer.parseInt(args[1]);
             numShards = Integer.parseInt(args[2]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             log.info("Invalid shards, defaulting to 0 of 1 shards");
@@ -93,7 +93,7 @@ public class FredBoat {
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
-        log.info("Starting as shard " + shard + " of " + numShards);
+        log.info("Starting as shard " + shardId + " of " + numShards);
 
         //Determine distribution
         if (BotConstants.IS_BETA) {
@@ -147,11 +147,11 @@ public class FredBoat {
                     .setBotToken(accountToken)
                     .setBulkDeleteSplittingEnabled(true);
             if(numShards > 1)
-                builder.useSharding(shard, numShards);
+                builder.useSharding(shardId, numShards);
             jdaBot = builder.buildAsync();
         }
 
-        if ((scopes & 0x001) != 0 && shard == 0) {
+        if ((scopes & 0x001) != 0 && shardId == 0) {
             jdaSelf = new JDAClientBuilder()
                     .addListener(listenerSelf)
                     .setClientToken(clientToken)
@@ -217,10 +217,9 @@ public class FredBoat {
 
         try {
             //Init the REST server
-            FredBoatAPIServer.start(
-                    jdaBot,
+            FredBoatAPIServer.start(jdaBot,
                     credsjson.optString("fredboatToken", "NOT_SET"),
-                    new String[0]
+                    new String[] {"--server.port=" + distribution.getPort(shardId)}
             );
         } catch (Exception ex) {
             log.error("Failed to start Spring Boot server", ex);

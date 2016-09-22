@@ -12,8 +12,6 @@ public class BotConstants {
     public static final String BETA_BOT_ID = "152691313123393536";
     public static final String MAIN_BOT_ID = "150376112944447488";
     
-    public static final short SHARD_0_PORT = 3400;
-    
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static final String HELP_TEXT = getHelpText();
     public static String CLIENT_ID = IS_BETA ? "168672778860494849" : "168686772216135681";

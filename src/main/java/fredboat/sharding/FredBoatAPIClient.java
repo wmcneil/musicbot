@@ -13,7 +13,7 @@ public class FredBoatAPIClient {
         int count = 0;
 
         for (int i = 0; i < FredBoat.numShards; i++) {
-            if (i == FredBoat.shard) {
+            if (i == FredBoat.shardId) {
                 count = count + FredBoat.jdaBot.getGuilds().size();
             } else {
                 String url = FredBoat.distribution.getUrlForShard(i) + "guildCount";
