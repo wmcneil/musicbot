@@ -45,10 +45,5 @@ public class DiscordUtil {
         
         return false;
     }
-    
-    /* Sharding */
-    public static List<String> getAllShardURLs(){
-        
-    }
 
 }

@@ -63,7 +63,7 @@ public class FredBoat {
     public static int readyEventsRequired = 0;
     
     public static int shard = 0;
-    public static int shardsTotal = 1;
+    public static int numShards = 1;
     
     private static JSONObject credsjson = null;
     public static DistributionEnum distribution = DistributionEnum.BETA;
@@ -84,7 +84,7 @@ public class FredBoat {
         
         try {
             shard = Integer.parseInt(args[1]);
-            shardsTotal = Integer.parseInt(args[2]);
+            numShards = Integer.parseInt(args[2]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             log.info("Invalid shards, defaulting to 0 of 1 shards");
             scopes = 0x100;
@@ -95,7 +95,7 @@ public class FredBoat {
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
-        log.info("Starting as shard " + shard + " of " + shardsTotal);
+        log.info("Starting as shard " + shard + " of " + numShards);
         
         //Determine distribution
         if(BotConstants.IS_BETA){
@@ -148,10 +148,11 @@ public class FredBoat {
                     .addListener(new EventLogger("216689009110417408"))
                     .setBotToken(accountToken)
                     .setBulkDeleteSplittingEnabled(true)
+                    .useSharding(shard, numShards)
                     .buildAsync();
         }
 
-        if ((scopes & 0x001) != 0) {
+        if ((scopes & 0x001) != 0 && shard == 0) {
             jdaSelf = new JDAClientBuilder()
                     .addListener(listenerSelf)
                     .setClientToken(clientToken)
