@@ -18,6 +18,7 @@ import fredboat.event.EventLogger;
 import fredboat.sharding.FredBoatAPI;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
+import fredboat.util.DistributionEnum;
 import fredboat.util.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
@@ -65,6 +66,7 @@ public class FredBoat {
     public static int shardsTotal = 1;
     
     private static JSONObject credsjson = null;
+    public static DistributionEnum distribution = DistributionEnum.BETA;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         //Attach log adapter
@@ -95,8 +97,13 @@ public class FredBoat {
 
         log.info("Starting as shard " + shard + " of " + shardsTotal);
         
-        //Determine what the "other bot" is
-        otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
+        //Determine distribution
+        if(BotConstants.IS_BETA){
+            distribution = DistributionEnum.BETA;
+        } else {
+            distribution = ((scopes & 0x010) == 0x010) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
+            otherBotId = distribution == DistributionEnum.MAIN ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
+        }
 
         //Load credentials file
         InputStream is = new FileInputStream(new File("./credentials.json"));

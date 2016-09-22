@@ -1,6 +1,7 @@
 package fredboat.util;
 
 import fredboat.FredBoat;
+import java.util.ArrayList;
 import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Guild;
@@ -43,6 +44,11 @@ public class DiscordUtil {
         }
         
         return false;
+    }
+    
+    /* Sharding */
+    public static List<String> getAllShardURLs(){
+        
     }
 
 }
