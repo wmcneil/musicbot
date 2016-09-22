@@ -10,19 +10,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class FredBoatAPI {
-    
+public class FredBoatAPIServer {
+
     protected static String token = null;
     protected static JDA jda = null;
-    
-    public static boolean isAuthenticated(HttpServletRequest request){
+
+    public static boolean isAuthenticated(HttpServletRequest request) {
         return request.getHeader("authorization").equals(token);
     }
-    
+
     public static void start(JDA api, String tkn, String[] args) throws Exception {
         jda = api;
         token = tkn;
         SpringApplication.run(BootController.class, args);
     }
-    
+
 }

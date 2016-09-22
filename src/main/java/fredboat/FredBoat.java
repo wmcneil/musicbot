@@ -1,8 +1,6 @@
 package fredboat;
 
-import fredboat.agent.CarbonAgent;
-import fredboat.agent.CarbonitexAgent;
-import fredboat.agent.MusicGC;
+import fredboat.agent.*;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.MusicQueueProcessor;
@@ -15,7 +13,7 @@ import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
-import fredboat.sharding.FredBoatAPI;
+import fredboat.sharding.FredBoatAPIServer;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
@@ -42,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
-    
+
     public static String otherBotId = "";
 
     public static int scopes = 0;
@@ -61,10 +59,10 @@ public class FredBoat {
 
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
-    
+
     public static int shard = 0;
     public static int numShards = 1;
-    
+
     private static JSONObject credsjson = null;
     public static DistributionEnum distribution = DistributionEnum.BETA;
 
@@ -74,14 +72,14 @@ public class FredBoat {
 
         //Make JDA not print to console, we have Logback for that
         SimpleLog.LEVEL = SimpleLog.Level.OFF;
-        
+
         try {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             log.info("Invalid scope, defaulting to scopes 0x101");
             scopes = 0x100;
         }
-        
+
         try {
             shard = Integer.parseInt(args[1]);
             numShards = Integer.parseInt(args[2]);
@@ -89,16 +87,16 @@ public class FredBoat {
             log.info("Invalid shards, defaulting to 0 of 1 shards");
             scopes = 0x100;
         }
-        
+
         log.info("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
         log.info("Starting as shard " + shard + " of " + numShards);
-        
+
         //Determine distribution
-        if(BotConstants.IS_BETA){
+        if (BotConstants.IS_BETA) {
             distribution = DistributionEnum.BETA;
         } else {
             distribution = ((scopes & 0x010) == 0x010) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
@@ -143,13 +141,14 @@ public class FredBoat {
         }
 
         if ((scopes & 0x110) != 0) {
-            jdaBot = new JDABuilder()
+            JDABuilder builder = new JDABuilder()
                     .addListener(listenerBot)
                     .addListener(new EventLogger("216689009110417408"))
                     .setBotToken(accountToken)
-                    .setBulkDeleteSplittingEnabled(true)
-                    .useSharding(shard, numShards)
-                    .buildAsync();
+                    .setBulkDeleteSplittingEnabled(true);
+            if(numShards > 1)
+                builder.useSharding(shard, numShards);
+            jdaBot = builder.buildAsync();
         }
 
         if ((scopes & 0x001) != 0 && shard == 0) {
@@ -170,10 +169,10 @@ public class FredBoat {
         //Redis
         String redisHost = credsjson.getString("redisHost");
         String redisPassword = credsjson.getString("redisPassword");
-        
+
         try {
             RedisCache.init(redisHost, redisPassword);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Failed to connect to Redis! This might cause problems with the bot.", e);
         }
 
@@ -215,10 +214,10 @@ public class FredBoat {
         if (readyEvents < readyEventsRequired) {
             return;
         }
-        
+
         try {
             //Init the REST server
-            FredBoatAPI.start(
+            FredBoatAPIServer.start(
                     jdaBot,
                     credsjson.optString("fredboatToken", "NOT_SET"),
                     new String[0]
