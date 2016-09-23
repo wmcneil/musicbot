@@ -1,5 +1,6 @@
 package fredboat.sharding;
 
+import fredboat.FredBoat;
 import net.dv8tion.jda.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ public class ShardTracker extends Thread {
     private static int globalUserCount = 0;
     private static int globalGuildCount = 0;
 
-    private static final long TICK_TIME = 30 * 60 * 1000;//30 mins
+    private static final long TICK_TIME = 10 * 60 * 1000;//10 mins
 
     public ShardTracker(JDA jda, String token) {
         if (ins != null) {
@@ -48,7 +49,13 @@ public class ShardTracker extends Thread {
     }
 
     private void tick() {
-
+        if(FredBoat.shardId == 0){
+            globalGuildCount = FredBoatAPIClient.getGlobalGuildCountFromShards();
+            globalUserCount = FredBoatAPIClient.getGlobalUserCountFromShards();
+        } else {
+            globalGuildCount = FredBoatAPIClient.getGlobalGuildCountFromShard0();
+            globalUserCount = FredBoatAPIClient.getGlobalUserCountFromShard0();
+        }
     }
 
 }

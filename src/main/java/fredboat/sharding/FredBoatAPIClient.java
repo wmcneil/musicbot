@@ -30,7 +30,7 @@ public class FredBoatAPIClient {
         return count;
     }
 
-    protected static int getGlobalUserGuildFromShard0() {
+    protected static int getGlobalGuildCountFromShard0() {
         int count = 0;
 
         String url = FredBoat.distribution.getUrlForShard(0) + "globalGuildCount";
