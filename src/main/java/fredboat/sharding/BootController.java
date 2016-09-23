@@ -25,9 +25,20 @@ public class BootController {
 
     @RequestMapping("/guildCount")
     @ResponseBody
-    private String guilds(HttpServletRequest request, HttpServletResponse response) {
+    private String guildCount(HttpServletRequest request, HttpServletResponse response) {
         if (isAuthenticated(request)) {
             return String.valueOf(jda.getGuilds().size());
+        } else {
+            response.setStatus(403);
+            return null;
+        }
+    }
+    
+    @RequestMapping("/globalGuildCount")
+    @ResponseBody
+    private String globalGuildCount(HttpServletRequest request, HttpServletResponse response) {
+        if (isAuthenticated(request)) {
+            return String.valueOf(ShardTracker.getGlobalGuildCount());
         } else {
             response.setStatus(403);
             return null;
@@ -45,6 +56,17 @@ public class BootController {
             }
 
             return a.toString();
+        } else {
+            response.setStatus(403);
+            return null;
+        }
+    }
+    
+    @RequestMapping("/globalUserCount")
+    @ResponseBody
+    private String globalUserCount(HttpServletRequest request, HttpServletResponse response) {
+        if (isAuthenticated(request)) {
+            return String.valueOf(ShardTracker.getGlobalUserCount());
         } else {
             response.setStatus(403);
             return null;
