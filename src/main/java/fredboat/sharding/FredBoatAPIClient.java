@@ -9,7 +9,7 @@ public class FredBoatAPIClient {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(FredBoatAPIClient.class);
 
-    public static int getGlobalGuildCount() {
+    public static int getGlobalGuildCountFromShards() {
         int count = 0;
 
         for (int i = 0; i < FredBoat.numShards; i++) {
@@ -23,6 +23,40 @@ public class FredBoatAPIClient {
                     log.error("Failed to contact " + url, ex);
                 }
             }
+        }
+
+        return count;
+    }
+
+    public static int getGlobalUserGuildFromShard0() {
+        int count = 0;
+
+        String url = FredBoat.distribution.getUrlForShard(0) + "globalGuildCount";
+        try {
+            count = count + Integer.parseInt(Unirest.get(url).asString().getBody());
+        } catch (UnirestException ex) {
+            log.error("Failed to contact " + url, ex);
+        }
+
+        return count;
+    }
+    
+    public static int getGlobalUserCountFromShards() {
+        int count = 0;
+
+        //TODO
+
+        return count;
+    }
+
+    public static int getGlobalUserCountFromShard0() {
+        int count = 0;
+
+        String url = FredBoat.distribution.getUrlForShard(0) + "globalUserCount";
+        try {
+            count = count + Integer.parseInt(Unirest.get(url).asString().getBody());
+        } catch (UnirestException ex) {
+            log.error("Failed to contact " + url, ex);
         }
 
         return count;
