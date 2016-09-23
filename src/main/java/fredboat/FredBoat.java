@@ -217,10 +217,10 @@ public class FredBoat {
 
         try {
             //Init the REST server
-            FredBoatAPIServer.start(jdaBot,
+            new FredBoatAPIServer(jdaBot,
                     credsjson.optString("fredboatToken", "NOT_SET"),
                     new String[] {"--server.port=" + distribution.getPort(shardId)}
-            );
+            ).start();
         } catch (Exception ex) {
             log.error("Failed to start Spring Boot server", ex);
             System.exit(-1);
