@@ -3,6 +3,8 @@ package fredboat.sharding;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
+import java.util.HashSet;
+import org.json.JSONArray;
 import org.slf4j.LoggerFactory;
 
 public class FredBoatAPIClient {
@@ -40,13 +42,30 @@ public class FredBoatAPIClient {
 
         return count;
     }
-    
+
     protected static int getGlobalUserCountFromShards() {
-        int count = 0;
+        HashSet<String> map = new HashSet<>();
 
-        //TODO
+        for (int i = 0; i < FredBoat.numShards; i++) {
+            if (i == FredBoat.shardId) {
+                FredBoat.jdaBot.getGuilds().forEach((Object id) -> {
+                    map.add((String) id);
+                });
+            } else {
+                String url = FredBoat.distribution.getUrlForShard(i) + "users";
+                try {
+                    JSONArray array = new JSONArray(Unirest.get(url).asString().getBody());
 
-        return count;
+                    array.forEach((Object id) -> {
+                        map.add((String) id);
+                    });
+                } catch (UnirestException ex) {
+                    log.error("Failed to contact " + url, ex);
+                }
+            }
+        }
+
+        return map.size();
     }
 
     protected static int getGlobalUserCountFromShard0() {
