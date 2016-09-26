@@ -14,7 +14,7 @@ Code is indented with 4 spaces and without brackets on newlines. Please use the 
 
 ### Issue labels
 * **Beginner** Means that the issue should be suitable for new contributors.
-* **Inermediate** Means that the issue might be somewhat more difficult.
+* **Intermediate** Means that the issue might be somewhat more difficult.
 * **Advanced** Means that the could be a major feature or requires a deep understanding of the bot.
 * **Docs** Means that help is wanted to improve the documentation.
 
