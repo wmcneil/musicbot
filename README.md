@@ -3,11 +3,19 @@ FredBoat is a bot that has various features, but most notably is that it can pla
 
 FredBoat is licensed under the MIT license, so feel free to copy small or large parts of the code here without having to ask.
 
+## Documentation
+Help ccan be found at https://frederikam.github.io/FredBoat/
+
 ## Contributing
 FredBoat is built using Maven, so you should just be able to import the project in your favorite IDE and download all dependencies while building.
 
 ### Code conventions
 Code is indented with 4 spaces and without brackets on newlines. Please use the logging system (SLF4J) instead of `System.out` or `System.err`.
 
-### Labels
-*TODO*
+### Issue labels
+* **Beginner** Means that the issue should be suitable for new contributors.
+* **Inermediate** Means that the issue might be somewhat more difficult.
+* **Advanced** Means that the could be a major feature or requires a deep understanding of the bot.
+* **Docs** Means that help is wanted to improve the documentation.
+
+These 4 tags all imply that help is wanted, so feel free to contribute at whichever level.
