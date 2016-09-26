@@ -19,3 +19,5 @@ Code is indented with 4 spaces and without brackets on newlines. Please use the 
 * **Docs** Means that help is wanted to improve the documentation.
 
 These 4 tags all imply that help is wanted, so feel free to contribute at whichever level.
+
+Also feel free to work on your own ideas. Especially commands, we can't have too many of those.
