@@ -297,7 +297,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x010, "playerdebug", new PlayerDebugCommand());
 
         /* Other Anime Discord or Sergi memes */
-        CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://imgur.com/jeGVLk3"));
+        CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));
         CommandRegistry.registerCommand(0x101, "welcome", new RemoteFileCommand("http://i.imgur.com/yjpmmBk.gif"));
         CommandRegistry.registerCommand(0x101, "rude", new RemoteFileCommand("http://i.imgur.com/pUn7ijx.png"));
         CommandRegistry.registerCommand(0x101, "fuck", new RemoteFileCommand("http://i.imgur.com/1bllKNh.png"));
