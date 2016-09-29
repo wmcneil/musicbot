@@ -65,3 +65,4 @@ target/
 /ffprobe.exe
 /youtube-dl
 /logs/
+*.jar
