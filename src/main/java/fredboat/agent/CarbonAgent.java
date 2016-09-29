@@ -1,8 +1,10 @@
 package fredboat.agent;
 
+import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.event.EventListenerBoat;
+import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,6 +46,10 @@ public class CarbonAgent extends Thread {
                         handleEvery5Minutes();
                     }
 
+                    if (timesSubmitted % 15 == 0) {
+                        handleEvery15Minutes();
+                    }
+
                     if (timesSubmitted % 60 == 0) {
                         handleHourly();
                     }
@@ -62,19 +68,25 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery5Minutes() {
-        submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
-        submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
+        submitData("carbon.fredboat.users." + buildStream + "." + FredBoat.shardId, String.valueOf(jda.getGuilds().size()));
 
-        submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+        submitData("carbon.fredboat.memoryUsage." + buildStream + "." + FredBoat.shardId, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         if (DiscordUtil.isMusicBot()) {
-            submitData("carbon.fredboat.playersPlaying.music", String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
+            submitData("carbon.fredboat.playersPlaying.music." + FredBoat.shardId, String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
+        }
+    }
+
+    private void handleEvery15Minutes() {
+        if (FredBoat.shardId == 0) {
+            submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
+            submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
         }
     }
 
     private void handleHourly() {
-        submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
+        submitData("carbon.fredboat.commandsExecuted." + buildStream + "." + FredBoat.shardId, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
         commandsExecutedLastSubmission = CommandManager.commandsExecuted;
-        submitData("carbon.fredboat.messagesReceived." + buildStream, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
+        submitData("carbon.fredboat.messagesReceived." + buildStream + "." + FredBoat.shardId, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
         messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
     }
 
