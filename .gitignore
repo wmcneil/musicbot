@@ -49,7 +49,7 @@ Temporary Items
 # Custom
 lib/
 test/
-dist*
+dist/*
 build/
 build.xml
 manifest.mf
