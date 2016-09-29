@@ -40,8 +40,8 @@ public class ShardTracker extends Thread {
     public void run() {
         while (true) {
             try {
-                sleep(TICK_TIME);
                 tick();
+                sleep(TICK_TIME);
             } catch (Exception ex) {
                 log.error("Caught exception in ShardTracker loop", ex);
             }
