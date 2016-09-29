@@ -38,6 +38,7 @@ public class FredBoatAPIClient {
             count = count + Integer.parseInt(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
         } catch (UnirestException ex) {
             log.error("Failed to contact " + url, ex);
+            count = FredBoat.jdaBot.getGuilds().size();
         }
 
         return count;
@@ -76,6 +77,7 @@ public class FredBoatAPIClient {
             count = count + Integer.parseInt(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
         } catch (UnirestException ex) {
             log.error("Failed to contact " + url, ex);
+            count = FredBoat.jdaBot.getUsers().size();
         }
 
         return count;
