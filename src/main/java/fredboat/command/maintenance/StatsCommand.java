@@ -5,6 +5,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.abs.Command;
+import fredboat.sharding.ShardTracker;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.JDAInfo;
@@ -51,9 +52,9 @@ public class StatsCommand extends Command {
 
         str = str + "\n----------\n\n";
 
-        str = str + "Known servers:             " + guild.getJDA().getGuilds().size() + "\n";
-        str = str + "Known text channels:       " + guild.getJDA().getTextChannels().size() + "\n";
-        str = str + "Known users in servers:    " + guild.getJDA().getUsers().size() + "\n";
+        str = str + "Known servers:             " + ShardTracker.getGlobalGuildCount() + "\n";
+        str = str + "Known users in servers:    " + ShardTracker.getGlobalUserCount()+ "\n";
+        str = str + "Shard:                     " + FredBoat.shardId + " of a total of " + FredBoat.numShards + "\n";
         str = str + "Is beta:                   " + BotConstants.IS_BETA + "\n";
         str = str + "JDA responses total:       " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:               " + JDAInfo.VERSION;
