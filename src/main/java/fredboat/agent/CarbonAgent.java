@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class CarbonAgent extends Thread {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(CarbonAgent.class);
-    
+
     public final String carbonHost;
     public final int CARBON_PORT = 2003;
     public final boolean logProductionStats;
@@ -25,7 +25,6 @@ public class CarbonAgent extends Thread {
     public final String buildStream;
     private int timesSubmitted = 0;
 
-    
     public CarbonAgent(JDA jda, String carbonHost, String buildStream, boolean logProductionStats) {
         this.jda = jda;
         this.carbonHost = carbonHost;
@@ -53,7 +52,7 @@ public class CarbonAgent extends Thread {
                 } catch (InterruptedException ex) {
                     log.error("Carbon agent was interrupted", ex);
                     return;
-                }  catch (Exception ex) {
+                } catch (Exception ex) {
                     log.error("Carbon agent caught an exception", ex);
                     return;
                 }
@@ -65,12 +64,10 @@ public class CarbonAgent extends Thread {
     private void handleEvery5Minutes() {
         submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
         submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
-        
-        if (logProductionStats) {
-            submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
-            if(DiscordUtil.isMusicBot()){
-                submitData("carbon.fredboat.playersPlaying.music", String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
-            }
+
+        submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+        if (DiscordUtil.isMusicBot()) {
+            submitData("carbon.fredboat.playersPlaying.music", String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
         }
     }
 
@@ -84,13 +81,16 @@ public class CarbonAgent extends Thread {
     public void submitData(String path, String value) {
         try {
             String output = path + " " + value + " " + System.currentTimeMillis() / 1000;
-            Socket socket = new Socket(carbonHost, CARBON_PORT);
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeBytes(output + "\n");
-            dos.flush();
-            socket.close();
-
-            log.info("Submitted data: " + output);
+            if (logProductionStats) {
+                Socket socket = new Socket(carbonHost, CARBON_PORT);
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                dos.writeBytes(output + "\n");
+                dos.flush();
+                socket.close();
+                log.info("Submitted data: " + output);
+            } else {
+                log.info("Discarded data: " + output);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
