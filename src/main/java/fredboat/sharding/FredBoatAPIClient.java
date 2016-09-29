@@ -20,7 +20,7 @@ public class FredBoatAPIClient {
             } else {
                 String url = FredBoat.distribution.getUrlForShard(i) + "guildCount";
                 try {
-                    count = count + Integer.parseInt(Unirest.get(url).asString().getBody());
+                    count = count + Integer.parseInt(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
                 } catch (UnirestException ex) {
                     log.error("Failed to contact " + url, ex);
                 }
@@ -35,7 +35,7 @@ public class FredBoatAPIClient {
 
         String url = FredBoat.distribution.getUrlForShard(0) + "globalGuildCount";
         try {
-            count = count + Integer.parseInt(Unirest.get(url).asString().getBody());
+            count = count + Integer.parseInt(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
         } catch (UnirestException ex) {
             log.error("Failed to contact " + url, ex);
         }
@@ -54,7 +54,7 @@ public class FredBoatAPIClient {
             } else {
                 String url = FredBoat.distribution.getUrlForShard(i) + "users";
                 try {
-                    JSONArray array = new JSONArray(Unirest.get(url).asString().getBody());
+                    JSONArray array = new JSONArray(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
 
                     array.forEach((Object id) -> {
                         map.add((String) id);
@@ -73,7 +73,7 @@ public class FredBoatAPIClient {
 
         String url = FredBoat.distribution.getUrlForShard(0) + "globalUserCount";
         try {
-            count = count + Integer.parseInt(Unirest.get(url).asString().getBody());
+            count = count + Integer.parseInt(Unirest.get(url).headers(FredBoatAPIServer.HEADERS).asString().getBody());
         } catch (UnirestException ex) {
             log.error("Failed to contact " + url, ex);
         }
