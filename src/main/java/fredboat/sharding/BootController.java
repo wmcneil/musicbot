@@ -3,7 +3,6 @@ package fredboat.sharding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONArray;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
