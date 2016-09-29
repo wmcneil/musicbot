@@ -24,7 +24,7 @@ public class FredBoatAPIServer {
     }
 
     public static boolean isAuthenticated(HttpServletRequest request) {
-        return request.getHeader("authorization").equals(token);
+        return request.getHeader("authorization") != null && request.getHeader("authorization").equals(token);
     }
 
     public void start() {
