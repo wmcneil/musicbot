@@ -49,6 +49,8 @@ public class ShardTracker extends Thread {
     }
 
     private void tick() {
+        FredBoatAPIClient.isErrornous = false;
+        
         if(FredBoat.shardId == 0){
             globalGuildCount = FredBoatAPIClient.getGlobalGuildCountFromShards();
             globalUserCount = FredBoatAPIClient.getGlobalUserCountFromShards();

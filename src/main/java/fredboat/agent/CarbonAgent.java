@@ -4,6 +4,7 @@ import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.event.EventListenerBoat;
+import fredboat.sharding.FredBoatAPIClient;
 import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
 import java.io.DataOutputStream;
@@ -77,7 +78,7 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery15Minutes() {
-        if (FredBoat.shardId == 0) {
+        if (FredBoatAPIClient.isErrornous == false && FredBoat.shardId == 0) {
             submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
             submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
         }
