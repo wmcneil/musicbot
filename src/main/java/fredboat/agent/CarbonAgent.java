@@ -69,8 +69,6 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery5Minutes() {
-        submitData("carbon.fredboat.users." + buildStream + "." + FredBoat.shardId, String.valueOf(jda.getGuilds().size()));
-
         submitData("carbon.fredboat.memoryUsage." + buildStream + "." + FredBoat.shardId, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         if (DiscordUtil.isMusicBot()) {
             submitData("carbon.fredboat.playersPlaying.music." + FredBoat.shardId, String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
@@ -82,6 +80,7 @@ public class CarbonAgent extends Thread {
             submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
             submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
         }
+        submitData("carbon.fredboat.users." + buildStream + "." + FredBoat.shardId, String.valueOf(jda.getGuilds().size()));
     }
 
     private void handleHourly() {
