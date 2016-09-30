@@ -69,7 +69,7 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery5Minutes() {
-        submitData("carbon.fredboat.memoryUsage." + buildStream + "." + FredBoat.shardId, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+        submitData("carbon.fredboat.memoryUsage." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
         if (DiscordUtil.isMusicBot()) {
             submitData("carbon.fredboat.playersPlaying.music." + FredBoat.shardId, String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
         }
@@ -84,9 +84,9 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleHourly() {
-        submitData("carbon.fredboat.commandsExecuted." + buildStream + "." + FredBoat.shardId, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
+        submitData("carbon.fredboat.commandsExecuted." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
         commandsExecutedLastSubmission = CommandManager.commandsExecuted;
-        submitData("carbon.fredboat.messagesReceived." + buildStream + "." + FredBoat.shardId, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
+        submitData("carbon.fredboat.messagesReceived." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
         messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
     }
 
