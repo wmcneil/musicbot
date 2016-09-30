@@ -80,7 +80,7 @@ public class CarbonAgent extends Thread {
             submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
             submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
         }
-        submitData("carbon.fredboat.users." + buildStream + "." + FredBoat.shardId, String.valueOf(jda.getGuilds().size()));
+        submitData("carbon.fredboat.users." + buildStream + "." + FredBoat.shardId, String.valueOf(jda.getUsers().size()));
     }
 
     private void handleHourly() {
