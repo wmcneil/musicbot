@@ -144,6 +144,7 @@ public class FredBoat {
         if ((scopes & 0x110) != 0) {
             JDABuilder builder = new JDABuilder()
                     .addListener(listenerBot)
+                    .addListener(new EventLogger("216689009110417408"))
                     .setBotToken(accountToken)
                     .setBulkDeleteSplittingEnabled(true);
             if (numShards > 1) {
@@ -371,10 +372,6 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x101, "roll", new RollCommand(roll));
 
         MusicPersistenceHandler.reloadPlaylists();
-
-        if (jdaBot.getTextChannelById("216689009110417408") != null) {
-            jdaBot.addEventListener(new EventLogger("216689009110417408"));
-        }
     }
 
     public static void shutdown(int code) {

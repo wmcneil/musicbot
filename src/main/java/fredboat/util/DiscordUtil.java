@@ -1,49 +1,62 @@
 package fredboat.util;
 
 import fredboat.FredBoat;
-import java.util.ArrayList;
 import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.impl.JDAImpl;
+import net.dv8tion.jda.requests.Requester;
+import org.json.JSONObject;
 
 public class DiscordUtil {
 
-    public static boolean isMainBot(){
+    public static boolean isMainBot() {
         return (FredBoat.scopes & 0x100) != 0;
     }
-    
-    public static boolean isMusicBot(){
+
+    public static boolean isMusicBot() {
         return (FredBoat.scopes & 0x010) != 0;
     }
-    
-    public static boolean isSelfBot(){
+
+    public static boolean isSelfBot() {
         return (FredBoat.scopes & 0x001) != 0;
     }
-    
+
     public static boolean isMainBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MAIN_BOT_ID);
         return guild.getUsers().contains(other);
     }
-    
+
     public static boolean isMusicBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
         return guild.getUsers().contains(other);
     }
-    
-    public static boolean isUserBotCommander(Guild guild, User user){
+
+    public static boolean isUserBotCommander(Guild guild, User user) {
         List<Role> roles = guild.getRolesForUser(user);
-        
-        for(Role r : roles){
-            if(r.getName().equals("Bot Commander")){
+
+        for (Role r : roles) {
+            if (r.getName().equals("Bot Commander")) {
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    public static void sendShardlessMessage(String channel, Message msg) {
+        sendShardlessMessage(msg.getJDA(), channel, msg.getRawContent());
+    }
+
+    public static void sendShardlessMessage(JDA jda, String channel, String content) {
+        JSONObject body = new JSONObject();
+        body.put("content", content);
+        ((JDAImpl) jda).getRequester().post(Requester.DISCORD_API_PREFIX + "channels/" + channel + "/messages", body);
     }
 
 }
