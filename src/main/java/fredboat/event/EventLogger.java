@@ -17,6 +17,7 @@ public class EventLogger extends ListenerAdapter {
 
     public EventLogger(String logChannelId) {
         this.logChannelId = logChannelId;
+        Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
     }
 
     private void send(Message msg) {
@@ -57,10 +58,13 @@ public class EventLogger extends ListenerAdapter {
         );
     }
 
-    public void onExit(int code) {
-        send(
-                "[:zzz:] Exiting with code `" + code + "`."
-        );
-    }
+    private final Runnable ON_SHUTDOWN = () -> {
+        Runtime rt = Runtime.getRuntime();
+        if(FredBoat.shutdownCode != FredBoat.UNKNOWN_SHUTDOWN_CODE){
+            send("[:door:] Exiting with code " + FredBoat.shutdownCode + ".");
+        } else {
+            send("[:door:] Exiting with unknown code.");
+        }
+    };
 
 }

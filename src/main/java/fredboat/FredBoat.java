@@ -31,7 +31,6 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
@@ -67,7 +66,12 @@ public class FredBoat {
     private static JSONObject credsjson = null;
     public static DistributionEnum distribution = DistributionEnum.BETA;
 
+    public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
+    public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
+
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
+        Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
+        
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
 
@@ -374,21 +378,21 @@ public class FredBoat {
         MusicPersistenceHandler.reloadPlaylists();
     }
 
-    public static void shutdown(int code) {
-        log.info("Shutting down with exit code " + code);
+    //Shutdown hook
+    private static final Runnable ON_SHUTDOWN = () -> {
+        Runtime rt = Runtime.getRuntime();
+        int code = shutdownCode != UNKNOWN_SHUTDOWN_CODE ? shutdownCode : -1;
 
         try {
             MusicPersistenceHandler.handlePreShutdown(code);
         } catch (Exception e) {
-            log.info("Critical error while handling music persistence: ");
-            e.printStackTrace();
+            log.error("Critical error while handling music persistence.", e);
         }
+    };
 
-        for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()) {
-            if (listener instanceof EventLogger) {
-                ((EventLogger) listener).onExit(code);
-            }
-        }
+    public static void shutdown(int code) {
+        log.info("Shutting down with exit code " + code);
+        shutdownCode = code;
 
         //jdaBot.shutdown(true);
         //jdaSelf.shutdown(true);
