@@ -1,8 +1,10 @@
 package fredboat.event;
 
+import fredboat.FredBoat;
+import fredboat.util.DiscordUtil;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.TextChannel;
+import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.events.guild.GuildLeaveEvent;
@@ -15,37 +17,54 @@ public class EventLogger extends ListenerAdapter {
 
     public EventLogger(String logChannelId) {
         this.logChannelId = logChannelId;
+        Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
     }
 
-    public TextChannel getChannel() {
-        return jda.getTextChannelById(logChannelId);
+    private void send(Message msg) {
+        send(msg.getRawContent());
+    }
+
+    private void send(String msg) {
+        DiscordUtil.sendShardlessMessage(jda, logChannelId,
+                "["
+                + FredBoat.shardId
+                + ":"
+                + FredBoat.numShards
+                + "] "
+                + msg
+        );
     }
 
     @Override
     public void onReady(ReadyEvent event) {
         jda = event.getJDA();
-        getChannel().sendMessage(new MessageBuilder()
+        send(new MessageBuilder()
                 .appendString("[:rocket:] Received ready event.")
                 .build()
         );
     }
-    
+
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        getChannel().sendMessage(
+        send(
                 "[:white_check_mark:] Joined guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
         );
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        getChannel().sendMessage(
+        send(
                 "[:x:] Left guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
         );
     }
-    
-    public void onExit(int code){
-        getChannel().sendMessage("[:zzz:] Exiting with code `" + code + "`.");
-    }
+
+    private final Runnable ON_SHUTDOWN = () -> {
+        Runtime rt = Runtime.getRuntime();
+        if(FredBoat.shutdownCode != FredBoat.UNKNOWN_SHUTDOWN_CODE){
+            send("[:door:] Exiting with code " + FredBoat.shutdownCode + ".");
+        } else {
+            send("[:door:] Exiting with unknown code.");
+        }
+    };
 
 }
