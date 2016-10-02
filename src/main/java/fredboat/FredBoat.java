@@ -116,9 +116,7 @@ public class FredBoat {
         Scanner scanner = new Scanner(is);
         credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
-
-        //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
-        //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
+        
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
@@ -243,13 +241,6 @@ public class FredBoat {
         //Init music system
         PlayerRegistry.init(jdaBot);
 
-        /*for (Guild guild : jdaBot.getGuilds()) {
-            log.info(guild.getName());
-
-            for (TextChannel channel : guild.getTextChannels()) {
-                log.info("\t" + channel.getName());
-            }
-        }*/
         //Commands
         CommandRegistry.registerCommand(0x110, "help", new HelpCommand());
         CommandRegistry.registerCommand(0x101, "version", new VersionCommand());
@@ -396,8 +387,6 @@ public class FredBoat {
         log.info("Shutting down with exit code " + code);
         shutdownCode = code;
 
-        //jdaBot.shutdown(true);
-        //jdaSelf.shutdown(true);
         System.exit(code);
     }
 }
