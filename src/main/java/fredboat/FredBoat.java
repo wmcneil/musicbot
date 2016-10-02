@@ -80,7 +80,7 @@ public class FredBoat {
 
         try {
             scopes = Integer.parseInt(args[0]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
             log.info("Invalid scope, defaulting to scopes 0x101");
             scopes = 0x100;
         }
@@ -88,7 +88,7 @@ public class FredBoat {
         try {
             shardId = Integer.parseInt(args[1]);
             numShards = Integer.parseInt(args[2]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
             log.info("Invalid shards, defaulting to 0 of 1 shards");
         }
 
