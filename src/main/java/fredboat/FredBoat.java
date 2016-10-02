@@ -90,7 +90,6 @@ public class FredBoat {
             numShards = Integer.parseInt(args[2]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
             log.info("Invalid shards, defaulting to 0 of 1 shards");
-            scopes = 0x100;
         }
 
         log.info("Starting with scopes:"
