@@ -1,8 +1,6 @@
 package fredboat;
 
-import fredboat.agent.CarbonAgent;
-import fredboat.agent.CarbonitexAgent;
-import fredboat.agent.MusicGC;
+import fredboat.agent.*;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.MusicQueueProcessor;
@@ -15,8 +13,11 @@ import fredboat.db.RedisCache;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.event.EventLogger;
+import fredboat.sharding.FredBoatAPIServer;
+import fredboat.sharding.ShardTracker;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
+import fredboat.util.DistributionEnum;
 import fredboat.util.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
@@ -30,7 +31,6 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.utils.SimpleLog;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
-    
+
     public static String otherBotId = "";
 
     public static int scopes = 0;
@@ -60,32 +60,59 @@ public class FredBoat {
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
 
+    public static int shardId = 0;
+    public static int numShards = 1;
+
+    private static JSONObject credsjson = null;
+    public static DistributionEnum distribution = DistributionEnum.BETA;
+
+    public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
+    public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
+
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
+        Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
+        
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
 
         //Make JDA not print to console, we have Logback for that
         SimpleLog.LEVEL = SimpleLog.Level.OFF;
-        
+
         try {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-            log.info("Invalid arguments: " + args + ", defaulting to scopes 0x101");
+            log.info("Invalid scope, defaulting to scopes 0x101");
             scopes = 0x100;
         }
+
+        try {
+            shardId = Integer.parseInt(args[1]);
+            numShards = Integer.parseInt(args[2]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+            log.info("Invalid shards, defaulting to 0 of 1 shards");
+        }
+
         log.info("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
-        //Determine what the "other bot" is
-        otherBotId = ((scopes & 0x010) == 0x010) ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
+        log.info("Starting as shard " + shardId + " of " + numShards);
+
+        //Determine distribution
+        if (BotConstants.IS_BETA) {
+            distribution = DistributionEnum.BETA;
+        } else {
+            distribution = ((scopes & 0x010) == 0x010) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
+            otherBotId = distribution == DistributionEnum.MAIN ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
+        }
 
         //Load credentials file
         InputStream is = new FileInputStream(new File("./credentials.json"));
         //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
-        JSONObject credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
+        credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
+        scanner.close();
 
         //accountEmail = credsjson.getString(ACCOUNT_EMAIL_KEY);
         //accountPassword = credsjson.getString(ACCOUNT_PASSWORD_KEY);
@@ -103,8 +130,6 @@ public class FredBoat {
             }
         }
 
-        scanner.close();
-
         //Initialise event listeners
         EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
         EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
@@ -120,15 +145,18 @@ public class FredBoat {
         }
 
         if ((scopes & 0x110) != 0) {
-            jdaBot = new JDABuilder()
+            JDABuilder builder = new JDABuilder()
                     .addListener(listenerBot)
                     .addListener(new EventLogger("216689009110417408"))
                     .setBotToken(accountToken)
-                    .setBulkDeleteSplittingEnabled(true)
-                    .buildAsync();
+                    .setBulkDeleteSplittingEnabled(true);
+            if (numShards > 1) {
+                builder.useSharding(shardId, numShards);
+            }
+            jdaBot = builder.buildAsync();
         }
 
-        if ((scopes & 0x001) != 0) {
+        if ((scopes & 0x001) != 0 && shardId == 0) {
             jdaSelf = new JDAClientBuilder()
                     .addListener(listenerSelf)
                     .setClientToken(clientToken)
@@ -146,10 +174,10 @@ public class FredBoat {
         //Redis
         String redisHost = credsjson.getString("redisHost");
         String redisPassword = credsjson.getString("redisPassword");
-        
+
         try {
             RedisCache.init(redisHost, redisPassword);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Failed to connect to Redis! This might cause problems with the bot.", e);
         }
 
@@ -190,6 +218,23 @@ public class FredBoat {
 
         if (readyEvents < readyEventsRequired) {
             return;
+        }
+
+        try {
+            //Init the REST server
+            new FredBoatAPIServer(
+                    jdaBot,
+                    credsjson.optString("fredboatToken", "NOT_SET"),
+                    new String[]{"--server.port=" + distribution.getPort(shardId)}
+            ).start();
+
+            new ShardTracker(
+                    jdaBot,
+                    credsjson.optString("fredboatToken", "NOT_SET")
+            ).start();
+        } catch (Exception ex) {
+            log.error("Failed to start Spring Boot server", ex);
+            System.exit(-1);
         }
 
         //Init music system
@@ -332,21 +377,21 @@ public class FredBoat {
         MusicPersistenceHandler.reloadPlaylists();
     }
 
-    public static void shutdown(int code) {
-        log.info("Shutting down with exit code " + code);
+    //Shutdown hook
+    private static final Runnable ON_SHUTDOWN = () -> {
+        Runtime rt = Runtime.getRuntime();
+        int code = shutdownCode != UNKNOWN_SHUTDOWN_CODE ? shutdownCode : -1;
 
         try {
             MusicPersistenceHandler.handlePreShutdown(code);
         } catch (Exception e) {
-            log.info("Critical error while handling music persistence: ");
-            e.printStackTrace();
+            log.error("Critical error while handling music persistence.", e);
         }
+    };
 
-        for (Object listener : ((JDAImpl) jdaBot).getEventManager().getRegisteredListeners()) {
-            if (listener instanceof EventLogger) {
-                ((EventLogger) listener).onExit(code);
-            }
-        }
+    public static void shutdown(int code) {
+        log.info("Shutting down with exit code " + code);
+        shutdownCode = code;
 
         //jdaBot.shutdown(true);
         //jdaSelf.shutdown(true);

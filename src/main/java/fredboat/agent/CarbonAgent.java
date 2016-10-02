@@ -1,8 +1,11 @@
 package fredboat.agent;
 
+import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.event.EventListenerBoat;
+import fredboat.sharding.FredBoatAPIClient;
+import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class CarbonAgent extends Thread {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(CarbonAgent.class);
-    
+
     public final String carbonHost;
     public final int CARBON_PORT = 2003;
     public final boolean logProductionStats;
@@ -25,7 +28,6 @@ public class CarbonAgent extends Thread {
     public final String buildStream;
     private int timesSubmitted = 0;
 
-    
     public CarbonAgent(JDA jda, String carbonHost, String buildStream, boolean logProductionStats) {
         this.jda = jda;
         this.carbonHost = carbonHost;
@@ -45,6 +47,10 @@ public class CarbonAgent extends Thread {
                         handleEvery5Minutes();
                     }
 
+                    if (timesSubmitted % 15 == 0) {
+                        handleEvery15Minutes();
+                    }
+
                     if (timesSubmitted % 60 == 0) {
                         handleHourly();
                     }
@@ -53,7 +59,7 @@ public class CarbonAgent extends Thread {
                 } catch (InterruptedException ex) {
                     log.error("Carbon agent was interrupted", ex);
                     return;
-                }  catch (Exception ex) {
+                } catch (Exception ex) {
                     log.error("Carbon agent caught an exception", ex);
                     return;
                 }
@@ -63,34 +69,40 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery5Minutes() {
-        submitData("carbon.fredboat.users." + buildStream, String.valueOf(jda.getUsers().size()));
-        submitData("carbon.fredboat.guilds." + buildStream, String.valueOf(jda.getGuilds().size()));
-        
-        if (logProductionStats) {
-            submitData("carbon.fredboat.memoryUsage." + buildStream, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
-            if(DiscordUtil.isMusicBot()){
-                submitData("carbon.fredboat.playersPlaying.music", String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
-            }
+        submitData("carbon.fredboat.memoryUsage." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));//In bytes
+        if (DiscordUtil.isMusicBot()) {
+            submitData("carbon.fredboat.playersPlaying.music." + FredBoat.shardId, String.valueOf(PlayerRegistry.getPlayingPlayers().size()));
         }
     }
 
+    private void handleEvery15Minutes() {
+        if (FredBoatAPIClient.isErrornous == false && FredBoat.shardId == 0) {
+            submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
+            submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
+        }
+        submitData("carbon.fredboat.users." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(jda.getUsers().size()));
+    }
+
     private void handleHourly() {
-        submitData("carbon.fredboat.commandsExecuted." + buildStream, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
+        submitData("carbon.fredboat.commandsExecuted." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(CommandManager.commandsExecuted - commandsExecutedLastSubmission));
         commandsExecutedLastSubmission = CommandManager.commandsExecuted;
-        submitData("carbon.fredboat.messagesReceived." + buildStream, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
+        submitData("carbon.fredboat.messagesReceived." + buildStream + ".shard" + FredBoat.shardId, String.valueOf(EventListenerBoat.messagesReceived - messagesReceivedLastSubmission));
         messagesReceivedLastSubmission = EventListenerBoat.messagesReceived;
     }
 
     public void submitData(String path, String value) {
         try {
             String output = path + " " + value + " " + System.currentTimeMillis() / 1000;
-            Socket socket = new Socket(carbonHost, CARBON_PORT);
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeBytes(output + "\n");
-            dos.flush();
-            socket.close();
-
-            log.info("Submitted data: " + output);
+            if (logProductionStats) {
+                Socket socket = new Socket(carbonHost, CARBON_PORT);
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                dos.writeBytes(output + "\n");
+                dos.flush();
+                socket.close();
+                log.info("Submitted data: " + output);
+            } else {
+                log.info("Discarded data: " + output);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CarbonAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
