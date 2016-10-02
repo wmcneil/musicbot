@@ -14,15 +14,15 @@ import org.json.JSONObject;
 public class DiscordUtil {
 
     public static boolean isMainBot() {
-        return (FredBoat.scopes & 0x100) != 0;
+        return (FredBoat.getScopes() & 0x100) != 0;
     }
 
     public static boolean isMusicBot() {
-        return (FredBoat.scopes & 0x010) != 0;
+        return (FredBoat.getScopes() & 0x010) != 0;
     }
 
     public static boolean isSelfBot() {
-        return (FredBoat.scopes & 0x001) != 0;
+        return (FredBoat.getScopes() & 0x001) != 0;
     }
 
     public static boolean isMainBotPresent(Guild guild) {

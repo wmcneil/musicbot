@@ -41,9 +41,7 @@ public class FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
 
-    public static String otherBotId = "";
-
-    public static int scopes = 0;
+    private static int scopes = 0;
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
     public static JCA jca;
@@ -107,7 +105,6 @@ public class FredBoat {
             distribution = DistributionEnum.BETA;
         } else {
             distribution = ((scopes & 0x010) == 0x010) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
-            otherBotId = distribution == DistributionEnum.MAIN ? BotConstants.MAIN_BOT_ID : BotConstants.MUSIC_BOT_ID;
         }
 
         //Load credentials file
@@ -388,5 +385,9 @@ public class FredBoat {
         shutdownCode = code;
 
         System.exit(code);
+    }
+
+    public static int getScopes() {
+        return scopes;
     }
 }
