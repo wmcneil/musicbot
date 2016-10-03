@@ -1,9 +1,10 @@
 language: java
 
 cache:
-directories:
-– $HOME/.m2
-– $HOME/.sonar/cache
+  directories:
+  - .autoconf
+  - $HOME/.m2
+  - $HOME/.sonar/cache
 
 jdk:
   - oraclejdk8
