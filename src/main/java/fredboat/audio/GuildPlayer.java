@@ -248,7 +248,7 @@ public class GuildPlayer extends MusicPlayer {
     /**
      * @return Users who are not bots
      */
-    public ArrayList<User> getUsersInVC() {
+    public List<User> getUsersInVC() {
         VoiceChannel vc = getChannel();
         if (vc == null) {
             return new ArrayList<>();

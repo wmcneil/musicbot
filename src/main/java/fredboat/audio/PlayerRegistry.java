@@ -2,6 +2,7 @@ package fredboat.audio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Guild;
 
@@ -52,7 +53,7 @@ public class PlayerRegistry {
         return registry;
     }
     
-    public static ArrayList<GuildPlayer> getPlayingPlayers(){
+    public static List<GuildPlayer> getPlayingPlayers(){
         ArrayList<GuildPlayer> plrs = new ArrayList<>();
         
         for(GuildPlayer plr : registry.values()){

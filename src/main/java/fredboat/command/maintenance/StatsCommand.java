@@ -3,10 +3,12 @@ package fredboat.command.maintenance;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.abs.Command;
 import fredboat.sharding.ShardTracker;
 import fredboat.util.BotConstants;
+import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.entities.Guild;
@@ -37,12 +39,17 @@ public class StatsCommand extends Command {
             ex.printStackTrace();
         }
         
-        String str = " This boat has been floating for "
+        String str = " This shard has been running for "
                 + days + " days, "
                 + hours + " hours, "
                 + mins + " minutes and "
                 + secs + " seconds.\n"
-                + "This bot has executed " + (CommandManager.commandsExecuted - 1) + " commands this session.\n";
+                + "This shard has executed " + (CommandManager.commandsExecuted - 1) + " commands this session.\n";
+        
+        if(DiscordUtil.isMusicBot()){
+            str = str + "Players playing:           " + PlayerRegistry.getPlayingPlayers().size() + "\n";
+        }
+        
         str = str + "That's a rate of " + (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)) + " commands per hour\n\n```";
         str = str + "Host uptime last 30 days:  " + uptime30Days + "\n";
         str = str + "Reserved memory:           " + Runtime.getRuntime().totalMemory() / 1000000 + "MB\n";
@@ -52,9 +59,11 @@ public class StatsCommand extends Command {
 
         str = str + "\n----------\n\n";
 
-        str = str + "Known servers:             " + ShardTracker.getGlobalGuildCount() + "\n";
-        str = str + "Known users in servers:    " + ShardTracker.getGlobalUserCount()+ "\n";
         str = str + "Shard:                     " + FredBoat.shardId + " of a total of " + FredBoat.numShards + "\n";
+        str = str + "Known servers:             " + ShardTracker.getGlobalGuildCount() + "\n";
+        str = str + "-> In this shard:          " + guild.getJDA().getGuilds().size();
+        str = str + "Known users in servers:    " + ShardTracker.getGlobalUserCount()+ "\n";
+        str = str + "-> In this shard:          " + guild.getJDA().getUsers().size();
         str = str + "Is beta:                   " + BotConstants.IS_BETA + "\n";
         str = str + "JDA responses total:       " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:               " + JDAInfo.VERSION;
