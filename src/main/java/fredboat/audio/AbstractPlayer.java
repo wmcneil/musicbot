@@ -28,15 +28,27 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public void play() {
         if (player.isPaused()) {
             player.setPaused(false);
+            if(player.getPlayingTrack() == null){
+                play0();
+            }
         }
     }
 
-    public void pause() {
-        player.setPaused(true);
+    public void setPause(boolean pause) {
+        if(pause){
+            player.setPaused(true);
+        } else {
+            play();
+        }
+    }
+
+    public void stop() {
+        player.stopTrack();
     }
 
     public void skip() {
         player.stopTrack();
+        play0();
     }
 
     public boolean isPlaying() {
@@ -63,11 +75,26 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         this.audioTrackProvider = audioTrackProvider;
     }
 
+    public AudioTrackProvider getAudioTrackProvider() {
+        return audioTrackProvider;
+    }
+
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, boolean interrupted) {
+        //If we *were* interrupted, we would just invoke play0()
+        if (!interrupted) {
+            play0();
+        }
+    }
+
+    private void play0() {
         if (audioTrackProvider != null) {
             player.playTrack(audioTrackProvider.provideAudioTrack());
         }
+    }
+    
+    public void destroy(){
+        player.destroy();
     }
 
     @Override
