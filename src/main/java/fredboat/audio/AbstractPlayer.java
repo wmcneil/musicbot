@@ -5,8 +5,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.queue.AudioTrackProvider;
+import net.dv8tion.jda.audio.AudioSendHandler;
 
-public abstract class AbstractPlayer extends AudioEventAdapter {
+public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler{
     
     private static AudioPlayerManager playerManager;
     private AudioPlayer player;
@@ -51,6 +52,16 @@ public abstract class AbstractPlayer extends AudioEventAdapter {
         if(audioTrackProvider != null){
             player.playTrack(audioTrackProvider.provideAudioTrack());
         }
+    }
+
+    @Override
+    public boolean canProvide() {
+        return player.getPlayingTrack() != null && !player.isPaused();
+    }
+
+    @Override
+    public byte[] provide20MsAudio() {
+        return player.provide().data;
     }
     
 }
