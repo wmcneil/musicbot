@@ -11,14 +11,14 @@ import net.dv8tion.jda.player.source.AudioSource;
 import net.dv8tion.jda.player.source.RemoteSource;
 import org.slf4j.LoggerFactory;
 
-public class PlayerEventListener extends PlayerListenerAdapter {
+public class PlayerEventListenerOld extends PlayerListenerAdapter {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayerEventListener.class);
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayerEventListenerOld.class);
     
     public final GuildPlayer player;
     public Pattern youtubeIdPattern = Pattern.compile("youtube.com\\/watch\\?v=(.+)");
 
-    public PlayerEventListener(GuildPlayer player) {
+    public PlayerEventListenerOld(GuildPlayer player) {
         this.player = player;
     }
     

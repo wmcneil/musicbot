@@ -35,7 +35,7 @@ public class GuildPlayer extends MusicPlayer {
     public TextChannel currentTC;
     public long lastTimePaused = System.currentTimeMillis();
     public long lastTimeInVC = System.currentTimeMillis();
-    public final PlayerEventListener eventListener;
+    public final PlayerEventListenerOld eventListener;
     public String lastYoutubeVideoId = null;
 
     private long playlistTimeoutEnds = 0L;
@@ -43,7 +43,7 @@ public class GuildPlayer extends MusicPlayer {
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
-        this.eventListener = new PlayerEventListener(this);
+        this.eventListener = new PlayerEventListenerOld(this);
         addEventListener(eventListener);
 
         AudioManager manager = guild.getAudioManager();
