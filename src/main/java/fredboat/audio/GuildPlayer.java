@@ -189,7 +189,7 @@ public class GuildPlayer extends MusicPlayer {
 
             }
 
-            playlistTimeoutEnds = System.currentTimeMillis() + 20000 * playlist.getSources().size();
+            playlistTimeoutEnds = System.currentTimeMillis() + 20000 * Math.min(MAX_PLAYLIST_ENTRIES, playlist.getSources().size());
         }
     }
 
