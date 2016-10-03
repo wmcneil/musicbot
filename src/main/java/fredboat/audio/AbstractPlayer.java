@@ -10,7 +10,7 @@ import net.dv8tion.jda.audio.AudioSendHandler;
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 
     private static AudioPlayerManager playerManager;
-    private AudioPlayer player;
+    AudioPlayer player;
     private AudioTrackProvider audioTrackProvider;
 
     @SuppressWarnings("LeakingThisInConstructor")

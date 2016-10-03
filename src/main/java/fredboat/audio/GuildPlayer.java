@@ -14,7 +14,6 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.managers.AudioManager;
-import net.dv8tion.jda.player.MusicPlayer;
 import net.dv8tion.jda.player.Playlist;
 import net.dv8tion.jda.player.source.AudioInfo;
 import net.dv8tion.jda.player.source.AudioSource;
@@ -23,7 +22,7 @@ import net.dv8tion.jda.utils.PermissionUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.LoggerFactory;
 
-public class GuildPlayer extends MusicPlayer {
+public class GuildPlayer extends AbstractPlayer {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
     
@@ -35,7 +34,7 @@ public class GuildPlayer extends MusicPlayer {
     public TextChannel currentTC;
     public long lastTimePaused = System.currentTimeMillis();
     public long lastTimeInVC = System.currentTimeMillis();
-    public final PlayerEventListenerOld eventListener;
+    public final PlayerEventListener eventListener;
     public String lastYoutubeVideoId = null;
 
     private long playlistTimeoutEnds = 0L;
@@ -43,8 +42,8 @@ public class GuildPlayer extends MusicPlayer {
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
-        this.eventListener = new PlayerEventListenerOld(this);
-        addEventListener(eventListener);
+        this.eventListener = new PlayerEventListener(this);
+        player.addListener(eventListener);
 
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
