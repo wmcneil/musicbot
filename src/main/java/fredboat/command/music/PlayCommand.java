@@ -33,7 +33,6 @@ public class PlayCommand extends Command implements IMusicCommand {
             return;
         }
 
-        SelfInfo self = guild.getJDA().getSelfInfo();
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.currentTC = channel;
 
@@ -48,7 +47,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
     private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        if (player.getCurrentAudioSource() == null && player.getAudioQueue().isEmpty()) {
+        if (player.getPlayingTrack() == null) {
             channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
         } else if (player.isPlaying()) {
             channel.sendMessage("The player is already playing.");
