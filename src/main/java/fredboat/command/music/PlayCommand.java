@@ -37,7 +37,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.currentTC = channel;
 
-        player.playOrQueueSong(args[1], channel, invoker);
+        player.queue(args[1], channel, invoker);
 
         try {
             message.deleteMessage();

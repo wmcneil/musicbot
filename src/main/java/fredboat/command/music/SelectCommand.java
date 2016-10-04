@@ -29,7 +29,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                     player.selections.remove(invoker.getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
                     selection.getOutMsg().updateMessage(msg);
-                    player.playOrQueueSong("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
+                    player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
                     try {
                         message.deleteMessage();
                     } catch (PermissionException ex) {

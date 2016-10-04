@@ -1,8 +1,8 @@
 package fredboat.audio;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.queue.AudioLoader;
-import fredboat.audio.queue.MusicQueueProcessor;
-import fredboat.audio.queue.QueueItem;
+import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import java.util.ArrayList;
@@ -16,12 +16,8 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.managers.AudioManager;
-import net.dv8tion.jda.player.Playlist;
-import net.dv8tion.jda.player.source.AudioInfo;
 import net.dv8tion.jda.player.source.AudioSource;
-import net.dv8tion.jda.player.source.RemoteSource;
 import net.dv8tion.jda.utils.PermissionUtil;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.LoggerFactory;
 
 public class GuildPlayer extends AbstractPlayer {
@@ -38,7 +34,6 @@ public class GuildPlayer extends AbstractPlayer {
     public long lastTimeInVC = System.currentTimeMillis();
     public final PlayerEventListener eventListener;
     public String lastYoutubeVideoId = null;
-    private long playlistTimeoutEnds = 0L;
     
     private final AudioLoader audioLoader;
     
@@ -50,8 +45,8 @@ public class GuildPlayer extends AbstractPlayer {
 
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
-        setAudioTrackProvider(new SimpleTrackProvider());
-        audioLoader = new AudioLoader(getAudioTrackProvider(), this);
+        audioTrackProvider = new SimpleTrackProvider();
+        audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager());
     }
 
     public void joinChannel(User usr) throws MessagingException {
@@ -82,16 +77,7 @@ public class GuildPlayer extends AbstractPlayer {
         } else {
             manager.openAudioConnection(targetChannel);
         }
-
-        /*while (manager.isAttemptingToConnect() == true && manager.isConnected() == false) {
-             log.info(manager.isAttemptingToConnect() + " : " + manager.isConnected());
-            synchronized (this) {
-                try {
-                    wait(100);
-                } catch (InterruptedException ex) {
-                }
-            }
-        }*/
+        
         log.info("Connected to voice channel " + targetChannel);
     }
 
@@ -118,121 +104,27 @@ public class GuildPlayer extends AbstractPlayer {
         return null;
     }
 
-    public void playOrQueueSong(String url, TextChannel channel) {
-        playOrQueueSong(url, channel, null);
-    }
-
-    public void playOrQueueSong(String url, TextChannel channel, User invoker) {
-        //Check that we are in the same voice channel
-        if (invoker != null && getUserCurrentVoiceChannel(invoker) != getChannel()) {
-            try {
-                joinChannel(invoker);
-            } catch (IllegalStateException ex) {
-                channel.sendMessage("An error occurred. Couldn't join " + getChannel().getName() + " because I am already trying to connect to that channel. Please try again.");
-                return;
-            }
-        }
-
-        //Now we will either have thrown an exception or be in the same channel
-        AudioManager manager = getGuild().getAudioManager();
-        manager.setSendingHandler(this);
-
-        Playlist playlist;
-        try {
-            playlist = Playlist.getPlaylist(url);
-        } catch (NullPointerException ex) {
-            RemoteSource rs = new RemoteSource(url);
-
-            AudioInfo rsinfo = rs.getInfo();
-            if (rsinfo.getError() != null) {
-                channel.sendMessage("Was unable to queue song:" + rsinfo.getError());
-            } else {
-                throw new RuntimeException("Caught exception but unable to determine yt-dl error", ex);
-            }
-            return;
-        }
-        if (playlist.getSources().isEmpty()) {
-            if (this.getAudioQueue().isEmpty()) {
-                manager.closeAudioConnection();
-                throw new MessagingException("The playlist is currently empty.");
-            }
-        } else if (playlist.getSources().size() == 1) {
-            AudioSource source = playlist.getSources().get(0);
-
-            QueueItem item = new QueueItem(invoker, channel, source);
-            MusicQueueProcessor.add(item);
-        } else {
-            //We have multiple sources in the playlist
-            channel.sendMessage("Found a playlist with " + playlist.getSources().size() + " entries");
-
-            //Check if the player is under cooldown
-            if (playlistTimeoutEnds > System.currentTimeMillis()) {
-                int secsToWait = (int) ((playlistTimeoutEnds - System.currentTimeMillis()) / 1000);
-                throw new MessagingException("You are adding playlists too fast! Please wait " + secsToWait + " seconds before adding a new playlist. Longer playlists results in longer cooldowns.");
-            }
-
-            if (playlist.getSources().size() > MAX_PLAYLIST_ENTRIES) {
-                channel.sendMessage("This playlist contains too many entries. Adding the first " + MAX_PLAYLIST_ENTRIES + " instead...");
-            }
-
-            String id = RandomStringUtils.random(16);
-
-            int i = 0;
-
-            for (AudioSource source : playlist.getSources()) {
-                i++;
-
-                if (i == MAX_PLAYLIST_ENTRIES || i == playlist.getSources().size()) {
-                    QueueItem item = new QueueItem(invoker, channel, source, id, i - 1, true);
-                    MusicQueueProcessor.add(item);
-                    break;
-                } else {
-                    QueueItem item = new QueueItem(invoker, channel, source, id, i - 1, false);
-                    MusicQueueProcessor.add(item);
-                }
-
-            }
-
-            playlistTimeoutEnds = System.currentTimeMillis() + 20000 * Math.min(MAX_PLAYLIST_ENTRIES, playlist.getSources().size());
-        }
-    }
-
-    //Includes currently playing song
-    public List<AudioSource> getAllRemainingSources() {
-        LinkedList<AudioSource> list = new LinkedList<>();
-
-        AudioSource current = getCurrentAudioSource();
-        if (current != null) {
-            list.add(current);
-        }
-
-        list.addAll(getAudioQueue());
-
-        return list;
+    public void queue(String identifier, TextChannel channel, User invoker) {
+        IdentifierContext ic = new IdentifierContext(identifier, channel, invoker);
+        audioLoader.loadAsync(ic);
     }
 
     public int getSongCount() {
-        int count = 0;
-        if (getCurrentAudioSource() != null) {
-            count++;
-        }
-
-        count += getAudioQueue().size();
-
-        return count;
+        return getRemainingTracks().size();
     }
 
     public int getTotalRemainingMusicTimeSeconds() {
-        int seconds = 0;
-        for (AudioSource as : getAllRemainingSources()) {
-            seconds += as.getInfo().getDuration().getTotalSeconds();
+        int millis = 0;
+        for(AudioTrack at : getQueuedTracks()){
+            millis += at.getDuration();
+        }
+        
+        AudioTrack at = getPlayingTrack();
+        if(at != null){
+            millis += at.getDuration() - at.getPosition();
         }
 
-        if (getCurrentTimestamp() != null) {
-            seconds = seconds - getCurrentTimestamp().getSeconds();
-        }
-
-        return seconds;
+        return millis / 1000;
     }
 
     public VoiceChannel getChannel() {

@@ -6,12 +6,14 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.audio.AudioSendHandler;
 import fredboat.audio.queue.ITrackProvider;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 
     private static AudioPlayerManager playerManager;
     AudioPlayer player;
-    private ITrackProvider audioTrackProvider;
+    ITrackProvider audioTrackProvider;
 
     @SuppressWarnings("LeakingThisInConstructor")
     protected AbstractPlayer() {
@@ -42,8 +44,8 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             play();
         }
     }
-    
-    public void pause(){
+
+    public void pause() {
         player.setPaused(true);
     }
 
@@ -64,6 +66,22 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         return player.getPlayingTrack();
     }
 
+    public List<AudioTrack> getQueuedTracks() {
+        return audioTrackProvider.getAsList();
+    }
+
+    public List<AudioTrack> getRemainingTracks() {
+        //Includes currently playing track, which comes first
+        if (getPlayingTrack() != null) {
+            ArrayList<AudioTrack> list = new ArrayList<>();
+            list.add(getPlayingTrack());
+            list.addAll(getQueuedTracks());
+            return list;
+        } else {
+            return getQueuedTracks();
+        }
+    }
+
     public void setVolume(float vol) {
         player.setVolume((int) (vol * 100));
     }
@@ -78,6 +96,10 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     public ITrackProvider getAudioTrackProvider() {
         return audioTrackProvider;
+    }
+
+    public static AudioPlayerManager getPlayerManager() {
+        return playerManager;
     }
 
     @Override
