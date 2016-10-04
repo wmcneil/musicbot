@@ -19,29 +19,28 @@ public class MusicGC extends Thread {
     @Override
     public void run() {
         log.info("Music GC running");
-        while(true){
-            synchronized(this){
+        while (true) {
+            synchronized (this) {
                 try {
                     this.sleep(60000);
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
-                
+
                 HashMap<String, GuildPlayer> players = PlayerRegistry.getRegistry();
                 
-                for(GuildPlayer player : players.values()){
-                    
-                    if(player.isPaused()
-                            && player.isStopped() == false
-                            && player.getMillisSincePause() > 60000){
+                for (GuildPlayer player : players.values()) {
+
+                    if (player.isPaused()
+                            && player.getMillisSincePause() > 60000) {
                         player.stop();
                         log.info("Stopped player: " + player);
                     }
-                    
-                    if(player.getChannel() != null){
+
+                    if (player.getChannel() != null
+                            && !player.isPlaying()) {
                         player.markIsInVC();
-                    } else if(player.isStopped() == false
-                            && player.getMillisSinceInVC() > 300000) {
+                    } else if (player.getMillisSinceInVC() > 300000) {
                         player.stop();
                         log.info("Stopped player for not being in a VC last 5 minutes: " + player);
                     }
@@ -49,5 +48,5 @@ public class MusicGC extends Thread {
             }
         }
     }
-    
+
 }
