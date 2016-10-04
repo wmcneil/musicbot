@@ -30,7 +30,6 @@ public class GuildPlayer extends AbstractPlayer {
     public TextChannel currentTC;
     public long lastTimePaused = System.currentTimeMillis();
     public long lastTimeInVC = System.currentTimeMillis();
-    public final PlayerEventListener eventListener;
     public String lastYoutubeVideoId = null;
 
     private final AudioLoader audioLoader;
@@ -38,8 +37,6 @@ public class GuildPlayer extends AbstractPlayer {
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
-        this.eventListener = new PlayerEventListener(this);
-        player.addListener(eventListener);
 
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
