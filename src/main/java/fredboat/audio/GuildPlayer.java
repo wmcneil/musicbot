@@ -34,6 +34,7 @@ public class GuildPlayer extends AbstractPlayer {
 
     private final AudioLoader audioLoader;
 
+    @SuppressWarnings("LeakingThisInConstructor")
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
@@ -41,7 +42,7 @@ public class GuildPlayer extends AbstractPlayer {
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
         audioTrackProvider = new SimpleTrackProvider();
-        audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager());
+        audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager(), this);
     }
 
     public void joinChannel(User usr) throws MessagingException {

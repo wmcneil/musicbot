@@ -5,19 +5,22 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fredboat.audio.GuildPlayer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AudioLoader implements AudioLoadResultHandler {
 
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
+    private final GuildPlayer gplayer;
     private final ConcurrentLinkedQueue<IdentifierContext> identifierQueue = new ConcurrentLinkedQueue();
     private IdentifierContext contextBeingLoaded = null;
     private volatile boolean isLoading = false;
 
-    public AudioLoader(ITrackProvider trackProvider, AudioPlayerManager playerManager) {
+    public AudioLoader(ITrackProvider trackProvider, AudioPlayerManager playerManager, GuildPlayer gplayer) {
         this.trackProvider = trackProvider;
         this.playerManager = playerManager;
+        this.gplayer = gplayer;
     }
     
     public void loadAsync(IdentifierContext ic){
@@ -45,6 +48,9 @@ public class AudioLoader implements AudioLoadResultHandler {
         );
         
         trackProvider.add(at);
+        if(!gplayer.isPaused()){
+            gplayer.play();
+        }
         loadNextAsync();
     }
 

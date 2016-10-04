@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import net.dv8tion.jda.audio.AudioSendHandler;
 import fredboat.audio.queue.ITrackProvider;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private static AudioPlayerManager playerManager;
     AudioPlayer player;
     ITrackProvider audioTrackProvider;
+    private AudioFrame lastFrame = null;
 
     @SuppressWarnings("LeakingThisInConstructor")
     protected AbstractPlayer() {
@@ -32,10 +34,11 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public void play() {
         if (player.isPaused()) {
             player.setPaused(false);
-            if (player.getPlayingTrack() == null) {
-                play0();
-            }
         }
+        if (player.getPlayingTrack() == null) {
+            play0();
+        }
+
     }
 
     public void setPause(boolean pause) {
@@ -123,13 +126,15 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     @Override
-    public boolean canProvide() {
-        return isPlaying();
-    }
-
-    @Override
     public byte[] provide20MsAudio() {
-        return player.provide().data;
+        return lastFrame.data;
+    }
+    
+    @Override
+    public boolean canProvide() {
+        lastFrame = player.provide();
+        
+        return lastFrame != null;
     }
 
     @Override
