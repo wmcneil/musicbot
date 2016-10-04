@@ -3,7 +3,6 @@ package fredboat;
 import fredboat.agent.*;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
-import fredboat.audio.queue.MusicQueueProcessor;
 import fredboat.command.fun.*;
 import fredboat.command.maintenance.*;
 import fredboat.command.music.*;
@@ -199,10 +198,6 @@ public class FredBoat {
         } else {
             log.info("No carbon host configured. Skipping carbon daemon.");
         }
-
-        MusicQueueProcessor mqp = new MusicQueueProcessor();
-        mqp.setDaemon(true);
-        mqp.start();
 
         MusicGC mgc = new MusicGC(jdaBot);
         mgc.setDaemon(true);
