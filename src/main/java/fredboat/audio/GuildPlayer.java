@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class GuildPlayer extends AbstractPlayer {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
-    
+
     public static final int MAX_PLAYLIST_ENTRIES = 20;
 
     public final JDA jda;
@@ -34,9 +34,9 @@ public class GuildPlayer extends AbstractPlayer {
     public long lastTimeInVC = System.currentTimeMillis();
     public final PlayerEventListener eventListener;
     public String lastYoutubeVideoId = null;
-    
+
     private final AudioLoader audioLoader;
-    
+
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
@@ -77,7 +77,7 @@ public class GuildPlayer extends AbstractPlayer {
         } else {
             manager.openAudioConnection(targetChannel);
         }
-        
+
         log.info("Connected to voice channel " + targetChannel);
     }
 
@@ -104,6 +104,10 @@ public class GuildPlayer extends AbstractPlayer {
         return null;
     }
 
+    public void queue(String identifier, TextChannel channel) {
+        queue(identifier, channel, null);
+    }
+
     public void queue(String identifier, TextChannel channel, User invoker) {
         IdentifierContext ic = new IdentifierContext(identifier, channel, invoker);
         audioLoader.loadAsync(ic);
@@ -115,12 +119,12 @@ public class GuildPlayer extends AbstractPlayer {
 
     public int getTotalRemainingMusicTimeSeconds() {
         int millis = 0;
-        for(AudioTrack at : getQueuedTracks()){
+        for (AudioTrack at : getQueuedTracks()) {
             millis += at.getDuration();
         }
-        
+
         AudioTrack at = getPlayingTrack();
-        if(at != null){
+        if (at != null) {
             millis += at.getDuration() - at.getPosition();
         }
 
@@ -179,6 +183,36 @@ public class GuildPlayer extends AbstractPlayer {
 
     public Guild getGuild() {
         return jda.getGuildById(guildId);
+    }
+
+    public boolean isRepeat() {
+        if (audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isRepeat()) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isShuffle() {
+        if (audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isShuffle()) {
+            return true;
+        }
+        return false;
+    }
+    
+    public void setRepeat(boolean repeat){
+        if (audioTrackProvider instanceof SimpleTrackProvider){
+            ((SimpleTrackProvider)audioTrackProvider).setRepeat(repeat);
+        } else {
+            throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
+        }
+    }
+    
+    public void setShuffle(boolean shuffle){
+        if (audioTrackProvider instanceof SimpleTrackProvider){
+            ((SimpleTrackProvider)audioTrackProvider).setRepeat(shuffle);
+        } else {
+            throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
+        }
     }
 
 }
