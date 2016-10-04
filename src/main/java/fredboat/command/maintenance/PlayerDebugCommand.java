@@ -28,7 +28,6 @@ public class PlayerDebugCommand extends Command implements ICommandOwnerRestrict
             data.put("users", gp.getChannel().getUsers().toString());
             data.put("isPlaying", gp.isPlaying());
             data.put("isPaused", gp.isPaused());
-            data.put("isStopped", gp.isStopped());
             data.put("songCount", gp.getSongCount());
             
             a.put(data);
