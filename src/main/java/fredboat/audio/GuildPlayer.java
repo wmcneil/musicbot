@@ -105,6 +105,11 @@ public class GuildPlayer extends AbstractPlayer {
 
     public void queue(String identifier, TextChannel channel, User invoker) {
         IdentifierContext ic = new IdentifierContext(identifier, channel, invoker);
+        
+        if(invoker != null){
+            joinChannel(invoker);
+        }
+        
         audioLoader.loadAsync(ic);
     }
 

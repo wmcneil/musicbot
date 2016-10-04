@@ -127,8 +127,7 @@ public class MusicPersistenceHandler {
                 });
                 
                 player.setPause(isPaused);
-                
-                isFirst = true;
+                player.joinChannel(vc);
                 tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
