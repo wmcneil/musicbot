@@ -82,7 +82,7 @@ public class FredBoat {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
             log.info("Invalid scope, defaulting to scopes 0x101");
-            scopes = 0x100;
+            scopes = 0x110;
         }
 
         try {

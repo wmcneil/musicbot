@@ -3,6 +3,7 @@ package fredboat.audio;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.audio.AudioSendHandler;
 import fredboat.audio.queue.ITrackProvider;
@@ -25,6 +26,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     private static void initAudioPlayerManager() {
         playerManager = new AudioPlayerManager();
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
     }
 
     public void play() {

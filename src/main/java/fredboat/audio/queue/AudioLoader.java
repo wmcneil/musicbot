@@ -40,12 +40,20 @@ public class AudioLoader implements AudioLoadResultHandler {
     
     @Override
     public void trackLoaded(AudioTrack at) {
+        contextBeingLoaded.textChannel.sendMessage(
+                "**" + at.getInfo().title + "** has been added to the queue."
+        );
+        
         trackProvider.add(at);
         loadNextAsync();
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist ap) {
+        contextBeingLoaded.textChannel.sendMessage(
+                "Found and added `" + ap.getTracks().size() + "` songs from playlist **" + ap.getName() + "**."
+        );
+        
         for(AudioTrack at : ap.getTracks()){
             trackProvider.add(at);
         }
