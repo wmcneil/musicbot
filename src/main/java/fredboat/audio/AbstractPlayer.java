@@ -64,11 +64,11 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public void setVolume(float vol) {
-        throw new UnsupportedOperationException("AudioPlayer does not yet support volume control");
+        player.setVolume((int)(vol * 100));
     }
 
     public float getVolume() {
-        return -1f;//Not yet supported
+        return ((float) player.getVolume()) * 100;
     }
 
     public void setAudioTrackProvider(AudioTrackProvider audioTrackProvider) {
