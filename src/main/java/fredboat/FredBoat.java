@@ -268,7 +268,6 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x010, "mrestart", new RestartCommand());
         CommandRegistry.registerCommand(0x010, "mstats", new StatsCommand());
         CommandRegistry.registerCommand(0x010, "play", new PlayCommand());
-        CommandRegistry.registerCommand(0x010, "minfo", new MusicInfoCommand());
         CommandRegistry.registerCommand(0x010, "meval", new EvalCommand());
         CommandRegistry.registerCommand(0x010, "skip", new SkipCommand());
         CommandRegistry.registerCommand(0x010, "join", new JoinCommand());
