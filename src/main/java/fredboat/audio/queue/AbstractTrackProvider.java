@@ -30,4 +30,6 @@ public abstract class AbstractTrackProvider implements AudioTrackProvider {
     
     public abstract boolean isEmpty();
     
+    public abstract void add(AudioTrack track);
+    
 }
