@@ -19,11 +19,6 @@
         </dependency>
         <dependency>
             <groupId>net.dv8tion</groupId>
-            <artifactId>jda-player</artifactId>
-            <version>0.2.2_18</version>
-        </dependency>
-        <dependency>
-            <groupId>net.dv8tion</groupId>
             <artifactId>JDA-Client</artifactId>
             <version>0.2.0_9</version>
         </dependency>
