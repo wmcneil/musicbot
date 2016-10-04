@@ -28,18 +28,23 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public void play() {
         if (player.isPaused()) {
             player.setPaused(false);
-            if(player.getPlayingTrack() == null){
+            if (player.getPlayingTrack() == null) {
                 play0();
             }
         }
     }
 
     public void setPause(boolean pause) {
-        if(pause){
+        if (pause) {
             player.setPaused(true);
         } else {
+            player.setPaused(false);
             play();
         }
+    }
+    
+    public void pause(){
+        player.setPaused(true);
     }
 
     public void stop() {
@@ -51,10 +56,6 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         play0();
     }
 
-    public boolean isPlaying() {
-        return player.getPlayingTrack() != null && !player.isPaused();
-    }
-
     public long getCurrentTimestamp() {
         return player.getPlayingTrack().getPosition();
     }
@@ -64,7 +65,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public void setVolume(float vol) {
-        player.setVolume((int)(vol * 100));
+        player.setVolume((int) (vol * 100));
     }
 
     public float getVolume() {
@@ -92,8 +93,8 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             player.playTrack(audioTrackProvider.provideAudioTrack());
         }
     }
-    
-    public void destroy(){
+
+    public void destroy() {
         player.destroy();
     }
 
@@ -110,6 +111,14 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     @Override
     public boolean isOpus() {
         return true;
+    }
+
+    public boolean isPlaying() {
+        return player.getPlayingTrack() != null && !player.isPaused();
+    }
+
+    public boolean isPaused() {
+        return player.isPaused();
     }
 
 }

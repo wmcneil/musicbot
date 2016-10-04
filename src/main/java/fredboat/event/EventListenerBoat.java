@@ -193,13 +193,8 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
         if (player.getUsersInVC().isEmpty()
                 && player.getUserCurrentVoiceChannel(jdaBot.getSelfInfo()) == event.getOldChannel()
-                && player.isPaused() == false
-                && player.isStopped() == false) {
-            try {
+                && player.isPaused() == false) {
                 player.pause();
-            } catch (Exception ex) {
-
-            }
             player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.");
         }
     }
