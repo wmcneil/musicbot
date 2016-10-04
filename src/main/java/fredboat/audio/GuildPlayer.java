@@ -7,7 +7,6 @@ import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
@@ -16,7 +15,6 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.managers.AudioManager;
-import net.dv8tion.jda.player.source.AudioSource;
 import net.dv8tion.jda.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
 
@@ -213,6 +211,10 @@ public class GuildPlayer extends AbstractPlayer {
         } else {
             throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
         }
+    }
+    
+    public void clear(){
+        audioTrackProvider.clear();
     }
 
 }

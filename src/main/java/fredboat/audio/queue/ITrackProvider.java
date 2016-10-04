@@ -15,4 +15,6 @@ public interface ITrackProvider {
     
     public abstract void add(AudioTrack track);
     
+    public abstract void clear();
+    
 }

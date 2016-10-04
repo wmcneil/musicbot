@@ -33,4 +33,9 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     public void add(AudioTrack track) {
         queue.add(track);
     }
+
+    @Override
+    public void clear() {
+        queue.clear();
+    }
 }
