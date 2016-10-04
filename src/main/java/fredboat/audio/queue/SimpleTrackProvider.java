@@ -8,9 +8,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SimpleTrackProvider extends AbstractTrackProvider {
     
     private ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
-    
-    protected SimpleTrackProvider(){
-    }
 
     @Override
     public AudioTrack getNext() {

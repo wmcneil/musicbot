@@ -9,13 +9,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AudioLoader implements AudioLoadResultHandler {
 
-    private final AbstractTrackProvider trackProvider;
+    private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
     private final ConcurrentLinkedQueue<IdentifierContext> identifierQueue = new ConcurrentLinkedQueue();
     private IdentifierContext contextBeingLoaded = null;
     private volatile boolean isLoading = false;
 
-    public AudioLoader(AbstractTrackProvider trackProvider, AudioPlayerManager playerManager) {
+    public AudioLoader(ITrackProvider trackProvider, AudioPlayerManager playerManager) {
         this.trackProvider = trackProvider;
         this.playerManager = playerManager;
     }

@@ -1,7 +1,9 @@
 package fredboat.audio;
 
+import fredboat.audio.queue.AudioLoader;
 import fredboat.audio.queue.MusicQueueProcessor;
 import fredboat.audio.queue.QueueItem;
+import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,9 +38,10 @@ public class GuildPlayer extends AbstractPlayer {
     public long lastTimeInVC = System.currentTimeMillis();
     public final PlayerEventListener eventListener;
     public String lastYoutubeVideoId = null;
-
     private long playlistTimeoutEnds = 0L;
-
+    
+    private final AudioLoader audioLoader;
+    
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
@@ -47,6 +50,8 @@ public class GuildPlayer extends AbstractPlayer {
 
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
+        setAudioTrackProvider(new SimpleTrackProvider());
+        audioLoader = new AudioLoader(getAudioTrackProvider(), this);
     }
 
     public void joinChannel(User usr) throws MessagingException {

@@ -1,9 +1,6 @@
 package fredboat.audio.queue;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.util.List;
-
-public abstract class AbstractTrackProvider implements AudioTrackProvider {
+public abstract class AbstractTrackProvider implements ITrackProvider {
 
     private boolean repeat = false;
     private boolean shuffle = false;
@@ -23,13 +20,5 @@ public abstract class AbstractTrackProvider implements AudioTrackProvider {
     public void setShuffle(boolean shuffle) {
         this.shuffle = shuffle;
     }
-    
-    public abstract AudioTrack getNext();
-    
-    public abstract List<AudioTrack> getAsList();
-    
-    public abstract boolean isEmpty();
-    
-    public abstract void add(AudioTrack track);
     
 }

@@ -4,14 +4,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import fredboat.audio.queue.AudioTrackProvider;
 import net.dv8tion.jda.audio.AudioSendHandler;
+import fredboat.audio.queue.ITrackProvider;
 
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 
     private static AudioPlayerManager playerManager;
     AudioPlayer player;
-    private AudioTrackProvider audioTrackProvider;
+    private ITrackProvider audioTrackProvider;
 
     @SuppressWarnings("LeakingThisInConstructor")
     protected AbstractPlayer() {
@@ -72,11 +72,11 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         return ((float) player.getVolume()) * 100;
     }
 
-    public void setAudioTrackProvider(AudioTrackProvider audioTrackProvider) {
+    public void setAudioTrackProvider(ITrackProvider audioTrackProvider) {
         this.audioTrackProvider = audioTrackProvider;
     }
 
-    public AudioTrackProvider getAudioTrackProvider() {
+    public ITrackProvider getAudioTrackProvider() {
         return audioTrackProvider;
     }
 
