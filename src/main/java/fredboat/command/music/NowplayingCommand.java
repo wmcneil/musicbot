@@ -16,7 +16,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.currentTC = channel;
         if (player.isPlaying()) {
-            channel.sendMessage("Now playing " + player.getCurrentAudioSource().getInfo().getTitle());
+            channel.sendMessage("Now playing " + player.getPlayingTrack().getInfo().title);
         } else {
             channel.sendMessage("Not currently playing anything");
         }
