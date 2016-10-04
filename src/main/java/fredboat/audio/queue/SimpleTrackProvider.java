@@ -19,7 +19,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     
     @Override
     public AudioTrack provideAudioTrack() {
-        return queue.poll();
+        return isRepeat() ? queue.peek() : queue.poll();
     }
 
     @Override
@@ -30,5 +30,10 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public boolean isEmpty() {
         return queue.isEmpty();
+    }
+
+    @Override
+    public void add(AudioTrack track) {
+        queue.add(track);
     }
 }
