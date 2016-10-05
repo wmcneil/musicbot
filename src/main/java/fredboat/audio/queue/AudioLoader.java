@@ -63,6 +63,9 @@ public class AudioLoader implements AudioLoadResultHandler {
         for(AudioTrack at : ap.getTracks()){
             trackProvider.add(at);
         }
+        if(!gplayer.isPaused()){
+            gplayer.play();
+        }
         loadNextAsync();
     }
 
