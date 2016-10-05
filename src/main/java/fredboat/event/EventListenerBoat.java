@@ -22,6 +22,7 @@ import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.InviteReceivedEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ReconnectedEvent;
+import net.dv8tion.jda.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class EventListenerBoat extends AbstractScopedEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerBoat.class);
-    
+
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     public User lastUserToReceiveHelp;
 
@@ -194,9 +195,14 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         if (player.getUsersInVC().isEmpty()
                 && player.getUserCurrentVoiceChannel(jdaBot.getSelfInfo()) == event.getOldChannel()
                 && player.isPaused() == false) {
-                player.pause();
+            player.pause();
             player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.");
         }
+    }
+
+    @Override
+    public void onGuildLeave(GuildLeaveEvent event) {
+        PlayerRegistry.destroyPlayer(event.getGuild());
     }
 
 }
