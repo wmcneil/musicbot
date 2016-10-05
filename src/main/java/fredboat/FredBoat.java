@@ -108,7 +108,6 @@ public class FredBoat {
 
         //Load credentials file
         InputStream is = new FileInputStream(new File("./credentials.json"));
-        //InputStream is = instance.getClass().getClassLoader().getResourceAsStream("credentials.json");
         Scanner scanner = new Scanner(is);
         credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
