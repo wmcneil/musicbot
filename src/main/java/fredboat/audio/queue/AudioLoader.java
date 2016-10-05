@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
+import fredboat.util.TextUtils;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AudioLoader implements AudioLoadResultHandler {
@@ -14,7 +15,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     private final AudioPlayerManager playerManager;
     private final GuildPlayer gplayer;
     private final ConcurrentLinkedQueue<IdentifierContext> identifierQueue = new ConcurrentLinkedQueue();
-    private IdentifierContext contextBeingLoaded = null;
+    private IdentifierContext context = null;
     private volatile boolean isLoading = false;
 
     public AudioLoader(ITrackProvider trackProvider, AudioPlayerManager playerManager, GuildPlayer gplayer) {
@@ -22,33 +23,33 @@ public class AudioLoader implements AudioLoadResultHandler {
         this.playerManager = playerManager;
         this.gplayer = gplayer;
     }
-    
-    public void loadAsync(IdentifierContext ic){
+
+    public void loadAsync(IdentifierContext ic) {
         identifierQueue.add(ic);
-        if(!isLoading){
+        if (!isLoading) {
             loadNextAsync();
         }
     }
-    
-    private void loadNextAsync(){
+
+    private void loadNextAsync() {
         IdentifierContext ic = identifierQueue.poll();
-        if(ic != null){
+        if (ic != null) {
             isLoading = true;
-            contextBeingLoaded = ic;
+            context = ic;
             playerManager.loadItem(ic.identifier, this);
         } else {
             isLoading = false;
         }
     }
-    
+
     @Override
     public void trackLoaded(AudioTrack at) {
-        contextBeingLoaded.textChannel.sendMessage(
+        context.textChannel.sendMessage(
                 "**" + at.getInfo().title + "** has been added to the queue."
         );
-        
+
         trackProvider.add(at);
-        if(!gplayer.isPaused()){
+        if (!gplayer.isPaused()) {
             gplayer.play();
         }
         loadNextAsync();
@@ -56,14 +57,14 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     @Override
     public void playlistLoaded(AudioPlaylist ap) {
-        contextBeingLoaded.textChannel.sendMessage(
+        context.textChannel.sendMessage(
                 "Found and added `" + ap.getTracks().size() + "` songs from playlist **" + ap.getName() + "**."
         );
-        
-        for(AudioTrack at : ap.getTracks()){
+
+        for (AudioTrack at : ap.getTracks()) {
             trackProvider.add(at);
         }
-        if(!gplayer.isPaused()){
+        if (!gplayer.isPaused()) {
             gplayer.play();
         }
         loadNextAsync();
@@ -71,18 +72,23 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-        contextBeingLoaded.textChannel.sendMessage(
-                "No audio could be found for `" + contextBeingLoaded.identifier + "`."
+        context.textChannel.sendMessage("No audio could be found for `" + context.identifier + "`."
         );
         loadNextAsync();
     }
 
     @Override
     public void loadFailed(FriendlyException fe) {
-        contextBeingLoaded.textChannel.sendMessage(
-                "Error when loading info for `" + contextBeingLoaded.identifier + "`: " + fe.getMessage()
-        );
+        if (fe.severity == FriendlyException.Severity.COMMON) {
+            context.textChannel.sendMessage("Error when loading info for `" + context.identifier + "`: " + fe.getMessage()
+            );
+        } else {
+            context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`:"
+            );
+            TextUtils.handleException(fe, context.textChannel);
+        }
+
         loadNextAsync();
     }
-    
+
 }
