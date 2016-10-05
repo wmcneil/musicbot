@@ -10,9 +10,12 @@ import net.dv8tion.jda.audio.AudioSendHandler;
 import fredboat.audio.queue.ITrackProvider;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AbstractPlayer.class);
+    
     private static AudioPlayerManager playerManager;
     AudioPlayer player;
     ITrackProvider audioTrackProvider;
@@ -110,6 +113,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, boolean interrupted) {
         //If we *were* interrupted, we would just invoke play0()
+        log.debug("Track ended. Interrupted: " + interrupted + ", player: " + player);
         if (!interrupted) {
             play0();
         }
@@ -118,6 +122,8 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private void play0() {
         if (audioTrackProvider != null) {
             player.playTrack(audioTrackProvider.provideAudioTrack());
+        } else {
+            log.warn("TrackProvider doesn't exist");
         }
     }
 

@@ -25,7 +25,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         if(isShuffle()){
             //Get random int from queue, remove it and then return it
             List<Object> list = Arrays.asList(queue.toArray());
-            AudioTrack lastTrack = (AudioTrack) list.remove(new Random().nextInt(list.size()));
+            AudioTrack lastTrack = (AudioTrack) list.get(new Random().nextInt(list.size()));
             queue.remove(lastTrack);
             return lastTrack;
         } else {

@@ -210,7 +210,7 @@ public class GuildPlayer extends AbstractPlayer {
     
     public void setShuffle(boolean shuffle){
         if (audioTrackProvider instanceof SimpleTrackProvider){
-            ((SimpleTrackProvider)audioTrackProvider).setRepeat(shuffle);
+            ((SimpleTrackProvider)audioTrackProvider).setShuffle(shuffle);
         } else {
             throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
         }
