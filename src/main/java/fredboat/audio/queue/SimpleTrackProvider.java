@@ -2,13 +2,16 @@ package fredboat.audio.queue;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimpleTrackProvider extends AbstractTrackProvider {
     
-    private ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
-
+    private volatile ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
+    private AudioTrack lastTrack = null;
+    
     @Override
     public AudioTrack getNext() {
         return queue.peek();
@@ -16,7 +19,19 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     
     @Override
     public AudioTrack provideAudioTrack() {
-        return isRepeat() ? queue.peek() : queue.poll();
+        if(isRepeat() && lastTrack != null){
+            return lastTrack;
+        }
+        if(isShuffle()){
+            lastTrack = queue.poll();
+            return lastTrack;
+        } else {
+            //Get random int from queue, remove it and then return it
+            List<AudioTrack> list = Arrays.asList((AudioTrack[]) queue.toArray());
+            AudioTrack lastTrack = list.remove(new Random().nextInt(list.size()));
+            queue.remove(lastTrack);
+            return lastTrack;
+        }
     }
 
     @Override
