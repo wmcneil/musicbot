@@ -23,13 +23,13 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
             return lastTrack;
         }
         if(isShuffle()){
-            lastTrack = queue.poll();
+            //Get random int from queue, remove it and then return it
+            List<Object> list = Arrays.asList(queue.toArray());
+            AudioTrack lastTrack = (AudioTrack) list.remove(new Random().nextInt(list.size()));
+            queue.remove(lastTrack);
             return lastTrack;
         } else {
-            //Get random int from queue, remove it and then return it
-            List<AudioTrack> list = Arrays.asList((AudioTrack[]) queue.toArray());
-            AudioTrack lastTrack = list.remove(new Random().nextInt(list.size()));
-            queue.remove(lastTrack);
+            lastTrack = queue.poll();
             return lastTrack;
         }
     }
