@@ -24,11 +24,11 @@ public class TextUtils {
         return mes;
     }
 
-    public static void handleException(Exception e, MessageChannel channel) {
+    public static void handleException(Throwable e, MessageChannel channel) {
         handleException(e, channel, null);
     }
     
-    public static void handleException(Exception e, MessageChannel channel, User invoker) {
+    public static void handleException(Throwable e, MessageChannel channel, User invoker) {
         if (e instanceof MessagingException){
             channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
             return;

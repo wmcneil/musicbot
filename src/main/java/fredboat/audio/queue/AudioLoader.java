@@ -8,9 +8,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.util.TextUtils;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import org.slf4j.LoggerFactory;
 
 public class AudioLoader implements AudioLoadResultHandler {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AudioLoader.class);
+    
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
     private final GuildPlayer gplayer;
@@ -80,12 +83,12 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException fe) {
         if (fe.severity == FriendlyException.Severity.COMMON) {
-            context.textChannel.sendMessage("Error when loading info for `" + context.identifier + "`: " + fe.getMessage()
+            context.textChannel.sendMessage("Error when loading info for `" + context.identifier + "`: " + fe.getCause().getMessage()
             );
         } else {
-            context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`:"
+            context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`."
             );
-            TextUtils.handleException(fe, context.textChannel);
+            TextUtils.handleException(fe.getCause(), context.textChannel);
         }
 
         loadNextAsync();

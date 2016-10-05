@@ -19,7 +19,7 @@ public class ListCommand extends Command implements IMusicCommand {
         player.currentTC = channel;
         if (player.getPlayingTrack() != null) {
             MessageBuilder mb = new MessageBuilder();
-            int i = 1;
+            int i = 0;
             for (AudioTrack at : player.getRemainingTracks()) {
                 if (i == 0) {
                     String status = player.isPlaying() ? "[PLAYING] " : "[PAUSED] ";
