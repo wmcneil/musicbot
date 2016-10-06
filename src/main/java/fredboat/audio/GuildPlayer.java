@@ -54,14 +54,11 @@ public class GuildPlayer extends AbstractPlayer {
             throw new MessagingException("You must join a voice channel first.");
         }
 
-        /*if (guild.getVoiceStatusOfUser(self).inVoiceChannel()) {
-            throw new MessagingException("I need to leave my current channel first.");
-        }*/
-        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT) == false) {
+        if (!PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT)) {
             throw new MessagingException("I am not permitted to connect to that voice channel.");
         }
 
-        if (PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK) == false) {
+        if (!PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK)) {
             throw new MessagingException("I am not permitted to play music in that voice channel.");
         }
 
@@ -138,7 +135,7 @@ public class GuildPlayer extends AbstractPlayer {
         if (currentTC != null) {
             return currentTC;
         } else {
-            System.err.println("No currentTC in " + getGuild() + "! Returning public channel...");
+            log.warn("No currentTC in " + getGuild() + "! Returning public channel...");
             return getGuild().getPublicChannel();
         }
 

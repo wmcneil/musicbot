@@ -6,10 +6,10 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import net.dv8tion.jda.audio.AudioSendHandler;
 import fredboat.audio.queue.ITrackProvider;
 import java.util.ArrayList;
 import java.util.List;
+import net.dv8tion.jda.audio.AudioSendHandler;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {

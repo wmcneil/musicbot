@@ -1,6 +1,5 @@
 package fredboat.sharding;
 
-import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.dv8tion.jda.JDA;
