@@ -1,4 +1,4 @@
-package fredboat.command.maintenance;
+package fredboat.command.admin;
 
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;

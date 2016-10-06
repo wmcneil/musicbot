@@ -1,5 +1,9 @@
 package fredboat;
 
+import fredboat.command.admin.UpdateCommand;
+import fredboat.command.admin.RestartCommand;
+import fredboat.command.admin.ExitCommand;
+import fredboat.command.admin.EvalCommand;
 import fredboat.agent.*;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
