@@ -4,6 +4,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -16,7 +17,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.currentTC = channel;
         if (player.isPlaying()) {
-            channel.sendMessage("Now playing " + player.getPlayingTrack().getInfo().title);
+            channel.sendMessage("Now playing **" + player.getPlayingTrack().getInfo().title + "** ["
+                    + TextUtils.formatTime((int) (player.getPlayingTrack().getDuration() / 1000))
+                    + "]");
         } else {
             channel.sendMessage("Not currently playing anything");
         }

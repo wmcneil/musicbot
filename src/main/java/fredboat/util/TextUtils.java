@@ -27,15 +27,15 @@ public class TextUtils {
     public static void handleException(Throwable e, MessageChannel channel) {
         handleException(e, channel, null);
     }
-    
+
     public static void handleException(Throwable e, MessageChannel channel, User invoker) {
-        if (e instanceof MessagingException){
+        if (e instanceof MessagingException) {
             channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
             return;
         }
         MessageBuilder builder = new MessageBuilder();
 
-        if(invoker != null){
+        if (invoker != null) {
             builder.appendMention(invoker);
             builder.appendString(" an error occured :anger: ```java\n" + e.toString().replace(FredBoat.googleServerKey, "GOOGLE_SERVER_KEY") + "\n");
         } else {
@@ -58,16 +58,36 @@ public class TextUtils {
             e.printStackTrace();
         }
     }
-    
+
     public static String postToHastebin(String body) throws UnirestException {
         return Unirest.post("http://hastebin.com/documents").body(body).asJson().getBody().getObject().getString("key");
     }
-    
+
     public static String postToHastebin(String body, boolean asURL) throws UnirestException {
-        if(asURL){
+        if (asURL) {
             return "http://hastebin.com/" + postToHastebin(body);
         } else {
             return postToHastebin(body);
         }
+    }
+
+    public static String formatTime(int t) {
+        int sec = t % 60;
+        int min = (t % 3600) / 60;
+        int hrs = t / 3600;
+
+        String timestamp;
+
+        if (hrs != 0) {
+            timestamp = forceTwoDigits(hrs) + ":" + forceTwoDigits(min) + ":" + forceTwoDigits(sec);
+        } else {
+            timestamp = forceTwoDigits(min) + ":" + forceTwoDigits(sec);
+        }
+
+        return timestamp;
+    }
+
+    private static String forceTwoDigits(int i) {
+        return i < 10 ? "0" + i : Integer.toString(i);
     }
 }

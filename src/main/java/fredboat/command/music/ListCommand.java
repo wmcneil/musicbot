@@ -5,6 +5,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -38,21 +39,11 @@ public class ListCommand extends Command implements IMusicCommand {
 
             //Now add a timestamp for how much is remaining
             int t = player.getTotalRemainingMusicTimeSeconds();
-            int sec = t % 60;
-            int min = (t % 3600) / 60;
-            int hrs = t / 3600;
-
-            String timestamp;
-
-            if (hrs != 0) {
-                timestamp = forceTwoDigits(hrs) + ":" + forceTwoDigits(min) + ":" + forceTwoDigits(sec);
-            } else {
-                timestamp = forceTwoDigits(min) + ":" + forceTwoDigits(sec);
-            }
+            String timestamp = TextUtils.formatTime(t);
 
             mb.appendString("\n\nThere are a total of **")
                     .appendString(String.valueOf(player.getRemainingTracks().size()), MessageBuilder.Formatting.BOLD)
-                    .appendString("** queued songs with a remaining length of **" + timestamp + "**.");
+                    .appendString("** queued songs with a remaining length of **[" + timestamp + "]**.");
 
             channel.sendMessage(mb.build());
         } else {
