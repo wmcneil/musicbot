@@ -115,7 +115,7 @@ public class MusicPersistenceHandler {
                 boolean shuffle = data.getBoolean("suffle");
                 
                 player.joinChannel(vc);
-                player.currentTC = tc;
+                player.setCurrentTC(tc);
                 player.setVolume(volume);
                 player.setRepeat(repeat);
                 player.setShuffle(shuffle);

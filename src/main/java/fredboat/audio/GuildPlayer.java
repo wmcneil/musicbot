@@ -8,6 +8,7 @@ import fredboat.commandmeta.MessagingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
@@ -26,8 +27,8 @@ public class GuildPlayer extends AbstractPlayer {
 
     public final JDA jda;
     public final String guildId;
-    public final HashMap<String, VideoSelection> selections = new HashMap<>();
-    public TextChannel currentTC;
+    public final Map<String, VideoSelection> selections = new HashMap<>();
+    private TextChannel currentTC;
     public String lastYoutubeVideoId = null;
 
     private final AudioLoader audioLoader;
@@ -199,6 +200,14 @@ public class GuildPlayer extends AbstractPlayer {
         } else {
             throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
         }
+    }
+
+    public void setCurrentTC(TextChannel currentTC) {
+        this.currentTC = currentTC;
+    }
+
+    public TextChannel getCurrentTC() {
+        return currentTC;
     }
 
     public void clear() {

@@ -17,7 +17,7 @@ public class ListCommand extends Command implements IMusicCommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        player.currentTC = channel;
+        player.setCurrentTC(channel);
         if (player.getPlayingTrack() != null) {
             MessageBuilder mb = new MessageBuilder();
             int i = 0;

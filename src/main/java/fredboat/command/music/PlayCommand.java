@@ -33,7 +33,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
 
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        player.currentTC = channel;
+        player.setCurrentTC(channel);
 
         player.queue(args[1], channel, invoker);
 
@@ -88,7 +88,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             outMsg.updateMessage(builder.build().getRawContent());
 
             GuildPlayer player = PlayerRegistry.get(guild.getId());
-            player.currentTC = channel;
+            player.setCurrentTC(channel);
             player.selections.put(invoker.getId(), new VideoSelection(vids, outMsg));
         }
     }

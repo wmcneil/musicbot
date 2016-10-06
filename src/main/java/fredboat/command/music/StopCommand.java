@@ -17,7 +17,7 @@ public class StopCommand extends Command implements IMusicCommand {
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         if (PermissionUtil.checkPermission(invoker, Permission.MESSAGE_MANAGE, guild)) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
-            player.currentTC = channel;
+            player.setCurrentTC(channel);
             int count = player.getRemainingTracks().size();
 
             player.clear();
