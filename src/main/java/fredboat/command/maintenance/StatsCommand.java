@@ -45,9 +45,9 @@ public class StatsCommand extends Command {
 
         str = str + "Shard:                     " + FredBoat.shardId + " of a total of " + FredBoat.numShards + "\n";
         str = str + "Known servers:             " + ShardTracker.getGlobalGuildCount() + "\n";
-        str = str + "-> In this shard:          " + guild.getJDA().getGuilds().size();
+        str = str + "-> In this shard:          " + guild.getJDA().getGuilds().size() + "\n";
         str = str + "Known users in servers:    " + ShardTracker.getGlobalUserCount()+ "\n";
-        str = str + "-> In this shard:          " + guild.getJDA().getUsers().size();
+        str = str + "-> In this shard:          " + guild.getJDA().getUsers().size() + "\n";
         str = str + "Is beta:                   " + BotConstants.IS_BETA + "\n";
         str = str + "JDA responses total:       " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:               " + JDAInfo.VERSION;
