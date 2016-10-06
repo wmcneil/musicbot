@@ -95,7 +95,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public float getVolume() {
-        return ((float) player.getVolume()) * 100;
+        return ((float) player.getVolume()) / 100;
     }
 
     public void setAudioTrackProvider(ITrackProvider audioTrackProvider) {
