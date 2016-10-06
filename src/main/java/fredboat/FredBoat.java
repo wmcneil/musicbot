@@ -104,7 +104,7 @@ public class FredBoat {
         if (BotConstants.IS_BETA) {
             distribution = DistributionEnum.BETA;
         } else {
-            distribution = ((scopes & 0x010) == 0x010) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
+            distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
         }
 
         //Load credentials file
