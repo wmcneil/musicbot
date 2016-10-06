@@ -48,7 +48,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void trackLoaded(AudioTrack at) {
         context.textChannel.sendMessage(
-                "**" + at.getInfo().title + "** has been added to the queue."
+                gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
         );
 
         trackProvider.add(at);

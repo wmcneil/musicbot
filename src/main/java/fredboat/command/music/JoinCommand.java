@@ -17,6 +17,7 @@ public class JoinCommand extends Command implements IMusicCommand {
         player.currentTC = channel;
         try {
             player.joinChannel(invoker);
+            channel.sendMessage("Joining " + channel.getName());
         } catch (IllegalStateException ex) {
             channel.sendMessage("An error occurred. Couldn't join " + player.getChannel().getName() + " because I am already trying to connect to that channel. Please try again.");
             return;
