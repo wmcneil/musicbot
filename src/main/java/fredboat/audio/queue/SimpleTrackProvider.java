@@ -20,8 +20,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public AudioTrack provideAudioTrack(boolean skipped) {
         if(isRepeat() && lastTrack != null){
-            lastTrack.setPosition(0);
-            return lastTrack;
+            return lastTrack.makeClone();
         }
         if(isShuffle()){
             //Get random int from queue, remove it and then return it
