@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,8 +24,10 @@ import org.slf4j.LoggerFactory;
 public class MusicPersistenceHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MusicPersistenceHandler.class);
-    private static boolean isFirst = true;//Used for loading songs
 
+    private MusicPersistenceHandler() {
+    }
+    
     public static void handlePreShutdown(int code) {
         JDA jda = FredBoat.jdaBot;
 
@@ -76,7 +79,7 @@ public class MusicPersistenceHandler {
                 data.put("sources", identifiers);
 
                 try {
-                    FileUtils.writeStringToFile(new File(dir, gId), data.toString());
+                    FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
                     player.getActiveTextChannel().sendMessage("Error occured when saving persistence file: " + ex.getMessage());
                 }
