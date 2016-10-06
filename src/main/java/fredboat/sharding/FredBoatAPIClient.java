@@ -5,6 +5,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import java.util.HashSet;
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.User;
 import org.json.JSONArray;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +54,8 @@ public class FredBoatAPIClient {
 
         for (int i = 0; i < FredBoat.numShards; i++) {
             if (i == FredBoat.shardId) {
-                FredBoat.jdaBot.getGuilds().forEach((Object guild) -> {
-                    map.add(((Guild) guild).getId());
+                FredBoat.jdaBot.getUsers().forEach((Object user) -> {
+                    map.add(((User) user).getId());
                 });
             } else {
                 String url = FredBoat.distribution.getUrlForShard(i) + "users";
