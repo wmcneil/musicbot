@@ -12,6 +12,9 @@ import net.dv8tion.jda.entities.User;
 
 public class TextUtils {
 
+    private TextUtils() {
+    }
+
     public static Message prefaceWithMention(User user, String msg) {
         MessageBuilder builder = new MessageBuilder().appendMention(user).appendString(msg);
         return builder.build();

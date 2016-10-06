@@ -6,6 +6,9 @@ import static org.luaj.vm2.LuaValue.valueOf;
 
 public class LuaUtil {
 
+    private LuaUtil() {
+    }
+
     public static LuaValue tostring(LuaValue arg) {
         LuaValue h = arg.metatag(TOSTRING);
         if (!h.isnil()) {

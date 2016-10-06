@@ -9,6 +9,9 @@ import org.json.JSONObject;
 
 public class YoutubeAPI {
 
+    private YoutubeAPI() {
+    }
+
     public static ArrayList<YoutubeVideo> searchForVideos(String query) {
         JSONObject data = null;
         try {
