@@ -53,7 +53,6 @@ public class MusicPersistenceHandler {
         for (String gId : reg.keySet()) {
             try {
                 GuildPlayer player = reg.get(gId);
-                Guild guild = jda.getGuildById(gId);
 
                 if (!player.isPlaying()) {
                     continue;//Nothing to see here
