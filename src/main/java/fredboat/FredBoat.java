@@ -1,5 +1,6 @@
 package fredboat;
 
+import fredboat.command.admin.PlayerDebugCommand;
 import fredboat.command.admin.UpdateCommand;
 import fredboat.command.admin.RestartCommand;
 import fredboat.command.admin.ExitCommand;

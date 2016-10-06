@@ -1,4 +1,4 @@
-package fredboat.command.maintenance;
+package fredboat.command.admin;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.audio.GuildPlayer;
