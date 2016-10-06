@@ -39,7 +39,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             player.setPaused(false);
         }
         if (player.getPlayingTrack() == null) {
-            play0();
+            play0(false);
         }
 
     }
@@ -63,7 +63,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     public void skip() {
         player.stopTrack();
-        play0();
+        play0(true);
     }
 
     public long getCurrentTimestamp() {
@@ -115,13 +115,13 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         //If we *were* interrupted, we would just invoke play0()
         log.debug("Track ended. Interrupted: " + interrupted + ", player: " + player);
         if (!interrupted) {
-            play0();
+            play0(false);
         }
     }
 
-    private void play0() {
+    private void play0(boolean skipped) {
         if (audioTrackProvider != null) {
-            player.playTrack(audioTrackProvider.provideAudioTrack());
+            player.playTrack(audioTrackProvider.provideAudioTrack(skipped));
         } else {
             log.warn("TrackProvider doesn't exist");
         }

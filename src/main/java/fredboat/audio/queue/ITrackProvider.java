@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ITrackProvider {
     
-    public AudioTrack provideAudioTrack();
+    public AudioTrack provideAudioTrack(boolean skipped);
     
     public abstract AudioTrack getNext();
     
