@@ -197,10 +197,6 @@ public class FredBoat {
         } else {
             log.info("No carbon host configured. Skipping carbon daemon.");
         }
-
-        MusicGC mgc = new MusicGC(jdaBot);
-        mgc.setDaemon(true);
-        mgc.start();
     }
 
     public static void init(ReadyEvent event) {

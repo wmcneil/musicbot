@@ -28,8 +28,6 @@ public class GuildPlayer extends AbstractPlayer {
     public final String guildId;
     public final HashMap<String, VideoSelection> selections = new HashMap<>();
     public TextChannel currentTC;
-    public long lastTimePaused = System.currentTimeMillis();
-    public long lastTimeInVC = System.currentTimeMillis();
     public String lastYoutubeVideoId = null;
 
     private final AudioLoader audioLoader;
@@ -48,7 +46,6 @@ public class GuildPlayer extends AbstractPlayer {
     public void joinChannel(User usr) throws MessagingException {
         VoiceChannel targetChannel = getUserCurrentVoiceChannel(usr);
         joinChannel(targetChannel);
-        markIsInVC();
     }
 
     public void joinChannel(VoiceChannel targetChannel) throws MessagingException {
@@ -106,11 +103,11 @@ public class GuildPlayer extends AbstractPlayer {
 
     public void queue(String identifier, TextChannel channel, User invoker) {
         IdentifierContext ic = new IdentifierContext(identifier, channel, invoker);
-        
-        if(invoker != null){
+
+        if (invoker != null) {
             joinChannel(invoker);
         }
-        
+
         audioLoader.loadAsync(ic);
     }
 
@@ -165,18 +162,6 @@ public class GuildPlayer extends AbstractPlayer {
         return nonBots;
     }
 
-    public long getMillisSincePause() {
-        return System.currentTimeMillis() - lastTimePaused;
-    }
-
-    public long getMillisSinceInVC() {
-        return System.currentTimeMillis() - lastTimeInVC;
-    }
-
-    public void markIsInVC() {
-        lastTimeInVC = System.currentTimeMillis();
-    }
-
     @Override
     public String toString() {
         return "[GP:" + getGuild().getId() + "]";
@@ -192,31 +177,31 @@ public class GuildPlayer extends AbstractPlayer {
         }
         return false;
     }
-    
+
     public boolean isShuffle() {
         if (audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isShuffle()) {
             return true;
         }
         return false;
     }
-    
-    public void setRepeat(boolean repeat){
-        if (audioTrackProvider instanceof SimpleTrackProvider){
-            ((SimpleTrackProvider)audioTrackProvider).setRepeat(repeat);
+
+    public void setRepeat(boolean repeat) {
+        if (audioTrackProvider instanceof SimpleTrackProvider) {
+            ((SimpleTrackProvider) audioTrackProvider).setRepeat(repeat);
         } else {
             throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
         }
     }
-    
-    public void setShuffle(boolean shuffle){
-        if (audioTrackProvider instanceof SimpleTrackProvider){
-            ((SimpleTrackProvider)audioTrackProvider).setShuffle(shuffle);
+
+    public void setShuffle(boolean shuffle) {
+        if (audioTrackProvider instanceof SimpleTrackProvider) {
+            ((SimpleTrackProvider) audioTrackProvider).setShuffle(shuffle);
         } else {
             throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
         }
     }
-    
-    public void clear(){
+
+    public void clear() {
         audioTrackProvider.clear();
     }
 
