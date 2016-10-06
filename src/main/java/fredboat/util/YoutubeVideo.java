@@ -9,9 +9,6 @@ public class YoutubeVideo {
     public String name = null;
     public String duration = null;//Youtube has strange duration strings suchs as PT2H3M33S
 
-    private YoutubeVideo() {
-    }
-
     public String getId() {
         return id;
     }
