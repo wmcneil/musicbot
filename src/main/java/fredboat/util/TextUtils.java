@@ -74,7 +74,8 @@ public class TextUtils {
         }
     }
 
-    public static String formatTime(long t) {
+    public static String formatTime(long millis) {
+        long t = millis / 1000L;
         int sec = (int) (t % 60L);
         int min = (int) ((t % 3600L) / 60L);
         int hrs = (int) (t / 3600L);
