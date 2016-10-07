@@ -2,6 +2,7 @@ package fredboat.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
+import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
 import java.io.File;
 import java.io.FileInputStream;
@@ -125,7 +126,11 @@ public class MusicPersistenceHandler {
                 sources.forEach((Object t) -> {
                     String identifier = (String) t;
 
-                    player.queue(identifier, tc);
+                    IdentifierContext ic = new IdentifierContext(identifier, tc);
+                    
+                    ic.setQuiet(true);
+                    
+                    player.queue(ic);
                 });
                 
                 player.setPause(isPaused);

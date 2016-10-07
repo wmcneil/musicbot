@@ -108,6 +108,14 @@ public class GuildPlayer extends AbstractPlayer {
 
         audioLoader.loadAsync(ic);
     }
+    
+    public void queue(IdentifierContext ic){
+        if (ic.user != null) {
+            joinChannel(ic.user);
+        }
+
+        audioLoader.loadAsync(ic);
+    }
 
     public int getSongCount() {
         return getRemainingTracks().size();

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class AudioLoader implements AudioLoadResultHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AudioLoader.class);
-    
+
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
     private final GuildPlayer gplayer;
@@ -47,9 +47,13 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack at) {
-        context.textChannel.sendMessage(
-                gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
-        );
+        if (!context.isQuiet()) {
+            context.textChannel.sendMessage(
+                    gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
+            );
+        } else {
+            log.info("Quietly loaded " + at.getIdentifier());
+        }
 
         trackProvider.add(at);
         if (!gplayer.isPaused()) {
