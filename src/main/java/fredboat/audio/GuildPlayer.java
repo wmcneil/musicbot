@@ -113,8 +113,8 @@ public class GuildPlayer extends AbstractPlayer {
         return getRemainingTracks().size();
     }
 
-    public int getTotalRemainingMusicTimeSeconds() {
-        int millis = 0;
+    public long getTotalRemainingMusicTimeSeconds() {
+        long millis = 0;
         for (AudioTrack at : getQueuedTracks()) {
             millis += at.getDuration();
         }

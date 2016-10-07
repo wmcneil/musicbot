@@ -74,10 +74,10 @@ public class TextUtils {
         }
     }
 
-    public static String formatTime(int t) {
-        int sec = t % 60;
-        int min = (t % 3600) / 60;
-        int hrs = t / 3600;
+    public static String formatTime(long t) {
+        int sec = (int) (t % 60L);
+        int min = (int) ((t % 3600L) / 60L);
+        int hrs = (int) (t / 3600L);
 
         String timestamp;
 

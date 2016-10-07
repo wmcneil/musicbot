@@ -38,7 +38,7 @@ public class ListCommand extends Command implements IMusicCommand {
             }
 
             //Now add a timestamp for how much is remaining
-            int t = player.getTotalRemainingMusicTimeSeconds();
+            long t = player.getTotalRemainingMusicTimeSeconds();
             String timestamp = TextUtils.formatTime(t);
 
             mb.appendString("\n\nThere are a total of **")
