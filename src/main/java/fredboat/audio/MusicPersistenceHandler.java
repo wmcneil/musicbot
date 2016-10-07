@@ -28,7 +28,7 @@ public class MusicPersistenceHandler {
 
     private MusicPersistenceHandler() {
     }
-    
+
     public static void handlePreShutdown(int code) {
         JDA jda = FredBoat.jdaBot;
 
@@ -70,10 +70,13 @@ public class MusicPersistenceHandler {
                 data.put("shuffle", player.isShuffle());
 
                 ArrayList<String> identifiers = new ArrayList<>();
-                identifiers.add(player.getPlayingTrack().getIdentifier());
-
+                
                 for (AudioTrack at : player.getRemainingTracks()) {
                     identifiers.add(at.getIdentifier());
+                }
+
+                if (player.getPlayingTrack() != null) {
+                    data.put("position", player.getPlayingTrack().getPosition());
                 }
 
                 data.put("sources", identifiers);
@@ -110,13 +113,13 @@ public class MusicPersistenceHandler {
                 GuildPlayer player = PlayerRegistry.get(gId);
 
                 boolean isPaused = data.getBoolean("isPaused");
-                JSONArray sources = data.getJSONArray("sources");
+                final JSONArray sources = data.getJSONArray("sources");
                 VoiceChannel vc = jda.getVoiceChannelById(data.getString("vc"));
                 TextChannel tc = jda.getTextChannelById(data.getString("tc"));
                 float volume = Float.parseFloat(data.getString("volume"));
                 boolean repeat = data.getBoolean("repeat");
                 boolean shuffle = data.getBoolean("shuffle");
-                
+
                 player.joinChannel(vc);
                 player.setCurrentTC(tc);
                 player.setVolume(volume);
@@ -127,12 +130,18 @@ public class MusicPersistenceHandler {
                     String identifier = (String) t;
 
                     IdentifierContext ic = new IdentifierContext(identifier, tc);
-                    
+
                     ic.setQuiet(true);
-                    
+
+                    if (identifier.equals(sources.get(0))) {
+                        if (data.has("position")) {
+                            ic.setPosition(data.getLong("position"));
+                        }
+                    }
+
                     player.queue(ic);
                 });
-                
+
                 player.setPause(isPaused);
                 tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
             } catch (Exception ex) {

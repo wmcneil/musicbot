@@ -54,6 +54,8 @@ public class AudioLoader implements AudioLoadResultHandler {
         } else {
             log.info("Quietly loaded " + at.getIdentifier());
         }
+        
+        at.setPosition(context.getPosition());
 
         trackProvider.add(at);
         if (!gplayer.isPaused()) {
