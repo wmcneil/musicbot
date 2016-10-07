@@ -4,6 +4,8 @@ import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.ExitCodes;
+import fredboat.util.log.SLF4JInputStreamErrorLogger;
+import fredboat.util.log.SLF4JInputStreamLogger;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -11,9 +13,13 @@ import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UpdateCommand extends Command implements ICommandOwnerRestricted {
 
+    private static final Logger log = LoggerFactory.getLogger(UpdateCommand.class);
+    
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         try {
@@ -33,6 +39,9 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
             }
 
             Process gitClone = rt.exec("git clone https://github.com/Frederikam/FredBoat.git --branch " + branch + " --single-branch update");
+            new SLF4JInputStreamLogger(log, gitClone.getInputStream()).start();
+            new SLF4JInputStreamErrorLogger(log, gitClone.getInputStream()).start();
+            
             if (gitClone.waitFor(120, TimeUnit.SECONDS) == false) {
                 msg = msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
                 throw new RuntimeException("Operation timed out: git clone");
@@ -43,8 +52,12 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
 
             msg = msg.updateMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ");
             File updateDir = new File("./update");
+            
             Process mvnBuild = rt.exec("mvn -f " + updateDir.getAbsolutePath() + "/pom.xml package shade:shade");
-            if (mvnBuild.waitFor(300, TimeUnit.SECONDS) == false) {
+            new SLF4JInputStreamLogger(log, mvnBuild.getInputStream()).start();
+            new SLF4JInputStreamErrorLogger(log, mvnBuild.getInputStream()).start();
+            
+            if (mvnBuild.waitFor(600, TimeUnit.SECONDS) == false) {
                 msg = msg.updateMessage(msg.getRawContent() + "[:anger: timed out]\n\n");
                 throw new RuntimeException("Operation timed out: mvn package shade:shade");
             } else if (mvnBuild.exitValue() != 0) {
