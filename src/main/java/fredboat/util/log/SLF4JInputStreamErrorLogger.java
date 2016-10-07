@@ -14,7 +14,11 @@ public class SLF4JInputStreamErrorLogger extends SLF4JInputStreamLogger {
     public void run() {
         try {
             while (true) {
-                log.error(br.readLine());
+                String ln = br.readLine();
+                if (ln == null) {
+                    return;
+                }
+                log.error(ln);
             }
         } catch (IOException ignored) {
             //The stream has ended

@@ -21,7 +21,11 @@ public class SLF4JInputStreamLogger extends Thread {
     public void run() {
         try {
             while (true) {
-                log.info(br.readLine());
+                String ln = br.readLine();
+                if (ln == null) {
+                    return;
+                }
+                log.info(ln);
             }
         } catch (IOException ignored) {
             //The stream has ended
