@@ -22,7 +22,7 @@ import fredboat.sharding.ShardTracker;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
-import fredboat.util.SimpleLogToSLF4JAdapter;
+import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
 import java.io.File;
