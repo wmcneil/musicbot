@@ -114,7 +114,7 @@ public class MusicPersistenceHandler {
                 TextChannel tc = jda.getTextChannelById(data.getString("tc"));
                 float volume = Float.parseFloat(data.getString("volume"));
                 boolean repeat = data.getBoolean("repeat");
-                boolean shuffle = data.getBoolean("suffle");
+                boolean shuffle = data.getBoolean("shuffle");
                 
                 player.joinChannel(vc);
                 player.setCurrentTC(tc);
@@ -129,7 +129,6 @@ public class MusicPersistenceHandler {
                 });
                 
                 player.setPause(isPaused);
-                player.joinChannel(vc);
                 tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
