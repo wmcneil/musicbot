@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.SelfInfo;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
@@ -33,11 +32,10 @@ public class PlayCommand extends Command implements IMusicCommand {
             return;
         }
 
-        SelfInfo self = guild.getJDA().getSelfInfo();
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        player.currentTC = channel;
+        player.setCurrentTC(channel);
 
-        player.playOrQueueSong(args[1], channel, invoker);
+        player.queue(args[1], channel, invoker);
 
         try {
             message.deleteMessage();
@@ -48,7 +46,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
     private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
-        if (player.getCurrentAudioSource() == null && player.getAudioQueue().isEmpty()) {
+        if (player.getPlayingTrack() == null) {
             channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
         } else if (player.isPlaying()) {
             channel.sendMessage("The player is already playing.");
@@ -90,7 +88,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             outMsg.updateMessage(builder.build().getRawContent());
 
             GuildPlayer player = PlayerRegistry.get(guild.getId());
-            player.currentTC = channel;
+            player.setCurrentTC(channel);
             player.selections.put(invoker.getId(), new VideoSelection(vids, outMsg));
         }
     }

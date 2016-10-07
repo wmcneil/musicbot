@@ -1,4 +1,4 @@
-package fredboat.util;
+package fredboat.util.log;
 
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.utils.SimpleLog;

@@ -4,7 +4,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import java.util.HashSet;
-import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONArray;
 import org.slf4j.LoggerFactory;

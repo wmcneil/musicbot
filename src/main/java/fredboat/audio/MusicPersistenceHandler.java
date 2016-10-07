@@ -1,11 +1,14 @@
 package fredboat.audio;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
+import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,8 +17,6 @@ import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.VoiceChannel;
-import net.dv8tion.jda.player.source.AudioSource;
-import net.dv8tion.jda.player.source.RemoteSource;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,8 +25,10 @@ import org.slf4j.LoggerFactory;
 public class MusicPersistenceHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MusicPersistenceHandler.class);
-    private static boolean isFirst = true;//Used for loading songs
-    
+
+    private MusicPersistenceHandler() {
+    }
+
     public static void handlePreShutdown(int code) {
         JDA jda = FredBoat.jdaBot;
 
@@ -51,30 +54,35 @@ public class MusicPersistenceHandler {
         for (String gId : reg.keySet()) {
             try {
                 GuildPlayer player = reg.get(gId);
-                Guild guild = jda.getGuildById(gId);
-                
-                if (player.getCurrentAudioSource() == null) {
+
+                if (!player.isPlaying()) {
                     continue;//Nothing to see here
                 }
-                
+
                 player.getActiveTextChannel().sendMessage(msg);
-                
+
                 JSONObject data = new JSONObject();
                 data.put("vc", player.getUserCurrentVoiceChannel(jda.getSelfInfo()).getId());
                 data.put("tc", player.getActiveTextChannel().getId());
                 data.put("isPaused", player.isPaused());
+                data.put("volume", Float.toString(player.getVolume()));
+                data.put("repeat", player.isRepeat());
+                data.put("shuffle", player.isShuffle());
+
+                ArrayList<String> identifiers = new ArrayList<>();
                 
-                ArrayList<String> srcs = new ArrayList<>();
-                srcs.add(player.getCurrentAudioSource().getSource());
-                
-                for (AudioSource src : player.getAudioQueue()) {
-                    srcs.add(src.getSource());
+                for (AudioTrack at : player.getRemainingTracks()) {
+                    identifiers.add(at.getIdentifier());
                 }
-                
-                data.put("sources", srcs);
-                
+
+                if (player.getPlayingTrack() != null) {
+                    data.put("position", player.getPlayingTrack().getPosition());
+                }
+
+                data.put("sources", identifiers);
+
                 try {
-                    FileUtils.writeStringToFile(new File(dir, gId), data.toString());
+                    FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
                     player.getActiveTextChannel().sendMessage("Error occured when saving persistence file: " + ex.getMessage());
                 }
@@ -91,7 +99,7 @@ public class MusicPersistenceHandler {
         if (!dir.exists()) {
             return;
         }
-        log.info("Found persistence data: "+Arrays.toString(dir.listFiles()));
+        log.info("Found persistence data: " + Arrays.toString(dir.listFiles()));
 
         for (File file : dir.listFiles()) {
             InputStream is = null;
@@ -103,37 +111,39 @@ public class MusicPersistenceHandler {
                 scanner.close();
 
                 GuildPlayer player = PlayerRegistry.get(gId);
-                
+
                 boolean isPaused = data.getBoolean("isPaused");
-                JSONArray sources = data.getJSONArray("sources");
+                final JSONArray sources = data.getJSONArray("sources");
                 VoiceChannel vc = jda.getVoiceChannelById(data.getString("vc"));
                 TextChannel tc = jda.getTextChannelById(data.getString("tc"));
-                
+                float volume = Float.parseFloat(data.getString("volume"));
+                boolean repeat = data.getBoolean("repeat");
+                boolean shuffle = data.getBoolean("shuffle");
+
                 player.joinChannel(vc);
-                player.currentTC = tc;
-                
-                
+                player.setCurrentTC(tc);
+                player.setVolume(volume);
+                player.setRepeat(repeat);
+                player.setShuffle(shuffle);
+
                 sources.forEach((Object t) -> {
-                    String src = (String) t;
-                    AudioSource aud = new RemoteSource(src);
-                    
-                    //log.info(player.getAudioQueue().toString()+ " : " + (player.isPlaying() == false));
-                    player.getAudioQueue().add(aud);
-                    
-                    if(isFirst){
-                        if(isPaused){
-                            tc.sendMessage("Reloading playlist. The player is still paused.");
-                            player.skipToNext();
-                            player.pause();
-                        } else {
-                            tc.sendMessage("Reloading playlist. The first song will now play.");
-                            player.play();
+                    String identifier = (String) t;
+
+                    IdentifierContext ic = new IdentifierContext(identifier, tc);
+
+                    ic.setQuiet(true);
+
+                    if (identifier.equals(sources.get(0))) {
+                        if (data.has("position")) {
+                            ic.setPosition(data.getLong("position"));
                         }
                     }
-                    isFirst = false;
+
+                    player.queue(ic);
                 });
-                isFirst = true;
-                tc.sendMessage("Finished reloading playlist.:ok_hand::skin-tone-3:");
+
+                player.setPause(isPaused);
+                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             } finally {
@@ -145,11 +155,11 @@ public class MusicPersistenceHandler {
             }
         }
 
-        for(File f : dir.listFiles()){
+        for (File f : dir.listFiles()) {
             boolean deleted = f.delete();
             log.info(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
         }
-        
+
         dir.delete();
     }
 

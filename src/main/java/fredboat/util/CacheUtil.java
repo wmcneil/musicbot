@@ -16,6 +16,9 @@ public class CacheUtil {
 
     private static HashMap<String, File> cachedURLFiles = new HashMap<>();
 
+    private CacheUtil() {
+    }
+
     public static File getImageFromURL(String url) {
         if (cachedURLFiles.containsKey(url) && cachedURLFiles.get(url).exists()) {
             //Already cached
@@ -32,7 +35,7 @@ public class CacheUtil {
                 FileWriter writer = new FileWriter(tmpFile);
                 fos = new FileOutputStream(tmpFile);
 
-                byte[] buffer = new byte[1024*10];
+                byte[] buffer = new byte[1024 * 10];
                 int bytesRead;
                 while ((bytesRead = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, bytesRead);

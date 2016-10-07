@@ -17,15 +17,11 @@ public class StopCommand extends Command implements IMusicCommand {
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         if (PermissionUtil.checkPermission(invoker, Permission.MESSAGE_MANAGE, guild)) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
-            player.currentTC = channel;
-            int count = player.getAudioQueue().size();
+            player.setCurrentTC(channel);
+            int count = player.getRemainingTracks().size();
 
-            if (player.getCurrentAudioSource() != null) {
-                count++;
-            }
-
-            player.getAudioQueue().clear();
-            player.skipToNext();
+            player.clear();
+            player.skip();
 
             switch (count) {
                 case 0:

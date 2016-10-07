@@ -55,8 +55,6 @@ public class StatsCommand extends Command {
         str = str + "```";
 
         channel.sendMessage(TextUtils.prefaceWithMention(invoker, str));
-        //channel.sendMessage(str2);
-        //hannel.sendMessage(str3);
     }
 
 }

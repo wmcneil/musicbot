@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 public class DiscordUtil {
 
+    private DiscordUtil() {
+    }
+
     public static boolean isMainBot() {
         return (FredBoat.getScopes() & 0x100) != 0;
     }
