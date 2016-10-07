@@ -24,7 +24,7 @@ public class VolumeCommand extends Command implements IMusicCommand {
 
             player.setVolume(volume);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-            throw new MessagingException("Use `;;volume <0-100>`. 35% is the default.\nThe player is currently at **" + (int) Math.floor(player.getVolume() * 100) + "%**.");
+            throw new MessagingException("Use `;;volume <0-150>`. " + (int) (100 * PlayerRegistry.DEFAULT_VOLUME) + "% is the default.\nThe player is currently at **" + (int) Math.floor(player.getVolume() * 100) + "%**.");
         }
     }
 

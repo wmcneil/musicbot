@@ -9,7 +9,7 @@ import net.dv8tion.jda.entities.Guild;
 public class PlayerRegistry {
 
     private static HashMap<String, GuildPlayer> registry = new HashMap<>();
-    public static final float DEFAULT_VOLUME = 0.35f;
+    public static final float DEFAULT_VOLUME = 1f;
     public static JDA jda;
 
     public static void init(JDA api) {
