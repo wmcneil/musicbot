@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AbstractPlayer.class);
-    
+
     private static AudioPlayerManager playerManager;
     AudioPlayer player;
     ITrackProvider audioTrackProvider;
@@ -68,11 +68,18 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         play0(true);
     }
 
+    public boolean isQueueEmpty() {
+        return getPlayingTrack() == null && audioTrackProvider.isEmpty();
+    }
+
     public long getCurrentTimestamp() {
         return player.getPlayingTrack().getPosition();
     }
 
     public AudioTrack getPlayingTrack() {
+        if(player.getPlayingTrack() == null){
+            play0(true);//Ensure we have something to return, unless the queue is really empty
+        }
         return player.getPlayingTrack();
     }
 
@@ -121,7 +128,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         }
     }
 
-    private void play0(boolean skipped) {
+    public void play0(boolean skipped) {
         if (audioTrackProvider != null) {
             player.playTrack(audioTrackProvider.provideAudioTrack(skipped));
         } else {
@@ -137,11 +144,11 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public byte[] provide20MsAudio() {
         return lastFrame.data;
     }
-    
+
     @Override
     public boolean canProvide() {
         lastFrame = player.provide();
-        
+
         return lastFrame != null;
     }
 

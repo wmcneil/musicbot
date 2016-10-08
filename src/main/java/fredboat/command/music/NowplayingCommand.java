@@ -18,10 +18,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (player.isPlaying()) {
             channel.sendMessage("Now playing **" + player.getPlayingTrack().getInfo().title + "** ["
-                    + TextUtils.formatTime((int) (player.getPlayingTrack().getDuration() / 1000))
+                    + TextUtils.formatTime(player.getPlayingTrack().getDuration())
                     + "]");
         } else {
-            channel.sendMessage("Not currently playing anything");
+            channel.sendMessage("Not currently playing anything.");
         }
     }
 

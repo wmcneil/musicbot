@@ -18,7 +18,7 @@ public class ListCommand extends Command implements IMusicCommand {
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
-        if (player.getPlayingTrack() != null) {
+        if (!player.isQueueEmpty()) {
             MessageBuilder mb = new MessageBuilder();
             int i = 0;
             for (AudioTrack at : player.getRemainingTracks()) {
@@ -47,7 +47,7 @@ public class ListCommand extends Command implements IMusicCommand {
 
             channel.sendMessage(mb.build());
         } else {
-            channel.sendMessage("Not currently playing anything");
+            channel.sendMessage("Not currently playing anything.");
         }
     }
 
