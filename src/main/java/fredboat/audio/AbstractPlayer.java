@@ -32,11 +32,13 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     private static void initAudioPlayerManager() {
-        playerManager = new AudioPlayerManager();
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
-        playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
-        playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
-        playerManager.enableGcMonitoring();
+        if (playerManager == null) {
+            playerManager = new AudioPlayerManager();
+            playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+            playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
+            playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
+            playerManager.enableGcMonitoring();
+        }
     }
 
     public void play() {
@@ -80,7 +82,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public AudioTrack getPlayingTrack() {
-        if(player.getPlayingTrack() == null){
+        if (player.getPlayingTrack() == null) {
             play0(true);//Ensure we have something to return, unless the queue is really empty
         }
         return player.getPlayingTrack();
