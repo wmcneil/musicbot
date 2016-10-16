@@ -36,6 +36,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
         playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
+        playerManager.enableGcMonitoring();
     }
 
     public void play() {
