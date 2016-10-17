@@ -283,6 +283,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x010, "repeat", new RepeatCommand());
         CommandRegistry.registerCommand(0x010, "volume", new VolumeCommand());
         CommandRegistry.registerCommand(0x010, "restart", new RestartCommand());
+        CommandRegistry.registerCommand(0x010, "export", new ExportCommand());
         CommandRegistry.registerCommand(0x010, "playerdebug", new PlayerDebugCommand());
 
         /* Other Anime Discord or Sergi memes */
