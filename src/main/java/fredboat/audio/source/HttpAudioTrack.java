@@ -1,4 +1,4 @@
-package fredboat.audio.http;
+package fredboat.audio.source;
 
 import com.sedmelluq.discord.lavaplayer.container.matroska.MatroskaAudioTrack;
 import com.sedmelluq.discord.lavaplayer.container.mp3.Mp3AudioTrack;
@@ -16,14 +16,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HTTPAudioTrack extends DelegatedAudioTrack {
+public class HttpAudioTrack extends DelegatedAudioTrack {
 
-    private final Logger log = LoggerFactory.getLogger(HTTPAudioTrack.class);
+    private final Logger log = LoggerFactory.getLogger(HttpAudioTrack.class);
 
-    private final HTTPAudioSourceManager sourceManager;
+    private final HttpAudioSourceManager sourceManager;
     private final String trackUrl;
 
-    public HTTPAudioTrack(AudioTrackInfo trackInfo, HTTPAudioSourceManager sourceManager, String trackUrl) {
+    public HttpAudioTrack(AudioTrackInfo trackInfo, HttpAudioSourceManager sourceManager, String trackUrl) {
         super(trackInfo);
         this.sourceManager = sourceManager;
         this.trackUrl = trackUrl;
@@ -50,7 +50,7 @@ public class HTTPAudioTrack extends DelegatedAudioTrack {
 
     @Override
     public AudioTrack makeClone() {
-        return new HTTPAudioTrack(trackInfo, sourceManager, trackUrl);
+        return new HttpAudioTrack(trackInfo, sourceManager, trackUrl);
     }
 
     @Override

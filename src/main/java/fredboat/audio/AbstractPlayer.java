@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import fredboat.audio.http.HTTPAudioSourceManager;
+import fredboat.audio.source.HttpAudioSourceManager;
 import fredboat.audio.queue.ITrackProvider;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     @SuppressWarnings("LeakingThisInConstructor")
     protected AbstractPlayer() {
         initAudioPlayerManager();
-        player = new AudioPlayer(playerManager);
+        player = playerManager.createPlayer();
 
         player.addListener(this);
     }
@@ -37,7 +37,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             playerManager = new AudioPlayerManager();
             playerManager.registerSourceManager(new YoutubeAudioSourceManager());
             playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
-            playerManager.registerSourceManager(new HTTPAudioSourceManager());
+            playerManager.registerSourceManager(new HttpAudioSourceManager());
             playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
             playerManager.enableGcMonitoring();
         }

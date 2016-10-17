@@ -1,4 +1,4 @@
-package fredboat.audio.http;
+package fredboat.audio.source;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-public class HTTPAudioSourceManager implements AudioSourceManager {
+public class HttpAudioSourceManager implements AudioSourceManager {
 
     private static final String TRACK_URL_REGEX = "^https?:\\/\\/.+\\.(?:mkv|(?:m4a|(?:mp3|(?:mp4|webm))))$";
     private static final String TRACK_NAME_REGEX = ".*\\/(.*)$";
@@ -24,7 +24,7 @@ public class HTTPAudioSourceManager implements AudioSourceManager {
     private static final Pattern TRACK_NAME_PATTERN = Pattern.compile(TRACK_NAME_REGEX);
     private final HttpClientBuilder HTTP_CLIENT_BUILDER;
 
-    public HTTPAudioSourceManager() {
+    public HttpAudioSourceManager() {
         HTTP_CLIENT_BUILDER = HttpClientTools.createSharedCookiesHttpBuilder();
     }
 
@@ -60,7 +60,7 @@ public class HTTPAudioSourceManager implements AudioSourceManager {
                 identifier
         );
 
-        return new HTTPAudioTrack(trackInfo, this, identifier);
+        return new HttpAudioTrack(trackInfo, this, identifier);
     }
 
     @Override
@@ -70,14 +70,14 @@ public class HTTPAudioSourceManager implements AudioSourceManager {
 
     @Override
     public void encodeTrack(AudioTrack at, DataOutput output) throws IOException {
-        output.writeUTF(((HTTPAudioTrack) at).getTrackUrl());
+        output.writeUTF(((HttpAudioTrack) at).getTrackUrl());
     }
 
     @Override
     public AudioTrack decodeTrack(AudioTrackInfo trackInfo, DataInput input) throws IOException {
         String trackUrl = input.readUTF();
 
-    return new HTTPAudioTrack(trackInfo, this, trackUrl);
+    return new HttpAudioTrack(trackInfo, this, trackUrl);
     }
 
     /**
