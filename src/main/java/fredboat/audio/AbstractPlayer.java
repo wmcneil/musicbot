@@ -123,6 +123,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public static AudioPlayerManager getPlayerManager() {
+        initAudioPlayerManager();
         return playerManager;
     }
 

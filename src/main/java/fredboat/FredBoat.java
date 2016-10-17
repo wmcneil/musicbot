@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
@@ -36,6 +38,7 @@ import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.utils.SimpleLog;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +57,6 @@ public class FredBoat {
     public static String mashapeKey;
 
     public static String MALPassword;
-    public static String googleServerKey = "";
 
     public static String myUserId = "";
 
@@ -70,12 +72,14 @@ public class FredBoat {
     public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
 
+    private final static List<String> GOOGLE_KEYS = new ArrayList<>();
+
     private FredBoat() {
     }
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
-        
+
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
 
@@ -115,13 +119,19 @@ public class FredBoat {
         Scanner scanner = new Scanner(is);
         credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
-        
+
         accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
         String carbonHost = credsjson.optString("carbonHost");
-        googleServerKey = credsjson.optString("googleServerKey");
+
+        JSONArray gkeys = credsjson.optJSONArray("googleServerKeys");
+        if (gkeys != null) {
+            gkeys.forEach((Object str) -> {
+                GOOGLE_KEYS.add((String) str);
+            });
+        }
 
         if (credsjson.has("scopePasswords")) {
             JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
@@ -374,5 +384,13 @@ public class FredBoat {
 
     public static int getScopes() {
         return scopes;
+    }
+
+    public static List<String> getGoogleKeys() {
+        return GOOGLE_KEYS;
+    }
+    
+    public static String getRandomGoogleKey(){
+        return GOOGLE_KEYS.get((int) Math.floor(Math.random() * GOOGLE_KEYS.size()));
     }
 }
