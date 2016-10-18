@@ -64,6 +64,10 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
         for (String id : filtered) {
             lastFuture = privateManager.loadItem(id, handler);
         }
+        
+        if(lastFuture == null){
+            return null;
+        }
 
         try {
             log.info("Waiting...");
