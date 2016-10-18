@@ -10,6 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.audio.source.HttpAudioSourceManager;
 import fredboat.audio.queue.ITrackProvider;
+import fredboat.audio.source.PlaylistImportSourceManager;
 import java.util.ArrayList;
 import java.util.List;
 import net.dv8tion.jda.audio.AudioSendHandler;
@@ -35,12 +36,19 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private static void initAudioPlayerManager() {
         if (playerManager == null) {
             playerManager = new AudioPlayerManager();
-            playerManager.registerSourceManager(new YoutubeAudioSourceManager());
-            playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
-            playerManager.registerSourceManager(new HttpAudioSourceManager());
+            registerSourceManagers(playerManager);
             playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
             playerManager.enableGcMonitoring();
         }
+    }
+
+    public static AudioPlayerManager registerSourceManagers(AudioPlayerManager mng) {
+        mng.registerSourceManager(new YoutubeAudioSourceManager());
+        mng.registerSourceManager(new SoundCloudAudioSourceManager());
+        mng.registerSourceManager(new HttpAudioSourceManager());
+        mng.registerSourceManager(new PlaylistImportSourceManager());
+        
+        return mng;
     }
 
     public void play() {
