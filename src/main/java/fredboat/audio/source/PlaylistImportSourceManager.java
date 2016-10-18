@@ -62,7 +62,7 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
         HastebinAudioResultHandler handler = new HastebinAudioResultHandler();
         Future<Void> lastFuture = null;
         for (String id : filtered) {
-            lastFuture = privateManager.loadItem(id, handler);
+            lastFuture = privateManager.loadItemOrdered(handler, id, handler);
         }
         
         if(lastFuture == null){
@@ -70,9 +70,7 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
         }
 
         try {
-            log.info("Waiting...");
             lastFuture.get();
-            log.info("Finished waiting");
         } catch (InterruptedException | ExecutionException ex) {
             throw new FriendlyException("Failed loading playlist item", FriendlyException.Severity.FAULT, ex);
         }
@@ -105,7 +103,6 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
 
         @Override
         public void trackLoaded(AudioTrack track) {
-            log.info(track.getIdentifier());
             loadedTracks.add(track);
         }
 
