@@ -71,9 +71,12 @@ public class PlayCommand extends Command implements IMusicCommand {
     }
 
     private void searchForVideos(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        Matcher m = Pattern.compile("\\S+\\s+(.*)").matcher(message.getStrippedContent());
+        Matcher m = Pattern.compile("\\S+\\s+(.*)").matcher(message.getRawContent());
         m.find();
         String query = m.group(1);
+        
+        //Now remove all punctuation
+        query = query.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", "");
 
         Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query));
 
