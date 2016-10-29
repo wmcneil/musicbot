@@ -29,6 +29,8 @@ public class PlayCommand extends Command implements IMusicCommand {
                 player.queue(atc.getUrl(), channel, invoker);
             }
             
+            player.setPause(false);
+            
             return;
         }
 
@@ -48,6 +50,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
 
         player.queue(args[1], channel, invoker);
+        player.setPause(false);
 
         try {
             message.deleteMessage();
