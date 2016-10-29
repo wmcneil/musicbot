@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -47,8 +48,9 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public static AudioPlayerManager registerSourceManagers(AudioPlayerManager mng) {
         mng.registerSourceManager(new YoutubeAudioSourceManager());
         mng.registerSourceManager(new SoundCloudAudioSourceManager());
-        mng.registerSourceManager(new HttpAudioSourceManager());
+        mng.registerSourceManager(new BandcampAudioSourceManager());
         mng.registerSourceManager(new PlaylistImportSourceManager());
+        mng.registerSourceManager(new HttpAudioSourceManager());
         
         return mng;
     }
