@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioReference;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.BasicAudioPlaylist;
@@ -28,8 +29,8 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlaylistImportSourceManager.class);
 
-    private static Pattern PLAYLIST_PATTERN = Pattern.compile("^https?:\\/\\/hastebin\\.com\\/(?:raw\\/)?(\\w+)(?:\\..+)?$");
-    private static AudioPlayerManager privateManager = AbstractPlayer.registerSourceManagers(new DefaultAudioPlayerManager());
+    private static final Pattern PLAYLIST_PATTERN = Pattern.compile("^https?:\\/\\/hastebin\\.com\\/(?:raw\\/)?(\\w+)(?:\\..+)?$");
+    private static final AudioPlayerManager PRIVATE_MANAGER = AbstractPlayer.registerSourceManagers(new DefaultAudioPlayerManager());
 
     @Override
     public String getSourceName() {
@@ -37,8 +38,8 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
     }
 
     @Override
-    public AudioItem loadItem(DefaultAudioPlayerManager manager, String identifier) {
-        Matcher m = PLAYLIST_PATTERN.matcher(identifier);
+    public AudioItem loadItem(DefaultAudioPlayerManager manager, AudioReference ar) {
+        Matcher m = PLAYLIST_PATTERN.matcher(ar.identifier);
 
         if (!m.find()) {
             return null;
@@ -63,7 +64,7 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
         HastebinAudioResultHandler handler = new HastebinAudioResultHandler();
         Future<Void> lastFuture = null;
         for (String id : filtered) {
-            lastFuture = privateManager.loadItemOrdered(handler, id, handler);
+            lastFuture = PRIVATE_MANAGER.loadItemOrdered(handler, id, handler);
         }
         
         if(lastFuture == null){
