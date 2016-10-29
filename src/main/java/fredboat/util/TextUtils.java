@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class TextUtils {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(TextUtils.class);
-    
+
     private TextUtils() {
     }
 
@@ -39,28 +39,28 @@ public class TextUtils {
             channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
             return;
         }
-        
+
         log.error("Caught exception while executing a command", e);
-        
+
         MessageBuilder builder = new MessageBuilder();
 
         if (invoker != null) {
             builder.appendMention(invoker);
-            
+
             String filtered = " an error occured :anger: ```java\n" + e.toString() + "\n";
-            
-            for(String str : FredBoat.getGoogleKeys()){
+
+            for (String str : FredBoat.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
-            
+
             builder.appendString(filtered);
         } else {
             String filtered = "An error occured :anger: ```java\n" + e.toString() + "\n";
-            
-            for(String str : FredBoat.getGoogleKeys()){
+
+            for (String str : FredBoat.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
-            
+
             builder.appendString(filtered);
         }
 
@@ -93,6 +93,10 @@ public class TextUtils {
     }
 
     public static String formatTime(long millis) {
+        if (millis == Long.MAX_VALUE) {
+            return "LIVE";
+        }
+
         long t = millis / 1000L;
         int sec = (int) (t % 60L);
         int min = (int) ((t % 3600L) / 60L);

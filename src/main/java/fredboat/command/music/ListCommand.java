@@ -41,10 +41,25 @@ public class ListCommand extends Command implements IMusicCommand {
             long t = player.getTotalRemainingMusicTimeSeconds();
             String timestamp = TextUtils.formatTime(t * 1000L);
 
-            mb.appendString("\n\nThere are a total of **")
-                    .appendString(String.valueOf(player.getRemainingTracks().size()), MessageBuilder.Formatting.BOLD)
-                    .appendString("** queued songs with a remaining length of **[" + timestamp + "]**.");
+            int tracks = player.getRemainingTracks().size() - player.getLiveTracks().size();
+            int streams = player.getLiveTracks().size();
 
+            String desc;
+
+            if (tracks == 0) {
+                //We are only listening to streams
+                desc = "There " + (streams == 1 ? "is" : "are") + " **" + streams +
+                        "** live " + (streams == 1 ? "stream" : "streams") + " in the queue.";
+            } else {
+
+                desc = "There " + (tracks == 1 ? "is" : "are") + " **" + tracks
+                        + "** " + (tracks == 1 ? "track" : "tracks") + " with a remaining length of **[" + timestamp + "]**"
+                        + (streams == 0 ? "" : ", as well as **" + streams + "** live " + (streams == 1 ? "stream" : "streams")) + " in the queue.";
+
+            }
+            
+            mb.appendString("\n" + desc);
+            
             channel.sendMessage(mb.build());
         } else {
             channel.sendMessage("Not currently playing anything.");

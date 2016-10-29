@@ -108,8 +108,8 @@ public class GuildPlayer extends AbstractPlayer {
 
         audioLoader.loadAsync(ic);
     }
-    
-    public void queue(IdentifierContext ic){
+
+    public void queue(IdentifierContext ic) {
         if (ic.user != null) {
             joinChannel(ic.user);
         }
@@ -122,17 +122,32 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public long getTotalRemainingMusicTimeSeconds() {
+        //Live streams are considered to have a length of 0
         long millis = 0;
         for (AudioTrack at : getQueuedTracks()) {
-            millis += at.getDuration();
+            if (!at.getInfo().isStream) {
+                millis += at.getDuration();
+            }
         }
 
         AudioTrack at = getPlayingTrack();
-        if (at != null) {
+        if (at != null && !at.getInfo().isStream) {
             millis += Math.max(0, at.getDuration() - at.getPosition());
         }
 
         return millis / 1000;
+    }
+    
+    public List<AudioTrack> getLiveTracks() {
+        ArrayList<AudioTrack> l = new ArrayList<>();
+        
+        for(AudioTrack at : getRemainingTracks()){
+            if(at.getInfo().isStream){
+                l.add(at);
+            }
+        }
+        
+        return l;
     }
 
     public VoiceChannel getChannel() {
