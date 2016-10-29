@@ -111,20 +111,12 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         }
 
         if (event.getAuthor() == lastUserToReceiveHelp) {
-            //Ignore, just got help!
+            //Ignore, they just got help! Stops any bot chain reactions
             return;
         }
 
         event.getChannel().sendMessage(BotConstants.HELP_TEXT);
         lastUserToReceiveHelp = event.getAuthor();
-    }
-
-    @Override
-    public void onInviteReceived(InviteReceivedEvent event) {
-        if (event.getMessage().isPrivate()) {
-            event.getAuthor().getPrivateChannel().sendMessage("Sorry! Since the release of the official API, registered bots must now be invited by someone with Manage **Server permissions**. If you have permissions, you can invite me at:\n"
-                    + "https://discordapp.com/oauth2/authorize?&client_id=" + BotConstants.CLIENT_ID + "&scope=bot");
-        }
     }
 
     @Override

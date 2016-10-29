@@ -39,6 +39,12 @@ public class DiscordUtil {
         User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
         return guild.getUsers().contains(other);
     }
+    
+    public static boolean isPatronBotPresent(Guild guild) {
+        JDA jda = guild.getJDA();
+        User other = jda.getUserById(BotConstants.PATRON_BOT_ID);
+        return guild.getUsers().contains(other);
+    }
 
     public static boolean isUserBotCommander(Guild guild, User user) {
         List<Role> roles = guild.getRolesForUser(user);
