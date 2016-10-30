@@ -3,6 +3,7 @@ package fredboat.util;
 import fredboat.FredBoat;
 import java.util.List;
 import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.Role;
@@ -38,6 +39,12 @@ public class DiscordUtil {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
         return guild.getUsers().contains(other);
+    }
+    
+    public static boolean isPatronBotPresentAndOnline(Guild guild) {
+        JDA jda = guild.getJDA();
+        User other = jda.getUserById(BotConstants.PATRON_BOT_ID);
+        return guild.getUsers().contains(other) && other.getOnlineStatus() == OnlineStatus.ONLINE;
     }
 
     public static boolean isUserBotCommander(Guild guild, User user) {

@@ -11,10 +11,12 @@ public class BotConstants {
     public static final String MUSIC_BOT_ID = "150376112944447488";
     public static final String BETA_BOT_ID = "152691313123393536";
     public static final String MAIN_BOT_ID = "150376112944447488";
+    public static final String PATRON_BOT_ID = "241950106125860865";
 
+    public static final String FREDBOAT_HANGOUT_ID = "174820236481134592";
+    
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static final String HELP_TEXT = getHelpText();
-    public static String CLIENT_ID = IS_BETA ? "168672778860494849" : "168686772216135681";
 
     public static final String DEFAULT_BOT_PREFIX = IS_BETA ? "¤" : ";;";
     public static final String DEFAULT_SELF_PREFIX = IS_BETA ? "::" : "<<";

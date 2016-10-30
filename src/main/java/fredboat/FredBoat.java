@@ -46,13 +46,13 @@ import org.slf4j.LoggerFactory;
 public class FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
+    private static JSONObject config = null;
 
     private static int scopes = 0;
     public static volatile JDA jdaBot;
     public static volatile JDA jdaSelf;
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
-    public static final String ACCOUNT_TOKEN_KEY = BotConstants.IS_BETA ? "tokenBeta" : "tokenProduction";
     private static String accountToken;
     public static String mashapeKey;
 
@@ -107,20 +107,18 @@ public class FredBoat {
 
         log.info("Starting as shard " + shardId + " of " + numShards);
 
-        //Determine distribution
-        if (BotConstants.IS_BETA) {
-            distribution = DistributionEnum.BETA;
-        } else {
-            distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
-        }
-
-        //Load credentials file
+        //Load credentials and config files
         InputStream is = new FileInputStream(new File("./credentials.json"));
         Scanner scanner = new Scanner(is);
         credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
+        
+        is = new FileInputStream(new File("./config.json"));
+        scanner = new Scanner(is);
+        config = new JSONObject(scanner.useDelimiter("\\A").next());
+        scanner.close();
 
-        accountToken = credsjson.getString(ACCOUNT_TOKEN_KEY);
+        
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
@@ -139,6 +137,20 @@ public class FredBoat {
                 scopePasswords.put(k, scopePasswords.getString(k));
             }
         }
+        
+        if(config.optBoolean("patron")){
+            distribution = DistributionEnum.PATRON;
+        } else {
+            //Determine distribution
+            if (BotConstants.IS_BETA) {
+                distribution = DistributionEnum.BETA;
+            } else {
+                distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
+            }
+        }
+        accountToken = credsjson.getJSONObject("token").getString(distribution.getId());
+        
+        log.info("Determined distribution: " + distribution);
 
         //Initialise event listeners
         EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
