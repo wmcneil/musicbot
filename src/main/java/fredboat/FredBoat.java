@@ -246,6 +246,7 @@ public class FredBoat {
 
         //Commands
         CommandRegistry.registerCommand(0x110, "help", new HelpCommand());
+        CommandRegistry.registerAlias("help", "info");
         CommandRegistry.registerCommand(0x101, "version", new VersionCommand());
         CommandRegistry.registerCommand(0x101, "say", new SayCommand());
         CommandRegistry.registerCommand(0x101, "uptime", new StatsCommand());
