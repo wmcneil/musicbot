@@ -39,8 +39,15 @@ public class CommandManager {
                 return;
             }
         }
+        
+        if(FredBoat.distribution == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)){
+            log.info("Ignored command because patron bot is not allowed in FredBoatHangout");
+            return;
+        }
 
-        if (FredBoat.distribution == DistributionEnum.MUSIC && DiscordUtil.isPatronBotPresentAndOnline(guild)) {
+        if (FredBoat.distribution == DistributionEnum.MUSIC
+                && DiscordUtil.isPatronBotPresentAndOnline(guild)
+                && !guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is present");
             return;
         }

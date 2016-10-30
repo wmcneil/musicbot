@@ -13,6 +13,8 @@ public class BotConstants {
     public static final String MAIN_BOT_ID = "150376112944447488";
     public static final String PATRON_BOT_ID = "150376112944447488";
 
+    public static final String FREDBOAT_HANGOUT_ID = "174820236481134592";
+    
     public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
     public static final String HELP_TEXT = getHelpText();
 

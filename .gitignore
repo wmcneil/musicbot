@@ -67,3 +67,4 @@ target/
 /logs/
 *.jar
 /music_persistence/
+/bootloader.json
