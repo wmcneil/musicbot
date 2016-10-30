@@ -4,6 +4,7 @@ import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommand;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.IMusicBackupCommand;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
@@ -39,8 +40,13 @@ public class CommandManager {
                 return;
             }
         }
-        
-        if(FredBoat.distribution == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)){
+
+        if (invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)) {
+            log.info("Ignored command because main bot is present");
+            return;
+        }
+
+        if (FredBoat.distribution == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is not allowed in FredBoatHangout");
             return;
         }
