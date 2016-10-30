@@ -105,11 +105,6 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        //Ignore invites (handled elsewhere)
-        if (event.getMessage().getContent().contains("discord.gg")) {
-            return;
-        }
-
         if (event.getAuthor() == lastUserToReceiveHelp) {
             //Ignore, they just got help! Stops any bot chain reactions
             return;

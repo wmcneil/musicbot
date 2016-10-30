@@ -40,7 +40,7 @@ public class CommandManager {
             }
         }
 
-        if (FredBoat.distribution == DistributionEnum.MUSIC && DiscordUtil.isPatronBotPresent(guild)) {
+        if (FredBoat.distribution == DistributionEnum.MUSIC && DiscordUtil.isPatronBotPresentAndOnline(guild)) {
             log.info("Ignored command because patron bot is present");
             return;
         }
