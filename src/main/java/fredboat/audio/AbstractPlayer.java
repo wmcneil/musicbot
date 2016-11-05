@@ -12,6 +12,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import java.util.ArrayList;
@@ -50,6 +52,8 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         mng.registerSourceManager(new SoundCloudAudioSourceManager());
         mng.registerSourceManager(new BandcampAudioSourceManager());
         mng.registerSourceManager(new PlaylistImportSourceManager());
+        mng.registerSourceManager(new TwitchStreamAudioSourceManager());
+        mng.registerSourceManager(new VimeoAudioSourceManager());
         mng.registerSourceManager(new HttpAudioSourceManager());
         
         return mng;
