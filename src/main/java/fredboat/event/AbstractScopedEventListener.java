@@ -1,6 +1,7 @@
 package fredboat.event;
 
 import fredboat.FredBoat;
+import fredboat.util.TextUtils;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.events.ReadyEvent;
@@ -31,7 +32,11 @@ public abstract class AbstractScopedEventListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         UserListener listener = userListener.get(event.getAuthor().getId());
         if (listener != null) {
+            try{
             listener.onGuildMessageReceived(event);
+            } catch(Exception ex){
+                TextUtils.handleException(ex, event.getChannel(), event.getAuthor());
+            }
         }
     }
 
