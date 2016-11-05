@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.InviteReceivedEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ReconnectedEvent;
 import net.dv8tion.jda.events.guild.GuildLeaveEvent;

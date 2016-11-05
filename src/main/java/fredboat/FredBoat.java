@@ -74,6 +74,9 @@ public class FredBoat {
 
     private final static List<String> GOOGLE_KEYS = new ArrayList<>();
 
+    private static EventListenerBoat listenerBot;
+    private static EventListenerSelf listenerSelf;
+
     private FredBoat() {
     }
 
@@ -112,13 +115,12 @@ public class FredBoat {
         Scanner scanner = new Scanner(is);
         credsjson = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
-        
+
         is = new FileInputStream(new File("./config.json"));
         scanner = new Scanner(is);
         config = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
 
-        
         mashapeKey = credsjson.getString("mashapeKey");
         String clientToken = credsjson.getString("clientToken");
         MALPassword = credsjson.getString("malPassword");
@@ -137,24 +139,22 @@ public class FredBoat {
                 scopePasswords.put(k, scopePasswords.getString(k));
             }
         }
-        
-        if(config.optBoolean("patron")){
+
+        if (config.optBoolean("patron")) {
             distribution = DistributionEnum.PATRON;
+        } else //Determine distribution
+        if (BotConstants.IS_BETA) {
+            distribution = DistributionEnum.BETA;
         } else {
-            //Determine distribution
-            if (BotConstants.IS_BETA) {
-                distribution = DistributionEnum.BETA;
-            } else {
-                distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
-            }
+            distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
         }
         accountToken = credsjson.getJSONObject("token").getString(distribution.getId());
-        
+
         log.info("Determined distribution: " + distribution);
 
         //Initialise event listeners
-        EventListenerBoat listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
-        EventListenerSelf listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
+        listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
+        listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
 
         /* Init JDA */
         //Doing increments here because concurrency
@@ -274,6 +274,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x101, "talk", new TalkCommand());
         CommandRegistry.registerCommand(0x101, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
+        CommandRegistry.registerCommand(0x101, "akinator", new AkinatorCommand());
 
         /* Music commands */
         CommandRegistry.registerCommand(0x010, "mexit", new ExitCommand());
@@ -407,8 +408,17 @@ public class FredBoat {
     public static List<String> getGoogleKeys() {
         return GOOGLE_KEYS;
     }
-    
-    public static String getRandomGoogleKey(){
+
+    public static String getRandomGoogleKey() {
         return GOOGLE_KEYS.get((int) Math.floor(Math.random() * GOOGLE_KEYS.size()));
     }
+
+    public static EventListenerBoat getListenerBot() {
+        return listenerBot;
+    }
+
+    public static EventListenerSelf getListenerSelf() {
+        return listenerSelf;
+    }
+
 }
