@@ -8,11 +8,12 @@ import fredboat.event.UserListener;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Channel;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 
 public final class AkinatorListener extends UserListener {
 
-    private final String NEW_SESSION_URL = "http://api-en4.akinator.com/ws/new_session?partner=1&player=desktopPlayer";
+    private final String NEW_SESSION_URL = "http://api-en4.akinator.com/ws/new_session?partner=1";
     private final String ANSWER_URL = "http://api-en4.akinator.com/ws/answer";
     private final String GET_GUESS_URL = "http://api-en4.akinator.com/ws/list";
     private final String CHOICE_URL = "http://api-en4.akinator.com/ws/choice";
@@ -38,7 +39,9 @@ public final class AkinatorListener extends UserListener {
         jda.getTextChannelById(channelId).sendTyping();
 
         //Start new session
-        JSONObject json = Unirest.get(NEW_SESSION_URL).asJson().getBody().getObject();
+        JSONObject json = Unirest.get(NEW_SESSION_URL)
+                .queryString("player", RandomStringUtils.random(16))
+                .asJson().getBody().getObject();
         stepInfo = new StepInfo(json);
 
         signature = stepInfo.getSignature();
