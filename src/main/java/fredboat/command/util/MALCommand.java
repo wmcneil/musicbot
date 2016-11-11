@@ -32,7 +32,7 @@ public class MALCommand extends Command {
         log.debug("TERM:"+term);
 
         try {
-            String body = Unirest.get("http://myanimelist.net/api/anime/search.xml?q=" + term).basicAuth("FredBoat", FredBoat.MALPassword).asString().getBody();
+            String body = Unirest.get("https://myanimelist.net/api/anime/search.xml?q=" + term).basicAuth("FredBoat", FredBoat.MALPassword).asString().getBody();
             if (body != null && body.length() > 0) {
                 if(handleAnime(channel, invoker, term, body)){
                     return;
@@ -50,6 +50,7 @@ public class MALCommand extends Command {
         String msg = invoker.getUsername() + ": Search revealed an anime.\n";
 
         //Read JSON
+        log.info(body);
         JSONObject root = XML.toJSONObject(body);
         JSONObject data = null;
         try {
