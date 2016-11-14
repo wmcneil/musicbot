@@ -46,6 +46,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# intellij files
+/.idea/
+*.iml
+*.ipr
+*.iws
+
 # Custom
 lib/
 test/
