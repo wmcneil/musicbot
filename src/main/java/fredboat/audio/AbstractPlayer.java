@@ -14,10 +14,13 @@ import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
+import fredboat.FredBoat;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import java.util.ArrayList;
 import java.util.List;
+
+import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.audio.AudioSendHandler;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +45,10 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         if (playerManager == null) {
             playerManager = new DefaultAudioPlayerManager();
             registerSourceManagers(playerManager);
-            playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.LOW);
+
+            //Patrons get higher quality
+            AudioConfiguration.ResamplingQuality quality = FredBoat.distribution == DistributionEnum.PATRON ? AudioConfiguration.ResamplingQuality.HIGH : AudioConfiguration.ResamplingQuality.LOW;
+            playerManager.getConfiguration().setResamplingQuality(quality);
             playerManager.enableGcMonitoring();
         }
     }
