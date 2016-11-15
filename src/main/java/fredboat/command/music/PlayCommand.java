@@ -13,12 +13,16 @@ import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.Message.Attachment;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import org.json.JSONException;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PlayCommand extends Command implements IMusicCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayCommand.class);
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
@@ -80,11 +84,18 @@ public class PlayCommand extends Command implements IMusicCommand {
         String query = m.group(1);
         
         //Now remove all punctuation
-        query = query.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", "");
+        query = query.replaceAll("[.,/#!$%\\^&*;:{}=\\-_`~()]", "");
 
         Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query));
 
-        ArrayList<YoutubeVideo> vids = YoutubeAPI.searchForVideos(query);
+        ArrayList<YoutubeVideo> vids = null;
+        try {
+            vids = YoutubeAPI.searchForVideos(query);
+        } catch (JSONException e) {
+            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```");
+            log.debug("YouTube search exception", e);
+            return;
+        }
 
         if (vids.isEmpty()) {
             outMsg.updateMessage("No results for `{q}`".replace("{q}", query));
