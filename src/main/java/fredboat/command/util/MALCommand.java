@@ -4,10 +4,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
@@ -18,6 +14,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MALCommand extends Command {
 

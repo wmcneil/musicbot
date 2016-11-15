@@ -7,15 +7,16 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.Message.Attachment;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlayCommand extends Command implements IMusicCommand {
 

@@ -2,10 +2,11 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import fredboat.FredBoat;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class YoutubeAPI {
 

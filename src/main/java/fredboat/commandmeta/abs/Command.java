@@ -1,11 +1,12 @@
 package fredboat.commandmeta.abs;
 
-import java.util.ArrayList;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+
+import java.util.ArrayList;
 
 public abstract class Command implements ICommand {
     

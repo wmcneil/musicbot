@@ -1,9 +1,10 @@
 package fredboat.sharding;
 
-import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
 import net.dv8tion.jda.JDA;
 import org.springframework.boot.SpringApplication;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 public class FredBoatAPIServer {
 

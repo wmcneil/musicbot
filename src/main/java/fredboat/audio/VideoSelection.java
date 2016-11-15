@@ -1,8 +1,9 @@
 package fredboat.audio;
 
 import fredboat.util.YoutubeVideo;
-import java.util.ArrayList;
 import net.dv8tion.jda.entities.Message;
+
+import java.util.ArrayList;
 
 public class VideoSelection {
 

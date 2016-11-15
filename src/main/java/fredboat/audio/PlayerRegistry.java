@@ -1,10 +1,11 @@
 package fredboat.audio;
 
+import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.entities.Guild;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
 
 public class PlayerRegistry {
 

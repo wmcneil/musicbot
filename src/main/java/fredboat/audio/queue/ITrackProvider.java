@@ -1,6 +1,7 @@
 package fredboat.audio.queue;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
 import java.util.List;
 
 public interface ITrackProvider {

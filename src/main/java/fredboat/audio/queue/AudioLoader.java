@@ -7,8 +7,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.util.TextUtils;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AudioLoader implements AudioLoadResultHandler {
 

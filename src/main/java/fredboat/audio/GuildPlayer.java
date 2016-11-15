@@ -5,10 +5,6 @@ import fredboat.audio.queue.AudioLoader;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
@@ -18,6 +14,11 @@ import net.dv8tion.jda.entities.VoiceChannel;
 import net.dv8tion.jda.managers.AudioManager;
 import net.dv8tion.jda.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GuildPlayer extends AbstractPlayer {
 

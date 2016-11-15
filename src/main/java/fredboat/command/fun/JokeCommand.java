@@ -4,13 +4,14 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommand;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONObject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JokeCommand extends Command implements ICommand {
 

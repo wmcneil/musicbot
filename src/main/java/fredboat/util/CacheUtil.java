@@ -2,11 +2,8 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.regex.Matcher;

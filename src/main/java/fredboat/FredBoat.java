@@ -1,15 +1,15 @@
 package fredboat;
 
-import fredboat.command.admin.PlayerDebugCommand;
-import fredboat.command.admin.UpdateCommand;
-import fredboat.command.admin.BotRestartCommand;
-import fredboat.command.admin.ExitCommand;
-import fredboat.command.admin.EvalCommand;
-import fredboat.agent.*;
+import fredboat.agent.CarbonAgent;
+import fredboat.agent.CarbonitexAgent;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.audio.PlayerRegistry;
+import fredboat.command.admin.*;
 import fredboat.command.fun.*;
-import fredboat.command.maintenance.*;
+import fredboat.command.maintenance.GetIdCommand;
+import fredboat.command.maintenance.StatsCommand;
+import fredboat.command.maintenance.TestCommand;
+import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.music.*;
 import fredboat.command.util.*;
 import fredboat.commandmeta.CommandRegistry;
@@ -24,14 +24,6 @@ import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.JDAInfo;
@@ -42,6 +34,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class FredBoat {
 

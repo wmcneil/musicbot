@@ -6,23 +6,23 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import fredboat.FredBoat;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
-import java.util.ArrayList;
-import java.util.List;
-
 import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.audio.AudioSendHandler;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractPlayer extends AudioEventAdapter implements AudioSendHandler {
 

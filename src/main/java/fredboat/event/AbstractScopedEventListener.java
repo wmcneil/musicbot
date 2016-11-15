@@ -2,11 +2,12 @@ package fredboat.event;
 
 import fredboat.FredBoat;
 import fredboat.util.TextUtils;
-import java.util.HashMap;
-import java.util.regex.Pattern;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
+
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public abstract class AbstractScopedEventListener extends ListenerAdapter {
 

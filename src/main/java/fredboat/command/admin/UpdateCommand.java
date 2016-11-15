@@ -6,15 +6,16 @@ import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.ExitCodes;
 import fredboat.util.log.SLF4JInputStreamErrorLogger;
 import fredboat.util.log.SLF4JInputStreamLogger;
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class UpdateCommand extends Command implements ICommandOwnerRestricted {
 

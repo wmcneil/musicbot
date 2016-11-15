@@ -1,7 +1,6 @@
 package fredboat.util;
 
 import fredboat.FredBoat;
-import java.util.List;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.entities.Guild;
@@ -11,6 +10,8 @@ import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.requests.Requester;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class DiscordUtil {
 

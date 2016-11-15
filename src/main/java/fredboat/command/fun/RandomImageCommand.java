@@ -2,12 +2,13 @@ package fredboat.command.fun;
 
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.CacheUtil;
-import java.lang.reflect.Array;
-import java.util.Random;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+
+import java.lang.reflect.Array;
+import java.util.Random;
 
 public class RandomImageCommand extends Command {
 

@@ -5,7 +5,6 @@
  */
 package fredboat.event;
 
-import static fredboat.FredBoat.jdaBot;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.command.fun.TalkCommand;
@@ -13,8 +12,6 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
-import java.util.HashMap;
-import java.util.regex.Matcher;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.ReadyEvent;
@@ -26,6 +23,11 @@ import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.regex.Matcher;
+
+import static fredboat.FredBoat.jdaBot;
 
 public class EventListenerBoat extends AbstractScopedEventListener {
 

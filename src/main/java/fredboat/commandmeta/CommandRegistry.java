@@ -1,6 +1,7 @@
 package fredboat.commandmeta;
 
 import fredboat.commandmeta.abs.Command;
+
 import java.util.HashMap;
 
 public class CommandRegistry {

@@ -4,20 +4,17 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
+import net.dv8tion.jda.MessageBuilder;
+import net.dv8tion.jda.MessageHistory;
+import net.dv8tion.jda.entities.*;
+import net.dv8tion.jda.entities.Message.Attachment;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.MessageHistory;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.Message.Attachment;
-import net.dv8tion.jda.entities.MessageChannel;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
 
 public class DumpCommand extends Command {
 

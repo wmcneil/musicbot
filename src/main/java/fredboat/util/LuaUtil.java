@@ -1,6 +1,7 @@
 package fredboat.util;
 
 import org.luaj.vm2.LuaValue;
+
 import static org.luaj.vm2.LuaValue.TOSTRING;
 import static org.luaj.vm2.LuaValue.valueOf;
 

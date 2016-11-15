@@ -1,17 +1,11 @@
 package fredboat.commandmeta;
 
 import fredboat.FredBoat;
-import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.ICommand;
-import fredboat.commandmeta.abs.ICommandOwnerRestricted;
-import fredboat.commandmeta.abs.IMusicBackupCommand;
-import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.commandmeta.abs.*;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
 import fredboat.util.TextUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -19,6 +13,9 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CommandManager {
 

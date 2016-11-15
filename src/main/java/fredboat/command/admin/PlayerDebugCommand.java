@@ -6,14 +6,15 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.TextUtils;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PlayerDebugCommand extends Command implements ICommandOwnerRestricted {
 

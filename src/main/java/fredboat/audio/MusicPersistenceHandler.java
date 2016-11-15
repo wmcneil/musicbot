@@ -4,6 +4,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
+import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.entities.TextChannel;
+import net.dv8tion.jda.entities.VoiceChannel;
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,13 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.VoiceChannel;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.slf4j.LoggerFactory;
 
 public class MusicPersistenceHandler {
 

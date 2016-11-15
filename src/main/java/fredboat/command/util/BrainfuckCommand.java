@@ -3,11 +3,12 @@ package fredboat.command.util;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
-import java.nio.ByteBuffer;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+
+import java.nio.ByteBuffer;
 
 public class BrainfuckCommand extends Command {
 

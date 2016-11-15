@@ -7,13 +7,14 @@ import fredboat.event.EventListenerBoat;
 import fredboat.sharding.FredBoatAPIClient;
 import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
+import net.dv8tion.jda.JDA;
+import org.slf4j.LoggerFactory;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.dv8tion.jda.JDA;
-import org.slf4j.LoggerFactory;
 
 public class CarbonAgent extends Thread {
 
