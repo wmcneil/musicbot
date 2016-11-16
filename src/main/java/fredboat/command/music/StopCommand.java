@@ -1,9 +1,11 @@
 package fredboat.command.music;
 
+import fredboat.FredBoat;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.BotConstants;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -15,7 +17,7 @@ public class StopCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        if (PermissionUtil.checkPermission(invoker, Permission.MESSAGE_MANAGE, guild)) {
+        if (PermissionUtil.checkPermission(guild, invoker, Permission.MESSAGE_MANAGE) || invoker.getId().equals(BotConstants.OWNER_ID)) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);
             int count = player.getRemainingTracks().size();

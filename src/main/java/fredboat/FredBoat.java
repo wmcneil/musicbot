@@ -59,8 +59,6 @@ public class FredBoat {
 
     public static String MALPassword;
 
-    public static String myUserId = "";
-
     public static int readyEvents = 0;
     public static int readyEventsRequired = 0;
 
