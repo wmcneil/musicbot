@@ -3,6 +3,7 @@ package fredboat.command.util;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
+import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -28,7 +29,11 @@ public class MALCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         Matcher matcher = regex.matcher(message.getContent());
-        matcher.find();
+        try {
+            matcher.find();
+        } catch (IllegalStateException e) {
+            throw new MessagingException("Correct usage: ;;mal <search-term>");
+        }
         String term = matcher.group(1).replace(' ', '+').trim();
         log.debug("TERM:"+term);
 
