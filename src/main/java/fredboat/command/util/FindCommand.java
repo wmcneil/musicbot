@@ -1,5 +1,6 @@
 package fredboat.command.util;
 
+import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.MessageBuilder;
@@ -20,7 +21,12 @@ public class FindCommand extends Command {
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         JDA jda = guild.getJDA();
 
-        String searchTerm = args[1].toLowerCase();
+        String searchTerm = null;
+        try {
+            searchTerm = args[1].toLowerCase();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new MessagingException("Correct usage: ;;find <text> [#channel]");
+        }
         TextChannel selected = channel;
         if (message.getMentionedChannels().isEmpty() == false) {
             selected = message.getMentionedChannels().get(0);
