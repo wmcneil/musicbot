@@ -30,6 +30,9 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
             if(homeJar.exists()
                     && (System.currentTimeMillis() - homeJar.lastModified()) < MAX_JAR_AGE){
                 update(channel);
+                return;
+            } else {
+                log.info("");
             }
 
             COMPILE_COMMAND.onInvoke(guild, channel, invoker, message, args);
@@ -41,7 +44,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
     }
 
     private void update(TextChannel channel) throws IOException {
-        File homeJar = new File("~/FredBoat-1.0.jar");
+        File homeJar = new File(System.getProperty("user.home") + "/FredBoat-1.0.jar");
         File targetJar = new File("./update/target/FredBoat-1.0.jar");
 
         targetJar.getParentFile().mkdirs();

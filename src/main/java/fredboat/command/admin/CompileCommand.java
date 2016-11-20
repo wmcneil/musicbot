@@ -66,7 +66,9 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
 
             msg.updateMessage(msg.getRawContent() + "👌🏽");
 
-            new File("./update/target/FredBoat-1.0.jar").renameTo(new File("~/FredBoat-1.0.jar"));
+            if(!new File("./update/target/FredBoat-1.0.jar").renameTo(new File(System.getProperty("user.home") + "/FredBoat-1.0.jar"))){
+                throw new RuntimeException("Failed to jar to home");
+            }
         } catch (InterruptedException | IOException ex) {
             throw new RuntimeException(ex);
         }
