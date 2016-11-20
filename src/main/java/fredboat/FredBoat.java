@@ -261,6 +261,7 @@ public class FredBoat {
         CommandRegistry.registerAlias("leet", "l33t");
         CommandRegistry.registerCommand(0x101, "riot", new RiotCommand());
         CommandRegistry.registerCommand(0x101, "update", new UpdateCommand());
+        CommandRegistry.registerCommand(0x101, "compile", new CompileCommand());
         CommandRegistry.registerCommand(0x101, "botrestart", new BotRestartCommand());
         CommandRegistry.registerCommand(0x101, "find", new FindCommand());
         CommandRegistry.registerCommand(0x101, "dance", new DanceCommand());
@@ -290,6 +291,7 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x010, "list", new ListCommand());
         CommandRegistry.registerAlias("list", "queue");
         CommandRegistry.registerCommand(0x010, "mupdate", new UpdateCommand());
+        CommandRegistry.registerCommand(0x010, "mcompile", new CompileCommand());
         CommandRegistry.registerCommand(0x010, "select", new SelectCommand());
         CommandRegistry.registerCommand(0x010, "stop", new StopCommand());
         CommandRegistry.registerCommand(0x010, "pause", new PauseCommand());
