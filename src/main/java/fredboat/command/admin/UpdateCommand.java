@@ -24,7 +24,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
         try {
-            File homeJar = new File("~/FredBoat-1.0.jar");
+            File homeJar = new File(System.getProperty("user.home") + "/FredBoat-1.0.jar");
 
             //Must exist and not be too old
             if(homeJar.exists()
