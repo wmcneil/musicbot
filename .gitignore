@@ -60,12 +60,12 @@ build/
 build.xml
 manifest.mf
 nbproject/private/
-tokens.json
 run.bat
 target/
 .nb-gradle/
 /dependency-reduced-pom.xml
-/credentials.json
+*credentials.json
+*tokens.json
 /ffmpeg.exe
 /ffplay.exe
 /ffprobe.exe
