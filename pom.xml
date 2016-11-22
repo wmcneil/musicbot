@@ -8,5 +8,6 @@
 
     <modules>
         <module>FredBoat</module>
+        <module>FredBoat-Bootloader</module>
     </modules>
 </project>
