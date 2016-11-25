@@ -12,14 +12,15 @@
 package fredboat.agent;
 
 import com.mashape.unirest.http.Unirest;
-import fredboat.sharding.ShardTracker;
+import fredboat.FredBoat;
+import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.JDA;
 import org.slf4j.LoggerFactory;
 
 public class CarbonitexAgent extends Thread {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(CarbonitexAgent.class);
-    
+
     private final String key;
     public final JDA jda;
 
@@ -30,6 +31,10 @@ public class CarbonitexAgent extends Thread {
 
     @Override
     public void run() {
+        if (FredBoat.distribution != DistributionEnum.MAIN) {
+            return;
+        }
+
         try {
             while (true) {
                 synchronized (this) {
@@ -40,12 +45,15 @@ public class CarbonitexAgent extends Thread {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private void sendStats() {
         try {
             final String response = Unirest.post("https://www.carbonitex.net/discord/data/botdata.php").field("key", key)
-                    .field("servercount", ShardTracker.getGlobalGuildCount()).asString().getBody();
+                    .field("servercount", jda.getGuilds().size())
+                    .field("shard_id", FredBoat.shardId)
+                    .field("shard_count", FredBoat.numShards).asString().getBody();
             log.info("Successfully posted the botdata to carbonitex.com: " + response);
         } catch (Exception e) {
             log.error("An error occured while posting the botdata to carbonitex.com", e);
