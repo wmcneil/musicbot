@@ -56,7 +56,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
 
     private void update(TextChannel channel) throws IOException {
         File homeJar = new File(System.getProperty("user.home") + "/FredBoat-1.0.jar");
-        File targetJar = new File("./update/FredBoat/target/FredBoat-1.0.jar");
+        File targetJar = new File("./update/target/FredBoat-1.0.jar");
 
         targetJar.getParentFile().mkdirs();
         targetJar.delete();

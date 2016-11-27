@@ -61,7 +61,7 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
             }
 
             msg = msg.updateMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ");
-            File updateDir = new File("./FredBoat/update");
+            File updateDir = new File("update/FredBoat");
 
             Process mvnBuild = rt.exec("mvn -f " + updateDir.getAbsolutePath() + "/pom.xml package shade:shade");
             new SLF4JInputStreamLogger(log, mvnBuild.getInputStream()).start();
@@ -77,8 +77,8 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
 
             msg.updateMessage(msg.getRawContent() + "👌🏽");
 
-            if(!new File("./update/target/FredBoat/FredBoat-1.0.jar").renameTo(new File(System.getProperty("user.home") + "/FredBoat-1.0.jar"))){
-                throw new RuntimeException("Failed to mmove jar to home");
+            if(!new File("./update/FredBoat/target/FredBoat-1.0.jar").renameTo(new File(System.getProperty("user.home") + "/FredBoat-1.0.jar"))){
+                throw new RuntimeException("Failed to move jar to home");
             }
         } catch (InterruptedException | IOException ex) {
             throw new RuntimeException(ex);
