@@ -25,6 +25,7 @@ import net.dv8tion.jda.utils.PermissionUtil;
 
 import java.util.List;
 
+//TODO: Rewrite this
 public class ClearCommand extends Command {
 
     @Override

@@ -46,31 +46,19 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# intellij files
-/.idea/
-*.iml
-*.ipr
-*.iws
-
 # Custom
 lib/
 test/
-dist/*
+dist*
 build/
 build.xml
 manifest.mf
 nbproject/private/
+tokens.json
 run.bat
 target/
 .nb-gradle/
 /dependency-reduced-pom.xml
-*credentials.json
-*tokens.json
-/ffmpeg.exe
-/ffplay.exe
-/ffprobe.exe
-/youtube-dl
-/logs/
-*.jar
-/music_persistence/
-/bootloader.json
+/credentials.json
+/FredBoat-1.0.jar
+/FredBoat-Bootloader-1.0.jar
