@@ -29,7 +29,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
     private final GuildPlayer gplayer;
-    private final ConcurrentLinkedQueue<IdentifierContext> identifierQueue = new ConcurrentLinkedQueue();
+    private final ConcurrentLinkedQueue<IdentifierContext> identifierQueue = new ConcurrentLinkedQueue<>();
     private IdentifierContext context = null;
     private volatile boolean isLoading = false;
 
