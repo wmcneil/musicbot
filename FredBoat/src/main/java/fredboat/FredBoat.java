@@ -338,6 +338,9 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x101, "internetspeed", new RemoteFileCommand("http://www.speedtest.net/result/5529046933.png"));
         CommandRegistry.registerCommand(0x101, "hug", new RemoteFileCommand("http://i.imgur.com/U2l7mnr.gif"));
         CommandRegistry.registerCommand(0x101, "powerpoint", new RemoteFileCommand("http://puu.sh/rISIl/1cc927ece3.PNG"));
+        CommandRegistry.registerCommand(0x101, "cooldog", new DogCommand());
+        CommandRegistry.registerAlias("cooldog", "dog");
+        CommandRegistry.registerAlias("cooldog", "dogmeme");
 
         CommandRegistry.registerCommand(0x101, "github", new TextCommand("https://github.com/Frederikam"));
         CommandRegistry.registerCommand(0x101, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));
