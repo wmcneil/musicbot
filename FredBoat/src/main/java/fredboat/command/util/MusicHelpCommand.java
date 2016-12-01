@@ -1,38 +1,39 @@
 /*
- * The MIT License (MIT)
- * Copyright (c) 2016 Frederik Mikkelsen
+ ** The MIT License (MIT)
+ ** Copyright (c) 2016 Frederik Mikkelsen
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ ** Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ ** The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package fredboat.command.util;
 
+import fredboat.command.fun.TextCommand;
+
 public class MusicHelpCommand extends TextCommand {
-	
-	public static final String MUSIC
-			="**This is the list of all the music commands the bot can execute, them being:** \n"
-			+"`*;;play* — makes the bot play a song. You can either give the bot an URL to a video(e.g.: ;;play <URL>) or use it to search on youtube(e.g.: ;;play rick roll) \n"
-			+"*;;list* — display a list of the current songs in the playlist \n"
-			+"*;;nowplaying — displays the current playing song \n"
-			+"*;;skip* — skips the current song. Please use in moderation \n"
-			+"*;;stop* — stops the current song and **clears** the playlist. Reserved for moderators \n"
-			+"*;;pause* — pauses the player \n"
-			+"*;;unpause* — unpauses the player \n"
-			+"*;;join* — makes the bot join your current voice channel \n"
-			+"*;;leave* — makes the bot leave the current voice channel \n"
-			+"*;;repeat* — toggles repeat mode for the current song \n"
-			+"*;;shuffle* — toggles shuffle mode for the current queue \n"
-			+"*;;volume* — changes the volume, volumes are 0-150, default volume is 100 \n"
-                        +"*;;mhelp* — makes the bot post this message \n"
-                        +"If you ping the bot, you can interact with the bot's cleverbot module.`";
-			
-	public MusicHelpCommand() {
-		super(MUSIC);
-	}
+
+    public static final String MUSIC
+            ="**This is the list of all the music commands this bot can execute:**.\n"
+            +"**;;play**        Plays a track. You can either provide an url to a video or track (;;play <url>) or use it to search on youtube (;;play rick roll).\n"
+            +"**;;list**        Display a list of the current tracks in the playlist.\n"
+            +"**;;nowplaying    Displays the currently playing track.\n"
+            +"**;;skip**        Skips the current track. Please use in moderation.\n"
+            +"**;;stop**        Stops the current track and ***clears*** the playlist. Reserved for moderators.\n"
+            +"**;;pause**       Pauses the player.\n"
+            +"**;;unpause**     Unpauses the player.\n"
+            +"**;;join**        Makes the bot join your current voice channel.\n"
+            +"**;;leave**       Makes the bot leave the current voice channel.\n"
+            +"**;;repeat**      Toggles repeat mode for the current track.\n"
+            +"**;;shuffle**     Toggles shuffle mode for the current queue.\n"
+            +"**;;volume**      Changes the volume, volumes are 0-150, default volume is 100.\n"
+            +"**;;music**       Posts this message.";
+
+    public MusicHelpCommand() {
+        super(MUSIC);
+    }
 }
 
 //gib dem pats to me
