@@ -15,7 +15,7 @@ public class MusicHelpCommand extends TextCommand {
 	
 	public static final String MUSIC
 			="**This is the list of all the music commands the bot can execute, them being:** \n"
-			+"`*;;play* — makes me play a song. You can either give the bot an URL to a video(e.g.: ;;play <IRL>) or use it to search on youtube(e.g.: ;;play rick roll) \n"
+			+"`*;;play* — makes the bot play a song. You can either give the bot an URL to a video(e.g.: ;;play <URL>) or use it to search on youtube(e.g.: ;;play rick roll) \n"
 			+"*;;list* — display a list of the current songs in the playlist \n"
 			+"*;;nowplaying — displays the current playing song \n"
 			+"*;;skip* — skips the current song. Please use in moderation \n"
