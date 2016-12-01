@@ -14,21 +14,21 @@ package fredboat.command.util;
 public class MusicHelpCommand extends TextCommand {
 	
 	public static final String MUSIC
-			="**This is the list of all the music commands I can execute, them being:** \n"
-			+"`*;;play* — makes me play a song. You can either give me an url to a video(e.g.: ;;play <url>) or use it to search on youtube(e.g.: ;;play rick roll) \n"
+			="**This is the list of all the music commands the bot can execute, them being:** \n"
+			+"`*;;play* — makes me play a song. You can either give the bot an URL to a video(e.g.: ;;play <IRL>) or use it to search on youtube(e.g.: ;;play rick roll) \n"
 			+"*;;list* — display a list of the current songs in the playlist \n"
 			+"*;;nowplaying — displays the current playing song \n"
 			+"*;;skip* — skips the current song. Please use in moderation \n"
 			+"*;;stop* — stops the current song and **clears** the playlist. Reserved for moderators \n"
 			+"*;;pause* — pauses the player \n"
 			+"*;;unpause* — unpauses the player \n"
-			+"*;;join* — makes me join your current voice channel \n"
-			+"*;;leave* — makes me leave the current voice channel \n"
+			+"*;;join* — makes the bot join your current voice channel \n"
+			+"*;;leave* — makes the bot leave the current voice channel \n"
 			+"*;;repeat* — toggles repeat mode for the current song \n"
 			+"*;;shuffle* — toggles shuffle mode for the current queue \n"
 			+"*;;volume* — changes the volume, volumes are 0-150, default volume is 100 \n"
-                        +"*;;mhelp* — makes me post this message \n"
-                        +"If you ping me, you can interact with my cleverbot module.`";
+                        +"*;;mhelp* — makes the bot post this message \n"
+                        +"If you ping the bot, you can interact with the bot's cleverbot module.`";
 			
 	public MusicHelpCommand() {
 		super(MUSIC);
