@@ -27,8 +27,8 @@ public class MusicHelpCommand extends TextCommand {
 			+"*;;repeat* — toggles repeat mode for the current song \n"
 			+"*;;shuffle* — toggles shuffle mode for the current queue \n"
 			+"*;;volume* — changes the volume, volumes are 0-150, default volume is 100 \n"
-      +"*;;mhelp* — makes me post this message \n"
-      +"If you ping me, you can interact with my cleverbot module.`";
+                        +"*;;mhelp* — makes me post this message \n"
+                        +"If you ping me, you can interact with my cleverbot module.`";
 			
 	public MusicHelpCommand() {
 		super(MUSIC);
