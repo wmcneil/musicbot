@@ -316,6 +316,8 @@ public class FredBoat {
         CommandRegistry.registerCommand(0x010, "restart", new RestartCommand());
         CommandRegistry.registerCommand(0x010, "export", new ExportCommand());
         CommandRegistry.registerCommand(0x010, "playerdebug", new PlayerDebugCommand());
+        CommandRegistry.registerCommand(0x010, "mhelp", new MusicHelpCommand());
+        CommandRegistry.registerAlias("mhelp", "musichelp");
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));
