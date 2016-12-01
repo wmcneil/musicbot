@@ -84,7 +84,7 @@ public class PlaylistImportSourceManager implements AudioSourceManager {
             throw new FriendlyException("Failed loading playlist item", FriendlyException.Severity.FAULT, ex);
         }
 
-        return new BasicAudioPlaylist(hasteId, handler.getLoadedTracks(), null);
+        return new BasicAudioPlaylist(hasteId, handler.getLoadedTracks(), null, false);
     }
 
     @Override
