@@ -22,7 +22,7 @@
 
     "files":
         [
-        {"includePattern": "target/(.*)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "$1"}
+        {"includePattern": "FredBoat/target/(.*)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "$1"}
         ],
     "publish": true
 }
