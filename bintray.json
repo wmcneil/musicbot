@@ -22,7 +22,7 @@
 
     "files":
         [
-        {"includePattern": "target", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "gems/$2"}
+        {"includePattern": "target/(.*)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "$1"}
         ],
     "publish": true
 }
