@@ -1,8 +1,8 @@
 {
     "package": {
-        "name": "auto-upload",
-        "repo": "FredBoat",
-        "subject": "Frederikam",
+        "name": "FredBoat",
+        "repo": "maven",
+        "subject": "frederikam",
         "desc": "Automatic build",
         "website_url": "https://github.com/Frederikam/FredBoat",
         "issue_tracker_url": "https://github.com/Frederikam/FredBoat/issues",
@@ -22,7 +22,7 @@
 
     "files":
         [
-        {"includePattern": "target)", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "gems/$2"}
+        {"includePattern": "target", "excludePattern": ".*/do-not-deploy/.*", "uploadPattern": "gems/$2"}
         ],
     "publish": true
 }
