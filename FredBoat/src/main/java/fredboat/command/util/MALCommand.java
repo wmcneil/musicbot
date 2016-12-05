@@ -63,13 +63,13 @@ public class MALCommand extends Command {
         }
     }
 
-    private boolean handleAnime(TextChannel channel, User invoker, String terms, String body) {
-        String msg = invoker.getUsername() + ": Search revealed an anime.\n";
+    private boolean handleAnime(TextChannel channel, Member invoker, String terms, String body) {
+        String msg = invoker.getEffectiveName() + ": Search revealed an anime.\n";
 
         //Read JSON
         log.info(body);
         JSONObject root = XML.toJSONObject(body);
-        JSONObject data = null;
+        JSONObject data;
         try {
             data = root.getJSONObject("anime").getJSONArray("entry").getJSONObject(0);
         } catch (JSONException ex) {
@@ -122,18 +122,18 @@ public class MALCommand extends Command {
 
         msg = data.has("id") ? msg + "http://myanimelist.net/anime/" + data.get("id") + "/" : msg;
         
-        channel.sendMessage(msg);
+        channel.sendMessage(msg).queue();
         return true;
     }
 
-    private boolean handleUser(TextChannel channel, User invoker, String body) {
-        String msg = invoker.getUsername() + ": Search revealed a user.\n";
+    private boolean handleUser(TextChannel channel, Member invoker, String body) {
+        String msg = invoker.getEffectiveName() + ": Search revealed a user.\n";
 
         //Read JSON
         JSONObject root = new JSONObject(body);
         JSONArray items = root.getJSONArray("categories").getJSONObject(0).getJSONArray("items");
         if(items.length() == 0){
-            channel.sendMessage(invoker.getUsername() + ": No results.");
+            channel.sendMessage(invoker.getEffectiveName() + ": No results.").queue();
             return false;
         }
         
@@ -145,7 +145,7 @@ public class MALCommand extends Command {
 
         log.debug(msg);
 
-        channel.sendMessage(msg);
+        channel.sendMessage(msg).queue();
         return true;
     }
 
