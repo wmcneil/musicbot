@@ -18,13 +18,21 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class HelpCommand extends Command implements IMusicBackupCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        invoker.getPrivateChannel().sendMessage(BotConstants.HELP_TEXT);
-        channel.sendMessage(invoker.getUsername() + ": Documentation has been sent to your direct messages!");
+        if(!invoker.getUser().hasPrivateChannel()){
+            try {
+                invoker.getUser().openPrivateChannel().block();
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        invoker.getUser().getPrivateChannel().sendMessage(BotConstants.HELP_TEXT);
+        channel.sendMessage(invoker.getEffectiveName() + ": Documentation has been sent to your direct messages!");
     }
     
 }

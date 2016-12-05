@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.MessageHistory;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.entities.Message.Attachment;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -37,7 +38,16 @@ public class DumpCommand extends Command {
         boolean isQuiet = args[1].equals("-q");
         int dumpSize = Integer.valueOf(args[args.length - 1]);
         int realDumpSize = Math.min(dumpSize, MAX_DUMP_SIZE);
-        MessageChannel outputChannel = isQuiet ? invoker.getPrivateChannel() : channel;
+
+        if(!invoker.getUser().hasPrivateChannel()){
+            try {
+                invoker.getUser().openPrivateChannel().block();
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        MessageChannel outputChannel = isQuiet ? invoker.getUser().getPrivateChannel() : channel;
         outputChannel.sendTyping();
         
         //Quick hack to allow infinite messages if invoked by owner:
@@ -48,16 +58,16 @@ public class DumpCommand extends Command {
         try {
 
             MessageHistory mh = new MessageHistory(channel);
-            int availableMessages = mh.getRecent().size();
+            int availableMessages = mh.getCachedHistory().size();
 
             while (availableMessages < realDumpSize) {
                 int nextMessages = Math.min(100, realDumpSize - availableMessages);
                 availableMessages = nextMessages + availableMessages;
-                mh.retrieve(nextMessages);
+                mh.retrievePast(nextMessages).block();
             }
 
             String dump = "**------BEGIN DUMP------**\n";
-            List<Message> messages = new ArrayList<>(mh.getRecent());
+            List<Message> messages = new ArrayList<>(mh.getCachedHistory());
             Collections.reverse(messages);
             messages = messages.subList(0, Math.min(realDumpSize, messages.size()));
             dump = dump + "Size = " + messages.size() + "\nTimes are in UTC\n\n";
@@ -69,18 +79,18 @@ public class DumpCommand extends Command {
                 String content = "[COULD NOT DISPLAY CONTENT!]";
 
                 try {
-                    authr = msg.getAuthor().getUsername() + "#" + msg.getAuthor().getDiscriminator();
-                } catch (NullPointerException ex) {
+                    authr = msg.getAuthor().getName() + "#" + msg.getAuthor().getDiscriminator();
+                } catch (NullPointerException ignored) {
                 }
                 
                 try {
-                    time = formatTimestamp(msg.getTime());
-                } catch (NullPointerException ex) {
+                    time = formatTimestamp(msg.getCreationTime());
+                } catch (NullPointerException ignored) {
                 }
                 
                 try {
                     content = msg.getContent();
-                } catch (NullPointerException ex) {
+                } catch (NullPointerException ignored) {
                 }
 
                 dump = dump + "--Msg #" + i + " by " + authr
@@ -106,6 +116,8 @@ public class DumpCommand extends Command {
             outputChannel.sendMessage(mb.build());
         } catch (UnirestException ex) {
             outputChannel.sendMessage("Failed to connect to Hastebin: " + ex.getMessage());
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
         }
     }
 

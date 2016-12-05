@@ -24,6 +24,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
     }
 
-    private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message) {
+    private void handleNoArguments(Guild guild, TextChannel channel, Member invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         if (player.isQueueEmpty()) {
             channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
@@ -89,7 +90,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
     }
 
-    private void searchForVideos(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    private void searchForVideos(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) throws RateLimitedException {
         Matcher m = Pattern.compile("\\S+\\s+(.*)").matcher(message.getRawContent());
         m.find();
         String query = m.group(1);
@@ -97,7 +98,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         //Now remove all punctuation
         query = query.replaceAll("[.,/#!$%\\^&*;:{}=\\-_`~()]", "");
 
-        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query));
+        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query)).block();
 
         ArrayList<YoutubeVideo> vids = null;
         try {
@@ -109,24 +110,24 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
 
         if (vids.isEmpty()) {
-            outMsg.updateMessage("No results for `{q}`".replace("{q}", query));
+            outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
         } else {
             MessageBuilder builder = new MessageBuilder();
             builder.appendString("**Please select a video with the `;;select n` command:**");
 
             int i = 1;
             for (YoutubeVideo vid : vids) {
-                builder.appendString("\n**")
-                        .appendString(String.valueOf(i))
-                        .appendString(":** ")
-                        .appendString(vid.name)
-                        .appendString(" (")
-                        .appendString(vid.getDurationFormatted())
-                        .appendString(")");
+                builder.append("\n**")
+                        .append(String.valueOf(i))
+                        .append(":** ")
+                        .append(vid.name)
+                        .append(" (")
+                        .append(vid.getDurationFormatted())
+                        .append(")");
                 i++;
             }
 
-            outMsg.updateMessage(builder.build().getRawContent());
+            outMsg.editMessage(builder.build().getRawContent()).queue();
 
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);

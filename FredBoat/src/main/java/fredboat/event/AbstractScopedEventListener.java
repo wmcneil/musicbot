@@ -47,7 +47,7 @@ public abstract class AbstractScopedEventListener extends ListenerAdapter {
             try{
             listener.onGuildMessageReceived(event);
             } catch(Exception ex){
-                TextUtils.handleException(ex, event.getChannel(), event.getAuthor());
+                TextUtils.handleException(ex, event.getChannel(), event.getMember());
             }
         }
     }

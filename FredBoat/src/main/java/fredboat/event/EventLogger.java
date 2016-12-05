@@ -58,14 +58,14 @@ public class EventLogger extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         send(
-                "[:white_check_mark:] Joined guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
+                "[:white_check_mark:] Joined guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getMembers().size() + "`."
         );
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         send(
-                "[:x:] Left guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
+                "[:x:] Left guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getMembers().size() + "`."
         );
     }
 

@@ -29,10 +29,10 @@ public class TalkCommand extends Command {
         talk(invoker, channel, question);
     }
 
-    public static void talk(User user, TextChannel channel, String question) {
+    public static void talk(Member member, TextChannel channel, String question) {
         //Clerverbot integration
         String response = FredBoat.jca.getResponse(question);
-        response = user.getUsername() + ": " + StringEscapeUtils.unescapeHtml4(response);
+        response = member.getEffectiveName() + ": " + StringEscapeUtils.unescapeHtml4(response);
         channel.sendMessage(response);
     }
 

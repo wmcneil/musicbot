@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  *
@@ -34,9 +35,14 @@ public class SayCommand extends Command {
             res = res+" "+args[i];
         }
         res = res.substring(1);
-        Message myMsg = channel.sendMessage('\u200b' + res);
-        
-        EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        Message myMsg;
+        try {
+            myMsg = channel.sendMessage('\u200b' + res).block();
+
+            EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
+        }
     }
     
 }
