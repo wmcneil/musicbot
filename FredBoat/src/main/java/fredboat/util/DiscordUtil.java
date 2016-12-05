@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.requests.Requester;
+import net.dv8tion.jda.core.requests.*;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -78,11 +78,15 @@ public class DiscordUtil {
     public static void sendShardlessMessage(JDA jda, String channel, String content) {
         JSONObject body = new JSONObject();
         body.put("content", content);
-        Unirest.post(Requester.DISCORD_API_PREFIX + "channels/" + channel + "/messages")
-                .header("Authorization", jda.getToken())
-                .header("User-agent", Requester.USER_AGENT)
-                .body(body)
-                .asStringAsync();
+        new RestAction<Void>(jda, Route.Messages.SEND_MESSAGE.compile(channel), body) {
+            @Override
+            protected void handleResponse(Response response, Request request) {
+                if (response.isOk())
+                    request.onSuccess(null);
+                else
+                    request.onFailure(response);
+            }
+        }.queue();
     }
 
 }

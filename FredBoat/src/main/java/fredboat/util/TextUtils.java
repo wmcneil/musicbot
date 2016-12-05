@@ -61,7 +61,7 @@ public class TextUtils {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
-            builder.appendString(filtered);
+            builder.append(filtered);
         } else {
             String filtered = "An error occured :anger: ```java\n" + e.toString() + "\n";
 
@@ -69,17 +69,17 @@ public class TextUtils {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
-            builder.appendString(filtered);
+            builder.append(filtered);
         }
 
         //builder.appendString("```java\n");
         for (StackTraceElement ste : e.getStackTrace()) {
-            builder.appendString("\t" + ste.toString() + "\n");
+            builder.append("\t" + ste.toString() + "\n");
             if ("prefixCalled".equals(ste.getMethodName())) {
                 break;
             }
         }
-        builder.appendString("\t...```");
+        builder.append("\t...```");
 
         try {
             channel.sendMessage(builder.build());

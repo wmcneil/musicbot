@@ -31,7 +31,7 @@ public final class AkinatorListener extends UserListener {
     private final String EXCLUSION_URL = "http://api-en4.akinator.com/ws/exclusion";
 
     public final JDA jda;
-    public final String channelId;
+    private final String channelId;
     private final String userId;
     private StepInfo stepInfo;
     private final AbstractScopedEventListener listener;
@@ -62,7 +62,7 @@ public final class AkinatorListener extends UserListener {
     }
 
     private void sendNextQuestion() {
-        String name = jda.getTextChannelById(channelId).getGuild().getEffectiveNameForUser(jda.getUserById(userId));
+        String name = jda.getTextChannelById(channelId).getGuild().getMemberById(userId).getEffectiveName();
         String out = "**" + name + ": Question " + (stepInfo.getStepNum() + 1) + "**\n"
                 + stepInfo.getQuestion() + "\n [yes/no/idk/probably/probably not]";
         jda.getTextChannelById(channelId).sendMessage(out);
@@ -194,7 +194,7 @@ public final class AkinatorListener extends UserListener {
         private final int stepNum;
         private final double progression;
 
-        public StepInfo(JSONObject json) {
+        StepInfo(JSONObject json) {
             JSONObject params = json.getJSONObject("parameters");
             JSONObject info = params.has("step_information") ? params.getJSONObject("step_information") : params;
             question = info.getString("question");
@@ -208,23 +208,23 @@ public final class AkinatorListener extends UserListener {
             }
         }
 
-        public String getQuestion() {
+        String getQuestion() {
             return question;
         }
 
-        public int getStepNum() {
+        int getStepNum() {
             return stepNum;
         }
 
-        public String getSignature() {
+        String getSignature() {
             return signature;
         }
 
-        public String getSession() {
+        String getSession() {
             return session;
         }
 
-        public double getProgression() {
+        double getProgression() {
             return progression;
         }
 
@@ -239,7 +239,7 @@ public final class AkinatorListener extends UserListener {
         private final String pseudo;
         private final String imgPath;
 
-        public Guess() throws UnirestException {
+        Guess() throws UnirestException {
             JSONObject json = Unirest.get(GET_GUESS_URL)
                     .queryString("session", session)
                     .queryString("signature", signature)
