@@ -16,12 +16,12 @@ import fredboat.commandmeta.abs.ICommand;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 public class RiotCommand extends Command implements ICommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         channel.sendMessage("ヽ༼ຈل͜ຈ༽ﾉ **" + message.getContent().replaceFirst("\\S*\\s+", "").toUpperCase()+"** ヽ༼ຈل͜ຈ༽ﾉ");
     }
 }

@@ -32,7 +32,7 @@ public class DumpCommand extends Command {
     public static final int MAX_DUMP_SIZE = 2000;
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Interpret arguments
         boolean isQuiet = args[1].equals("-q");
         int dumpSize = Integer.valueOf(args[args.length - 1]);

@@ -18,7 +18,7 @@ import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +28,7 @@ public class LuaCommand extends Command {
     public static final int MAX_COMPUTATION_TIME = 5;
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
             String source = message.getContent().replaceFirst(args[0], "");
             HashMap<String, String> luaArgs = new HashMap<>();

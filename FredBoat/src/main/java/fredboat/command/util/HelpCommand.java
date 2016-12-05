@@ -17,12 +17,12 @@ import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 public class HelpCommand extends Command implements IMusicBackupCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         invoker.getPrivateChannel().sendMessage(BotConstants.HELP_TEXT);
         channel.sendMessage(invoker.getUsername() + ": Documentation has been sent to your direct messages!");
     }

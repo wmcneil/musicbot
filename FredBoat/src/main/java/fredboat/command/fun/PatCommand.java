@@ -15,7 +15,7 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 public class PatCommand extends RandomImageCommand {
 
@@ -24,7 +24,7 @@ public class PatCommand extends RandomImageCommand {
     }
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         super.onInvoke(guild, channel, invoker, message, args);
 
         if (message.getMentionedUsers().size() > 0) {

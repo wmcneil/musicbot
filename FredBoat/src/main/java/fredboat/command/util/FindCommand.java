@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.MessageHistory;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class FindCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         JDA jda = guild.getJDA();
 
         String searchTerm = null;

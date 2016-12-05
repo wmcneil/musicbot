@@ -20,7 +20,7 @@ import net.dv8tion.jda.core.entities.*;
 public class JoinCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         VoiceChannel vc = player.getUserCurrentVoiceChannel(invoker);
         player.setCurrentTC(channel);

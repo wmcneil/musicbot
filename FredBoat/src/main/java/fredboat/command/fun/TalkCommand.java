@@ -17,13 +17,13 @@ import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class TalkCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         String question = message.getRawContent().substring(BotConstants.DEFAULT_BOT_PREFIX.length() + 5);
 
         talk(invoker, channel, question);

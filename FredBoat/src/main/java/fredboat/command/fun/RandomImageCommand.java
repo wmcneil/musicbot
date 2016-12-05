@@ -16,7 +16,7 @@ import fredboat.util.CacheUtil;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.lang.reflect.Array;
 import java.util.Random;
@@ -30,7 +30,7 @@ public class RandomImageCommand extends Command {
     }
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Get a random file and send it
         String randomUrl = (String) Array.get(urls, new Random().nextInt(urls.length));
         channel.sendFile(CacheUtil.getImageFromURL(randomUrl), null);

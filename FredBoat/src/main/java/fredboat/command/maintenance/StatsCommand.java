@@ -23,12 +23,12 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 public class StatsCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         long totalSecs = (System.currentTimeMillis() - FredBoat.START_TIME) / 1000;
         int days = (int) (totalSecs / (60 * 60 * 24));
         int hours = (int) ((totalSecs / (60 * 60)) % 24);

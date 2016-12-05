@@ -11,13 +11,10 @@
 
 package fredboat.commandmeta.abs;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 
 public interface ICommand {
 
-    public abstract void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args);
+    public abstract void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args);
 
 }

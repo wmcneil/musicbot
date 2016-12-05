@@ -18,12 +18,12 @@ import fredboat.feature.AkinatorListener;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 public class AkinatorCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
             AkinatorListener akinator = new AkinatorListener(guild.getJDA(), FredBoat.getListenerBot(), channel.getId(), invoker.getId());
             FredBoat.getListenerBot().putListener(invoker.getId(), akinator);

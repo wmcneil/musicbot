@@ -18,10 +18,7 @@ import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
 
@@ -36,15 +33,15 @@ public class CommandManager {
     public static ICommand defaultCmd = new UnknownCommand();
     public static int commandsExecuted = 0;
 
-    public static void prefixCalled(Command invoked, Guild guild, TextChannel channel, User invoker, Message message) {
+    public static void prefixCalled(Command invoked, Guild guild, TextChannel channel, Member invoker, Message message) {
         //String[] args = message.getRawContent().replace("\n", " ").split(" ");
         String[] args = commandToArguments(message.getRawContent());
         commandsExecuted++;
         if (invoked instanceof ICommandOwnerRestricted) {
             //This command is restricted to only Frederikam
             //Check if invoker is actually Fre_d
-            if (!invoker.getId().equals(BotConstants.OWNER_ID)) {
-                channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!"));
+            if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
+                channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!")).queue();
                 return;
             }
         }
@@ -66,10 +63,10 @@ public class CommandManager {
             return;
         }
 
-        if (invoked instanceof IMusicCommand && PermissionUtil.checkPermission(
+        if (invoked instanceof IMusicCommand && !PermissionUtil.checkPermission(
                 channel,
-                guild.getJDA().getSelfInfo(),
-                Permission.MESSAGE_WRITE) == false) {
+                channel.getGuild().getSelfMember(),
+                Permission.MESSAGE_WRITE)) {
             log.debug("Ignored command because it was a music command, and this bot cannot write in that channel");
             return;
         }
@@ -78,9 +75,9 @@ public class CommandManager {
         if (invoked instanceof IMusicCommand && guild.getId().equals("174820236481134592")) {
             if (!channel.getId().equals("174821093633294338")
                     && !channel.getId().equals("217526705298866177")
-                    && !invoker.getId().equals("81011298891993088")) {
+                    && !invoker.getUser().getId().equals("81011298891993088")) {
                 message.deleteMessage();
-                channel.sendMessage("Please don't spam music commands outside of <#174821093633294338>.");
+                channel.sendMessage("Please don't spam music commands outside of <#174821093633294338>.").queue();
                 return;
             }
         }
@@ -93,13 +90,13 @@ public class CommandManager {
 
     }
 
-    public static String[] commandToArguments(String cmd) {
+    private static String[] commandToArguments(String cmd) {
         ArrayList<String> a = new ArrayList<>();
         int argi = 0;
         boolean isInQuote = false;
 
         for (Character ch : cmd.toCharArray()) {
-            if (Character.isWhitespace(ch) && isInQuote == false) {
+            if (Character.isWhitespace(ch) && !isInQuote) {
                 String arg = null;
                 try {
                     arg = a.get(argi);
@@ -130,7 +127,7 @@ public class CommandManager {
         String arg = null;
         try {
             arg = a.get(argi);
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
         }
         if (arg == null) {
             a.add(argi, String.valueOf(ch));

@@ -27,7 +27,7 @@ public class LuaDiscordLib extends TwoArgFunction {
     public LuaDiscordLib(JDA jda) {
         this.jda = jda;
     }
-    
+
     @Override
     public LuaValue call(LuaValue modname, LuaValue env) {
         LuaTable discord = new LuaTable();

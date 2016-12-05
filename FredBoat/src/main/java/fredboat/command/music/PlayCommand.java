@@ -23,7 +23,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class PlayCommand extends Command implements IMusicCommand {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayCommand.class);
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (!message.getAttachments().isEmpty()) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);

@@ -21,13 +21,13 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 
 public class StopCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (PermissionUtil.checkPermission(guild, invoker, Permission.MESSAGE_MANAGE) || invoker.getId().equals(BotConstants.OWNER_ID)) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);

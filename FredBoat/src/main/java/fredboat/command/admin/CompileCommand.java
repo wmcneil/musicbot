@@ -18,7 +18,7 @@ import fredboat.util.log.SLF4JInputStreamLogger;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
     private static final Logger log = LoggerFactory.getLogger(CompileCommand.class);
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
             Runtime rt = Runtime.getRuntime();
             Message msg = channel.sendMessage("*Now updating...*\n\nRunning `git clone`... ");

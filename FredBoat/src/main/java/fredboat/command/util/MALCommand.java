@@ -19,7 +19,7 @@ import fredboat.commandmeta.abs.Command;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,7 @@ public class MALCommand extends Command {
     private static Pattern regex = Pattern.compile("^\\S+\\s+([\\W\\w]*)");
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         Matcher matcher = regex.matcher(message.getContent());
         try {
             matcher.find();

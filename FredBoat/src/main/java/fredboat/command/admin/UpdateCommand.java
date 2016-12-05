@@ -18,7 +18,7 @@ import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
     private static final long MAX_JAR_AGE = 10 * 60 * 1000;
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
             File homeJar = new File(System.getProperty("user.home") + "/FredBoat-1.0.jar");
 

@@ -12,10 +12,7 @@
 package fredboat.commandmeta;
 
 import fredboat.commandmeta.abs.ICommand;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 
 /**
  *
@@ -24,9 +21,6 @@ import net.dv8tion.jda.core.entities.User;
 public class UnknownCommand implements ICommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        //channel.sendMessage("<@"+invoker.getId()+"> unknown command \""+message.getContent()+"\"!");
-        //channel.sendMessage(TextUtils.prefaceWithMention(invoker, " unknown command \""+message.getContent()+"\"!"));
-    }
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {}
     
 }

@@ -20,7 +20,7 @@ import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 public class PlayerDebugCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         JSONArray a = new JSONArray();
         
         for(GuildPlayer gp : PlayerRegistry.getRegistry().values()){
