@@ -11,7 +11,6 @@
 
 package fredboat.util;
 
-import com.mashape.unirest.http.Unirest;
 import fredboat.FredBoat;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.OnlineStatus;

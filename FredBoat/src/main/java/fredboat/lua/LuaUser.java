@@ -47,7 +47,7 @@ public class LuaUser extends LuaTable {
         meta.set(TOSTRING, new OneArgFunction() {
             @Override
             public LuaValue call(LuaValue arg){//, LuaValue arg2) {
-                return LuaString.valueOf(user.getUsername());
+                return LuaString.valueOf(user.getName());
             }
         });
 
