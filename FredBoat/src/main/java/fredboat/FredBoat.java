@@ -35,10 +35,10 @@ import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
+import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDAInfo;
-import net.dv8tion.jda.core.client.JDAClientBuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONArray;
@@ -177,10 +177,10 @@ public class FredBoat {
         }
 
         if ((scopes & 0x110) != 0) {
-            JDABuilder builder = new JDABuilder()
+            JDABuilder builder = new JDABuilder(AccountType.BOT)
                     .addListener(listenerBot)
                     .addListener(new EventLogger("216689009110417408"))
-                    .setBotToken(accountToken)
+                    .setToken(accountToken)
                     .setBulkDeleteSplittingEnabled(true);
             if (numShards > 1) {
                 builder.useSharding(shardId, numShards);
@@ -189,9 +189,9 @@ public class FredBoat {
         }
 
         if ((scopes & 0x001) != 0 && shardId == 0) {
-            jdaSelf = new JDAClientBuilder()
+            jdaSelf = new JDABuilder(AccountType.CLIENT)
                     .addListener(listenerSelf)
-                    .setClientToken(clientToken)
+                    .setToken(clientToken)
                     .buildAsync();
         }
 
