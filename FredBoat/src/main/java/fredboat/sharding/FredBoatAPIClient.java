@@ -25,7 +25,7 @@ public class FredBoatAPIClient {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(FredBoatAPIClient.class);
     public static boolean isErrornous = true;//This just makes sure we don't submit any stats from failed atempts. 
     
-    protected static int getGlobalGuildCountFromShards() {
+    static int getGlobalGuildCountFromShards() {
         int count = 0;
 
         for (int i = 0; i < FredBoat.numShards; i++) {
@@ -45,7 +45,7 @@ public class FredBoatAPIClient {
         return count;
     }
 
-    protected static int getGlobalGuildCountFromShard0() {
+    static int getGlobalGuildCountFromShard0() {
         int count = 0;
 
         String url = FredBoat.distribution.getUrlForShard(0) + "globalGuildCount";
@@ -60,7 +60,7 @@ public class FredBoatAPIClient {
         return count;
     }
 
-    protected static int getGlobalUserCountFromShards() {
+    static int getGlobalUserCountFromShards() {
         HashSet<String> map = new HashSet<>();
 
         for (int i = 0; i < FredBoat.numShards; i++) {
@@ -86,7 +86,7 @@ public class FredBoatAPIClient {
         return map.size();
     }
 
-    protected static int getGlobalUserCountFromShard0() {
+    static int getGlobalUserCountFromShard0() {
         int count = 0;
 
         String url = FredBoat.distribution.getUrlForShard(0) + "globalUserCount";

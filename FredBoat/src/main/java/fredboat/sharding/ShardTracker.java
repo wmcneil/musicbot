@@ -20,7 +20,7 @@ public class ShardTracker extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(ShardTracker.class);
     public final JDA jda;
-    public static ShardTracker ins = null;
+    private static ShardTracker ins = null;
 
     private static int globalUserCount = 0;
     private static int globalGuildCount = 0;

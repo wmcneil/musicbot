@@ -19,19 +19,19 @@ import java.util.HashMap;
 
 public class FredBoatAPIServer {
 
-    protected static String token;
+    static String token;
     protected static JDA jda;
-    public static FredBoatAPIServer ins = null;
+    private static FredBoatAPIServer ins = null;
     private final String[] args;
-    public static final HashMap<String, String> HEADERS = new HashMap<>();
+    static final HashMap<String, String> HEADERS = new HashMap<>();
 
     public FredBoatAPIServer(JDA jda, String token, String[] args) {
         if (ins != null) {
             throw new IllegalStateException("Only one instance may exist.");
         }
 
-        this.jda = jda;
-        this.token = token;
+        FredBoatAPIServer.jda = jda;
+        FredBoatAPIServer.token = token;
         this.args = args;
         HEADERS.put("authorization", token);
         
