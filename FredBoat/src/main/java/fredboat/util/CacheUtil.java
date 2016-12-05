@@ -51,17 +51,6 @@ public class CacheUtil {
                 is.close();
                 fos.close();
 
-                //Use regex to find the file extension
-                /*Matcher matcher = Pattern.compile("\\.(\\w+$)").matcher(url);
-                String type = matcher.find() ? matcher.group(1) : "png";
-
-                tmpFile = File.createTempFile(UUID.randomUUID().toString(), "." + type);
-                is = Unirest.get(url).asBinary().getRawBody();
-
-                RenderedImage img = ImageIO.read(is);
-                ImageIO.write(img, type, tmpFile);
-                
-                tmpFile.deleteOnExit();*/
                 cachedURLFiles.put(url, tmpFile);
                 return tmpFile;
             } catch (IOException ex) {
