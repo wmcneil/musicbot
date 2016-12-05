@@ -34,7 +34,7 @@ public class TextUtils {
     public static Message replyWithMention(TextChannel channel, Member member, String msg) {
         MessageBuilder builder = new MessageBuilder().append(member).append(msg);
         Message mes = builder.build();
-        channel.sendMessage(mes);
+        channel.sendMessage(mes).queue();
         return mes;
     }
 
@@ -44,7 +44,7 @@ public class TextUtils {
 
     public static void handleException(Throwable e, MessageChannel channel, Member invoker) {
         if (e instanceof MessagingException) {
-            channel.sendMessage(invoker.getEffectiveName() + ": " + e.getMessage());
+            channel.sendMessage(invoker.getEffectiveName() + ": " + e.getMessage()).queue();
             return;
         }
 
@@ -82,9 +82,9 @@ public class TextUtils {
         builder.append("\t...```");
 
         try {
-            channel.sendMessage(builder.build());
+            channel.sendMessage(builder.build()).queue();
         } catch (UnsupportedOperationException tooLongEx) {
-            channel.sendMessage("An error occured :anger: Error was too long to display.");
+            channel.sendMessage("An error occured :anger: Error was too long to display.").queue();
         }
     }
 
