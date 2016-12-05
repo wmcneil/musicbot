@@ -12,7 +12,7 @@
 package fredboat.audio;
 
 import fredboat.util.YoutubeVideo;
-import net.dv8tion.jda.entities.Message;
+import net.dv8tion.jda.core.entities.Message;
 
 import java.util.ArrayList;
 

@@ -13,13 +13,13 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.MessageHistory;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.MessageHistory;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.time.Clock;
 import java.time.LocalDateTime;

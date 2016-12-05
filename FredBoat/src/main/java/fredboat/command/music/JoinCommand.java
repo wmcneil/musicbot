@@ -15,7 +15,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import net.dv8tion.jda.entities.*;
+import net.dv8tion.jda.core.entities.*;
 
 public class JoinCommand extends Command implements IMusicCommand {
 

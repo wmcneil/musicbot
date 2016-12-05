@@ -14,7 +14,7 @@ package fredboat.sharding;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.User;
 import org.json.JSONArray;
 import org.slf4j.LoggerFactory;
 

@@ -16,9 +16,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.event.AbstractScopedEventListener;
 import fredboat.event.UserListener;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Channel;
-import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Channel;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 

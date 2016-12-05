@@ -18,7 +18,7 @@ import fredboat.event.EventListenerBoat;
 import fredboat.sharding.FredBoatAPIClient;
 import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;

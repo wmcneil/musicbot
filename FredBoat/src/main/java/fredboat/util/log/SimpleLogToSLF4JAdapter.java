@@ -11,8 +11,8 @@
 
 package fredboat.util.log;
 
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.utils.SimpleLog;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.utils.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

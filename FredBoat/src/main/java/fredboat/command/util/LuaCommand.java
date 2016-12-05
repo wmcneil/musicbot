@@ -15,10 +15,10 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.lua.LuaParser;
 import fredboat.lua.LuaParser.Outcome;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;

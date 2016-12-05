@@ -29,7 +29,7 @@ import fredboat.FredBoat;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import fredboat.util.DistributionEnum;
-import net.dv8tion.jda.audio.AudioSendHandler;
+import net.dv8tion.jda.core.audio.AudioSendHandler;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;

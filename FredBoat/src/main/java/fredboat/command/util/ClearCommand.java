@@ -14,14 +14,14 @@ package fredboat.command.util;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.MessageHistory;
-import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.utils.PermissionUtil;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageHistory;
+import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.utils.PermissionUtil;
 
 import java.util.List;
 

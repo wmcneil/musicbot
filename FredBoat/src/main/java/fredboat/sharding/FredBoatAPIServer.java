@@ -11,7 +11,7 @@
 
 package fredboat.sharding;
 
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.springframework.boot.SpringApplication;
 
 import javax.servlet.http.HttpServletRequest;

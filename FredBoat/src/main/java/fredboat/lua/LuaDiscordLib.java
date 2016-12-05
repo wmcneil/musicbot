@@ -11,7 +11,7 @@
 
 package fredboat.lua;
 
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.TwoArgFunction;

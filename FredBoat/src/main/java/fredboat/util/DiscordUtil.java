@@ -12,14 +12,14 @@
 package fredboat.util;
 
 import fredboat.FredBoat;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.OnlineStatus;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.Role;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.impl.JDAImpl;
-import net.dv8tion.jda.requests.Requester;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.impl.JDAImpl;
+import net.dv8tion.jda.core.requests.Requester;
 import org.json.JSONObject;
 
 import java.util.List;

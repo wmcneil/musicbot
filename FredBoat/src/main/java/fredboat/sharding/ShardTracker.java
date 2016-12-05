@@ -12,7 +12,7 @@
 package fredboat.sharding;
 
 import fredboat.FredBoat;
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
