@@ -16,10 +16,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import org.slf4j.LoggerFactory;
 
 public class TextUtils {
@@ -29,13 +26,13 @@ public class TextUtils {
     private TextUtils() {
     }
 
-    public static Message prefaceWithMention(User user, String msg) {
-        MessageBuilder builder = new MessageBuilder().appendMention(user).appendString(msg);
+    public static Message prefaceWithMention(Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
         return builder.build();
     }
 
-    public static Message replyWithMention(TextChannel channel, User user, String msg) {
-        MessageBuilder builder = new MessageBuilder().appendMention(user).appendString(msg);
+    public static Message replyWithMention(TextChannel channel, Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
         Message mes = builder.build();
         channel.sendMessage(mes);
         return mes;
@@ -45,9 +42,9 @@ public class TextUtils {
         handleException(e, channel, null);
     }
 
-    public static void handleException(Throwable e, MessageChannel channel, User invoker) {
+    public static void handleException(Throwable e, MessageChannel channel, Member invoker) {
         if (e instanceof MessagingException) {
-            channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
+            channel.sendMessage(invoker.getEffectiveName() + ": " + e.getMessage());
             return;
         }
 
@@ -56,7 +53,7 @@ public class TextUtils {
         MessageBuilder builder = new MessageBuilder();
 
         if (invoker != null) {
-            builder.appendMention(invoker);
+            builder.append(invoker);
 
             String filtered = " an error occured :anger: ```java\n" + e.toString() + "\n";
 
