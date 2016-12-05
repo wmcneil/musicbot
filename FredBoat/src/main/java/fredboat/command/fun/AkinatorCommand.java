@@ -25,8 +25,8 @@ public class AkinatorCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
-            AkinatorListener akinator = new AkinatorListener(guild.getJDA(), FredBoat.getListenerBot(), channel.getId(), invoker.getId());
-            FredBoat.getListenerBot().putListener(invoker.getId(), akinator);
+            AkinatorListener akinator = new AkinatorListener(guild.getJDA(), FredBoat.getListenerBot(), channel.getId(), invoker.getUser().getId());
+            FredBoat.getListenerBot().putListener(invoker.getUser().getId(), akinator);
         } catch (UnirestException ex) {
             throw new RuntimeException(ex);
         }

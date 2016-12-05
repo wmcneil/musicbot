@@ -29,15 +29,15 @@ public class SelectCommand extends Command implements IMusicCommand {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
-        if (player.selections.containsKey(invoker.getId())) {
-            VideoSelection selection = player.selections.get(invoker.getId());
+        if (player.selections.containsKey(invoker.getUser().getId())) {
+            VideoSelection selection = player.selections.get(invoker.getUser().getId());
             try {
                 int i = Integer.valueOf(args[1]);
                 if (selection.getChoices().size() < i || i < 1) {
                     throw new NumberFormatException();
                 } else {
                     YoutubeVideo selected = selection.choices.get(i - 1);
-                    player.selections.remove(invoker.getId());
+                    player.selections.remove(invoker.getUser().getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
                     selection.getOutMsg().updateMessage(msg);
                     player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);

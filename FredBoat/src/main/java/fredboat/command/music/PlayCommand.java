@@ -130,7 +130,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);
-            player.selections.put(invoker.getId(), new VideoSelection(vids, outMsg));
+            player.selections.put(invoker.getUser().getId(), new VideoSelection(vids, outMsg));
         }
     }
 

@@ -30,7 +30,7 @@ public class ExitCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if (invoker.getId().equals(BotConstants.OWNER_ID)) {
+        if (invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
             channel.sendMessage(TextUtils.prefaceWithMention(invoker, " goodbye!!"));
             FredBoat.shutdown(ExitCodes.EXIT_CODE_NORMAL);
         } else {

@@ -41,7 +41,7 @@ public class DumpCommand extends Command {
         outputChannel.sendTyping();
         
         //Quick hack to allow infinite messages if invoked by owner:
-        if(invoker.getId().equals(BotConstants.OWNER_ID)){
+        if(invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
             realDumpSize = dumpSize;
         }
         

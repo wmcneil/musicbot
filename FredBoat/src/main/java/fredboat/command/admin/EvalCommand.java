@@ -41,9 +41,8 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
     }
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User author, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member author, Message message, String[] args) {
         JDA jda = guild.getJDA();
-        String msg = message.getContent();
 
         channel.sendTyping();
 
@@ -54,7 +53,8 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         engine.put("channel", channel);
         engine.put("vc", PlayerRegistry.getExisting(guild) != null ? PlayerRegistry.getExisting(guild).getChannel() : null);
         engine.put("author", author);
-        engine.put("bot", jda.getSelfInfo());
+        engine.put("bot", jda.getSelfUser());
+        engine.put("member", guild.getSelfMember());
         engine.put("message", message);
         engine.put("guild", guild);
         engine.put("player", PlayerRegistry.getExisting(guild));
