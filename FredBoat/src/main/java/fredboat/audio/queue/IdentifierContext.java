@@ -11,6 +11,7 @@
 
 package fredboat.audio.queue;
 
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
@@ -18,20 +19,20 @@ public class IdentifierContext {
 
     public final String identifier;
     public final TextChannel textChannel;
-    public final User user;
+    public final Member member;
     private boolean quiet = false;
     private long position = 0L;
 
     public IdentifierContext(String identifier, TextChannel textChannel) {
         this.identifier = identifier;
         this.textChannel = textChannel;
-        this.user = null;
+        this.member = null;
     }
 
-    public IdentifierContext(String identifier, TextChannel textChannel, User user) {
+    public IdentifierContext(String identifier, TextChannel textChannel, Member member) {
         this.identifier = identifier;
         this.textChannel = textChannel;
-        this.user = user;
+        this.member = member;
     }
 
     public boolean isQuiet() {

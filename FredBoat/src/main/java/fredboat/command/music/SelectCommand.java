@@ -22,6 +22,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class SelectCommand extends Command implements IMusicCommand {
 
@@ -39,7 +40,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                     YoutubeVideo selected = selection.choices.get(i - 1);
                     player.selections.remove(invoker.getUser().getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
-                    selection.getOutMsg().updateMessage(msg);
+                    selection.getOutMsg().editMessage(msg).block();
                     player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
                     try {
                         message.deleteMessage();
@@ -47,8 +48,10 @@ public class SelectCommand extends Command implements IMusicCommand {
 
                     }
                 }
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException numberFormatException) {
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".");
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
             }
         } else {
             channel.sendMessage("You must first be given a selection to choose from.");

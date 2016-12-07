@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>f1b1f1288d477c7c3331e4a8546a202d42fcf2f5</version>
+            <version>c97947157a08a86ce63fc44761d4b65fa5b7c888</version>
         </dependency>
         <dependency>
             <groupId>org.luaj</groupId>

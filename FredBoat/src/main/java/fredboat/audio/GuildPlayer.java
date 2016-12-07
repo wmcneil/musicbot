@@ -18,10 +18,7 @@ import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
@@ -50,13 +47,15 @@ public class GuildPlayer extends AbstractPlayer {
         this.jda = jda;
         this.guildId = guild.getId();
 
+        guild.
+
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
         audioTrackProvider = new SimpleTrackProvider();
         audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager(), this);
     }
 
-    public void joinChannel(User usr) throws MessagingException {
+    public void joinChannel(Member usr) throws MessagingException {
         VoiceChannel targetChannel = getUserCurrentVoiceChannel(usr);
         joinChannel(targetChannel);
     }
@@ -96,10 +95,10 @@ public class GuildPlayer extends AbstractPlayer {
         manager.closeAudioConnection();
     }
 
-    public VoiceChannel getUserCurrentVoiceChannel(User usr) {
+    public VoiceChannel getUserCurrentVoiceChannel(Member member) {
         for (VoiceChannel chn : getGuild().getVoiceChannels()) {
-            for (User userInChannel : chn.getUsers()) {
-                if (usr.getId().equals(userInChannel.getId())) {
+            for (Member memberInChannel : chn.getMembers()) {
+                if (member.getUser().getId().equals(memberInChannel.getUser().getId())) {
                     return chn;
                 }
             }
@@ -111,7 +110,7 @@ public class GuildPlayer extends AbstractPlayer {
         queue(identifier, channel, null);
     }
 
-    public void queue(String identifier, TextChannel channel, User invoker) {
+    public void queue(String identifier, TextChannel channel, Member invoker) {
         IdentifierContext ic = new IdentifierContext(identifier, channel, invoker);
 
         if (invoker != null) {
