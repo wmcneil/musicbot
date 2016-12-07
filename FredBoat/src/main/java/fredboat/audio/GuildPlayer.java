@@ -19,6 +19,7 @@ import fredboat.commandmeta.MessagingException;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.impl.MemberImpl;
 import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,10 @@ public class GuildPlayer extends AbstractPlayer {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
 
-    public static final int MAX_PLAYLIST_ENTRIES = 20;
-
     public final JDA jda;
     public final String guildId;
     public final Map<String, VideoSelection> selections = new HashMap<>();
     private TextChannel currentTC;
-    public String lastYoutubeVideoId = null;
 
     private final AudioLoader audioLoader;
 
@@ -46,8 +44,6 @@ public class GuildPlayer extends AbstractPlayer {
     public GuildPlayer(JDA jda, Guild guild) {
         this.jda = jda;
         this.guildId = guild.getId();
-
-        guild.
 
         AudioManager manager = guild.getAudioManager();
         manager.setSendingHandler(this);
@@ -65,20 +61,17 @@ public class GuildPlayer extends AbstractPlayer {
             throw new MessagingException("You must join a voice channel first.");
         }
 
-        if (!PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_CONNECT)) {
+        if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_CONNECT)) {
             throw new MessagingException("I am not permitted to connect to that voice channel.");
         }
 
-        if (!PermissionUtil.checkPermission(targetChannel, jda.getSelfInfo(), Permission.VOICE_SPEAK)) {
+        if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_SPEAK)) {
             throw new MessagingException("I am not permitted to play music in that voice channel.");
         }
 
         AudioManager manager = getGuild().getAudioManager();
-        if (manager.getConnectedChannel() != null) {
-            manager.moveAudioConnection(targetChannel);
-        } else {
-            manager.openAudioConnection(targetChannel);
-        }
+
+        manager.openAudioConnection(targetChannel);
 
         log.info("Connected to voice channel " + targetChannel);
     }
@@ -93,6 +86,10 @@ public class GuildPlayer extends AbstractPlayer {
             }
         }
         manager.closeAudioConnection();
+    }
+
+    public VoiceChannel getUserCurrentVoiceChannel(User usr) {
+        return getUserCurrentVoiceChannel(new MemberImpl(getGuild(), usr));
     }
 
     public VoiceChannel getUserCurrentVoiceChannel(Member member) {
@@ -121,8 +118,8 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public void queue(IdentifierContext ic) {
-        if (ic.user != null) {
-            joinChannel(ic.user);
+        if (ic.member != null) {
+            joinChannel(ic.member);
         }
 
         audioLoader.loadAsync(ic);
@@ -162,7 +159,7 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public VoiceChannel getChannel() {
-        return getUserCurrentVoiceChannel(jda.getSelfInfo());
+        return getUserCurrentVoiceChannel(getGuild().getSelfMember());
     }
 
     public TextChannel getActiveTextChannel() {
@@ -178,17 +175,17 @@ public class GuildPlayer extends AbstractPlayer {
     /**
      * @return Users who are not bots
      */
-    public List<User> getUsersInVC() {
+    public List<Member> getUsersInVC() {
         VoiceChannel vc = getChannel();
         if (vc == null) {
             return new ArrayList<>();
         }
 
-        List<User> allUsers = vc.getUsers();
-        ArrayList<User> nonBots = new ArrayList<>();
-        for (User usr : allUsers) {
-            if (!usr.isBot()) {
-                nonBots.add(usr);
+        List<Member> members = vc.getMembers();
+        ArrayList<Member> nonBots = new ArrayList<>();
+        for (Member member : members) {
+            if (!member.getUser().isBot()) {
+                nonBots.add(member);
             }
         }
         return nonBots;

@@ -59,7 +59,11 @@ public class PlayCommand extends Command implements IMusicCommand {
 
         //Search youtube for videos and let the user select a video
         if (!args[1].startsWith("http")) {
-            searchForVideos(guild, channel, invoker, message, args);
+            try {
+                searchForVideos(guild, channel, invoker, message, args);
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 

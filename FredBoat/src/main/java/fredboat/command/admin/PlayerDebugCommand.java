@@ -37,7 +37,7 @@ public class PlayerDebugCommand extends Command implements ICommandOwnerRestrict
             JSONObject data = new JSONObject();
             data.put("name", gp.getGuild().getName());
             data.put("id", gp.getGuild().getId());
-            data.put("users", gp.getChannel().getUsers().toString());
+            data.put("users", gp.getChannel().getMembers().toString());
             data.put("isPlaying", gp.isPlaying());
             data.put("isPaused", gp.isPaused());
             data.put("songCount", gp.getSongCount());
