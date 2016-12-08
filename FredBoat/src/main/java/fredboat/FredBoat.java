@@ -39,6 +39,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDAInfo;
+import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONArray;
@@ -175,54 +176,50 @@ public class FredBoat {
         }
 
         if ((scopes & 0x110) != 0) {
-            new Thread(() -> {
-                try {
-                    boolean success = false;
-                    while (!success) {
-                        JDABuilder builder = new JDABuilder(AccountType.BOT)
-                                .addListener(listenerBot)
-                                .addListener(new EventLogger("216689009110417408"))
-                                .setToken(accountToken)
-                                .setBulkDeleteSplittingEnabled(true);
-                        if (numShards > 1) {
-                            builder.useSharding(shardId, numShards);
-                        }
-                        try {
-                            jdaBot = builder.buildAsync();
-                            success = true;
-                        } catch (RateLimitedException e) {
-                            log.warn("Got rate limited while building bot JDA instance! Retrying...", e);
-                            Thread.sleep(1000);
-                        }
+            try {
+                boolean success = false;
+                while (!success) {
+                    JDABuilder builder = new JDABuilder(AccountType.BOT)
+                            .addListener(listenerBot)
+                            .addListener(new EventLogger("216689009110417408"))
+                            .setToken(accountToken)
+                            .setBulkDeleteSplittingEnabled(true);
+                    if (numShards > 1) {
+                        builder.useSharding(shardId, numShards);
                     }
-                } catch (Exception e) {
-                    log.error("Failed to start JDA", e);
-                    FredBoat.shutdown(-1);
+                    try {
+                        jdaBot = builder.buildAsync();
+                        success = true;
+                    } catch (RateLimitedException e) {
+                        log.warn("Got rate limited while building bot JDA instance! Retrying...", e);
+                        Thread.sleep(1000);
+                    }
                 }
-            }).start();
+            } catch (Exception e) {
+                log.error("Failed to start JDA", e);
+                FredBoat.shutdown(-1);
+            }
         }
 
         if ((scopes & 0x001) != 0) {
-            new Thread(() -> {
-                try {
-                    boolean success = false;
-                    while (!success) {
-                        try {
-                            jdaSelf = new JDABuilder(AccountType.CLIENT)
-                                .addListener(listenerSelf)
-                                .setToken(clientToken)
-                                .buildAsync();
+            try {
+                boolean success = false;
+                while (!success) {
+                    try {
+                        jdaSelf = new JDABuilder(AccountType.CLIENT)
+                            .addListener(listenerSelf)
+                            .setToken(clientToken)
+                            .buildAsync();
 
-                            success = true;
-                        } catch (RateLimitedException e) {
-                            log.warn("Got rate limited while building client JDA instance! Retrying...", e);
-                            Thread.sleep(1000);
-                        }
+                        success = true;
+                    } catch (RateLimitedException e) {
+                        log.warn("Got rate limited while building client JDA instance! Retrying...", e);
+                        Thread.sleep(1000);
                     }
-                } catch (Exception e) {
-                    log.error("Failed to start JDA client", e);
                 }
-            }).start();
+            } catch (Exception e) {
+                log.error("Failed to start JDA client", e);
+            }
         }
 
         /* JDA initialising */
