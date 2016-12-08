@@ -48,7 +48,7 @@ public class DumpCommand extends Command {
         }
 
         MessageChannel outputChannel = isQuiet ? invoker.getUser().getPrivateChannel() : channel;
-        outputChannel.sendTyping();
+        outputChannel.sendTyping().queue();
         
         //Quick hack to allow infinite messages if invoked by owner:
         if(invoker.getUser().getId().equals(BotConstants.OWNER_ID)){

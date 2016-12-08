@@ -36,7 +36,7 @@ public class LeetCommand extends Command implements ICommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         String res = "";
-        channel.sendTyping();
+        channel.sendTyping().queue();
 
         if(args.length < 2) {
             channel.sendMessage("Proper usage: ;;leet <text>").queue();

@@ -45,7 +45,7 @@ public class FindCommand extends Command {
             selected = message.getMentionedChannels().get(0);
         }
         int toSearch = 1500;
-        channel.sendTyping();
+        channel.sendTyping().queue();
 
         Message startMsg = new MessageBuilder().append(invoker)
                 .append(" searching in ")

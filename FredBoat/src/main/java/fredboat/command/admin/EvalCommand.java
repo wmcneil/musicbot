@@ -44,7 +44,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
     public void onInvoke(Guild guild, TextChannel channel, Member author, Message message, String[] args) {
         JDA jda = guild.getJDA();
 
-        channel.sendTyping();
+        channel.sendTyping().queue();
 
         final String source = message.getRawContent().substring(args[0].length() + 1);
 

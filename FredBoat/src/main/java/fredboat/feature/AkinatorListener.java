@@ -47,7 +47,7 @@ public final class AkinatorListener extends UserListener {
         this.channelId = channelId;
         this.userId = userId;
 
-        jda.getTextChannelById(channelId).sendTyping();
+        jda.getTextChannelById(channelId).sendTyping().queue();
 
         //Start new session
         JSONObject json = Unirest.get(NEW_SESSION_URL)
@@ -178,10 +178,10 @@ public final class AkinatorListener extends UserListener {
                 return;
             }
 
-            jda.getTextChannelById(channelId).sendTyping();
+            jda.getTextChannelById(channelId).sendTyping().queue();
             answerGuess(answer);
         } else {
-            jda.getTextChannelById(channelId).sendTyping();
+            jda.getTextChannelById(channelId).sendTyping().queue();
             answerQuestion(answer);
         }
     }
