@@ -71,9 +71,9 @@ public class ListCommand extends Command implements IMusicCommand {
             
             mb.append("\n" + desc);
             
-            channel.sendMessage(mb.build());
+            channel.sendMessage(mb.build()).queue();
         } else {
-            channel.sendMessage("Not currently playing anything.");
+            channel.sendMessage("Not currently playing anything.").queue();
         }
     }
 

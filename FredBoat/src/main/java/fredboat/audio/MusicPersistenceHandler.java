@@ -70,7 +70,7 @@ public class MusicPersistenceHandler {
                     continue;//Nothing to see here
                 }
 
-                player.getActiveTextChannel().sendMessage(msg);
+                player.getActiveTextChannel().sendMessage(msg).queue();
 
                 JSONObject data = new JSONObject();
                 data.put("vc", player.getUserCurrentVoiceChannel(jda.getSelfUser()).getId());
@@ -95,7 +95,7 @@ public class MusicPersistenceHandler {
                 try {
                     FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
-                    player.getActiveTextChannel().sendMessage("Error occured when saving persistence file: " + ex.getMessage());
+                    player.getActiveTextChannel().sendMessage("Error occurred when saving persistence file: " + ex.getMessage()).queue();
                 }
             } catch (Exception ex) {
                 log.error("Error when saving persistence file", ex);
@@ -154,7 +154,7 @@ public class MusicPersistenceHandler {
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
+                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:").queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             } finally {

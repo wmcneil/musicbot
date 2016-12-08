@@ -31,8 +31,8 @@ public class HelpCommand extends Command implements IMusicBackupCommand {
                 throw new RuntimeException(e);
             }
         }
-        invoker.getUser().getPrivateChannel().sendMessage(BotConstants.HELP_TEXT);
-        channel.sendMessage(invoker.getEffectiveName() + ": Documentation has been sent to your direct messages!");
+        invoker.getUser().getPrivateChannel().sendMessage(BotConstants.HELP_TEXT).queue();
+        channel.sendMessage(invoker.getEffectiveName() + ": Documentation has been sent to your direct messages!").queue();
     }
     
 }

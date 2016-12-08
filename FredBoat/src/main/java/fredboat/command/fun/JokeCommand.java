@@ -46,7 +46,7 @@ public class JokeCommand extends Command implements ICommand {
             
             joke = joke.replaceAll("&quot;", "\"");
             
-            channel.sendMessage(joke);
+            channel.sendMessage(joke).queue();
         } catch (UnirestException ex) {
             Logger.getLogger(JokeCommand.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -33,7 +33,7 @@ public class FacedeskCommand extends RandomImageCommand {
                         .append("_")
                         .append(invoker)
                         .append(" facedesks._")
-                        .build());
+                        .build()).queue();
             
         }
     }

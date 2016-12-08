@@ -27,12 +27,12 @@ public class PauseCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty.");
+            channel.sendMessage("The queue is empty.").queue();
         } else if (player.isPaused()) {
-            channel.sendMessage("The player is already paused.");
+            channel.sendMessage("The player is already paused.").queue();
         } else {
             player.pause();
-            channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.");
+            channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.").queue();
         }
     }
 

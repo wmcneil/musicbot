@@ -38,18 +38,18 @@ public class StopCommand extends Command implements IMusicCommand {
 
             switch (count) {
                 case 0:
-                    channel.sendMessage("The queue was already empty.");
+                    channel.sendMessage("The queue was already empty.").queue();
                     break;
                 case 1:
-                    channel.sendMessage("The queue has been emptied, `1` song has been removed.");
+                    channel.sendMessage("The queue has been emptied, `1` song has been removed.").queue();
                     break;
                 default:
-                    channel.sendMessage("The queue has been emptied, `" + count + "` songs have been removed.");
+                    channel.sendMessage("The queue has been emptied, `" + count + "` songs have been removed.").queue();
                     break;
             }
             player.leaveVoiceChannelRequest(channel, true);
         } else {
-            channel.sendMessage("In order to prevent abuse, this command is only available to those who can manage messages.");
+            channel.sendMessage("In order to prevent abuse, this command is only available to those who can manage messages.").queue();
         }
     }
 

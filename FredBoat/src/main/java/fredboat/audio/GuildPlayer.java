@@ -80,9 +80,9 @@ public class GuildPlayer extends AbstractPlayer {
         AudioManager manager = getGuild().getAudioManager();
         if (!silent) {
             if (manager.getConnectedChannel() == null) {
-                channel.sendMessage("Not currently in a channel.");
+                channel.sendMessage("Not currently in a channel.").queue();
             } else {
-                channel.sendMessage("Left channel " + getChannel().getName() + ".");
+                channel.sendMessage("Left channel " + getChannel().getName() + ".").queue();
             }
         }
         manager.closeAudioConnection();

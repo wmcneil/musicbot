@@ -33,7 +33,7 @@ public class RollCommand extends RandomImageCommand {
                         .append("_")
                         .append(invoker)
                         .append(" rolls around on the floor._")
-                        .build());
+                        .build()).queue();
             
         }
     }

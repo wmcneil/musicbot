@@ -113,9 +113,9 @@ public class DumpCommand extends Command {
             if (!isQuiet) {
                 mb.append("Hint: You can call this with `-q` to instead get the dump in a DM\n");
             }
-            outputChannel.sendMessage(mb.build());
+            outputChannel.sendMessage(mb.build()).queue();
         } catch (UnirestException ex) {
-            outputChannel.sendMessage("Failed to connect to Hastebin: " + ex.getMessage());
+            outputChannel.sendMessage("Failed to connect to Hastebin: " + ex.getMessage()).queue();
         } catch (RateLimitedException e) {
             throw new RuntimeException(e);
         }

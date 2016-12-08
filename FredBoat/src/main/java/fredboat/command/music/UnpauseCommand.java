@@ -27,14 +27,14 @@ public class UnpauseCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty.");
+            channel.sendMessage("The queue is empty.").queue();
         } else if (!player.isPaused()) {
-            channel.sendMessage("The player is not paused.");
+            channel.sendMessage("The player is not paused.").queue();
         } else if (player.getUsersInVC().isEmpty() && player.isPaused()) {
-            channel.sendMessage("There are no users in the voice chat.");
+            channel.sendMessage("There are no users in the voice chat.").queue();
         } else {
             player.play();
-            channel.sendMessage("The player is now unpaused.");
+            channel.sendMessage("The player is now unpaused.").queue();
         }
     }
 

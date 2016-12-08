@@ -49,12 +49,12 @@ public class SelectCommand extends Command implements IMusicCommand {
                     }
                 }
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".");
+                channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".").queue();
             } catch (RateLimitedException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            channel.sendMessage("You must first be given a selection to choose from.");
+            channel.sendMessage("You must first be given a selection to choose from.").queue();
         }
     }
 

@@ -52,7 +52,6 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
 
         if (args.length < 2) {
-            //channel.sendMessage("Proper syntax: ;;play <url-or-search-terms>");
             handleNoArguments(guild, channel, invoker, message);
             return;
         }
@@ -83,14 +82,14 @@ public class PlayCommand extends Command implements IMusicCommand {
     private void handleNoArguments(Guild guild, TextChannel channel, Member invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
+            channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>").queue();
         } else if (player.isPlaying()) {
-            channel.sendMessage("The player is already playing.");
+            channel.sendMessage("The player is already playing.").queue();
         } else if (player.getUsersInVC().isEmpty()) {
-            channel.sendMessage("There are no users in the voice chat.");
+            channel.sendMessage("There are no users in the voice chat.").queue();
         } else {
             player.play();
-            channel.sendMessage("The player will now play.");
+            channel.sendMessage("The player will now play.").queue();
         }
     }
 
@@ -108,7 +107,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         try {
             vids = YoutubeAPI.searchForVideos(query);
         } catch (JSONException e) {
-            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```");
+            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```").queue();
             log.debug("YouTube search exception", e);
             return;
         }

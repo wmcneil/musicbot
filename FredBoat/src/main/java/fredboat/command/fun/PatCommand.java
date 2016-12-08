@@ -29,13 +29,13 @@ public class PatCommand extends RandomImageCommand {
 
         if (message.getMentionedUsers().size() > 0) {
             if (message.getMentionedUsers().get(0) == guild.getJDA().getSelfUser()) {
-                channel.sendMessage("Thanks for the pats :blush:");
+                channel.sendMessage("Thanks for the pats :blush:").queue();
             } else {
                 channel.sendMessage(new MessageBuilder()
                         .append("_Pats ")
                         .append(message.getMentionedUsers().get(0))
                         .append("_")
-                        .build());
+                        .build()).queue();
             }
         }
     }

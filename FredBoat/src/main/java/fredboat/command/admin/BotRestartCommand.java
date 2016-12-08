@@ -20,13 +20,21 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import org.slf4j.LoggerFactory;
 
 public class BotRestartCommand extends Command implements ICommandOwnerRestricted {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(BotRestartCommand.class);
+
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        channel.sendMessage(TextUtils.prefaceWithMention(invoker, " Restarting.."));
-        
+        try {
+            channel.sendMessage(TextUtils.prefaceWithMention(invoker, " Restarting..")).block();
+        } catch (RateLimitedException e) {
+            log.warn("Rate limited", e);
+        }
+
         FredBoat.shutdown(ExitCodes.EXIT_CODE_RESTART);
     }
 

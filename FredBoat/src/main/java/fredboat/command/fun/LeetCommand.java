@@ -39,7 +39,7 @@ public class LeetCommand extends Command implements ICommand {
         channel.sendTyping();
 
         if(args.length < 2) {
-            channel.sendMessage("Proper usage: ;;leet <text>");
+            channel.sendMessage("Proper usage: ;;leet <text>").queue();
             return;
         }
 

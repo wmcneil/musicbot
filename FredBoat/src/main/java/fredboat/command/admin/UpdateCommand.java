@@ -63,7 +63,7 @@ public class UpdateCommand extends Command implements ICommandOwnerRestricted {
         FileUtils.copyFile(homeJar, targetJar);
 
         //Shutdown for update
-        channel.sendMessage("Now restarting...");
+        channel.sendMessage("Now restarting...").queue();
         FredBoat.shutdown(ExitCodes.EXIT_CODE_UPDATE);
     }
 

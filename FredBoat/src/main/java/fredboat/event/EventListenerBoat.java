@@ -112,7 +112,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        event.getChannel().sendMessage(BotConstants.HELP_TEXT);
+        event.getChannel().sendMessage(BotConstants.HELP_TEXT).queue();
         lastUserToReceiveHelp = event.getAuthor();
     }
 
@@ -140,7 +140,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 && player.getUserCurrentVoiceChannel(event.getGuild().getSelfMember()) == event.getChannelLeft()
                 && !player.isPaused()) {
             player.pause();
-            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.");
+            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.").queue();
         }
     }
 

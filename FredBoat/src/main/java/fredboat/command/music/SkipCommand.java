@@ -28,11 +28,11 @@ public class SkipCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty!");
+            channel.sendMessage("The queue is empty!").queue();
         } else {
             AudioTrack at = player.getPlayingTrack();
             player.skip();
-            channel.sendMessage("Skipped " + at.getInfo().title);
+            channel.sendMessage("Skipped " + at.getInfo().title).queue();
         }
 
     }

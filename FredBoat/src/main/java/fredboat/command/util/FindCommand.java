@@ -71,7 +71,7 @@ public class FindCommand extends Command {
         } catch (NullPointerException ex) {//End of chat - ignore
         }
 
-        channel.sendMessage(startMsg);
+        channel.sendMessage(startMsg).queue();
         ArrayList<Message> matches = new ArrayList<>();
 
         for (Message msg : msgs) {
@@ -113,7 +113,7 @@ public class FindCommand extends Command {
         if (truncated > 0) {
             endMsg.append("\n[Truncated " + truncated + "]");
         }
-        channel.sendMessage(endMsg.build());
+        channel.sendMessage(endMsg.build()).queue();
 
     }
     

@@ -31,7 +31,7 @@ public class VolumeCommand extends Command implements IMusicCommand {
             float volume = Float.parseFloat(args[1]) / 100;
             volume = Math.max(0, Math.min(1.5f, volume));
 
-            channel.sendMessage("Changed volume from **" + (int) Math.floor(player.getVolume() * 100) + "%** to **" + (int) Math.floor(volume * 100) + "%**.");
+            channel.sendMessage("Changed volume from **" + (int) Math.floor(player.getVolume() * 100) + "%** to **" + (int) Math.floor(volume * 100) + "%**.").queue();
 
             player.setVolume(volume);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {

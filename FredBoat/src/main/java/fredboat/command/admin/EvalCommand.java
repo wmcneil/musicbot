@@ -70,7 +70,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                         + "})();");
 
             } catch (Exception ex) {
-                channel.sendMessage("`"+ex.getMessage()+"`");
+                channel.sendMessage("`"+ex.getMessage()+"`").queue();
                 return;
             }
 
@@ -83,7 +83,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                 outputS = "\nEval: `" + out.toString() + "`";
             }
 
-            channel.sendMessage("```java\n"+source+"```" + "\n" + outputS);
+            channel.sendMessage("```java\n"+source+"```" + "\n" + outputS).queue();
 
         }, 0, TimeUnit.MILLISECONDS);
 
@@ -95,9 +95,9 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
 
                 } catch (TimeoutException ex) {
                     future.cancel(true);
-                    channel.sendMessage("Task exceeded time limit.");
+                    channel.sendMessage("Task exceeded time limit.").queue();
                 } catch (Exception ex) {
-                    channel.sendMessage("`"+ex.getMessage()+"`");
+                    channel.sendMessage("`"+ex.getMessage()+"`").queue();
                 }
             }
         };

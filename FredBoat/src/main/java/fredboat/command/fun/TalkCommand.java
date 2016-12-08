@@ -33,7 +33,7 @@ public class TalkCommand extends Command {
         //Clerverbot integration
         String response = FredBoat.jca.getResponse(question);
         response = member.getEffectiveName() + ": " + StringEscapeUtils.unescapeHtml4(response);
-        channel.sendMessage(response);
+        channel.sendMessage(response).queue();
     }
 
 }

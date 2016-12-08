@@ -32,9 +32,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
             + TextUtils.formatTime(player.getPlayingTrack().getPosition())
             + "/"
             + TextUtils.formatTime(player.getPlayingTrack().getDuration())
-            + "]");
+            + "]").queue();
         } else {
-            channel.sendMessage("Not currently playing anything.");
+            channel.sendMessage("Not currently playing anything.").queue();
         }
     }
 

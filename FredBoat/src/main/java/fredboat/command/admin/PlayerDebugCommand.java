@@ -46,7 +46,7 @@ public class PlayerDebugCommand extends Command implements ICommandOwnerRestrict
         }
         
         try {
-            channel.sendMessage(TextUtils.postToHastebin(a.toString(), true));
+            channel.sendMessage(TextUtils.postToHastebin(a.toString(), true)).queue();
         } catch (UnirestException ex) {
             Logger.getLogger(PlayerDebugCommand.class.getName()).log(Level.SEVERE, null, ex);
         }

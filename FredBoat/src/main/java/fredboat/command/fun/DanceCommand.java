@@ -40,7 +40,7 @@ public class DanceCommand extends Command implements ICommand {
                                 msg = msg.editMessage("\\o\\").block();
                             }
                         }
-                    } catch (InterruptedException | RateLimitedException ex) {
+                    } catch (InterruptedException | RateLimitedException ignored) {
                     }
                 }
             }

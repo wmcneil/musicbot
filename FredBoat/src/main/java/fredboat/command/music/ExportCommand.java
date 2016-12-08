@@ -50,7 +50,7 @@ public class ExportCommand extends Command implements IMusicCommand {
         
         try {
             String url = TextUtils.postToHastebin(out, true) + ".fredboat";
-            channel.sendMessage("Exported playlist: " + url + "\nYou can provide this URL to play the current playlist later.");
+            channel.sendMessage("Exported playlist: " + url + "\nYou can provide this URL to play the current playlist later.").queue();
         } catch (UnirestException ex) {
             throw new MessagingException("Failed to upload playlist to hastebin.com");
         }

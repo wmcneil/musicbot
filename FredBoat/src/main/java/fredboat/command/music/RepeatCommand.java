@@ -28,9 +28,9 @@ public class RepeatCommand extends Command implements IMusicCommand {
         player.setRepeat(!player.isRepeat());
 
         if (player.isRepeat()) {
-            channel.sendMessage("The player is now on repeat.");
+            channel.sendMessage("The player is now on repeat.").queue();
         } else {
-            channel.sendMessage("The player is no longer on repeat.");
+            channel.sendMessage("The player is no longer on repeat.").queue();
         }
     }
 

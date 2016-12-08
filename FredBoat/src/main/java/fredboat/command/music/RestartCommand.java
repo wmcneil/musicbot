@@ -28,9 +28,9 @@ public class RestartCommand extends Command implements IMusicCommand {
         
         if(player != null && !player.isQueueEmpty()){
             player.getPlayingTrack().setPosition(0L);
-            channel.sendMessage("**" + player.getPlayingTrack().getInfo().title + "** has been restarted.");
+            channel.sendMessage("**" + player.getPlayingTrack().getInfo().title + "** has been restarted.").queue();
         } else {
-            channel.sendMessage("The queue is empty.");
+            channel.sendMessage("The queue is empty.").queue();
         }
     }
     

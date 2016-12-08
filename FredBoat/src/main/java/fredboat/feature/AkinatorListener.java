@@ -65,14 +65,14 @@ public final class AkinatorListener extends UserListener {
         String name = jda.getTextChannelById(channelId).getGuild().getMemberById(userId).getEffectiveName();
         String out = "**" + name + ": Question " + (stepInfo.getStepNum() + 1) + "**\n"
                 + stepInfo.getQuestion() + "\n [yes/no/idk/probably/probably not]";
-        jda.getTextChannelById(channelId).sendMessage(out);
+        jda.getTextChannelById(channelId).sendMessage(out).queue();
         lastQuestionWasGuess = false;
     }
 
     private void sendGuess() throws UnirestException {
         guess = new Guess();
         String out = "Is this your character?\n" + guess.toString() + "\n[yes/no]";
-        jda.getTextChannelById(channelId).sendMessage(out);
+        jda.getTextChannelById(channelId).sendMessage(out).queue();
         lastQuestionWasGuess = true;
     }
 
@@ -107,7 +107,7 @@ public final class AkinatorListener extends UserListener {
                         .asString();
                 jda.getTextChannelById(channelId).sendMessage("Great ! Guessed right one more time.\n"
                         + "I love playing with you!\n"
-                        + "<http://akinator.com>");
+                        + "<http://akinator.com>").queue();
                 FredBoat.getListenerBot().removeListener(userId);
             } else if (answer == 1) {
                 Unirest.get(EXCLUSION_URL)

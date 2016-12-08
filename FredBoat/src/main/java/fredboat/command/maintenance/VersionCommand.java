@@ -22,7 +22,7 @@ public class VersionCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        channel.sendMessage("JDA Version: " + JDAInfo.VERSION);
+        channel.sendMessage("JDA Version: " + JDAInfo.VERSION).queue();
     }
     
 }
