@@ -73,7 +73,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         player.setPause(false);
 
         try {
-            message.deleteMessage();
+            message.deleteMessage().queue();
         } catch (Exception ex) {
 
         }

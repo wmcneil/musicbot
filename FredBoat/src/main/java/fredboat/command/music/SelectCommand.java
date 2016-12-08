@@ -43,7 +43,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                     selection.getOutMsg().editMessage(msg).block();
                     player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
                     try {
-                        message.deleteMessage();
+                        message.deleteMessage().queue();
                     } catch (PermissionException ex) {
 
                     }

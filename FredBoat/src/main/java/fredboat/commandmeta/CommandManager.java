@@ -76,7 +76,7 @@ public class CommandManager {
             if (!channel.getId().equals("174821093633294338")
                     && !channel.getId().equals("217526705298866177")
                     && !invoker.getUser().getId().equals("81011298891993088")) {
-                message.deleteMessage();
+                message.deleteMessage().queue();
                 channel.sendMessage("Please don't spam music commands outside of <#174821093633294338>.").queue();
                 return;
             }

@@ -55,7 +55,7 @@ public class ClearCommand extends Command {
             if(myMessages.isEmpty()){
                 throw new MessagingException("No messages found.");
             } else if(myMessages.size() == 1) {
-                myMessages.get(0).deleteMessage().block();
+                myMessages.get(0).deleteMessage().queue().block();
                 channel.sendMessage("Deleted one message.").queue();
             } else {
 
