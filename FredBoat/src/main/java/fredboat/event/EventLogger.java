@@ -13,13 +13,13 @@ package fredboat.event;
 
 import fredboat.FredBoat;
 import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class EventLogger extends ListenerAdapter {
 
@@ -50,7 +50,7 @@ public class EventLogger extends ListenerAdapter {
     public void onReady(ReadyEvent event) {
         jda = event.getJDA();
         send(new MessageBuilder()
-                .appendString("[:rocket:] Received ready event.")
+                .append("[:rocket:] Received ready event.")
                 .build()
         );
     }
@@ -58,14 +58,14 @@ public class EventLogger extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         send(
-                "[:white_check_mark:] Joined guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
+                "[:white_check_mark:] Joined guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getMembers().size() + "`."
         );
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         send(
-                "[:x:] Left guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getUsers().size() + "`."
+                "[:x:] Left guild `" + event.getGuild() + "`. Users: `" + event.getGuild().getMembers().size() + "`."
         );
     }
 

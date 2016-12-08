@@ -17,15 +17,16 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.ReconnectedEvent;
-import net.dv8tion.jda.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.events.message.MessageDeleteEvent;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.events.voice.VoiceLeaveEvent;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.ReconnectedEvent;
+import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,12 +58,12 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         messagesReceived++;
 
         if (event.getPrivateChannel() != null) {
-            log.info("PRIVATE" + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            log.info("PRIVATE" + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             return;
         }
 
-        if (event.getAuthor().getUsername().equals(event.getJDA().getSelfInfo().getUsername())) {
-            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+        if (event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
+            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             return;
         }
 
@@ -73,7 +74,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
             Command invoked = null;
             try {
-                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
                 matcher.find();
 
@@ -86,11 +87,11 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 return;
             }
 
-            CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
-        } else if (event.getMessage().getRawContent().startsWith("<@" + jdaBot.getSelfInfo().getId() + ">")) {
-            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+            CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getMember(), event.getMessage());
+        } else if (event.getMessage().getRawContent().startsWith("<@" + jdaBot.getSelfUser().getId() + ">")) {
+            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
-            TalkCommand.talk(event.getAuthor(), event.getTextChannel(), event.getMessage().getRawContent().substring(jdaBot.getSelfInfo().getAsMention().length() + 1));
+            TalkCommand.talk(event.getMember(), event.getTextChannel(), event.getMessage().getRawContent().substring(jdaBot.getSelfUser().getAsMention().length() + 1));
         }
     }
 
@@ -99,41 +100,36 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         if (messagesToDeleteIfIdDeleted.containsKey(event.getMessageId())) {
             Message msg = messagesToDeleteIfIdDeleted.remove(event.getMessageId());
             if (msg.getJDA() == jdaBot) {
-                msg.deleteMessage();
+                msg.deleteMessage().queue();
             }
         }
     }
 
     @Override
     public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
-        //Ignore self
-        if (event.getAuthor().getUsername().equals(event.getJDA().getSelfInfo().getUsername())) {
-            return;
-        }
-
         if (event.getAuthor() == lastUserToReceiveHelp) {
             //Ignore, they just got help! Stops any bot chain reactions
             return;
         }
 
-        event.getChannel().sendMessage(BotConstants.HELP_TEXT);
+        event.getChannel().sendMessage(BotConstants.HELP_TEXT).queue();
         lastUserToReceiveHelp = event.getAuthor();
     }
 
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        jdaBot.getAccountManager().setGame("Say ;;help");
+        jdaBot.getPresence().setGame(Game.of("Say ;;help"));
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        jdaBot.getAccountManager().setGame("Say ;;help");
+        jdaBot.getPresence().setGame(Game.of("Say ;;help"));
     }
 
     /* music related */
     @Override
-    public void onVoiceLeave(VoiceLeaveEvent event) {
+    public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
         GuildPlayer player = PlayerRegistry.getExisting(event.getGuild());
 
         if (player == null) {
@@ -141,10 +137,10 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         }
 
         if (player.getUsersInVC().isEmpty()
-                && player.getUserCurrentVoiceChannel(jdaBot.getSelfInfo()) == event.getOldChannel()
-                && player.isPaused() == false) {
+                && player.getUserCurrentVoiceChannel(event.getGuild().getSelfMember()) == event.getChannelLeft()
+                && !player.isPaused()) {
             player.pause();
-            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.");
+            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.").queue();
         }
     }
 

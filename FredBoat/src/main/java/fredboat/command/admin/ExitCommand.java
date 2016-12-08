@@ -17,10 +17,10 @@ import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import fredboat.util.BotConstants;
 import fredboat.util.ExitCodes;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 /**
  *
@@ -29,12 +29,12 @@ import net.dv8tion.jda.entities.User;
 public class ExitCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        if (invoker.getId().equals(BotConstants.OWNER_ID)) {
-            channel.sendMessage(TextUtils.prefaceWithMention(invoker, " goodbye!!"));
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        if (invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
+            channel.sendMessage(TextUtils.prefaceWithMention(invoker, " goodbye!!")).queue();
             FredBoat.shutdown(ExitCodes.EXIT_CODE_NORMAL);
         } else {
-            channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!"));
+            channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!")).queue();
         }
     }
 

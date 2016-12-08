@@ -12,10 +12,11 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
 import fredboat.event.EventListenerBoat;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 /**
  *
@@ -24,9 +25,9 @@ import net.dv8tion.jda.entities.User;
 public class SayCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (args.length < 2) {
-            channel.sendMessage("Proper syntax: ;;say <text>");
+            channel.sendMessage("Proper syntax: ;;say <text>").queue();
             return;
         }
         String res = "";
@@ -34,9 +35,14 @@ public class SayCommand extends Command {
             res = res+" "+args[i];
         }
         res = res.substring(1);
-        Message myMsg = channel.sendMessage('\u200b' + res);
-        
-        EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        Message myMsg;
+        try {
+            myMsg = channel.sendMessage('\u200b' + res).block();
+
+            EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
+        }
     }
     
 }

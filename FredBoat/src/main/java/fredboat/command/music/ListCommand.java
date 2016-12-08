@@ -17,16 +17,16 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class ListCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (!player.isQueueEmpty()) {
@@ -35,12 +35,12 @@ public class ListCommand extends Command implements IMusicCommand {
             for (AudioTrack at : player.getRemainingTracks()) {
                 if (i == 0) {
                     String status = player.isPlaying() ? "[PLAYING] " : "[PAUSED] ";
-                    mb.appendString(status, MessageBuilder.Formatting.BOLD)
-                            .appendString(at.getInfo().title)
-                            .appendString("\n");
+                    mb.append(status, MessageBuilder.Formatting.BOLD)
+                            .append(at.getInfo().title)
+                            .append("\n");
                 } else {
-                    mb.appendString(at.getInfo().title)
-                            .appendString("\n");
+                    mb.append(at.getInfo().title)
+                            .append("\n");
                     if (i == 10) {
                         break;
                     }
@@ -69,11 +69,11 @@ public class ListCommand extends Command implements IMusicCommand {
 
             }
             
-            mb.appendString("\n" + desc);
+            mb.append("\n" + desc);
             
-            channel.sendMessage(mb.build());
+            channel.sendMessage(mb.build()).queue();
         } else {
-            channel.sendMessage("Not currently playing anything.");
+            channel.sendMessage("Not currently playing anything.").queue();
         }
     }
 

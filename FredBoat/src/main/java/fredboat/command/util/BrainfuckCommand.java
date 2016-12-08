@@ -14,10 +14,10 @@ package fredboat.command.util;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.nio.ByteBuffer;
 
@@ -97,7 +97,7 @@ public class BrainfuckCommand extends Command {
     }
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         code = message.getContent().replaceFirst(args[0], "").toCharArray();
         bytes = ByteBuffer.allocateDirect(1024 * 1024 * 8);
         String inputArg = "";

@@ -15,26 +15,26 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class UnpauseCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty.");
+            channel.sendMessage("The queue is empty.").queue();
         } else if (!player.isPaused()) {
-            channel.sendMessage("The player is not paused.");
+            channel.sendMessage("The player is not paused.").queue();
         } else if (player.getUsersInVC().isEmpty() && player.isPaused()) {
-            channel.sendMessage("There are no users in the voice chat.");
+            channel.sendMessage("There are no users in the voice chat.").queue();
         } else {
             player.play();
-            channel.sendMessage("The player is now unpaused.");
+            channel.sendMessage("The player is now unpaused.").queue();
         }
     }
 

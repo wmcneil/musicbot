@@ -12,14 +12,13 @@
 package fredboat.util;
 
 import fredboat.FredBoat;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.OnlineStatus;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.Role;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.impl.JDAImpl;
-import net.dv8tion.jda.requests.Requester;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.*;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -44,23 +43,23 @@ public class DiscordUtil {
     public static boolean isMainBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MAIN_BOT_ID);
-        return guild.getUsers().contains(other);
+        return guild.getMember(other) != null;
     }
 
     public static boolean isMusicBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
-        return guild.getUsers().contains(other);
+        return guild.getMember(other) != null;
     }
     
     public static boolean isPatronBotPresentAndOnline(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.PATRON_BOT_ID);
-        return guild.getUsers().contains(other) && other.getOnlineStatus() == OnlineStatus.ONLINE;
+        return guild.getMember(other) != null && guild.getMember(other).getOnlineStatus() == OnlineStatus.ONLINE;
     }
 
     public static boolean isUserBotCommander(Guild guild, User user) {
-        List<Role> roles = guild.getRolesForUser(user);
+        List<Role> roles = guild.getMember(user).getRoles();
 
         for (Role r : roles) {
             if (r.getName().equals("Bot Commander")) {
@@ -78,7 +77,15 @@ public class DiscordUtil {
     public static void sendShardlessMessage(JDA jda, String channel, String content) {
         JSONObject body = new JSONObject();
         body.put("content", content);
-        ((JDAImpl) jda).getRequester().post(Requester.DISCORD_API_PREFIX + "channels/" + channel + "/messages", body);
+        new RestAction<Void>(jda, Route.Messages.SEND_MESSAGE.compile(channel), body) {
+            @Override
+            protected void handleResponse(Response response, Request request) {
+                if (response.isOk())
+                    request.onSuccess(null);
+                else
+                    request.onFailure(response);
+            }
+        }.queue();
     }
 
 }

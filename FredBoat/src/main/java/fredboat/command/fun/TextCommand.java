@@ -12,10 +12,10 @@
 package fredboat.command.fun;
 
 import fredboat.commandmeta.abs.Command;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class TextCommand extends Command {
 
@@ -26,8 +26,8 @@ public class TextCommand extends Command {
     }
     
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        channel.sendMessage(msg);
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        channel.sendMessage(msg).queue();
     }
     
 }

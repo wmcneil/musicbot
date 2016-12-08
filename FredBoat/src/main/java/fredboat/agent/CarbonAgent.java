@@ -18,7 +18,7 @@ import fredboat.event.EventListenerBoat;
 import fredboat.sharding.FredBoatAPIClient;
 import fredboat.sharding.ShardTracker;
 import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.slf4j.LoggerFactory;
 
 import java.io.DataOutputStream;
@@ -99,7 +99,7 @@ public class CarbonAgent extends Thread {
     }
 
     private void handleEvery15Minutes() {
-        if (FredBoatAPIClient.isErrornous == false && FredBoat.shardId == 0) {
+        if (!FredBoatAPIClient.isErrornous && FredBoat.shardId == 0) {
             submitData("carbon.fredboat.users." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalUserCount()));
             submitData("carbon.fredboat.guilds." + buildStream + ".all", String.valueOf(ShardTracker.getGlobalGuildCount()));
         }

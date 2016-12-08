@@ -12,7 +12,7 @@
 package fredboat.sharding;
 
 import fredboat.FredBoat;
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ public class ShardTracker extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(ShardTracker.class);
     public final JDA jda;
-    public static ShardTracker ins = null;
+    private static ShardTracker ins = null;
 
     private static int globalUserCount = 0;
     private static int globalGuildCount = 0;

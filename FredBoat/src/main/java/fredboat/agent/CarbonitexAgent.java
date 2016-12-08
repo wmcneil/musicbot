@@ -14,7 +14,7 @@ package fredboat.agent;
 import com.mashape.unirest.http.Unirest;
 import fredboat.FredBoat;
 import fredboat.util.DistributionEnum;
-import net.dv8tion.jda.JDA;
+import net.dv8tion.jda.core.JDA;
 import org.slf4j.LoggerFactory;
 
 public class CarbonitexAgent extends Thread {

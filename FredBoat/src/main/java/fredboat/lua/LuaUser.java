@@ -11,8 +11,8 @@
 
 package fredboat.lua;
 
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.User;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -47,7 +47,7 @@ public class LuaUser extends LuaTable {
         meta.set(TOSTRING, new OneArgFunction() {
             @Override
             public LuaValue call(LuaValue arg){//, LuaValue arg2) {
-                return LuaString.valueOf(user.getUsername());
+                return LuaString.valueOf(user.getName());
             }
         });
 

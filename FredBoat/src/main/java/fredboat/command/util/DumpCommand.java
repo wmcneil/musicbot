@@ -15,10 +15,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.MessageHistory;
-import net.dv8tion.jda.entities.*;
-import net.dv8tion.jda.entities.Message.Attachment;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.MessageHistory;
+import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Message.Attachment;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -32,32 +33,41 @@ public class DumpCommand extends Command {
     public static final int MAX_DUMP_SIZE = 2000;
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Interpret arguments
         boolean isQuiet = args[1].equals("-q");
         int dumpSize = Integer.valueOf(args[args.length - 1]);
         int realDumpSize = Math.min(dumpSize, MAX_DUMP_SIZE);
-        MessageChannel outputChannel = isQuiet ? invoker.getPrivateChannel() : channel;
-        outputChannel.sendTyping();
+
+        if(!invoker.getUser().hasPrivateChannel()){
+            try {
+                invoker.getUser().openPrivateChannel().block();
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        MessageChannel outputChannel = isQuiet ? invoker.getUser().getPrivateChannel() : channel;
+        outputChannel.sendTyping().queue();
         
         //Quick hack to allow infinite messages if invoked by owner:
-        if(invoker.getId().equals(BotConstants.OWNER_ID)){
+        if(invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
             realDumpSize = dumpSize;
         }
         
         try {
 
             MessageHistory mh = new MessageHistory(channel);
-            int availableMessages = mh.getRecent().size();
+            int availableMessages = mh.getCachedHistory().size();
 
             while (availableMessages < realDumpSize) {
                 int nextMessages = Math.min(100, realDumpSize - availableMessages);
                 availableMessages = nextMessages + availableMessages;
-                mh.retrieve(nextMessages);
+                mh.retrievePast(nextMessages).block();
             }
 
             String dump = "**------BEGIN DUMP------**\n";
-            List<Message> messages = new ArrayList<>(mh.getRecent());
+            List<Message> messages = new ArrayList<>(mh.getCachedHistory());
             Collections.reverse(messages);
             messages = messages.subList(0, Math.min(realDumpSize, messages.size()));
             dump = dump + "Size = " + messages.size() + "\nTimes are in UTC\n\n";
@@ -69,18 +79,18 @@ public class DumpCommand extends Command {
                 String content = "[COULD NOT DISPLAY CONTENT!]";
 
                 try {
-                    authr = msg.getAuthor().getUsername() + "#" + msg.getAuthor().getDiscriminator();
-                } catch (NullPointerException ex) {
+                    authr = msg.getAuthor().getName() + "#" + msg.getAuthor().getDiscriminator();
+                } catch (NullPointerException ignored) {
                 }
                 
                 try {
-                    time = formatTimestamp(msg.getTime());
-                } catch (NullPointerException ex) {
+                    time = formatTimestamp(msg.getCreationTime());
+                } catch (NullPointerException ignored) {
                 }
                 
                 try {
                     content = msg.getContent();
-                } catch (NullPointerException ex) {
+                } catch (NullPointerException ignored) {
                 }
 
                 dump = dump + "--Msg #" + i + " by " + authr
@@ -98,14 +108,16 @@ public class DumpCommand extends Command {
             dump = dump + "**------END DUMP------**\n";
 
             MessageBuilder mb = new MessageBuilder();
-            mb.appendString("Successfully found and dumped `" + messages.size() + "` messages.\n");
-            mb.appendString(TextUtils.postToHastebin(dump, true) + ".txt\n");
+            mb.append("Successfully found and dumped `" + messages.size() + "` messages.\n");
+            mb.append(TextUtils.postToHastebin(dump, true) + ".txt\n");
             if (!isQuiet) {
-                mb.appendString("Hint: You can call this with `-q` to instead get the dump in a DM\n");
+                mb.append("Hint: You can call this with `-q` to instead get the dump in a DM\n");
             }
-            outputChannel.sendMessage(mb.build());
+            outputChannel.sendMessage(mb.build()).queue();
         } catch (UnirestException ex) {
-            outputChannel.sendMessage("Failed to connect to Hastebin: " + ex.getMessage());
+            outputChannel.sendMessage("Failed to connect to Hastebin: " + ex.getMessage()).queue();
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
         }
     }
 

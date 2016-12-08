@@ -15,9 +15,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.VoiceChannel;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,10 +70,10 @@ public class MusicPersistenceHandler {
                     continue;//Nothing to see here
                 }
 
-                player.getActiveTextChannel().sendMessage(msg);
+                player.getActiveTextChannel().sendMessage(msg).queue();
 
                 JSONObject data = new JSONObject();
-                data.put("vc", player.getUserCurrentVoiceChannel(jda.getSelfInfo()).getId());
+                data.put("vc", player.getUserCurrentVoiceChannel(jda.getSelfUser()).getId());
                 data.put("tc", player.getActiveTextChannel().getId());
                 data.put("isPaused", player.isPaused());
                 data.put("volume", Float.toString(player.getVolume()));
@@ -95,7 +95,7 @@ public class MusicPersistenceHandler {
                 try {
                     FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
-                    player.getActiveTextChannel().sendMessage("Error occured when saving persistence file: " + ex.getMessage());
+                    player.getActiveTextChannel().sendMessage("Error occurred when saving persistence file: " + ex.getMessage()).queue();
                 }
             } catch (Exception ex) {
                 log.error("Error when saving persistence file", ex);
@@ -154,7 +154,7 @@ public class MusicPersistenceHandler {
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:");
+                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:").queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             } finally {

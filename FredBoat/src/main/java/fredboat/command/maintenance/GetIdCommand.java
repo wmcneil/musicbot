@@ -12,16 +12,16 @@
 package fredboat.command.maintenance;
 
 import fredboat.commandmeta.abs.Command;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class GetIdCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
-        channel.sendMessage("The id of this guild is " + guild.getId()+". The id of this text channel is " + channel.getId() + ".");
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        channel.sendMessage("The id of this guild is " + guild.getId()+". The id of this text channel is " + channel.getId() + ".").queue();
     }
     
 }

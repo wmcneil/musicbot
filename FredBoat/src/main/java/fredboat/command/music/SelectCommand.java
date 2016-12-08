@@ -17,41 +17,44 @@ import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.YoutubeVideo;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.exceptions.PermissionException;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class SelectCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
-        if (player.selections.containsKey(invoker.getId())) {
-            VideoSelection selection = player.selections.get(invoker.getId());
+        if (player.selections.containsKey(invoker.getUser().getId())) {
+            VideoSelection selection = player.selections.get(invoker.getUser().getId());
             try {
                 int i = Integer.valueOf(args[1]);
                 if (selection.getChoices().size() < i || i < 1) {
                     throw new NumberFormatException();
                 } else {
                     YoutubeVideo selected = selection.choices.get(i - 1);
-                    player.selections.remove(invoker.getId());
+                    player.selections.remove(invoker.getUser().getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
-                    selection.getOutMsg().updateMessage(msg);
+                    selection.getOutMsg().editMessage(msg).block();
                     player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
                     try {
-                        message.deleteMessage();
+                        message.deleteMessage().queue();
                     } catch (PermissionException ex) {
 
                     }
                 }
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException numberFormatException) {
-                channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".");
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".").queue();
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
             }
         } else {
-            channel.sendMessage("You must first be given a selection to choose from.");
+            channel.sendMessage("You must first be given a selection to choose from.").queue();
         }
     }
 

@@ -16,10 +16,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,7 @@ public class MALCommand extends Command {
     private static Pattern regex = Pattern.compile("^\\S+\\s+([\\W\\w]*)");
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         Matcher matcher = regex.matcher(message.getContent());
         try {
             matcher.find();
@@ -63,13 +63,13 @@ public class MALCommand extends Command {
         }
     }
 
-    private boolean handleAnime(TextChannel channel, User invoker, String terms, String body) {
-        String msg = invoker.getUsername() + ": Search revealed an anime.\n";
+    private boolean handleAnime(TextChannel channel, Member invoker, String terms, String body) {
+        String msg = invoker.getEffectiveName() + ": Search revealed an anime.\n";
 
         //Read JSON
         log.info(body);
         JSONObject root = XML.toJSONObject(body);
-        JSONObject data = null;
+        JSONObject data;
         try {
             data = root.getJSONObject("anime").getJSONArray("entry").getJSONObject(0);
         } catch (JSONException ex) {
@@ -122,18 +122,18 @@ public class MALCommand extends Command {
 
         msg = data.has("id") ? msg + "http://myanimelist.net/anime/" + data.get("id") + "/" : msg;
         
-        channel.sendMessage(msg);
+        channel.sendMessage(msg).queue();
         return true;
     }
 
-    private boolean handleUser(TextChannel channel, User invoker, String body) {
-        String msg = invoker.getUsername() + ": Search revealed a user.\n";
+    private boolean handleUser(TextChannel channel, Member invoker, String body) {
+        String msg = invoker.getEffectiveName() + ": Search revealed a user.\n";
 
         //Read JSON
         JSONObject root = new JSONObject(body);
         JSONArray items = root.getJSONArray("categories").getJSONObject(0).getJSONArray("items");
         if(items.length() == 0){
-            channel.sendMessage(invoker.getUsername() + ": No results.");
+            channel.sendMessage(invoker.getEffectiveName() + ": No results.").queue();
             return false;
         }
         
@@ -145,7 +145,7 @@ public class MALCommand extends Command {
 
         log.debug(msg);
 
-        channel.sendMessage(msg);
+        channel.sendMessage(msg).queue();
         return true;
     }
 

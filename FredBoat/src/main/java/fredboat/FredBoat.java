@@ -35,12 +35,13 @@ import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.JDABuilder;
-import net.dv8tion.jda.JDAInfo;
-import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.utils.SimpleLog;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.JDAInfo;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class FredBoat {
 
     private static int scopes = 0;
     public static volatile JDA jdaBot;
-    public static volatile JDA jdaSelf;
+    private static volatile JDA jdaSelf;
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
     private static String accountToken;
@@ -70,8 +71,8 @@ public class FredBoat {
 
     public static String MALPassword;
 
-    public static int readyEvents = 0;
-    public static int readyEventsRequired = 0;
+    private static int readyEvents = 0;
+    private static int readyEventsRequired = 0;
 
     public static int shardId = 0;
     public static int numShards = 1;
@@ -138,9 +139,7 @@ public class FredBoat {
 
         JSONArray gkeys = credsjson.optJSONArray("googleServerKeys");
         if (gkeys != null) {
-            gkeys.forEach((Object str) -> {
-                GOOGLE_KEYS.add((String) str);
-            });
+            gkeys.forEach((Object str) -> GOOGLE_KEYS.add((String) str));
         }
 
         if (credsjson.has("scopePasswords")) {
@@ -177,22 +176,50 @@ public class FredBoat {
         }
 
         if ((scopes & 0x110) != 0) {
-            JDABuilder builder = new JDABuilder()
-                    .addListener(listenerBot)
-                    .addListener(new EventLogger("216689009110417408"))
-                    .setBotToken(accountToken)
-                    .setBulkDeleteSplittingEnabled(true);
-            if (numShards > 1) {
-                builder.useSharding(shardId, numShards);
+            try {
+                boolean success = false;
+                while (!success) {
+                    JDABuilder builder = new JDABuilder(AccountType.BOT)
+                            .addListener(listenerBot)
+                            .addListener(new EventLogger("216689009110417408"))
+                            .setToken(accountToken)
+                            .setBulkDeleteSplittingEnabled(true);
+                    if (numShards > 1) {
+                        builder.useSharding(shardId, numShards);
+                    }
+                    try {
+                        jdaBot = builder.buildAsync();
+                        success = true;
+                    } catch (RateLimitedException e) {
+                        log.warn("Got rate limited while building bot JDA instance! Retrying...", e);
+                        Thread.sleep(1000);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Failed to start JDA", e);
+                FredBoat.shutdown(-1);
             }
-            jdaBot = builder.buildAsync();
         }
 
-        if ((scopes & 0x001) != 0 && shardId == 0) {
-            jdaSelf = new JDAClientBuilder()
-                    .addListener(listenerSelf)
-                    .setClientToken(clientToken)
-                    .buildAsync();
+        if ((scopes & 0x001) != 0) {
+            try {
+                boolean success = false;
+                while (!success) {
+                    try {
+                        jdaSelf = new JDABuilder(AccountType.CLIENT)
+                            .addListener(listenerSelf)
+                            .setToken(clientToken)
+                            .buildAsync();
+
+                        success = true;
+                    } catch (RateLimitedException e) {
+                        log.warn("Got rate limited while building client JDA instance! Retrying...", e);
+                        Thread.sleep(1000);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Failed to start JDA client", e);
+            }
         }
 
         /* JDA initialising */
@@ -225,7 +252,7 @@ public class FredBoat {
         }
     }
 
-    public static void init(ReadyEvent event) {
+    public static void init() {
         readyEvents = readyEvents + 1;
 
         log.info("INIT: " + readyEvents + "/" + readyEventsRequired);
@@ -402,7 +429,6 @@ public class FredBoat {
 
     //Shutdown hook
     private static final Runnable ON_SHUTDOWN = () -> {
-        Runtime rt = Runtime.getRuntime();
         int code = shutdownCode != UNKNOWN_SHUTDOWN_CODE ? shutdownCode : -1;
 
         try {

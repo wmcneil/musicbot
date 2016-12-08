@@ -41,7 +41,7 @@ public class BotConstants {
         try {
             String str = "";
 
-            InputStream helpIS = new BotConstants().getClass().getClassLoader().getResourceAsStream("help.txt");
+            InputStream helpIS = BotConstants.class.getClassLoader().getResourceAsStream("help.txt");
             BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
 
             String inputLine;

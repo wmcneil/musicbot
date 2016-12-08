@@ -13,9 +13,9 @@ package fredboat.event;
 
 import fredboat.FredBoat;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -37,7 +37,7 @@ public abstract class AbstractScopedEventListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        FredBoat.init(event);
+        FredBoat.init();
     }
 
     @Override
@@ -47,7 +47,7 @@ public abstract class AbstractScopedEventListener extends ListenerAdapter {
             try{
             listener.onGuildMessageReceived(event);
             } catch(Exception ex){
-                TextUtils.handleException(ex, event.getChannel(), event.getAuthor());
+                TextUtils.handleException(ex, event.getChannel(), event.getMember());
             }
         }
     }

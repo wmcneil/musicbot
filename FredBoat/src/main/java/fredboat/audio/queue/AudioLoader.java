@@ -68,7 +68,7 @@ public class AudioLoader implements AudioLoadResultHandler {
             if (!context.isQuiet()) {
                 context.textChannel.sendMessage(
                         gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
-                );
+                ).queue();
             } else {
                 log.info("Quietly loaded " + at.getIdentifier());
             }
@@ -90,7 +90,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         try {
             context.textChannel.sendMessage(
                     "Found and added `" + ap.getTracks().size() + "` songs from playlist **" + ap.getName() + "**."
-            );
+            ).queue();
 
             for (AudioTrack at : ap.getTracks()) {
                 trackProvider.add(at);
@@ -107,8 +107,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void noMatches() {
         try {
-            context.textChannel.sendMessage("No audio could be found for `" + context.identifier + "`."
-            );
+            context.textChannel.sendMessage("No audio could be found for `" + context.identifier + "`.").queue();
         } catch (Throwable th) {
             handleThrowable(context, th);
         }
@@ -129,20 +128,20 @@ public class AudioLoader implements AudioLoadResultHandler {
                 FriendlyException fe = (FriendlyException) th;
                 if (fe.severity == FriendlyException.Severity.COMMON) {
                     if (ic.textChannel != null) {
-                        context.textChannel.sendMessage("Error ocurred when loading info for `" + context.identifier + "`:\n"
-                        + fe.getMessage());
+                        context.textChannel.sendMessage("Error occurred when loading info for `" + context.identifier + "`:\n"
+                        + fe.getMessage()).queue();
                     } else {
                         log.error("Error while loading track ", th);
                     }
                 } else if (ic.textChannel != null) {
-                    context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`.");
+                    context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`.").queue();
                     Throwable exposed = fe.getCause() == null ? fe : fe.getCause();
                     TextUtils.handleException(exposed, context.textChannel);
                 } else {
                     log.error("Error while loading track ", th);
                 }
             } else if (ic.textChannel != null) {
-                context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`.");
+                context.textChannel.sendMessage("Suspicious error when loading info for `" + context.identifier + "`.").queue();
                 TextUtils.handleException(th, context.textChannel);
             } else {
                 log.error("Error while loading track ", th);

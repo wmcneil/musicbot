@@ -16,9 +16,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.event.AbstractScopedEventListener;
 import fredboat.event.UserListener;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Channel;
-import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Channel;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 
@@ -31,7 +31,7 @@ public final class AkinatorListener extends UserListener {
     private final String EXCLUSION_URL = "http://api-en4.akinator.com/ws/exclusion";
 
     public final JDA jda;
-    public final String channelId;
+    private final String channelId;
     private final String userId;
     private StepInfo stepInfo;
     private final AbstractScopedEventListener listener;
@@ -47,7 +47,7 @@ public final class AkinatorListener extends UserListener {
         this.channelId = channelId;
         this.userId = userId;
 
-        jda.getTextChannelById(channelId).sendTyping();
+        jda.getTextChannelById(channelId).sendTyping().queue();
 
         //Start new session
         JSONObject json = Unirest.get(NEW_SESSION_URL)
@@ -62,17 +62,17 @@ public final class AkinatorListener extends UserListener {
     }
 
     private void sendNextQuestion() {
-        String name = jda.getTextChannelById(channelId).getGuild().getEffectiveNameForUser(jda.getUserById(userId));
+        String name = jda.getTextChannelById(channelId).getGuild().getMemberById(userId).getEffectiveName();
         String out = "**" + name + ": Question " + (stepInfo.getStepNum() + 1) + "**\n"
                 + stepInfo.getQuestion() + "\n [yes/no/idk/probably/probably not]";
-        jda.getTextChannelById(channelId).sendMessage(out);
+        jda.getTextChannelById(channelId).sendMessage(out).queue();
         lastQuestionWasGuess = false;
     }
 
     private void sendGuess() throws UnirestException {
         guess = new Guess();
         String out = "Is this your character?\n" + guess.toString() + "\n[yes/no]";
-        jda.getTextChannelById(channelId).sendMessage(out);
+        jda.getTextChannelById(channelId).sendMessage(out).queue();
         lastQuestionWasGuess = true;
     }
 
@@ -107,7 +107,7 @@ public final class AkinatorListener extends UserListener {
                         .asString();
                 jda.getTextChannelById(channelId).sendMessage("Great ! Guessed right one more time.\n"
                         + "I love playing with you!\n"
-                        + "<http://akinator.com>");
+                        + "<http://akinator.com>").queue();
                 FredBoat.getListenerBot().removeListener(userId);
             } else if (answer == 1) {
                 Unirest.get(EXCLUSION_URL)
@@ -178,10 +178,10 @@ public final class AkinatorListener extends UserListener {
                 return;
             }
 
-            jda.getTextChannelById(channelId).sendTyping();
+            jda.getTextChannelById(channelId).sendTyping().queue();
             answerGuess(answer);
         } else {
-            jda.getTextChannelById(channelId).sendTyping();
+            jda.getTextChannelById(channelId).sendTyping().queue();
             answerQuestion(answer);
         }
     }
@@ -194,7 +194,7 @@ public final class AkinatorListener extends UserListener {
         private final int stepNum;
         private final double progression;
 
-        public StepInfo(JSONObject json) {
+        StepInfo(JSONObject json) {
             JSONObject params = json.getJSONObject("parameters");
             JSONObject info = params.has("step_information") ? params.getJSONObject("step_information") : params;
             question = info.getString("question");
@@ -208,23 +208,23 @@ public final class AkinatorListener extends UserListener {
             }
         }
 
-        public String getQuestion() {
+        String getQuestion() {
             return question;
         }
 
-        public int getStepNum() {
+        int getStepNum() {
             return stepNum;
         }
 
-        public String getSignature() {
+        String getSignature() {
             return signature;
         }
 
-        public String getSession() {
+        String getSession() {
             return session;
         }
 
-        public double getProgression() {
+        double getProgression() {
             return progression;
         }
 
@@ -239,7 +239,7 @@ public final class AkinatorListener extends UserListener {
         private final String pseudo;
         private final String imgPath;
 
-        public Guess() throws UnirestException {
+        Guess() throws UnirestException {
             JSONObject json = Unirest.get(GET_GUESS_URL)
                     .queryString("session", session)
                     .queryString("signature", signature)

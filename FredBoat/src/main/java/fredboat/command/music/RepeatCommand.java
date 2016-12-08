@@ -15,22 +15,22 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class RepeatCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild);
         player.setRepeat(!player.isRepeat());
 
         if (player.isRepeat()) {
-            channel.sendMessage("The player is now on repeat.");
+            channel.sendMessage("The player is now on repeat.").queue();
         } else {
-            channel.sendMessage("The player is no longer on repeat.");
+            channel.sendMessage("The player is no longer on repeat.").queue();
         }
     }
 

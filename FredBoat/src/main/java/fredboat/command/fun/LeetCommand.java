@@ -18,10 +18,11 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommand;
 import fredboat.event.EventListenerBoat;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,12 +34,12 @@ import java.net.URLEncoder;
 public class LeetCommand extends Command implements ICommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         String res = "";
-        channel.sendTyping();
+        channel.sendTyping().queue();
 
         if(args.length < 2) {
-            channel.sendMessage("Proper usage: ;;leet <text>");
+            channel.sendMessage("Proper usage: ;;leet <text>").queue();
             return;
         }
 
@@ -54,8 +55,13 @@ public class LeetCommand extends Command implements ICommand {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
-        Message myMsg = channel.sendMessage(res);
-        
+        Message myMsg = null;
+        try {
+            myMsg = channel.sendMessage(res).block();
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
+        }
+
         EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
     }
     

@@ -14,11 +14,11 @@ package fredboat.command.admin;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -41,11 +41,10 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
     }
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User author, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member author, Message message, String[] args) {
         JDA jda = guild.getJDA();
-        String msg = message.getContent();
 
-        channel.sendTyping();
+        channel.sendTyping().queue();
 
         final String source = message.getRawContent().substring(args[0].length() + 1);
 
@@ -54,7 +53,8 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
         engine.put("channel", channel);
         engine.put("vc", PlayerRegistry.getExisting(guild) != null ? PlayerRegistry.getExisting(guild).getChannel() : null);
         engine.put("author", author);
-        engine.put("bot", jda.getSelfInfo());
+        engine.put("bot", jda.getSelfUser());
+        engine.put("member", guild.getSelfMember());
         engine.put("message", message);
         engine.put("guild", guild);
         engine.put("player", PlayerRegistry.getExisting(guild));
@@ -70,7 +70,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                         + "})();");
 
             } catch (Exception ex) {
-                channel.sendMessage("`"+ex.getMessage()+"`");
+                channel.sendMessage("`"+ex.getMessage()+"`").queue();
                 return;
             }
 
@@ -83,7 +83,7 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
                 outputS = "\nEval: `" + out.toString() + "`";
             }
 
-            channel.sendMessage("```java\n"+source+"```" + "\n" + outputS);
+            channel.sendMessage("```java\n"+source+"```" + "\n" + outputS).queue();
 
         }, 0, TimeUnit.MILLISECONDS);
 
@@ -95,9 +95,9 @@ public class EvalCommand extends Command implements ICommandOwnerRestricted {
 
                 } catch (TimeoutException ex) {
                     future.cancel(true);
-                    channel.sendMessage("Task exceeded time limit.");
+                    channel.sendMessage("Task exceeded time limit.").queue();
                 } catch (Exception ex) {
-                    channel.sendMessage("`"+ex.getMessage()+"`");
+                    channel.sendMessage("`"+ex.getMessage()+"`").queue();
                 }
             }
         };

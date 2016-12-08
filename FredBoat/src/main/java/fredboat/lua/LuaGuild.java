@@ -11,9 +11,10 @@
 
 package fredboat.lua;
 
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.TwoArgFunction;
@@ -41,8 +42,8 @@ public class LuaGuild extends LuaTable {
                 if (k.checkjstring().equals("users")) {
                     LuaTable users =  new LuaTable();
                     int i = 1;
-                    for(User usr : guild.getUsers()){
-                        users.set(i, new LuaUser(usr));
+                    for(Member member : guild.getMembers()){
+                        users.set(i, new LuaUser(member.getUser()));
                         i++;
                     }
                     return users;

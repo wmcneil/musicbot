@@ -15,18 +15,18 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.AkinatorListener;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 public class AkinatorCommand extends Command {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
-            AkinatorListener akinator = new AkinatorListener(guild.getJDA(), FredBoat.getListenerBot(), channel.getId(), invoker.getId());
-            FredBoat.getListenerBot().putListener(invoker.getId(), akinator);
+            AkinatorListener akinator = new AkinatorListener(guild.getJDA(), FredBoat.getListenerBot(), channel.getId(), invoker.getUser().getId());
+            FredBoat.getListenerBot().putListener(invoker.getUser().getId(), akinator);
         } catch (UnirestException ex) {
             throw new RuntimeException(ex);
         }

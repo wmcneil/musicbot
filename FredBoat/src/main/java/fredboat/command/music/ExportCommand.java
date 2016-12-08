@@ -20,17 +20,17 @@ import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.util.List;
 
 public class ExportCommand extends Command implements IMusicCommand {
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         
         if(player.getRemainingTracks().isEmpty()){
@@ -50,7 +50,7 @@ public class ExportCommand extends Command implements IMusicCommand {
         
         try {
             String url = TextUtils.postToHastebin(out, true) + ".fredboat";
-            channel.sendMessage("Exported playlist: " + url + "\nYou can provide this URL to play the current playlist later.");
+            channel.sendMessage("Exported playlist: " + url + "\nYou can provide this URL to play the current playlist later.").queue();
         } catch (UnirestException ex) {
             throw new MessagingException("Failed to upload playlist to hastebin.com");
         }

@@ -18,12 +18,13 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.Message.Attachment;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Message.Attachment;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class PlayCommand extends Command implements IMusicCommand {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayCommand.class);
 
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (!message.getAttachments().isEmpty()) {
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);
@@ -51,14 +52,17 @@ public class PlayCommand extends Command implements IMusicCommand {
         }
 
         if (args.length < 2) {
-            //channel.sendMessage("Proper syntax: ;;play <url-or-search-terms>");
             handleNoArguments(guild, channel, invoker, message);
             return;
         }
 
         //Search youtube for videos and let the user select a video
         if (!args[1].startsWith("http")) {
-            searchForVideos(guild, channel, invoker, message, args);
+            try {
+                searchForVideos(guild, channel, invoker, message, args);
+            } catch (RateLimitedException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -69,27 +73,27 @@ public class PlayCommand extends Command implements IMusicCommand {
         player.setPause(false);
 
         try {
-            message.deleteMessage();
+            message.deleteMessage().queue();
         } catch (Exception ex) {
 
         }
     }
 
-    private void handleNoArguments(Guild guild, TextChannel channel, User invoker, Message message) {
+    private void handleNoArguments(Guild guild, TextChannel channel, Member invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>");
+            channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>").queue();
         } else if (player.isPlaying()) {
-            channel.sendMessage("The player is already playing.");
+            channel.sendMessage("The player is already playing.").queue();
         } else if (player.getUsersInVC().isEmpty()) {
-            channel.sendMessage("There are no users in the voice chat.");
+            channel.sendMessage("There are no users in the voice chat.").queue();
         } else {
             player.play();
-            channel.sendMessage("The player will now play.");
+            channel.sendMessage("The player will now play.").queue();
         }
     }
 
-    private void searchForVideos(Guild guild, TextChannel channel, User invoker, Message message, String[] args) {
+    private void searchForVideos(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) throws RateLimitedException {
         Matcher m = Pattern.compile("\\S+\\s+(.*)").matcher(message.getRawContent());
         m.find();
         String query = m.group(1);
@@ -97,40 +101,40 @@ public class PlayCommand extends Command implements IMusicCommand {
         //Now remove all punctuation
         query = query.replaceAll("[.,/#!$%\\^&*;:{}=\\-_`~()]", "");
 
-        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query));
+        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query)).block();
 
         ArrayList<YoutubeVideo> vids = null;
         try {
             vids = YoutubeAPI.searchForVideos(query);
         } catch (JSONException e) {
-            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```");
+            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```").queue();
             log.debug("YouTube search exception", e);
             return;
         }
 
         if (vids.isEmpty()) {
-            outMsg.updateMessage("No results for `{q}`".replace("{q}", query));
+            outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
         } else {
             MessageBuilder builder = new MessageBuilder();
-            builder.appendString("**Please select a video with the `;;select n` command:**");
+            builder.append("**Please select a video with the `;;select n` command:**");
 
             int i = 1;
             for (YoutubeVideo vid : vids) {
-                builder.appendString("\n**")
-                        .appendString(String.valueOf(i))
-                        .appendString(":** ")
-                        .appendString(vid.name)
-                        .appendString(" (")
-                        .appendString(vid.getDurationFormatted())
-                        .appendString(")");
+                builder.append("\n**")
+                        .append(String.valueOf(i))
+                        .append(":** ")
+                        .append(vid.name)
+                        .append(" (")
+                        .append(vid.getDurationFormatted())
+                        .append(")");
                 i++;
             }
 
-            outMsg.updateMessage(builder.build().getRawContent());
+            outMsg.editMessage(builder.build().getRawContent()).queue();
 
             GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);
-            player.selections.put(invoker.getId(), new VideoSelection(vids, outMsg));
+            player.selections.put(invoker.getUser().getId(), new VideoSelection(vids, outMsg));
         }
     }
 

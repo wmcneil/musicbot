@@ -14,8 +14,8 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +24,6 @@ import java.util.regex.Matcher;
 public class EventListenerSelf extends AbstractScopedEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerSelf.class);
-
-    public User lastUserToReceiveHelp;
 
     public EventListenerSelf(int scope, String defaultPrefix) {
         super(scope, defaultPrefix);
@@ -44,7 +42,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
         if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
             Command invoked = null;
             try {
-                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getUsername() + " \t " + event.getMessage().getRawContent());
+                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
                 matcher.find();
 
@@ -57,10 +55,10 @@ public class EventListenerSelf extends AbstractScopedEventListener {
                 return;
             }
 
-            CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getMessage());
+            CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getMember(), event.getMessage());
 
             try {
-                event.getMessage().deleteMessage();
+                event.getMessage().deleteMessage().queue();
             } catch (Exception ex) {
             }
 

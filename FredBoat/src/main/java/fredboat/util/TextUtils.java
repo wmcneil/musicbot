@@ -15,11 +15,8 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
-import net.dv8tion.jda.MessageBuilder;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.MessageChannel;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.*;
 import org.slf4j.LoggerFactory;
 
 public class TextUtils {
@@ -29,15 +26,15 @@ public class TextUtils {
     private TextUtils() {
     }
 
-    public static Message prefaceWithMention(User user, String msg) {
-        MessageBuilder builder = new MessageBuilder().appendMention(user).appendString(msg);
+    public static Message prefaceWithMention(Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
         return builder.build();
     }
 
-    public static Message replyWithMention(TextChannel channel, User user, String msg) {
-        MessageBuilder builder = new MessageBuilder().appendMention(user).appendString(msg);
+    public static Message replyWithMention(TextChannel channel, Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
         Message mes = builder.build();
-        channel.sendMessage(mes);
+        channel.sendMessage(mes).queue();
         return mes;
     }
 
@@ -45,9 +42,9 @@ public class TextUtils {
         handleException(e, channel, null);
     }
 
-    public static void handleException(Throwable e, MessageChannel channel, User invoker) {
+    public static void handleException(Throwable e, MessageChannel channel, Member invoker) {
         if (e instanceof MessagingException) {
-            channel.sendMessage(invoker.getUsername() + ": " + e.getMessage());
+            channel.sendMessage(invoker.getEffectiveName() + ": " + e.getMessage()).queue();
             return;
         }
 
@@ -56,7 +53,7 @@ public class TextUtils {
         MessageBuilder builder = new MessageBuilder();
 
         if (invoker != null) {
-            builder.appendMention(invoker);
+            builder.append(invoker);
 
             String filtered = " an error occured :anger: ```java\n" + e.toString() + "\n";
 
@@ -64,7 +61,7 @@ public class TextUtils {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
-            builder.appendString(filtered);
+            builder.append(filtered);
         } else {
             String filtered = "An error occured :anger: ```java\n" + e.toString() + "\n";
 
@@ -72,22 +69,22 @@ public class TextUtils {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
-            builder.appendString(filtered);
+            builder.append(filtered);
         }
 
-        //builder.appendString("```java\n");
+        //builder.append("```java\n");
         for (StackTraceElement ste : e.getStackTrace()) {
-            builder.appendString("\t" + ste.toString() + "\n");
+            builder.append("\t" + ste.toString() + "\n");
             if ("prefixCalled".equals(ste.getMethodName())) {
                 break;
             }
         }
-        builder.appendString("\t...```");
+        builder.append("\t...```");
 
         try {
-            channel.sendMessage(builder.build());
+            channel.sendMessage(builder.build()).queue();
         } catch (UnsupportedOperationException tooLongEx) {
-            channel.sendMessage("An error occured :anger: Error was too long to display.");
+            channel.sendMessage("An error occured :anger: Error was too long to display.").queue();
         }
     }
 
