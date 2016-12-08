@@ -30,9 +30,9 @@ public class FacedeskCommand extends RandomImageCommand {
         if (message.getMentionedUsers().size() > 0) {
             
                 channel.sendMessage(new MessageBuilder()
-                        .appendString("_")
-                        .appendMention(invoker)
-                        .appendString(" facedesks._")
+                        .append("_")
+                        .append(invoker)
+                        .append(" facedesks._")
                         .build());
             
         }

@@ -22,6 +22,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -54,8 +55,13 @@ public class LeetCommand extends Command implements ICommand {
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
-        Message myMsg = channel.sendMessage(res);
-        
+        Message myMsg = null;
+        try {
+            myMsg = channel.sendMessage(res).block();
+        } catch (RateLimitedException e) {
+            throw new RuntimeException(e);
+        }
+
         EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
     }
     

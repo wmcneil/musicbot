@@ -30,9 +30,9 @@ public class RollCommand extends RandomImageCommand {
         if (message.getMentionedUsers().size() > 0) {
             
                 channel.sendMessage(new MessageBuilder()
-                        .appendString("_")
-                        .appendMention(invoker)
-                        .appendString(" rolls around on the floor._")
+                        .append("_")
+                        .append(invoker)
+                        .append(" rolls around on the floor._")
                         .build());
             
         }

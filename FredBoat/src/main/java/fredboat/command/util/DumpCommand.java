@@ -108,10 +108,10 @@ public class DumpCommand extends Command {
             dump = dump + "**------END DUMP------**\n";
 
             MessageBuilder mb = new MessageBuilder();
-            mb.appendString("Successfully found and dumped `" + messages.size() + "` messages.\n");
-            mb.appendString(TextUtils.postToHastebin(dump, true) + ".txt\n");
+            mb.append("Successfully found and dumped `" + messages.size() + "` messages.\n");
+            mb.append(TextUtils.postToHastebin(dump, true) + ".txt\n");
             if (!isQuiet) {
-                mb.appendString("Hint: You can call this with `-q` to instead get the dump in a DM\n");
+                mb.append("Hint: You can call this with `-q` to instead get the dump in a DM\n");
             }
             outputChannel.sendMessage(mb.build());
         } catch (UnirestException ex) {

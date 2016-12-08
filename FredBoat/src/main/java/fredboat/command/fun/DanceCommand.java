@@ -18,6 +18,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class DanceCommand extends Command implements ICommand {
 
@@ -27,19 +28,19 @@ public class DanceCommand extends Command implements ICommand {
             @Override
             public void run() {
                 synchronized (channel) {
-                    Message msg = channel.sendMessage('\u200b' + "\\o\\");
+                    try {
+                    Message msg = channel.sendMessage('\u200b' + "\\o\\").block();
                     EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
                     long start = System.currentTimeMillis();
-                    try {
                         synchronized (this) {
                             while (start + 60000 > System.currentTimeMillis()) {
                                 wait(1000);
-                                msg = msg.updateMessage("/o/");
+                                msg = msg.editMessage("/o/").block();
                                 wait(1000);
-                                msg = msg.updateMessage("\\o\\");
+                                msg = msg.editMessage("\\o\\").block();
                             }
                         }
-                    } catch (InterruptedException ex) {
+                    } catch (InterruptedException | RateLimitedException ex) {
                     }
                 }
             }

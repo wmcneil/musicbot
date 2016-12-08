@@ -50,7 +50,7 @@ public class EventLogger extends ListenerAdapter {
     public void onReady(ReadyEvent event) {
         jda = event.getJDA();
         send(new MessageBuilder()
-                .appendString("[:rocket:] Received ready event.")
+                .append("[:rocket:] Received ready event.")
                 .build()
         );
     }

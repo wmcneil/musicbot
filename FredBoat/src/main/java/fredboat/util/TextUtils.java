@@ -72,7 +72,7 @@ public class TextUtils {
             builder.append(filtered);
         }
 
-        //builder.appendString("```java\n");
+        //builder.append("```java\n");
         for (StackTraceElement ste : e.getStackTrace()) {
             builder.append("\t" + ste.toString() + "\n");
             if ("prefixCalled".equals(ste.getMethodName())) {

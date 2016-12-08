@@ -18,6 +18,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Random;
 
@@ -33,7 +34,11 @@ public class RandomImageCommand extends Command {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Get a random file and send it
         String randomUrl = (String) Array.get(urls, new Random().nextInt(urls.length));
-        channel.sendFile(CacheUtil.getImageFromURL(randomUrl), null);
+        try {
+            channel.sendFile(CacheUtil.getImageFromURL(randomUrl), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

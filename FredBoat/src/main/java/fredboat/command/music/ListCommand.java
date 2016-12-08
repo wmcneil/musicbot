@@ -35,12 +35,12 @@ public class ListCommand extends Command implements IMusicCommand {
             for (AudioTrack at : player.getRemainingTracks()) {
                 if (i == 0) {
                     String status = player.isPlaying() ? "[PLAYING] " : "[PAUSED] ";
-                    mb.appendString(status, MessageBuilder.Formatting.BOLD)
-                            .appendString(at.getInfo().title)
-                            .appendString("\n");
+                    mb.append(status, MessageBuilder.Formatting.BOLD)
+                            .append(at.getInfo().title)
+                            .append("\n");
                 } else {
-                    mb.appendString(at.getInfo().title)
-                            .appendString("\n");
+                    mb.append(at.getInfo().title)
+                            .append("\n");
                     if (i == 10) {
                         break;
                     }
@@ -69,7 +69,7 @@ public class ListCommand extends Command implements IMusicCommand {
 
             }
             
-            mb.appendString("\n" + desc);
+            mb.append("\n" + desc);
             
             channel.sendMessage(mb.build());
         } else {

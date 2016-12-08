@@ -117,7 +117,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
         } else {
             MessageBuilder builder = new MessageBuilder();
-            builder.appendString("**Please select a video with the `;;select n` command:**");
+            builder.append("**Please select a video with the `;;select n` command:**");
 
             int i = 1;
             for (YoutubeVideo vid : vids) {
