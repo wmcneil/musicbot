@@ -28,6 +28,10 @@ public class SelectCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        select(guild, channel, invoker, message, args);
+    }
+
+    static void select(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.selections.containsKey(invoker.getUser().getId())) {
@@ -44,7 +48,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                     player.queue("https://www.youtube.com/watch?v=" + selected.id, channel, invoker);
                     try {
                         message.deleteMessage().queue();
-                    } catch (PermissionException ex) {
+                    } catch (PermissionException ignored) {
 
                     }
                 }

@@ -25,6 +25,7 @@ import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,12 @@ public class PlayCommand extends Command implements IMusicCommand {
             return;
         }
 
+        //What if we want to select a selection instead?
+        if (args.length == 2 && StringUtils.isNumeric(args[1])){
+            SelectCommand.select(guild, channel, invoker, message, args);
+            return;
+        }
+
         //Search youtube for videos and let the user select a video
         if (!args[1].startsWith("http")) {
             try {
@@ -74,7 +81,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
         try {
             message.deleteMessage().queue();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
 
         }
     }
