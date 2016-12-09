@@ -33,14 +33,20 @@ public class SkipCommand extends Command implements IMusicCommand {
         }
 
         if(args.length == 1){
-            AudioTrack at = player.getPlayingTrack();
-            player.skip();
-            channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();
+            skipNext(guild, channel, invoker, message, args);
         } else if (args.length == 2 && StringUtils.isNumeric(args[1])) {
             int givenIndex = Integer.parseInt(args[1]);
 
-            if(player.getRemainingTracks().size() + 1 < givenIndex){
-                channel.sendMessage("Can't remove track number " + givenIndex + " when there are only " + player.getRemainingTracks().size() + "tracks.").queue();
+            if(givenIndex == 1){
+                skipNext(guild, channel, invoker, message, args);
+                return;
+            }
+
+            if(player.getRemainingTracks().size() < givenIndex){
+                channel.sendMessage("Can't remove track number " + givenIndex + " when there are only " + player.getRemainingTracks().size() + " tracks.").queue();
+                return;
+            } else if (givenIndex < 1){
+                channel.sendMessage("Given number must be greater than 0.").queue();
                 return;
             }
 
@@ -49,7 +55,13 @@ public class SkipCommand extends Command implements IMusicCommand {
         } else {
             channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
         }
+    }
 
+    private void skipNext(Guild guild, TextChannel channel, Member invoker, Message message, String[] args){
+        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        AudioTrack at = player.getPlayingTrack();
+        player.skip();
+        channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();
     }
 
 }
