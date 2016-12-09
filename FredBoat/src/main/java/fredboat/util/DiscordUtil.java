@@ -43,19 +43,19 @@ public class DiscordUtil {
     public static boolean isMainBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MAIN_BOT_ID);
-        return guild.getMember(other) != null;
+        return other != null && guild.getMember(other) != null;
     }
 
     public static boolean isMusicBotPresent(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.MUSIC_BOT_ID);
-        return guild.getMember(other) != null;
+        return other != null && guild.getMember(other) != null;
     }
     
     public static boolean isPatronBotPresentAndOnline(Guild guild) {
         JDA jda = guild.getJDA();
         User other = jda.getUserById(BotConstants.PATRON_BOT_ID);
-        return guild.getMember(other) != null && guild.getMember(other).getOnlineStatus() == OnlineStatus.ONLINE;
+        return other != null && guild.getMember(other) != null && guild.getMember(other).getOnlineStatus() == OnlineStatus.ONLINE;
     }
 
     public static boolean isUserBotCommander(Guild guild, User user) {
