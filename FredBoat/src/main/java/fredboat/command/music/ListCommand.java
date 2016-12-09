@@ -34,12 +34,14 @@ public class ListCommand extends Command implements IMusicCommand {
             int i = 0;
             for (AudioTrack at : player.getRemainingTracks()) {
                 if (i == 0) {
-                    String status = player.isPlaying() ? "[PLAYING] " : "[PAUSED] ";
-                    mb.append(status, MessageBuilder.Formatting.BOLD)
+                    String status = player.isPlaying() ? "\\▶" : "\\\u23F8"; //Escaped play and pause emojis
+                    mb.append("["+(i+1)+"]" , MessageBuilder.Formatting.BOLD)
+                            .append(status + " ")
                             .append(at.getInfo().title)
                             .append("\n");
                 } else {
-                    mb.append(at.getInfo().title)
+                    mb.append("["+(i+1)+"] ", MessageBuilder.Formatting.BOLD)
+                            .append(at.getInfo().title)
                             .append("\n");
                     if (i == 10) {
                         break;
