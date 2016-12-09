@@ -40,8 +40,8 @@ public class ListCommand extends Command implements IMusicCommand {
                             .append(at.getInfo().title)
                             .append("\n");
                 } else {
-                    mb.append("["+(i+1)+"] ", MessageBuilder.Formatting.BOLD)
-                            .append(at.getInfo().title)
+                    mb.append("["+forceTwoDigits(i+1)+"]", MessageBuilder.Formatting.BLOCK)
+                            .append(" " + at.getInfo().title)
                             .append("\n");
                     if (i == 10) {
                         break;

@@ -61,6 +61,10 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             AudioConfiguration.ResamplingQuality quality = FredBoat.distribution == DistributionEnum.PATRON ? AudioConfiguration.ResamplingQuality.HIGH : AudioConfiguration.ResamplingQuality.LOW;
             playerManager.getConfiguration().setResamplingQuality(quality);
             playerManager.enableGcMonitoring();
+
+            if (FredBoat.distribution != DistributionEnum.PATRON && FredBoat.isLavaplayerNodesEnabled()) {
+                playerManager.useRemoteNodes(FredBoat.getLavaplayerNodes());
+            }
         }
     }
 

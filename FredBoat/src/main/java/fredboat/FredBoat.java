@@ -53,6 +53,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -87,6 +88,8 @@ public class FredBoat {
 
     private static EventListenerBoat listenerBot;
     private static EventListenerSelf listenerSelf;
+    private static String[] lavaplayerNodes = new String[64];
+    private static boolean lavaplayerNodesEnabled = false;
 
     private FredBoat() {
     }
@@ -137,8 +140,20 @@ public class FredBoat {
         MALPassword = credsjson.getString("malPassword");
         String carbonHost = credsjson.optString("carbonHost");
 
+        JSONArray nodesArray = credsjson.optJSONArray("lavaplayerNodes");
+        if(nodesArray != null) {
+            lavaplayerNodesEnabled = true;
+            Iterator<Object> itr = nodesArray.iterator();
+            int i = 0;
+            while(itr.hasNext()) {
+                lavaplayerNodes[i] = (String) itr.next();
+                i++;
+            }
+        }
+
         JSONArray gkeys = credsjson.optJSONArray("googleServerKeys");
         if (gkeys != null) {
+            log.info("Using lavaplayer nodes");
             gkeys.forEach((Object str) -> GOOGLE_KEYS.add((String) str));
         }
 
@@ -465,4 +480,11 @@ public class FredBoat {
         return listenerSelf;
     }
 
+    public static String[] getLavaplayerNodes() {
+        return lavaplayerNodes;
+    }
+
+    public static boolean isLavaplayerNodesEnabled() {
+        return lavaplayerNodesEnabled;
+    }
 }
