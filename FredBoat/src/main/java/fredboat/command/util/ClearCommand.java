@@ -40,7 +40,7 @@ public class ClearCommand extends Command {
         }
         
         MessageHistory history = new MessageHistory(channel);
-        List<Message> msgs = null;
+        List<Message> msgs;
         try {
             msgs = history.retrievePast(50).block();
 

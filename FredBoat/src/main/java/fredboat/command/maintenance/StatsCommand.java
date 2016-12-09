@@ -52,7 +52,7 @@ public class StatsCommand extends Command {
 
         str = str + "Shard:                          " + FredBoat.shardId + " of a total of " + FredBoat.numShards + "\n";
         if(DiscordUtil.isMusicBot()){
-            str = str + "Players playing (this shard):    " + PlayerRegistry.getPlayingPlayers().size() + "\n";
+            str = str + "Players playing (this shard):   " + PlayerRegistry.getPlayingPlayers().size() + "\n";
         }
         str = str + "Known servers:                  " + ShardTracker.getGlobalGuildCount() + "\n";
         str = str + "-> In this shard:               " + guild.getJDA().getGuilds().size() + "\n";
