@@ -52,6 +52,25 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
+    public AudioTrack removeAt(int i) {
+        if(queue.size() < i){
+            return null;
+        } else {
+            int i2 = 0;
+            for(Object obj : Arrays.asList(queue.toArray())){
+                if(i == i2){
+                    //noinspection SuspiciousMethodCalls
+                    queue.remove(obj);
+                    return (AudioTrack) obj;
+                }
+                i2++;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<AudioTrack> getAsList() {
         return new ArrayList<>(queue);
     }

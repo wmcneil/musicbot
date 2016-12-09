@@ -17,16 +17,18 @@ import java.util.List;
 
 public interface ITrackProvider {
     
-    public AudioTrack provideAudioTrack(boolean skipped);
+    AudioTrack provideAudioTrack(boolean skipped);
     
-    public abstract AudioTrack getNext();
+    AudioTrack getNext();
+
+    List<AudioTrack> getAsList();
     
-    public abstract List<AudioTrack> getAsList();
+    boolean isEmpty();
     
-    public abstract boolean isEmpty();
+    void add(AudioTrack track);
     
-    public abstract void add(AudioTrack track);
-    
-    public abstract void clear();
+    void clear();
+
+    AudioTrack removeAt(int i);
     
 }

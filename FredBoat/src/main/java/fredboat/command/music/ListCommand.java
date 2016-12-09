@@ -34,9 +34,9 @@ public class ListCommand extends Command implements IMusicCommand {
             int i = 0;
             for (AudioTrack at : player.getRemainingTracks()) {
                 if (i == 0) {
-                    String status = player.isPlaying() ? "\\▶" : "\\\u23F8"; //Escaped play and pause emojis
+                    String status = player.isPlaying() ? " \\▶" : " \\\u23F8"; //Escaped play and pause emojis
                     mb.append("["+(i+1)+"]" , MessageBuilder.Formatting.BOLD)
-                            .append(status + " ")
+                            .append(status)
                             .append(at.getInfo().title)
                             .append("\n");
                 } else {

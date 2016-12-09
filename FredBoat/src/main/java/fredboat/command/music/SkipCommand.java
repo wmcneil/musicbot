@@ -20,6 +20,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 
 public class SkipCommand extends Command implements IMusicCommand {
 
@@ -29,10 +30,24 @@ public class SkipCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
             channel.sendMessage("The queue is empty!").queue();
-        } else {
+        }
+
+        if(args.length == 1){
             AudioTrack at = player.getPlayingTrack();
             player.skip();
-            channel.sendMessage("Skipped " + at.getInfo().title).queue();
+            channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();
+        } else if (args.length == 2 && StringUtils.isNumeric(args[1])) {
+            int givenIndex = Integer.parseInt(args[1]);
+
+            if(player.getRemainingTracks().size() + 1 < givenIndex){
+                channel.sendMessage("Can't remove track number " + givenIndex + " when there are only " + player.getRemainingTracks().size() + "tracks.").queue();
+                return;
+            }
+
+            AudioTrack at = player.getAudioTrackProvider().removeAt(givenIndex - 2);
+            channel.sendMessage("Skipped track #" + givenIndex + ": **" + at.getInfo().title + "**").queue();
+        } else {
+            channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
         }
 
     }
