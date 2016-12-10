@@ -11,6 +11,7 @@
 
 package fredboat.command.music;
 
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -39,6 +40,8 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);
             } else if (at instanceof SoundCloudAudioTrack) {
                 sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
+            } else if (at instanceof HttpAudioTrack) {
+                sendHttpEmbed(channel, (HttpAudioTrack) at);
             } else {
                 sendDefaultResponse(channel, at);
             }
@@ -75,7 +78,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                         + TextUtils.formatTime(at.getPosition())
                         + "/"
                         + TextUtils.formatTime(at.getDuration())
-                        + "]\n\n") //TODO: Gather description, thumbnail, etc
+                        + "]\n\nLoaded from Soundcloud") //TODO: Gather description, thumbnail, etc
                 .setColor(new Color(255, 85, 0))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
@@ -83,12 +86,45 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
+    private void sendHttpEmbed(TextChannel channel, HttpAudioTrack at){
+        String desc = at.getDuration() == Long.MAX_VALUE ?
+                "[LIVE]" :
+                "["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]";
+
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, null, null)
+                .setTitle(at.getInfo().title)
+                .setUrl(at.getIdentifier())
+                .setDescription(desc + "\n\nLoaded from " + at.getIdentifier()) //TODO: Probe data
+                .setColor(new Color(28, 191, 226))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
+    }
+
     private void sendDefaultResponse(TextChannel channel, AudioTrack at){
-        channel.sendMessage("Now playing " + at.getInfo().title + " ["
-                + TextUtils.formatTime(at.getPosition())
-                + "/"
-                + TextUtils.formatTime(at.getDuration())
-                + "]").queue();
+        String desc = at.getDuration() == Long.MAX_VALUE ?
+                "[LIVE]" :
+                "["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]";
+
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, null, null)
+                .setTitle(at.getInfo().title)
+                .setDescription(desc + "\n\nLoaded from " + at.getSourceManager().getSourceName())
+                .setColor(new Color(28, 191, 226))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
     }
 
 }
