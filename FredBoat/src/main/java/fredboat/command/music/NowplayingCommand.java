@@ -11,15 +11,18 @@
 
 package fredboat.command.music;
 
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.TextUtils;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Member;
+import fredboat.util.YoutubeAPI;
+import fredboat.util.YoutubeVideo;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.*;
+import java.awt.Color;
 
 public class NowplayingCommand extends Command implements IMusicCommand {
 
@@ -28,14 +31,45 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild.getId());
         player.setCurrentTC(channel);
         if (player.isPlaying()) {
-            channel.sendMessage("Now playing " + player.getPlayingTrack().getInfo().title + " ["
-            + TextUtils.formatTime(player.getPlayingTrack().getPosition())
-            + "/"
-            + TextUtils.formatTime(player.getPlayingTrack().getDuration())
-            + "]").queue();
+
+            AudioTrack at = player.getPlayingTrack();
+
+            if (at instanceof YoutubeAudioTrack){
+                sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);
+            } else {
+                sendDefaultResponse(channel, at);
+            }
+
         } else {
             channel.sendMessage("Not currently playing anything.").queue();
         }
+    }
+
+    private void sendYoutubeEmbed(TextChannel channel, YoutubeAudioTrack at){
+        YoutubeVideo yv = YoutubeAPI.getVideoFromID(at.getIdentifier(), true);
+
+        MessageEmbed embed = new EmbedBuilder()
+                .setTitle(at.getInfo().title)
+                .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
+                .setDescription("["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]\n\n" + yv.getDescription())
+                .setColor(new Color(205, 32, 31))
+                .setThumbnail("https://i.ytimg.com/vi/" + at.getIdentifier() + "/hqdefault.jpg")
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .setAuthor(yv.getCannelTitle(), yv.getChannelUrl(), yv.getChannelThumbUrl())
+                .build();
+        channel.sendMessage(embed).queue();
+    }
+
+    private void sendDefaultResponse(TextChannel channel, AudioTrack at){
+        channel.sendMessage("Now playing " + at.getInfo().title + " ["
+                + TextUtils.formatTime(at.getPosition())
+                + "/"
+                + TextUtils.formatTime(at.getDuration())
+                + "]").queue();
     }
 
 }

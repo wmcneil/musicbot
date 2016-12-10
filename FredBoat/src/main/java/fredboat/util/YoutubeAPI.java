@@ -74,4 +74,35 @@ public class YoutubeAPI {
         }
     }
 
+    public static YoutubeVideo getVideoFromID(String id, boolean verbose) {
+        if(verbose){
+            JSONObject data = null;
+            try {
+                data = Unirest.get("https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet")
+                        .queryString("id", id)
+                        .queryString("key", FredBoat.getRandomGoogleKey())
+                        .asJson()
+                        .getBody()
+                        .getObject();
+
+                YoutubeVideo vid = new YoutubeVideo();
+                vid.id = data.getJSONArray("items").getJSONObject(0).getString("id");
+                vid.name = data.getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title");
+                vid.duration = data.getJSONArray("items").getJSONObject(0).getJSONObject("contentDetails").getString("duration");
+                vid.description = data.getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description");
+                vid.channelId = data.getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelId");
+                vid.channelTitle = data.getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle");
+
+                return vid;
+            } catch (JSONException ex) {
+                System.err.println(data);
+                throw ex;
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            return getVideoFromID(id);
+        }
+    }
+
 }

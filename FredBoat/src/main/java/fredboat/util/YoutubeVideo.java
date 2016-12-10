@@ -11,14 +11,26 @@
 
 package fredboat.util;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import fredboat.FredBoat;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class YoutubeVideo {
 
-    public String id = null;
-    public String name = null;
-    public String duration = null;//Youtube has strange duration strings suchs as PT2H3M33S
+    private static final Logger log = LoggerFactory.getLogger(YoutubeVideo.class);
+
+    String id = null;
+    String name = null;
+    String duration = null;//Youtube has strange duration strings suchs as PT2H3M33S
+    String description = null;
+    String channelId = null;
+    String channelTitle = null;
 
     public String getId() {
         return id;
@@ -30,6 +42,18 @@ public class YoutubeVideo {
 
     public String getDuration() {
         return duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public String getCannelTitle() {
+        return channelTitle;
     }
 
     public int getDurationHours() {
@@ -70,6 +94,33 @@ public class YoutubeVideo {
             return forceTwoDigits(getDurationMinutes()) + ":" + forceTwoDigits(getDurationSeconds());
         } else {
             return forceTwoDigits(getDurationHours()) + ":" + forceTwoDigits(getDurationMinutes()) + ":" + forceTwoDigits(getDurationSeconds());
+        }
+    }
+
+    public String getChannelUrl() {
+        return "https://www.youtube.com/channel/" + channelId;
+    }
+
+    public String getChannelThumbUrl() {
+        try {
+            JSONObject json = Unirest.get("https://www.googleapis.com/youtube/v3/channels?part=snippet&fields=items(snippet/thumbnails)")
+                    .queryString("id", channelId)
+                    .queryString("key", FredBoat.getRandomGoogleKey())
+                    .asJson()
+                    .getBody()
+                    .getObject();
+
+            log.debug(json.toString());
+
+            return json.getJSONArray("items")
+                    .getJSONObject(0)
+                    .getJSONObject("snippet")
+                    .getJSONObject("thumbnails")
+                    .getJSONObject("default")
+                    .getString("url");
+        } catch (UnirestException e) {
+            log.error("Failed to get channel thumbnail", e);
+            return null;
         }
     }
 
