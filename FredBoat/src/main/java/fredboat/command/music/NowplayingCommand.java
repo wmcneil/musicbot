@@ -83,22 +83,6 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendSoundcloudEmbed(TextChannel channel, SoundCloudAudioTrack at) {
-        MessageEmbed embed = new EmbedBuilder()
-                .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
-                .setDescription("["
-                        + TextUtils.formatTime(at.getPosition())
-                        + "/"
-                        + TextUtils.formatTime(at.getDuration())
-                        + "]\n\n") //TODO: Gather description, thumbnail, etc
-                .setColor(new Color(255, 85, 0))
-                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
-                .build();
-
-        channel.sendMessage(embed).queue();
-    }
-
     private void sendDefaultResponse(TextChannel channel, AudioTrack at){
         channel.sendMessage("Now playing " + at.getInfo().title + " ["
                 + TextUtils.formatTime(at.getPosition())
