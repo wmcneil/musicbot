@@ -31,8 +31,12 @@ public class JoinCommand extends Command implements IMusicCommand {
                         .queue();
             }
         } catch (IllegalStateException ex) {
-            channel.sendMessage("An error occurred. Couldn't join " + player.getChannel().getName() + " because I am already trying to connect to that channel. Please try again.")
+            if(vc != null) {
+                channel.sendMessage("An error occurred. Couldn't join " + vc.getName() + " because I am already trying to connect to that channel. Please try again.")
                         .queue();
+            } else {
+                throw ex;
+            }
         }
     }
 
