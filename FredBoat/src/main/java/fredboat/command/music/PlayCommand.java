@@ -130,7 +130,7 @@ public class PlayCommand extends Command implements IMusicCommand {
                 builder.append("\n**")
                         .append(String.valueOf(i))
                         .append(":** ")
-                        .append(vid.name)
+                        .append(vid.getName())
                         .append(" (")
                         .append(vid.getDurationFormatted())
                         .append(")");
