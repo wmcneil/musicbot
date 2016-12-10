@@ -11,8 +11,10 @@
 
 package fredboat.command.music;
 
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
@@ -42,8 +44,12 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
             } else if (at instanceof HttpAudioTrack) {
                 sendHttpEmbed(channel, (HttpAudioTrack) at);
+            } else if (at instanceof BandcampAudioTrack) {
+                sendBandcampResponse(channel, (BandcampAudioTrack) at);
+            } else if (at instanceof TwitchStreamAudioTrack) {
+                sendTwitchEmbed(channel, (TwitchStreamAudioTrack) at);
             } else {
-                sendDefaultResponse(channel, at);
+                sendDefaultEmbed(channel, at);
             }
 
         } else {
@@ -86,6 +92,38 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
+    private void sendBandcampResponse(TextChannel channel, BandcampAudioTrack at){
+        String desc = at.getDuration() == Long.MAX_VALUE ?
+                "[LIVE]" :
+                "["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]";
+
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, null, null)
+                .setTitle(at.getInfo().title)
+                .setDescription(desc + "\n\nLoaded from Bandcamp")
+                .setColor(new Color(99, 154, 169))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
+    }
+
+    private void sendTwitchEmbed(TextChannel channel, TwitchStreamAudioTrack at){
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
+                .setTitle(at.getInfo().title)
+                .setDescription("Loaded from Twitch")
+                .setColor(new Color(100, 65, 164))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
+    }
+
     private void sendHttpEmbed(TextChannel channel, HttpAudioTrack at){
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
@@ -107,7 +145,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendDefaultResponse(TextChannel channel, AudioTrack at){
+    private void sendDefaultEmbed(TextChannel channel, AudioTrack at){
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
