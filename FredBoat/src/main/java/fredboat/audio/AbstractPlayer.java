@@ -62,7 +62,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             playerManager.getConfiguration().setResamplingQuality(quality);
             playerManager.enableGcMonitoring();
 
-            if (FredBoat.distribution != DistributionEnum.PATRON && FredBoat.isLavaplayerNodesEnabled()) {
+            if (FredBoat.distribution != DistributionEnum.PATRON && FredBoat.distribution != DistributionEnum.BETA && FredBoat.isLavaplayerNodesEnabled()) {
                 playerManager.useRemoteNodes(FredBoat.getLavaplayerNodes());
             }
         }
