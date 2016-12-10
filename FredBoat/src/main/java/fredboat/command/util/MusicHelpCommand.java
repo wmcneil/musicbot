@@ -16,24 +16,35 @@ import fredboat.command.fun.TextCommand;
 public class MusicHelpCommand extends TextCommand {
 
     public static final String MUSIC
-            ="**This is the list of all the music commands this bot can execute:**.\n"
-            +"**;;play**        Plays a track. You can either provide an url to a video or track (;;play <url>) or use it to search on youtube (;;play rick roll).\n"
-            +"**;;list**        Display a list of the current tracks in the playlist.\n"
-            +"**;;nowplaying    Displays the currently playing track.\n"
-            +"**;;skip**        Skips the current track. Please use in moderation.\n"
-            +"**;;stop**        Stops the current track and ***clears*** the playlist. Reserved for moderators.\n"
-            +"**;;pause**       Pauses the player.\n"
-            +"**;;unpause**     Unpauses the player.\n"
-            +"**;;join**        Makes the bot join your current voice channel.\n"
-            +"**;;leave**       Makes the bot leave the current voice channel.\n"
-            +"**;;repeat**      Toggles repeat mode for the current track.\n"
-            +"**;;shuffle**     Toggles shuffle mode for the current queue.\n"
-            +"**;;volume**      Changes the volume, volumes are 0-150, default volume is 100.\n"
-            +"**;;music**       Posts this message.";
+            ="```md\n" +
+            "< FredBoat Music Commands >\n" +
+            ";;play <url>\n" +
+            "#Plays music from the given URL. See supported sources below.\n" +
+            ";;list\n" +
+            "#Displays a list of the current songs in the playlist.\n" +
+            ";;nowplaying\n" +
+            ";;np\n" +
+            "#Displays the currently playing song.\n" +
+            ";;skip [n]\n" +
+            "#Skip the current song or the `n`th song in the qeueu. Please use in moderation.\n" +
+            ";;stop\n" +
+            "#Stop the player and clear the playlist. Reserved for moderators.\n" +
+            ";;pause\n" +
+            "#Pause the player.\n" +
+            ";;unpause\n" +
+            "#Unpause the player.\n" +
+            ";;join\n" +
+            "#Makes the bot join your current voice channel.\n" +
+            ";;leave\n" +
+            "#Makes the bot leave the current voice channel.\n" +
+            ";;repeat\n" +
+            "#Toggles repeat mode for the current song.\n" +
+            ";;shuffle\n" +
+            "#Toggles shuffle mode for the current queue.\n" +
+            ";;volume <vol>\n" +
+            "#Changes the volume. Values are 0-150 and 100 is the default.```";
 
     public MusicHelpCommand() {
         super(MUSIC);
     }
 }
-
-//gib dem pats to me
