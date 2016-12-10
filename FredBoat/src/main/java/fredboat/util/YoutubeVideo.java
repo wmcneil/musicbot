@@ -110,7 +110,7 @@ public class YoutubeVideo {
                     .getBody()
                     .getObject();
 
-            log.debug(json.toString());
+            log.debug("Channel thumb response", json);
 
             return json.getJSONArray("items")
                     .getJSONObject(0)

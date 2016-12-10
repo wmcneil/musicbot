@@ -11,6 +11,7 @@
 
 package fredboat.command.music;
 
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
@@ -34,8 +35,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
             AudioTrack at = player.getPlayingTrack();
 
-            if (at instanceof YoutubeAudioTrack){
+            if (at instanceof YoutubeAudioTrack) {
                 sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);
+            } else if (at instanceof SoundCloudAudioTrack) {
+                sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
             } else {
                 sendDefaultResponse(channel, at);
             }
@@ -58,9 +61,41 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                         + "]\n\n" + yv.getDescription())
                 .setColor(new Color(205, 32, 31))
                 .setThumbnail("https://i.ytimg.com/vi/" + at.getIdentifier() + "/hqdefault.jpg")
-                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .setAuthor(yv.getCannelTitle(), yv.getChannelUrl(), yv.getChannelThumbUrl())
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
+        channel.sendMessage(embed).queue();
+    }
+
+    private void sendSoundcloudEmbed(TextChannel channel, SoundCloudAudioTrack at) {
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, null, null)
+                .setTitle(at.getInfo().title)
+                .setDescription("["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]\n\n") //TODO: Gather description, thumbnail, etc
+                .setColor(new Color(255, 85, 0))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
+    }
+
+    private void sendSoundcloudEmbed(TextChannel channel, SoundCloudAudioTrack at) {
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, null, null)
+                .setTitle(at.getInfo().title)
+                .setDescription("["
+                        + TextUtils.formatTime(at.getPosition())
+                        + "/"
+                        + TextUtils.formatTime(at.getDuration())
+                        + "]\n\n") //TODO: Gather description, thumbnail, etc
+                .setColor(new Color(255, 85, 0))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
         channel.sendMessage(embed).queue();
     }
 
