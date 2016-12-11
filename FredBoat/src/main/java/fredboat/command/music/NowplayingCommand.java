@@ -61,22 +61,29 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
     private void sendYoutubeEmbed(TextChannel channel, YoutubeAudioTrack at){
         YoutubeVideo yv = YoutubeAPI.getVideoFromID(at.getIdentifier(), true);
-        String desc = "["
+        String timeField = "["
                 + TextUtils.formatTime(at.getPosition())
                 + "/"
                 + TextUtils.formatTime(at.getDuration())
-                + "]\n\n" + yv.getDescription();
+                + "]";
+
+        String desc = yv.getDescription();
 
         //Shorten it to about 400 chars if it's too long
         if(desc.length() > 450){
             desc = TextUtils.substringPreserveWords(desc, 400, " [...]");
         }
 
-        MessageEmbed embed = new EmbedBuilder()
+        EmbedBuilder eb = new EmbedBuilder()
                 .setTitle(at.getInfo().title)
                 .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
-                .setDescription(desc)
-                .setColor(new Color(205, 32, 31))
+                .addField("Time", timeField, true);
+
+        if(desc != null && !desc.equals("")) {
+                eb.addField("Description", desc, false);
+        }
+
+        MessageEmbed embed = eb.setColor(new Color(205, 32, 31))
                 .setThumbnail("https://i.ytimg.com/vi/" + at.getIdentifier() + "/hqdefault.jpg")
                 .setAuthor(yv.getCannelTitle(), yv.getChannelUrl(), yv.getChannelThumbUrl())
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
