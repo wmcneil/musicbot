@@ -122,8 +122,16 @@ public class PlayCommand extends Command implements IMusicCommand {
         if (vids.isEmpty()) {
             outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
         } else {
+            //Clean up any last search by this user
+            GuildPlayer player = PlayerRegistry.get(guild.getId());
+
+            VideoSelection oldSelection = player.selections.get(invoker.getUser().getId());
+            if(oldSelection != null) {
+                oldSelection.getOutMsg().deleteMessage().queue();
+            }
+
             MessageBuilder builder = new MessageBuilder();
-            builder.append("**Please select a video with the `;;select n` command:**");
+            builder.append("**Please select a video with the `;;play n` command:**");
 
             int i = 1;
             for (YoutubeVideo vid : vids) {
@@ -139,8 +147,8 @@ public class PlayCommand extends Command implements IMusicCommand {
 
             outMsg.editMessage(builder.build().getRawContent()).queue();
 
-            GuildPlayer player = PlayerRegistry.get(guild.getId());
             player.setCurrentTC(channel);
+
             player.selections.put(invoker.getUser().getId(), new VideoSelection(vids, outMsg));
         }
     }
