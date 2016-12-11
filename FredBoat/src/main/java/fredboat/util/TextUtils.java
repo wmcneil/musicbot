@@ -19,6 +19,9 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.*;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class TextUtils {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(TextUtils.class);
@@ -123,5 +126,17 @@ public class TextUtils {
 
     private static String forceTwoDigits(int i) {
         return i < 10 ? "0" + i : Integer.toString(i);
+    }
+
+    public static String substringPreserveWords(String str, int len, String appendOnMatch){
+        Pattern pattern = Pattern.compile("^([\\w\\W]{" + len + "}\\S+?)\\s");
+        Matcher matcher = pattern.matcher(str);
+
+        if(matcher.find()){
+            return matcher.group(1) + appendOnMatch;
+        } else {
+            //Oh well
+            return str;
+        }
     }
 }

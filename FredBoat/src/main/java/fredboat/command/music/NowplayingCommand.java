@@ -26,6 +26,8 @@ import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
+
+import javax.xml.soap.Text;
 import java.awt.Color;
 
 public class NowplayingCommand extends Command implements IMusicCommand {
@@ -59,15 +61,21 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
     private void sendYoutubeEmbed(TextChannel channel, YoutubeAudioTrack at){
         YoutubeVideo yv = YoutubeAPI.getVideoFromID(at.getIdentifier(), true);
+        String desc = "["
+                + TextUtils.formatTime(at.getPosition())
+                + "/"
+                + TextUtils.formatTime(at.getDuration())
+                + "]\n\n" + yv.getDescription();
+
+        //Shorten it to about 400 chars if it's too long
+        if(desc.length() > 450){
+            desc = TextUtils.substringPreserveWords(desc, 400, " [...]");
+        }
 
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle(at.getInfo().title)
                 .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
-                .setDescription("["
-                        + TextUtils.formatTime(at.getPosition())
-                        + "/"
-                        + TextUtils.formatTime(at.getDuration())
-                        + "]\n\n" + yv.getDescription())
+                .setDescription(desc)
                 .setColor(new Color(205, 32, 31))
                 .setThumbnail("https://i.ytimg.com/vi/" + at.getIdentifier() + "/hqdefault.jpg")
                 .setAuthor(yv.getCannelTitle(), yv.getChannelUrl(), yv.getChannelThumbUrl())
