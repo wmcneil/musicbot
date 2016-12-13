@@ -11,6 +11,9 @@
 
 package fredboat.util;
 
+import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -24,6 +27,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class DiscordUtil {
+
+    public static final Route GATEWAY_BOT = new Route(HttpMethod.GET, "gateway", new String[0])
 
     private DiscordUtil() {
     }
@@ -86,6 +91,14 @@ public class DiscordUtil {
                     request.onFailure(response);
             }
         }.queue();
+    }
+
+    public static int getRecommendedShardCount(String token) throws UnirestException {
+        return Unirest.get(Requester.DISCORD_API_PREFIX + "gateway/bot")
+                .asJson()
+                .getBody()
+                .getObject()
+                .getInt("shards");
     }
 
 }

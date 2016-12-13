@@ -56,8 +56,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FredBoat {
+
+    private static final ConcurrentHashMap<Integer, FredBoat> shards = new ConcurrentHashMap<>();
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
     private static JSONObject config = null;
