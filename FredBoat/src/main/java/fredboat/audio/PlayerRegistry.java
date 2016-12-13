@@ -22,21 +22,16 @@ public class PlayerRegistry {
 
     private static final HashMap<String, GuildPlayer> REGISTRY = new HashMap<>();
     public static final float DEFAULT_VOLUME = 1f;
-    public static JDA jda;
-
-    public static void init(JDA api) {
-        jda = api;
-    }
 
     public static void put(String k, GuildPlayer v) {
         REGISTRY.put(k, v);
     }
 
     public static GuildPlayer get(Guild guild) {
-        return get(guild.getId());
+        return get(guild.getJDA(), guild.getId());
     }
 
-    public static GuildPlayer get(String k) {
+    public static GuildPlayer get(JDA jda, String k) {
         GuildPlayer player = REGISTRY.get(k);
         if (player == null) {
             player = new GuildPlayer(jda, jda.getGuildById(k));
@@ -47,12 +42,12 @@ public class PlayerRegistry {
     }
 
     public static GuildPlayer getExisting(Guild guild) {
-        return getExisting(guild.getId());
+        return getExisting(guild.getJDA(), guild.getId());
     }
 
-    public static GuildPlayer getExisting(String k) {
+    public static GuildPlayer getExisting(JDA jda, String k) {
         if (REGISTRY.containsKey(k)) {
-            return get(k);
+            return get(jda, k);
         }
         return null;
     }
@@ -78,11 +73,11 @@ public class PlayerRegistry {
     }
 
     public static void destroyPlayer(Guild g) {
-        destroyPlayer(g.getId());
+        destroyPlayer(g.getJDA(), g.getId());
     }
 
-    public static void destroyPlayer(String g) {
-        GuildPlayer player = getExisting(g);
+    public static void destroyPlayer(JDA jda, String g) {
+        GuildPlayer player = getExisting(jda, g);
         if (player != null) {
             player.destroy();
             remove(g);

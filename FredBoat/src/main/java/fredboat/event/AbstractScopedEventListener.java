@@ -37,7 +37,7 @@ public abstract class AbstractScopedEventListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        FredBoat.init();
+        FredBoat.onInit();
     }
 
     @Override

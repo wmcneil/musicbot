@@ -28,8 +28,6 @@ import java.util.List;
 
 public class DiscordUtil {
 
-    public static final Route GATEWAY_BOT = new Route(HttpMethod.GET, "gateway", new String[0])
-
     private DiscordUtil() {
     }
 
