@@ -15,15 +15,13 @@ import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.abs.Command;
-import fredboat.sharding.ShardTracker;
-import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Member;
 
 public class StatsCommand extends Command {
 
@@ -35,7 +33,7 @@ public class StatsCommand extends Command {
         int mins = (int) ((totalSecs / 60) % 60);
         int secs = (int) (totalSecs % 60);
         
-        String str = " This shard has been running for "
+        String str = " This bot has been running for "
                 + days + " days, "
                 + hours + " hours, "
                 + mins + " minutes and "
@@ -50,15 +48,13 @@ public class StatsCommand extends Command {
 
         str = str + "\n----------\n\n";
 
-        str = str + "Shard:                          " + FredBoat.shardId + " of a total of " + FredBoat.numShards + "\n";
+        str = str + "Shards:                         " + FredBoat.numShards + "\n";
         if(DiscordUtil.isMusicBot()){
             str = str + "Players playing (this shard):   " + PlayerRegistry.getPlayingPlayers().size() + "\n";
         }
-        str = str + "Known servers:                  " + ShardTracker.getGlobalGuildCount() + "\n";
-        str = str + "-> In this shard:               " + guild.getJDA().getGuilds().size() + "\n";
-        str = str + "Known users in servers:         " + ShardTracker.getGlobalUserCount()+ "\n";
-        str = str + "-> In this shard:               " + guild.getJDA().getUsers().size() + "\n";
-        str = str + "Is beta:                        " + BotConstants.IS_BETA + "\n";
+        str = str + "Known servers:                  " + FredBoat.getAllGuilds().size() + "\n";
+        str = str + "Known users in servers:         " + FredBoat.getAllUsersAsMap().size() + "\n";
+        str = str + "Distribution:                   " + FredBoat.distribution + "\n";
         str = str + "JDA responses total:            " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:                    " + JDAInfo.VERSION;
         

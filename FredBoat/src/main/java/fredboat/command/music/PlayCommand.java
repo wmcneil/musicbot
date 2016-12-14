@@ -20,10 +20,10 @@ import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ public class PlayCommand extends Command implements IMusicCommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (!message.getAttachments().isEmpty()) {
-            GuildPlayer player = PlayerRegistry.get(guild.getId());
+            GuildPlayer player = PlayerRegistry.get(guild);
             player.setCurrentTC(channel);
             
             for (Attachment atc : message.getAttachments()) {
@@ -73,7 +73,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             return;
         }
 
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
 
         player.queue(args[1], channel, invoker);
@@ -87,7 +87,7 @@ public class PlayCommand extends Command implements IMusicCommand {
     }
 
     private void handleNoArguments(Guild guild, TextChannel channel, Member invoker, Message message) {
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         if (player.isQueueEmpty()) {
             channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>").queue();
         } else if (player.isPlaying()) {
@@ -123,7 +123,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
         } else {
             //Clean up any last search by this user
-            GuildPlayer player = PlayerRegistry.get(guild.getId());
+            GuildPlayer player = PlayerRegistry.get(guild);
 
             VideoSelection oldSelection = player.selections.get(invoker.getUser().getId());
             if(oldSelection != null) {

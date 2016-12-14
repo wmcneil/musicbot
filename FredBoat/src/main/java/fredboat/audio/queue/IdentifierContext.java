@@ -13,7 +13,6 @@ package fredboat.audio.queue;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
 
 public class IdentifierContext {
 

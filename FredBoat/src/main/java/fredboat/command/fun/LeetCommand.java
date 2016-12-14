@@ -19,9 +19,9 @@ import fredboat.commandmeta.abs.ICommand;
 import fredboat.event.EventListenerBoat;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import java.io.UnsupportedEncodingException;

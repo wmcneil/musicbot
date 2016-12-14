@@ -27,14 +27,13 @@ import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
 
-import javax.xml.soap.Text;
-import java.awt.Color;
+import java.awt.*;
 
 public class NowplayingCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.isPlaying()) {
 

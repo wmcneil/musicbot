@@ -48,10 +48,8 @@ public class LuaParser {
         globals.load(new StringLib());
         globals.load(new CoroutineLib());
         globals.load(new JseMathLib());
-        //globals.load(new JseIoLib());
         globals.load(new JseOsLib());
-        //globals.load(new LuajavaLib());
-        globals.load(new LuaDiscordLib(FredBoat.jdaBot));
+        //globals.load(new LuaDiscordLib(FredBoat.jdaBot));
 
         globals.set("require", LuaValue.NIL);
         globals.set("package", LuaValue.NIL);

@@ -12,7 +12,10 @@
 package fredboat.commandmeta;
 
 import fredboat.commandmeta.abs.ICommand;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 /**
  *
