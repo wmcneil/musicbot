@@ -250,24 +250,10 @@ public class FredBoat {
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
         if (!BotConstants.IS_BETA) {
+            //TODO: Fix this
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
-        }
-
-        if (!carbonHost.equals("")) {
-            //Determine metric name
-            String metricName = "beta";
-            if (!BotConstants.IS_BETA) {
-                metricName = DiscordUtil.isMusicBot() ? "music" : "production";
-            }
-
-            CarbonAgent carbonAgent = new CarbonAgent(jdaBot, carbonHost, metricName, !BotConstants.IS_BETA);
-            carbonAgent.setDaemon(true);
-            carbonAgent.start();
-            log.info("Started reporting to carbon-cache at " + carbonHost + " with metric name " + metricName + ".");
-        } else {
-            log.info("No carbon host configured. Skipping carbon daemon.");
         }
     }
 
