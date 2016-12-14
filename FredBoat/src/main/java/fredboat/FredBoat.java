@@ -11,6 +11,7 @@
 
 package fredboat;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonAgent;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.audio.MusicPersistenceHandler;
@@ -56,10 +57,12 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FredBoat {
-    
+
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
 
-    private static final ConcurrentHashMap<Integer, FredBoat> shards = new ConcurrentHashMap<>();
+    private static final int SHARD_CREATION_SLEEP_INTERVAL = 5100;
+
+    private static final ArrayList<FredBoat> shards = new ArrayList<>();
     private static volatile JDA jdaSelf;
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
@@ -75,13 +78,15 @@ public class FredBoat {
     public static int numShards = 1;
 
     /* Credentials */
-    private static JSONObject credsjson = null;
+    private static JSONObject credsjson;
     private static String accountToken;
+    private static String clientToken;
     public static String mashapeKey;
     public static String MALPassword;
     private final static List<String> GOOGLE_KEYS = new ArrayList<>();
     private static String[] lavaplayerNodes = new String[64];
     private static boolean lavaplayerNodesEnabled = false;
+    private static String carbonKey;
 
     private JDA jdaBot;
 
@@ -103,12 +108,11 @@ public class FredBoat {
                     success = true;
                 } catch (RateLimitedException e) {
                     log.warn("Got rate limited while building bot JDA instance! Retrying...", e);
-                    Thread.sleep(5000);
+                    Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to start JDA", e);
-            FredBoat.shutdown(-1);
+            throw new RuntimeException("Failed to start JDA shard " + shardId, e);
         }
 
     }
@@ -129,19 +133,12 @@ public class FredBoat {
             scopes = 0x110;
         }
 
-        try {
-            shardId = Integer.parseInt(args[1]);
-            numShards = Integer.parseInt(args[2]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-            log.info("Invalid shards, defaulting to 0 of 1 shards");
-        }
-
         log.info("Starting with scopes:"
                 + "\n\tMain: " + ((scopes & 0x100) == 0x100)
                 + "\n\tMusic: " + ((scopes & 0x010) == 0x010)
                 + "\n\tSelf: " + ((scopes & 0x001) == 0x001));
 
-        log.info("Starting as shard " + shardId + " of " + numShards);
+        log.info("JDA version:\t" + JDAInfo.VERSION);
 
         //Load credentials and config files
         InputStream is = new FileInputStream(new File("./credentials.json"));
@@ -154,10 +151,10 @@ public class FredBoat {
         config = new JSONObject(scanner.useDelimiter("\\A").next());
         scanner.close();
 
-        mashapeKey = credsjson.getString("mashapeKey");
-        String clientToken = credsjson.getString("clientToken");
-        MALPassword = credsjson.getString("malPassword");
-        String carbonHost = credsjson.optString("carbonHost");
+        mashapeKey = credsjson.optString("mashapeKey");
+        clientToken = credsjson.optString("clientToken");
+        MALPassword = credsjson.optString("malPassword");
+        carbonKey = credsjson.getString("carbonKey");
 
         JSONArray nodesArray = credsjson.optJSONArray("lavaplayerNodes");
         if(nodesArray != null) {
@@ -174,13 +171,6 @@ public class FredBoat {
         if (gkeys != null) {
             log.info("Using lavaplayer nodes");
             gkeys.forEach((Object str) -> GOOGLE_KEYS.add((String) str));
-        }
-
-        if (credsjson.has("scopePasswords")) {
-            JSONObject scopePasswords = credsjson.getJSONObject("scopePasswords");
-            for (String k : scopePasswords.keySet()) {
-                scopePasswords.put(k, scopePasswords.getString(k));
-            }
         }
 
         if (config.optBoolean("patron")) {
@@ -200,14 +190,6 @@ public class FredBoat {
         listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
 
         /* Init JDA */
-        //Doing increments here because concurrency
-        if ((scopes & 0x110) != 0) {
-            readyEventsRequired++;
-        }
-
-        if ((scopes & 0x001) != 0) {
-            readyEventsRequired++;
-        }
 
         if ((scopes & 0x110) != 0) {
             initBotShards();
@@ -234,24 +216,39 @@ public class FredBoat {
             }
         }
 
-        /* JDA initialising */
-        log.info("JDA version:\t" + JDAInfo.VERSION);
-
         //Initialise JCA
         String cbUser = credsjson.getString("cbUser");
         String cbKey = credsjson.getString("cbKey");
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
-        if (!BotConstants.IS_BETA) {
+        if (distribution == DistributionEnum.MAIN && carbonKey != null) {
             //TODO: Fix this
-            CarbonitexAgent carbonitexAgent = new CarbonitexAgent(jdaBot, credsjson.getString("carbonKey"));
+            CarbonitexAgent carbonitexAgent = new CarbonitexAgent(carbonKey);
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
     }
 
     private static void initBotShards() {
-        numShards = DiscordUtil.getRecommendedShardCount()
+        try {
+            numShards = DiscordUtil.getRecommendedShardCount(accountToken);
+        } catch (UnirestException e) {
+            throw new RuntimeException("Unable to get recommended shard count!", e);
+        }
+
+        log.info("Discord recommends " + numShards + " shard(s)");
+
+        for(int i = 0; i < numShards; i++){
+            shards.add(i, new FredBoat(i));
+            try {
+                Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Got interrupted while setting up bot shards!", e);
+            }
+        }
+
+        log.info(numShards + " shards have been created");
+
     }
 
     public void onInit() {
