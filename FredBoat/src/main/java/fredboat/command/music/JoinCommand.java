@@ -21,7 +21,7 @@ public class JoinCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         VoiceChannel vc = player.getUserCurrentVoiceChannel(invoker);
         player.setCurrentTC(channel);
         try {

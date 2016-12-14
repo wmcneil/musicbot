@@ -26,7 +26,7 @@ public class SkipCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
             channel.sendMessage("The queue is empty!").queue();
@@ -58,7 +58,7 @@ public class SkipCommand extends Command implements IMusicCommand {
     }
 
     private void skipNext(Guild guild, TextChannel channel, Member invoker, Message message, String[] args){
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         AudioTrack at = player.getPlayingTrack();
         player.skip();
         channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();

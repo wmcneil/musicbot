@@ -32,7 +32,7 @@ public class SelectCommand extends Command implements IMusicCommand {
     }
 
     static void select(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild.getId());
+        GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.selections.containsKey(invoker.getUser().getId())) {
             VideoSelection selection = player.selections.get(invoker.getUser().getId());
