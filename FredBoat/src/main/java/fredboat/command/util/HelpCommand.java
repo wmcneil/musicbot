@@ -15,9 +15,9 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicBackupCommand;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class HelpCommand extends Command implements IMusicBackupCommand {

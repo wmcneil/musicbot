@@ -11,7 +11,6 @@
 
 package fredboat.util;
 
-import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;

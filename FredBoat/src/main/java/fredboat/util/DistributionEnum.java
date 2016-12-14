@@ -11,9 +11,6 @@
 
 package fredboat.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum DistributionEnum {
     MAIN("production"),
     MUSIC("music"),
