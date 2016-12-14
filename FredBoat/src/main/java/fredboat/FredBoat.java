@@ -28,6 +28,8 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDAInfo;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.utils.SimpleLog;
@@ -41,10 +43,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class FredBoat {
 
@@ -214,7 +213,6 @@ public class FredBoat {
         jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
 
         if (distribution == DistributionEnum.MAIN && carbonKey != null) {
-            //TODO: Fix this
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(carbonKey);
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
@@ -296,5 +294,37 @@ public class FredBoat {
 
     public static boolean isLavaplayerNodesEnabled() {
         return lavaplayerNodesEnabled;
+    }
+
+    /* Sharding */
+
+    public JDA getJda() {
+        return jdaBot;
+    }
+
+    public static List<FredBoat> getShards() {
+        return shards;
+    }
+
+    public static List<Guild> getAllGuilds() {
+        ArrayList<Guild> list = new ArrayList<>();
+
+        for (FredBoat fb : shards) {
+            list.addAll(fb.getJda().getGuilds());
+        }
+
+        return list;
+    }
+
+    public static Map<String, User> getAllUsersAsMap() {
+        HashMap<String, User> map = new HashMap<>();
+
+        for (FredBoat fb : shards) {
+            for (User usr : fb.getJda().getUsers()) {
+                map.put(usr.getId(), usr);
+            }
+        }
+
+        return map;
     }
 }
