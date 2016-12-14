@@ -71,7 +71,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         //Shorten it to about 400 chars if it's too long
         if(desc.length() > 450){
-            desc = TextUtils.substringPreserveWords(desc, 400, " [...]");
+            desc = TextUtils.substringPreserveWords(desc, 400) + " [...]";
         }
 
         EmbedBuilder eb = new EmbedBuilder()
