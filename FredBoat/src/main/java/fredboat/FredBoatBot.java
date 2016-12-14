@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 public class FredBoatBot extends FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoatBot.class);
+    private final int shardId;
 
     FredBoatBot(int shardId) {
+        this.shardId = shardId;
 
         log.info("Building shard " + shardId);
 
@@ -38,6 +40,10 @@ public class FredBoatBot extends FredBoat {
             throw new RuntimeException("Failed to start JDA shard " + shardId, e);
         }
 
+    }
+
+    public int getShardId() {
+        return shardId;
     }
 
 }

@@ -23,6 +23,7 @@ import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
 import frederikam.jca.JCABuilder;
+import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Guild;
@@ -87,8 +88,8 @@ public abstract class FredBoat {
         try {
             scopes = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-            log.info("Invalid scope, defaulting to scopes 0x101");
-            scopes = 0x110;
+            log.info("Invalid scope, defaulting to scopes 0x111");
+            scopes = 0x111;
         }
 
         log.info("Starting with scopes:"
@@ -192,7 +193,7 @@ public abstract class FredBoat {
     }
 
     public static void onInit(ReadyEvent readyEvent) {
-        log.info("Received ready event for " + readyEvent.getJDA().getShardInfo().getShardString());
+        log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
 
         //Commands
         CommandInitializer.initCommands();
@@ -280,5 +281,55 @@ public abstract class FredBoat {
 
     public static FredBoatClient getClient() {
         return fbClient;
+    }
+
+    public static FredBoat getInstance(JDA jda) {
+        if(jda.getAccountType() == AccountType.CLIENT) {
+            return fbClient;
+        } else {
+            int sId = jda.getShardInfo() == null ? 0 : jda.getShardInfo().getShardId();
+
+            for(FredBoat fb : shards) {
+                if(((FredBoatBot) fb).getShardId() == sId) {
+                    return fb;
+                }
+            }
+        }
+
+        throw new IllegalStateException("Attempted to get instance for JDA shard that is not indexed");
+    }
+
+    public ShardInfo getShardInfo() {
+        int sId = jda.getShardInfo() == null ? 0 : jda.getShardInfo().getShardId();
+
+        if(jda.getAccountType() == AccountType.CLIENT) {
+            return new ShardInfo(0, 1);
+        } else {
+            return new ShardInfo(sId, numShards);
+        }
+    }
+
+    public class ShardInfo {
+
+        int shardId;
+        int shardTotal;
+
+        ShardInfo(int shardId, int shardTotal) {
+            this.shardId = shardId;
+            this.shardTotal = shardTotal;
+        }
+
+        public int getShardId() {
+            return this.shardId;
+        }
+
+        public int getShardTotal() {
+            return this.shardTotal;
+        }
+
+        public String getShardString() {
+            return "[" + this.shardId + " / " + this.shardTotal + "]";
+        }
+
     }
 }
