@@ -48,7 +48,7 @@ public class StatsCommand extends Command {
 
         str = str + "\n----------\n\n";
 
-        str = str + "Shards:                         " + FredBoat.numShards + "\n";
+        str = str + "Sharding:                       " + FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString() + "\n";
         if(DiscordUtil.isMusicBot()){
             str = str + "Players playing (this shard):   " + PlayerRegistry.getPlayingPlayers().size() + "\n";
         }
