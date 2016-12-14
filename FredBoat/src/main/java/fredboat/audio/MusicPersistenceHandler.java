@@ -41,7 +41,13 @@ public class MusicPersistenceHandler {
     }
 
     public static void handlePreShutdown(int code) {
-        JDA jda = FredBoat.jdaBot;
+        for(FredBoat fb : FredBoat.getShards()){
+            handlePreShutdown(code, fb);
+        }
+    }
+
+    public static void handlePreShutdown(int code, FredBoat fb) {
+        JDA jda = fb.getJda();
 
         File dir = new File("music_persistence");
         if (!dir.exists()) {
@@ -104,7 +110,13 @@ public class MusicPersistenceHandler {
     }
 
     public static void reloadPlaylists() {
-        JDA jda = FredBoat.jdaBot;
+        for(FredBoat fb : FredBoat.getShards()){
+            reloadPlaylists(fb);
+        }
+    }
+
+    public static void reloadPlaylists(FredBoat fb) {
+        JDA jda = fb.getJda();
 
         File dir = new File("music_persistence");
         if (!dir.exists()) {
@@ -121,7 +133,7 @@ public class MusicPersistenceHandler {
                 JSONObject data = new JSONObject(scanner.useDelimiter("\\A").next());
                 scanner.close();
 
-                GuildPlayer player = PlayerRegistry.get(gId);
+                GuildPlayer player = PlayerRegistry.get(jda, gId);
 
                 boolean isPaused = data.getBoolean("isPaused");
                 final JSONArray sources = data.getJSONArray("sources");

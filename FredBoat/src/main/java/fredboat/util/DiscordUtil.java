@@ -15,6 +15,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -92,6 +93,8 @@ public class DiscordUtil {
 
     public static int getRecommendedShardCount(String token) throws UnirestException {
         return Unirest.get(Requester.DISCORD_API_PREFIX + "gateway/bot")
+                .header("Authorization", "Bot " + token)
+                .header("User-agent", "FredBoat DiscordBot (https://github.com/Frederikam/FredBoat, " + JDAInfo.VERSION + ")")
                 .asJson()
                 .getBody()
                 .getObject()

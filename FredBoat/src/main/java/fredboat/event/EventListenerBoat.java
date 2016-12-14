@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
-import static fredboat.FredBoat.jdaBot;
-
 public class EventListenerBoat extends AbstractScopedEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerBoat.class);
@@ -88,10 +86,10 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             }
 
             CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getMember(), event.getMessage());
-        } else if (event.getMessage().getRawContent().startsWith("<@" + jdaBot.getSelfUser().getId() + ">")) {
+        } else if (event.getMessage().getRawContent().startsWith("<@" + event.getJDA().getSelfUser().getId() + ">")) {
             log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
-            TalkCommand.talk(event.getMember(), event.getTextChannel(), event.getMessage().getRawContent().substring(jdaBot.getSelfUser().getAsMention().length() + 1));
+            TalkCommand.talk(event.getMember(), event.getTextChannel(), event.getMessage().getRawContent().substring(event.getJDA().getSelfUser().getAsMention().length() + 1));
         }
     }
 
@@ -99,7 +97,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     public void onMessageDelete(MessageDeleteEvent event) {
         if (messagesToDeleteIfIdDeleted.containsKey(event.getMessageId())) {
             Message msg = messagesToDeleteIfIdDeleted.remove(event.getMessageId());
-            if (msg.getJDA() == jdaBot) {
+            if (msg.getJDA() == event.getJDA()) {
                 msg.deleteMessage().queue();
             }
         }
@@ -119,12 +117,12 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        jdaBot.getPresence().setGame(Game.of("Say ;;help"));
+        event.getJDA().getPresence().setGame(Game.of("Say ;;help"));
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        jdaBot.getPresence().setGame(Game.of("Say ;;help"));
+        event.getJDA().getPresence().setGame(Game.of("Say ;;help"));
     }
 
     /* music related */

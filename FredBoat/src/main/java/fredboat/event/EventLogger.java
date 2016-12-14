@@ -38,9 +38,9 @@ public class EventLogger extends ListenerAdapter {
     private void send(String msg) {
         DiscordUtil.sendShardlessMessage(jda, logChannelId,
                 "["
-                + FredBoat.shardId
+                + jda.getShardInfo().getShardId()
                 + ":"
-                + FredBoat.numShards
+                + jda.getShardInfo().getShardTotal()
                 + "] "
                 + msg
         );
