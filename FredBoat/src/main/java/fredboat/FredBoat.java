@@ -45,21 +45,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class FredBoat {
+public abstract class FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
 
-    private static final int SHARD_CREATION_SLEEP_INTERVAL = 5100;
+    static final int SHARD_CREATION_SLEEP_INTERVAL = 5100;
 
     private static final ArrayList<FredBoat> shards = new ArrayList<>();
-    private static volatile JDA jdaSelf;
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
     public static DistributionEnum distribution = DistributionEnum.BETA;
     public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
-    private static EventListenerBoat listenerBot;
-    private static EventListenerSelf listenerSelf;
+    static EventListenerBoat listenerBot;
+    static EventListenerSelf listenerSelf;
 
     /* Config */
     private static JSONObject config = null;
@@ -68,8 +67,8 @@ public class FredBoat {
 
     /* Credentials */
     private static JSONObject credsjson;
-    private static String accountToken;
-    private static String clientToken;
+    static String accountToken;
+    static String clientToken;
     public static String mashapeKey;
     public static String MALPassword;
     private final static List<String> GOOGLE_KEYS = new ArrayList<>();
@@ -77,36 +76,8 @@ public class FredBoat {
     private static boolean lavaplayerNodesEnabled = false;
     private static String carbonKey;
 
-    private JDA jdaBot;
-
-    private FredBoat(int shardId) {
-
-        log.info("Building shard " + shardId);
-
-        try {
-            boolean success = false;
-            while (!success) {
-                JDABuilder builder = new JDABuilder(AccountType.BOT)
-                        .addListener(listenerBot)
-                        .addListener(new EventLogger("216689009110417408"))
-                        .setToken(accountToken)
-                        .setBulkDeleteSplittingEnabled(true);
-                if (numShards > 1) {
-                    builder.useSharding(shardId, numShards);
-                }
-                try {
-                    jdaBot = builder.buildAsync();
-                    success = true;
-                } catch (RateLimitedException e) {
-                    log.warn("Got rate limited while building bot JDA instance! Retrying...", e);
-                    Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to start JDA shard " + shardId, e);
-        }
-
-    }
+    JDA jda;
+    private static FredBoatClient fbClient;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
@@ -187,24 +158,7 @@ public class FredBoat {
         }
 
         if ((scopes & 0x001) != 0) {
-            try {
-                boolean success = false;
-                while (!success) {
-                    try {
-                        jdaSelf = new JDABuilder(AccountType.CLIENT)
-                            .addListener(listenerSelf)
-                            .setToken(clientToken)
-                            .buildAsync();
-
-                        success = true;
-                    } catch (RateLimitedException e) {
-                        log.warn("Got rate limited while building client JDA instance! Retrying...", e);
-                        Thread.sleep(1000);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Failed to start JDA client", e);
-            }
+            fbClient = new FredBoatClient();
         }
 
         //Initialise JCA
@@ -229,7 +183,7 @@ public class FredBoat {
         log.info("Discord recommends " + numShards + " shard(s)");
 
         for(int i = 0; i < numShards; i++){
-            shards.add(i, new FredBoat(i));
+            shards.add(i, new FredBoatBot(i));
             try {
                 Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
             } catch (InterruptedException e) {
@@ -299,7 +253,7 @@ public class FredBoat {
     /* Sharding */
 
     public JDA getJda() {
-        return jdaBot;
+        return jda;
     }
 
     public static List<FredBoat> getShards() {
@@ -326,5 +280,9 @@ public class FredBoat {
         }
 
         return map;
+    }
+
+    public static FredBoatClient getClient() {
+        return fbClient;
     }
 }
