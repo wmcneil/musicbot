@@ -128,15 +128,15 @@ public class TextUtils {
         return i < 10 ? "0" + i : Integer.toString(i);
     }
 
-    public static String substringPreserveWords(String str, int len, String appendOnMatch){
+    public static String substringPreserveWords(String str, int len){
         Pattern pattern = Pattern.compile("^([\\w\\W]{" + len + "}\\S+?)\\s");
         Matcher matcher = pattern.matcher(str);
 
         if(matcher.find()){
-            return matcher.group(1) + appendOnMatch;
+            return matcher.group(1);
         } else {
             //Oh well
-            return str;
+            return str.substring(0, len);
         }
     }
 }
