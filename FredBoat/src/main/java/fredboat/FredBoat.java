@@ -56,37 +56,30 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FredBoat {
+    
+    private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
 
     private static final ConcurrentHashMap<Integer, FredBoat> shards = new ConcurrentHashMap<>();
-
-    private static final Logger log = LoggerFactory.getLogger(FredBoat.class);
-    private static JSONObject config = null;
-
-    private static int scopes = 0;
     private static volatile JDA jdaSelf;
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
-    private static String accountToken;
-    public static String mashapeKey;
-
-    public static String MALPassword;
-
-    private static int readyEvents = 0;
-    private static int readyEventsRequired = 0;
-
-    public static int shardId = 0;
-    public static int numShards = 1;
-
-    private static JSONObject credsjson = null;
     public static DistributionEnum distribution = DistributionEnum.BETA;
-
     public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
-
-    private final static List<String> GOOGLE_KEYS = new ArrayList<>();
-
     private static EventListenerBoat listenerBot;
     private static EventListenerSelf listenerSelf;
+
+    /* Config */
+    private static JSONObject config = null;
+    private static int scopes = 0;
+    public static int numShards = 1;
+
+    /* Credentials */
+    private static JSONObject credsjson = null;
+    private static String accountToken;
+    public static String mashapeKey;
+    public static String MALPassword;
+    private final static List<String> GOOGLE_KEYS = new ArrayList<>();
     private static String[] lavaplayerNodes = new String[64];
     private static boolean lavaplayerNodesEnabled = false;
 
@@ -258,7 +251,7 @@ public class FredBoat {
     }
 
     private static void initBotShards() {
-
+        numShards = DiscordUtil.getRecommendedShardCount()
     }
 
     public void onInit() {
