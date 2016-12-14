@@ -26,7 +26,7 @@ public class MusicHelpCommand extends TextCommand {
             ";;np\n" +
             "#Displays the currently playing song.\n" +
             ";;skip [n]\n" +
-            "#Skip the current song or the `n`th song in the qeueu. Please use in moderation.\n" +
+            "#Skip the current song or the n'th song in the queue. Please use in moderation.\n" +
             ";;stop\n" +
             "#Stop the player and clear the playlist. Reserved for moderators.\n" +
             ";;pause\n" +
