@@ -61,7 +61,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        if (event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
+        if (event.getAuthor().equals(event.getJDA().getSelfUser())) {
             log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             return;
         }
@@ -75,11 +75,13 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             try {
                 log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
                 Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
-                matcher.find();
 
-                invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
-            } catch (NullPointerException ex) {
-
+                if(matcher.find()) {
+                    //noinspection ConstantConditions
+                    invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
+                }
+            } catch (NullPointerException e) {
+                log.warn("Got a NPE while handling a prefixed message", e);
             }
 
             if (invoked == null) {
