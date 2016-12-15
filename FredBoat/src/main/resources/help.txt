@@ -1,7 +1,8 @@
 Documentation can be found at the bot's GitHub pages:
-http://frederikam.github.io/FredBoat
+http://docs.frederikam.com
 
 Want to add FredBoat to your server? If you have Manage Server permissions for your guild, you can invite it here:
+*This one doesn't play music*
 https://discordapp.com/oauth2/authorize?&client_id=168686772216135681&scope=bot
 
 If you want to add the music bot, you will want to invite this bot:
