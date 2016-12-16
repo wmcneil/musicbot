@@ -113,7 +113,7 @@ public abstract class FredBoat {
         mashapeKey = credsjson.optString("mashapeKey");
         clientToken = credsjson.optString("clientToken");
         MALPassword = credsjson.optString("malPassword");
-        carbonKey = credsjson.getString("carbonKey");
+        carbonKey = credsjson.optString("carbonKey");
 
         JSONArray nodesArray = credsjson.optJSONArray("lavaplayerNodes");
         if(nodesArray != null) {
@@ -159,9 +159,14 @@ public abstract class FredBoat {
         }
 
         //Initialise JCA
-        String cbUser = credsjson.getString("cbUser");
-        String cbKey = credsjson.getString("cbKey");
-        jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
+        String cbUser = credsjson.optString("cbUser");
+        String cbKey = credsjson.optString("cbKey");
+        if(cbUser != null && cbKey != null) {
+            log.info("Starting CleverBot");
+            jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
+        } else {
+            log.warn("Credentials not found for cleverbot authentication. Skipping...");
+        }
 
         if (distribution == DistributionEnum.MAIN && carbonKey != null) {
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(carbonKey);
