@@ -18,24 +18,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SimpleTrackProvider extends AbstractTrackProvider {
 
-    private static final int SHUFFLE_QUEUE_MAX_LENGTH = 10;
-
-    private final ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
-    private CopyOnWriteArrayList<AudioTrack> shuffleQueue = new CopyOnWriteArrayList<>();
+    private volatile ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
     private AudioTrack lastTrack = null;
 
     @Override
     public AudioTrack getNext() {
-        if(isShuffle()) {
-            if(shuffleQueue.isEmpty()) return null;
-            return shuffleQueue.get(0);
-        } else {
-            return queue.peek();
-        }
+        return queue.peek();
     }
 
     @Override
@@ -98,30 +89,4 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     public void clear() {
         queue.clear();
     }
-
-    @Override
-    public void setShuffle(boolean shuffle) {
-        super.setShuffle(shuffle);
-
-        if(shuffle) {
-            generateShuffleQueue();
-        } else {
-            shuffleQueue.clear();
-        }
-    }
-
-    /* Shuffle queue methods */
-    private void generateShuffleQueue() {
-        if(!shouldUpdateShuffleQueue()) return;
-
-        for (int i = 0; i < Math.min(SHUFFLE_QUEUE_MAX_LENGTH, queue.size(); i++) {
-            AudioTrack v = shuffleQueue.
-        }
-    }
-
-    private boolean shouldUpdateShuffleQueue() {
-        return isShuffle() && shuffleQueue.size() < Math.min(SHUFFLE_QUEUE_MAX_LENGTH, queue.size());
-    }
-
-    private boolean should
 }
