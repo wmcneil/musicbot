@@ -31,7 +31,7 @@ public class RemoteFileCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         try {
-            channel.sendFile(CacheUtil.getImageFromURL(msg), null);
+            channel.sendFile(CacheUtil.getImageFromURL(msg), null).queue();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
