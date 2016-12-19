@@ -75,6 +75,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "playerdebug", new PlayerDebugCommand());
         CommandRegistry.registerCommand(0x010, "music", new MusicHelpCommand());
         CommandRegistry.registerAlias("music", "musichelp");
+        CommandRegistry.registerCommand(0x010, "nodes", new NodesCommand());
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));

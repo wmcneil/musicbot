@@ -21,6 +21,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
@@ -152,7 +153,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .setTitle(at.getInfo().title)
                 .setUrl(at.getIdentifier())
                 .setDescription(desc + "\n\nLoaded from " + at.getIdentifier()) //TODO: Probe data
-                .setColor(new Color(28, 191, 226))
+                .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
 
@@ -172,7 +173,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(at.getInfo().title)
                 .setDescription(desc + "\n\nLoaded from " + at.getSourceManager().getSourceName())
-                .setColor(new Color(28, 191, 226))
+                .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
 
