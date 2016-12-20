@@ -11,6 +11,8 @@
 
 package fredboat.command.music;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
@@ -27,6 +29,8 @@ import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
+import org.json.JSONObject;
+import org.json.XML;
 
 import java.awt.*;
 
@@ -44,6 +48,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);
             } else if (at instanceof SoundCloudAudioTrack) {
                 sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
+            } else if (at instanceof HttpAudioTrack && at.getIdentifier().contains("gensokyoradio.net")){
+                //Special handling for GR
+                sendGensokyoRadioEmbed(channel, (HttpAudioTrack) at);
             } else if (at instanceof HttpAudioTrack) {
                 sendHttpEmbed(channel, (HttpAudioTrack) at);
             } else if (at instanceof BandcampAudioTrack) {
@@ -137,6 +144,48 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .build();
 
         channel.sendMessage(embed).queue();
+    }
+
+    private void sendGensokyoRadioEmbed(TextChannel channel, HttpAudioTrack at) {
+        try {
+            JSONObject data = XML.toJSONObject(Unirest.get("https://gensokyoradio.net/xml/").asString().getBody()).getJSONObject("GENSOKYORADIODATA");
+
+            String rating = data.getJSONObject("MISC").getInt("TIMESRATED") == 0 ?
+                    "None yet" :
+                    data.getJSONObject("MISC").getInt("RATING") + "/5 from " + data.getJSONObject("MISC").getInt("TIMESRATED") + " votes";
+
+            String albumArt = data.getJSONObject("MISC").getString("ALBUMART").equals("") ?
+                    "https://gensokyoradio.net/images/albums/c200/gr6_circular.png" :
+                    "https://gensokyoradio.net/images/albums/original/" + data.getJSONObject("MISC").getString("ALBUMART");
+
+            String titleUrl = data.getJSONObject("MISC").getString("CIRCLELINK").equals("") ?
+                    "https://gensokyoradio.net/" :
+                    data.getJSONObject("MISC").getString("CIRCLELINK");
+
+            EmbedBuilder eb = new EmbedBuilder()
+                    .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"))
+                    .setUrl(titleUrl)
+                    .addField("Album", data.getJSONObject("SONGINFO").getString("ALBUM"), true)
+                    .addField("Artist", data.getJSONObject("SONGINFO").getString("ARTIST"), true)
+                    .addField("Circle", data.getJSONObject("SONGINFO").getString("CIRCLE"), true);
+
+            if(data.getJSONObject("SONGINFO").optInt("YEAR") != 0){
+                eb.addField("Year", Integer.toString(data.getJSONObject("SONGINFO").getInt("YEAR")), true);
+            }
+
+            eb.addField("Rating", rating, true)
+                    .addField("Listeners", Integer.toString(data.getJSONObject("SERVERINFO").getInt("LISTENERS")), true)
+
+                    .setThumbnail("https://gensokyoradio.net/images/circles/" + data.getJSONObject("MISC").getString("CIRCLEART"))
+                    .setImage(albumArt)
+                    .setColor(new Color(66, 16, 80))
+                    .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                    .build();
+
+            channel.sendMessage(eb.build()).queue();
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendHttpEmbed(TextChannel channel, HttpAudioTrack at){
