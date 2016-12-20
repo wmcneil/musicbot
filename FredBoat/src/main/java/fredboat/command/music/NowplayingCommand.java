@@ -175,8 +175,6 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
             eb.addField("Rating", rating, true)
                     .addField("Listeners", Integer.toString(data.getJSONObject("SERVERINFO").getInt("LISTENERS")), true)
-
-                    .setThumbnail("https://gensokyoradio.net/images/circles/" + data.getJSONObject("MISC").getString("CIRCLEART"))
                     .setImage(albumArt)
                     .setColor(new Color(66, 16, 80))
                     .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
