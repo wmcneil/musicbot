@@ -152,7 +152,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
             String rating = data.getJSONObject("MISC").getInt("TIMESRATED") == 0 ?
                     "None yet" :
-                    data.getJSONObject("MISC").getInt("RATING") + "/5 from " + data.getJSONObject("MISC").getInt("TIMESRATED") + " votes";
+                    data.getJSONObject("MISC").getInt("RATING") + "/5 from " + data.getJSONObject("MISC").getInt("TIMESRATED") + " vote(s)";
 
             String albumArt = data.getJSONObject("MISC").getString("ALBUMART").equals("") ?
                     "https://gensokyoradio.net/images/albums/c200/gr6_circular.png" :
