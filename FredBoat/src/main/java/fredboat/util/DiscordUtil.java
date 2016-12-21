@@ -71,22 +71,6 @@ public class DiscordUtil {
         return false;
     }
 
-    public static List<Member> fuzzyMemberSearch(Guild guild, String term) {
-        ArrayList<Member> list = new ArrayList<>();
-
-        term = term.toLowerCase();
-
-        for(Member mem : guild.getMembers()) {
-            if((mem.getUser().getName().toLowerCase() + "#" + mem.getUser().getDiscriminator()).contains(term)
-                    | (mem.getEffectiveName().toLowerCase().contains(term))
-                    | term.contains(mem.getUser().getId())) {
-                list.add(mem);
-            }
-        }
-
-        return list;
-    }
-
     public static void sendShardlessMessage(String channel, Message msg) {
         sendShardlessMessage(msg.getJDA(), channel, msg.getRawContent());
     }

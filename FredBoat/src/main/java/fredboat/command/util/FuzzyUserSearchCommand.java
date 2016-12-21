@@ -1,7 +1,7 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.util.DiscordUtil;
+import fredboat.util.ArgumentUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -17,7 +17,7 @@ public class FuzzyUserSearchCommand extends Command {
         if(args.length == 1){
             TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;fuzzy <term>`");
         } else {
-            List<Member> list = DiscordUtil.fuzzyMemberSearch(guild, args[1]);
+            List<Member> list = ArgumentUtil.fuzzyMemberSearch(guild, args[1]);
 
             if(list.isEmpty()){
                 TextUtils.replyWithName(channel, invoker, "No such users");
