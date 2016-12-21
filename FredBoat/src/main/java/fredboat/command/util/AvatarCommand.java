@@ -23,9 +23,9 @@ public class AvatarCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(message.getMentionedUsers().isEmpty()){
-            TextUtils.replyWithMention(channel, invoker, " proper usage is: ```;;avatar @<username>```");
+            TextUtils.replyWithName(channel, invoker, " proper usage is: ```;;avatar @<username>```");
         } else {
-            TextUtils.replyWithMention(channel, invoker, " found it\n"+message.getMentionedUsers().get(0).getAvatarUrl());
+            TextUtils.replyWithName(channel, invoker, " found it\n"+message.getMentionedUsers().get(0).getAvatarUrl());
         }
     }
 

@@ -118,9 +118,9 @@ public class BrainfuckCommand extends Command {
             out2 = out2 + "," + sh;
         }
         try {
-            TextUtils.replyWithMention(channel, invoker, " " + out + "\n-------\n" + out2.substring(1));
+            TextUtils.replyWithName(channel, invoker, " " + out + "\n-------\n" + out2.substring(1));
         } catch (IndexOutOfBoundsException ex) {
-TextUtils.replyWithMention(channel, invoker, " There was no output");
+TextUtils.replyWithName(channel, invoker, " There was no output");
         }
     }
 

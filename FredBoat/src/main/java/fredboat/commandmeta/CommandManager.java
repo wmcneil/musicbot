@@ -44,7 +44,7 @@ public class CommandManager {
             //This command is restricted to only Frederikam
             //Check if invoker is actually Fre_d
             if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
-                channel.sendMessage(TextUtils.prefaceWithMention(invoker, " you are not allowed to use that command!")).queue();
+                channel.sendMessage(TextUtils.prefaceWithName(invoker, " you are not allowed to use that command!")).queue();
                 return;
             }
         }

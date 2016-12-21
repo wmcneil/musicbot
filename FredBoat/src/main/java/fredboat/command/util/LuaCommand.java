@@ -37,17 +37,17 @@ public class LuaCommand extends Command {
             String finalOutMsg = outcome.output;
 
             if (outcome.timedOut) {
-                TextUtils.replyWithMention(channel, invoker, " Function timed out :anger: allowed computation time is " + MAX_COMPUTATION_TIME + " seconds.");
+                TextUtils.replyWithName(channel, invoker, " Function timed out :anger: allowed computation time is " + MAX_COMPUTATION_TIME + " seconds.");
             } else if (!finalOutMsg.equals("")) {
                 if (finalOutMsg.length() > 2000) {
-                    TextUtils.replyWithMention(channel, invoker, " Output buffer is too large :anger: Discord only allows 2000 characters per message, got " + finalOutMsg.length());
+                    TextUtils.replyWithName(channel, invoker, " Output buffer is too large :anger: Discord only allows 2000 characters per message, got " + finalOutMsg.length());
                 } else {
-                    TextUtils.replyWithMention(channel, invoker, " " + finalOutMsg);
+                    TextUtils.replyWithName(channel, invoker, " " + finalOutMsg);
                 }
             }
 
             if (outcome.luaError != null) {
-                TextUtils.replyWithMention(channel, invoker, " A Lua error occured :anger:\n```" + outcome.luaError + "```");
+                TextUtils.replyWithName(channel, invoker, " A Lua error occured :anger:\n```" + outcome.luaError + "```");
             }
 
         } catch (InterruptedException ex) {

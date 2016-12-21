@@ -32,13 +32,13 @@ public class TextUtils {
     private TextUtils() {
     }
 
-    public static Message prefaceWithMention(Member member, String msg) {
-        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
+    public static Message prefaceWithName(Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(":").append(msg);
         return builder.build();
     }
 
-    public static Message replyWithMention(TextChannel channel, Member member, String msg) {
-        MessageBuilder builder = new MessageBuilder().append(member).append(msg);
+    public static Message replyWithName(TextChannel channel, Member member, String msg) {
+        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(":").append(msg);
         Message mes = builder.build();
         channel.sendMessage(mes).queue();
         return mes;

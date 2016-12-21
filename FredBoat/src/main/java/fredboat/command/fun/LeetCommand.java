@@ -50,7 +50,7 @@ public class LeetCommand extends Command implements ICommand {
         try {
             res = Unirest.get("https://montanaflynn-l33t-sp34k.p.mashape.com/encode?text=" + URLEncoder.encode(res, "UTF-8").replace("+", "%20")).header("X-Mashape-Key", FredBoat.mashapeKey).asString().getBody();
         } catch (UnirestException ex) {
-            Message myMsg = TextUtils.replyWithMention(channel, invoker, " Could not connect to API! "+ex.getMessage());
+            Message myMsg = TextUtils.replyWithName(channel, invoker, " Could not connect to API! "+ex.getMessage());
             return;
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);

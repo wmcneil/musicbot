@@ -35,7 +35,7 @@ public class ClearCommand extends Command {
         JDA jda = guild.getJDA();
         
         if(!PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) && !invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
-            TextUtils.replyWithMention(channel, invoker, " You must have Manage Messages to do that!");
+            TextUtils.replyWithName(channel, invoker, " You must have Manage Messages to do that!");
             return;
         }
         
