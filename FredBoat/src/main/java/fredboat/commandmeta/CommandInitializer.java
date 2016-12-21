@@ -6,6 +6,7 @@ import fredboat.command.maintenance.GetIdCommand;
 import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
+import fredboat.command.moderation.SoftbanCommand;
 import fredboat.command.music.*;
 import fredboat.command.util.*;
 
@@ -45,6 +46,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
         CommandRegistry.registerCommand(0x101, "akinator", new AkinatorCommand());
         CommandRegistry.registerCommand(0x101, "fuzzy", new FuzzyUserSearchCommand());
+        CommandRegistry.registerCommand(0x101, "softban", new SoftbanCommand());
 
         /* Music commands */
         CommandRegistry.registerCommand(0x010, "mexit", new ExitCommand());
