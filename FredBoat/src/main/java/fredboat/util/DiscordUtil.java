@@ -17,13 +17,11 @@ import fredboat.FredBoat;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.requests.*;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DiscordUtil {
@@ -71,6 +69,22 @@ public class DiscordUtil {
         }
 
         return false;
+    }
+
+    public static List<Member> fuzzyMemberSearch(Guild guild, String term) {
+        ArrayList<Member> list = new ArrayList<>();
+
+        term = term.toLowerCase();
+
+        for(Member mem : guild.getMembers()) {
+            if((mem.getUser().getName().toLowerCase() + "#" + mem.getUser().getDiscriminator()).contains(term)
+                    | (mem.getEffectiveName().toLowerCase().contains(term))
+                    | mem.getUser().getId().contains(term)) {
+                list.add(mem);
+            }
+        }
+
+        return list;
     }
 
     public static void sendShardlessMessage(String channel, Message msg) {

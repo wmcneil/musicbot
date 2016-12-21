@@ -14,16 +14,14 @@ public class SoftbanCommand extends Command {
 
     }
 
-    private boolean isAuthorized(Member mod, Member target) {
+    /*private boolean isAuthorized(Member mod, Member target) {
         if(mod.isOwner()) return true;
 
         if(!PermissionUtil.checkPermission(mod.getGuild(), mod, Permission.BAN_MEMBERS, Permission.KICK_MEMBERS)) return false;
-        
-        if(Role roles mod.getRoles())
     }
 
     private int getHighestRole(List<Role> roles) {
 
-    }
+    }*///TODO
 
 }

@@ -44,6 +44,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
         CommandRegistry.registerCommand(0x101, "akinator", new AkinatorCommand());
+        CommandRegistry.registerCommand(0x101, "fuzzy", new FuzzyUserSearchCommand());
 
         /* Music commands */
         CommandRegistry.registerCommand(0x010, "mexit", new ExitCommand());
