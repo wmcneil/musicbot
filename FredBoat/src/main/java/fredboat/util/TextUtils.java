@@ -33,15 +33,23 @@ public class TextUtils {
     }
 
     public static Message prefaceWithName(Member member, String msg) {
-        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(":").append(msg);
+        msg = ensureSpace(msg);
+
+        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(": ").append(msg);
         return builder.build();
     }
 
     public static Message replyWithName(TextChannel channel, Member member, String msg) {
-        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(":").append(msg);
+        msg = ensureSpace(msg);
+
+        MessageBuilder builder = new MessageBuilder().append(member.getEffectiveName()).append(": ").append(msg);
         Message mes = builder.build();
         channel.sendMessage(mes).queue();
         return mes;
+    }
+
+    private static String ensureSpace(String msg){
+        return msg.charAt(0) == ' ' ? msg : " " + msg;
     }
 
     public static void handleException(Throwable e, MessageChannel channel) {
