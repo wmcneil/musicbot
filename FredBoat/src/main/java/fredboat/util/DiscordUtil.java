@@ -79,7 +79,7 @@ public class DiscordUtil {
         for(Member mem : guild.getMembers()) {
             if((mem.getUser().getName().toLowerCase() + "#" + mem.getUser().getDiscriminator()).contains(term)
                     | (mem.getEffectiveName().toLowerCase().contains(term))
-                    | mem.getUser().getId().contains(term)) {
+                    | term.contains(mem.getUser().getId())) {
                 list.add(mem);
             }
         }
