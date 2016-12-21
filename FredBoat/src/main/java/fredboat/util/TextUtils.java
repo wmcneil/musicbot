@@ -103,12 +103,12 @@ public class TextUtils {
     }
 
     public static String postToHastebin(String body) throws UnirestException {
-        return Unirest.post("http://hastebin.com/documents").body(body).asJson().getBody().getObject().getString("key");
+        return Unirest.post("https://hastebin.com/documents").body(body).asJson().getBody().getObject().getString("key");
     }
 
     public static String postToHastebin(String body, boolean asURL) throws UnirestException {
         if (asURL) {
-            return "http://hastebin.com/" + postToHastebin(body);
+            return "https://hastebin.com/" + postToHastebin(body);
         } else {
             return postToHastebin(body);
         }
