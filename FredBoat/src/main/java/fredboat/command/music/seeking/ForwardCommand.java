@@ -36,7 +36,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class SeekCommand extends Command implements IMusicCommand {
+public class ForwardCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -48,7 +48,7 @@ public class SeekCommand extends Command implements IMusicCommand {
         }
 
         if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;forward [[hh:]mm:]ss`");
             return;
         }
 
@@ -56,7 +56,7 @@ public class SeekCommand extends Command implements IMusicCommand {
         try {
             t = TextUtils.parseTimeString(args[1]);
         } catch (IllegalStateException e){
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;forward [[hh:]mm:]ss`");
             return;
         }
 
@@ -64,10 +64,10 @@ public class SeekCommand extends Command implements IMusicCommand {
 
         //Ensure bounds
         t = Math.max(0, t);
-        t = Math.min(at.getDuration(), t);
+        t = Math.min(at.getDuration() -  at.getPosition(), t);
 
-        at.setPosition(t);
-        channel.sendMessage("Seeking **" + player.getPlayingTrack().getInfo().title + "** to " + TextUtils.formatTime(t) + ".").queue();
+        at.setPosition(at.getPosition() + t);
+        channel.sendMessage("Forwarding **" + player.getPlayingTrack().getInfo().title + "** by " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }
