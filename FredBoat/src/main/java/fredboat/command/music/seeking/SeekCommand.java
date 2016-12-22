@@ -23,19 +23,51 @@
  *
  */
 
-package fredboat.command.music.info;
+package fredboat.command.music.seeking;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fredboat.audio.GuildPlayer;
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class GensokyoRadioCommand extends Command implements IMusicCommand {
+public class SeekCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        NowplayingCommand.sendGensokyoRadioEmbed(channel);
+        GuildPlayer player = PlayerRegistry.getExisting(guild);
+
+        if(player == null || player.isQueueEmpty()) {
+            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+            return;
+        }
+
+        if(args.length == 1) {
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            return;
+        }
+
+        long t;
+        try {
+            t = TextUtils.parseTimeString(args[1]);
+        } catch (IllegalStateException e){
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            return;
+        }
+
+        AudioTrack at = player.getPlayingTrack();
+
+        //Ensure bounds
+        t = Math.max(0, t);
+        t = Math.min(at.getDuration(), t);
+
+        player.getPlayingTrack().setPosition(t);
+        channel.sendMessage("Seeking **" + player.getPlayingTrack().getInfo().title + "** to " + TextUtils.formatTime(t) + ".").queue();
     }
+
 }

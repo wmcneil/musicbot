@@ -38,6 +38,7 @@ import fredboat.command.music.info.GensokyoRadioCommand;
 import fredboat.command.music.info.ListCommand;
 import fredboat.command.music.info.NowplayingCommand;
 import fredboat.command.music.seeking.RestartCommand;
+import fredboat.command.music.seeking.SeekCommand;
 import fredboat.command.util.*;
 
 public class CommandInitializer {
@@ -113,6 +114,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "gr", new GensokyoRadioCommand());
         CommandRegistry.registerAlias("gr", "gensokyo");
         CommandRegistry.registerAlias("gr", "gensokyoradio");
+        CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));

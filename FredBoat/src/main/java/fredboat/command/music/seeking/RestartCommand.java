@@ -39,7 +39,7 @@ public class RestartCommand extends Command implements IMusicCommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.getExisting(guild);
-        
+
         if(player != null && !player.isQueueEmpty()){
             player.getPlayingTrack().setPosition(0L);
             channel.sendMessage("**" + player.getPlayingTrack().getInfo().title + "** has been restarted.").queue();
@@ -47,5 +47,5 @@ public class RestartCommand extends Command implements IMusicCommand {
             channel.sendMessage("The queue is empty.").queue();
         }
     }
-    
+
 }
