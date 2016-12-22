@@ -106,8 +106,8 @@ public class CommandInitializer {
         CommandRegistry.registerAlias("music", "musichelp");
         CommandRegistry.registerCommand(0x010, "nodes", new NodesCommand());
         CommandRegistry.registerCommand(0x010, "gr", new GensokyoRadioCommand());
-        CommandRegistry.registerAlias("music", "gensokyo");
-        CommandRegistry.registerAlias("music", "gensokyoradio");
+        CommandRegistry.registerAlias("gr", "gensokyo");
+        CommandRegistry.registerAlias("gr", "gensokyoradio");
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));
