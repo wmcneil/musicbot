@@ -32,7 +32,12 @@ import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.SoftbanCommand;
-import fredboat.command.music.*;
+import fredboat.command.music.control.*;
+import fredboat.command.music.info.ExportCommand;
+import fredboat.command.music.info.GensokyoRadioCommand;
+import fredboat.command.music.info.ListCommand;
+import fredboat.command.music.info.NowplayingCommand;
+import fredboat.command.music.seeking.RestartCommand;
 import fredboat.command.util.*;
 
 public class CommandInitializer {

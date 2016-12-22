@@ -23,18 +23,34 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
+import fredboat.audio.GuildPlayer;
+import fredboat.audio.PlayerRegistry;
+import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.IMusicCommand;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class GensokyoRadioCommand extends Command {
+public class VolumeCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        NowplayingCommand.sendGensokyoRadioEmbed(channel);
+
+        GuildPlayer player = PlayerRegistry.get(guild);
+        try {
+            float volume = Float.parseFloat(args[1]) / 100;
+            volume = Math.max(0, Math.min(1.5f, volume));
+
+            channel.sendMessage("Changed volume from **" + (int) Math.floor(player.getVolume() * 100) + "%** to **" + (int) Math.floor(volume * 100) + "%**.").queue();
+
+            player.setVolume(volume);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+            throw new MessagingException("Use `;;volume <0-150>`. " + (int) (100 * PlayerRegistry.DEFAULT_VOLUME) + "% is the default.\nThe player is currently at **" + (int) Math.floor(player.getVolume() * 100) + "%**.");
+        }
     }
+
 }
