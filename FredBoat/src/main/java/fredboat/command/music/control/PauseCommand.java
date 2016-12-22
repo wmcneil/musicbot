@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
@@ -34,7 +34,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class UnpauseCommand extends Command implements IMusicCommand {
+public class PauseCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -42,13 +42,11 @@ public class UnpauseCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
             channel.sendMessage("The queue is empty.").queue();
-        } else if (!player.isPaused()) {
-            channel.sendMessage("The player is not paused.").queue();
-        } else if (player.getUsersInVC().isEmpty() && player.isPaused()) {
-            channel.sendMessage("There are no users in the voice chat.").queue();
+        } else if (player.isPaused()) {
+            channel.sendMessage("The player is already paused.").queue();
         } else {
-            player.play();
-            channel.sendMessage("The player is now unpaused.").queue();
+            player.pause();
+            channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.").queue();
         }
     }
 

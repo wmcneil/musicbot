@@ -23,10 +23,8 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.info;
 
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import net.dv8tion.jda.core.entities.Guild;
@@ -34,18 +32,10 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class RestartCommand extends Command implements IMusicCommand {
+public class GensokyoRadioCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.getExisting(guild);
-        
-        if(player != null && !player.isQueueEmpty()){
-            player.getPlayingTrack().setPosition(0L);
-            channel.sendMessage("**" + player.getPlayingTrack().getInfo().title + "** has been restarted.").queue();
-        } else {
-            channel.sendMessage("The queue is empty.").queue();
-        }
+        NowplayingCommand.sendGensokyoRadioEmbed(channel);
     }
-    
 }

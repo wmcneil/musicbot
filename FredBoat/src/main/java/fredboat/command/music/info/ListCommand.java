@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.info;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;

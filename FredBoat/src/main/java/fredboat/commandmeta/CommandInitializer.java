@@ -32,7 +32,15 @@ import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.maintenance.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.SoftbanCommand;
-import fredboat.command.music.*;
+import fredboat.command.music.control.*;
+import fredboat.command.music.info.ExportCommand;
+import fredboat.command.music.info.GensokyoRadioCommand;
+import fredboat.command.music.info.ListCommand;
+import fredboat.command.music.info.NowplayingCommand;
+import fredboat.command.music.seeking.ForwardCommand;
+import fredboat.command.music.seeking.RestartCommand;
+import fredboat.command.music.seeking.RewindCommand;
+import fredboat.command.music.seeking.SeekCommand;
 import fredboat.command.util.*;
 
 public class CommandInitializer {
@@ -110,6 +118,12 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "gr", new GensokyoRadioCommand());
         CommandRegistry.registerAlias("gr", "gensokyo");
         CommandRegistry.registerAlias("gr", "gensokyoradio");
+
+        CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
+        CommandRegistry.registerCommand(0x010, "forward", new ForwardCommand());
+        CommandRegistry.registerAlias("forward", "fwd");
+        CommandRegistry.registerCommand(0x010, "rewind", new RewindCommand());
+        CommandRegistry.registerAlias("rewind", "rew");
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand(0x101, "ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));

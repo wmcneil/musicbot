@@ -23,59 +23,51 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.seeking;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import org.apache.commons.lang3.StringUtils;
 
-public class SkipCommand extends Command implements IMusicCommand {
+public class RewindCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild);
-        player.setCurrentTC(channel);
-        if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty!").queue();
+        GuildPlayer player = PlayerRegistry.getExisting(guild);
+
+        if(player == null || player.isQueueEmpty()) {
+            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+            return;
         }
 
-        if(args.length == 1){
-            skipNext(guild, channel, invoker, message, args);
-        } else if (args.length == 2 && StringUtils.isNumeric(args[1])) {
-            int givenIndex = Integer.parseInt(args[1]);
-
-            if(givenIndex == 1){
-                skipNext(guild, channel, invoker, message, args);
-                return;
-            }
-
-            if(player.getRemainingTracks().size() < givenIndex){
-                channel.sendMessage("Can't remove track number " + givenIndex + " when there are only " + player.getRemainingTracks().size() + " tracks.").queue();
-                return;
-            } else if (givenIndex < 1){
-                channel.sendMessage("Given number must be greater than 0.").queue();
-                return;
-            }
-
-            AudioTrack at = player.getAudioTrackProvider().removeAt(givenIndex - 2);
-            channel.sendMessage("Skipped track #" + givenIndex + ": **" + at.getInfo().title + "**").queue();
-        } else {
-            channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
+        if(args.length == 1) {
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;rewind [[hh:]mm:]ss`");
+            return;
         }
-    }
 
-    private void skipNext(Guild guild, TextChannel channel, Member invoker, Message message, String[] args){
-        GuildPlayer player = PlayerRegistry.get(guild);
+        long t;
+        try {
+            t = TextUtils.parseTimeString(args[1]);
+        } catch (IllegalStateException e){
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;rewind [[hh:]mm:]ss`");
+            return;
+        }
+
         AudioTrack at = player.getPlayingTrack();
-        player.skip();
-        channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();
+
+        //Ensure bounds
+        t = Math.max(0, t);
+        t = Math.min(at.getPosition(), t);
+
+        at.setPosition(at.getPosition() - t);
+        channel.sendMessage("Rewinding **" + player.getPlayingTrack().getInfo().title + "** by " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }

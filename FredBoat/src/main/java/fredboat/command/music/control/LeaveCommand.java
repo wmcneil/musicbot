@@ -23,35 +23,24 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
-public class JoinCommand extends Command implements IMusicCommand {
+public class LeaveCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild);
-        VoiceChannel vc = player.getUserCurrentVoiceChannel(invoker);
         player.setCurrentTC(channel);
-        try {
-            player.joinChannel(vc);
-            if (vc != null) {
-                channel.sendMessage("Joining " + vc.getName())
-                        .queue();
-            }
-        } catch (IllegalStateException ex) {
-            if(vc != null) {
-                channel.sendMessage("An error occurred. Couldn't join " + vc.getName() + " because I am already trying to connect to that channel. Please try again.")
-                        .queue();
-            } else {
-                throw ex;
-            }
-        }
+        player.leaveVoiceChannelRequest(channel, false);
     }
 
 }

@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
@@ -34,19 +34,17 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class PauseCommand extends Command implements IMusicCommand {
+public class RepeatCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild);
-        player.setCurrentTC(channel);
-        if (player.isQueueEmpty()) {
-            channel.sendMessage("The queue is empty.").queue();
-        } else if (player.isPaused()) {
-            channel.sendMessage("The player is already paused.").queue();
+        player.setRepeat(!player.isRepeat());
+
+        if (player.isRepeat()) {
+            channel.sendMessage("The player is now on repeat.").queue();
         } else {
-            player.pause();
-            channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.").queue();
+            channel.sendMessage("The player is no longer on repeat.").queue();
         }
     }
 

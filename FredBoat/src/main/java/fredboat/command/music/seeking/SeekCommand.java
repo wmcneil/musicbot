@@ -23,47 +23,51 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.seeking;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.BotConstants;
-import net.dv8tion.jda.core.Permission;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.utils.PermissionUtil;
 
-public class StopCommand extends Command implements IMusicCommand {
+public class SeekCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if (PermissionUtil.checkPermission(guild, invoker, Permission.MESSAGE_MANAGE) || invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
-            GuildPlayer player = PlayerRegistry.get(guild);
-            player.setCurrentTC(channel);
-            int count = player.getRemainingTracks().size();
+        GuildPlayer player = PlayerRegistry.getExisting(guild);
 
-            player.clear();
-            player.skip();
-
-            switch (count) {
-                case 0:
-                    channel.sendMessage("The queue was already empty.").queue();
-                    break;
-                case 1:
-                    channel.sendMessage("The queue has been emptied, `1` song has been removed.").queue();
-                    break;
-                default:
-                    channel.sendMessage("The queue has been emptied, `" + count + "` songs have been removed.").queue();
-                    break;
-            }
-            player.leaveVoiceChannelRequest(channel, true);
-        } else {
-            channel.sendMessage("In order to prevent abuse, this command is only available to those who can manage messages.").queue();
+        if(player == null || player.isQueueEmpty()) {
+            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+            return;
         }
+
+        if(args.length == 1) {
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            return;
+        }
+
+        long t;
+        try {
+            t = TextUtils.parseTimeString(args[1]);
+        } catch (IllegalStateException e){
+            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            return;
+        }
+
+        AudioTrack at = player.getPlayingTrack();
+
+        //Ensure bounds
+        t = Math.max(0, t);
+        t = Math.min(at.getDuration(), t);
+
+        at.setPosition(t);
+        channel.sendMessage("Seeking **" + player.getPlayingTrack().getInfo().title + "** to " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }

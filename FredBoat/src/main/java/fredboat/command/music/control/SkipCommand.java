@@ -23,53 +23,59 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
-import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-
-public class ExportCommand extends Command implements IMusicCommand {
+public class SkipCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         GuildPlayer player = PlayerRegistry.get(guild);
-        
-        if(player.getRemainingTracks().isEmpty()){
-            throw new MessagingException("Nothing to export, the queue is empty.");
+        player.setCurrentTC(channel);
+        if (player.isQueueEmpty()) {
+            channel.sendMessage("The queue is empty!").queue();
         }
-        
-        List<AudioTrack> tracks = player.getRemainingTracks();
-        String out = "";
-        
-        for(AudioTrack at : tracks){
-            if(at instanceof YoutubeAudioTrack){
-                out = out + "https://www.youtube.com/watch?v=" + at.getIdentifier() + "\n";
-            } else {
-                out = out + at.getIdentifier() + "\n";
+
+        if(args.length == 1){
+            skipNext(guild, channel, invoker, message, args);
+        } else if (args.length == 2 && StringUtils.isNumeric(args[1])) {
+            int givenIndex = Integer.parseInt(args[1]);
+
+            if(givenIndex == 1){
+                skipNext(guild, channel, invoker, message, args);
+                return;
             }
+
+            if(player.getRemainingTracks().size() < givenIndex){
+                channel.sendMessage("Can't remove track number " + givenIndex + " when there are only " + player.getRemainingTracks().size() + " tracks.").queue();
+                return;
+            } else if (givenIndex < 1){
+                channel.sendMessage("Given number must be greater than 0.").queue();
+                return;
+            }
+
+            AudioTrack at = player.getAudioTrackProvider().removeAt(givenIndex - 2);
+            channel.sendMessage("Skipped track #" + givenIndex + ": **" + at.getInfo().title + "**").queue();
+        } else {
+            channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
         }
-        
-        try {
-            String url = TextUtils.postToHastebin(out, true) + ".fredboat";
-            channel.sendMessage("Exported playlist: " + url + "\nYou can provide this URL to play the current playlist later.").queue();
-        } catch (UnirestException ex) {
-            throw new MessagingException("Failed to upload playlist to hastebin.com");
-        }
-        
-        
+    }
+
+    private void skipNext(Guild guild, TextChannel channel, Member invoker, Message message, String[] args){
+        GuildPlayer player = PlayerRegistry.get(guild);
+        AudioTrack at = player.getPlayingTrack();
+        player.skip();
+        channel.sendMessage("Skipped track #1: **" + at.getInfo().title + "**").queue();
     }
 
 }

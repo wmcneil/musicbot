@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.command.music;
+package fredboat.command.music.control;
 
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
