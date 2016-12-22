@@ -56,7 +56,11 @@ public class MusicHelpCommand extends TextCommand {
             ";;shuffle\n" +
             "#Toggles shuffle mode for the current queue.\n" +
             ";;volume <vol>\n" +
-            "#Changes the volume. Values are 0-150 and 100 is the default.```";
+            "#Changes the volume. Values are 0-150 and 100 is the default.\n" +
+            ";;export\n" +
+            "#Export the current queue to a hastebin link, can be later used as a playlist for ;;play.\n" +
+            ";;gr\n" +
+            "#Posts a special embed for gensokyoradio.net.```";
 
     public MusicHelpCommand() {
         super(MUSIC);
