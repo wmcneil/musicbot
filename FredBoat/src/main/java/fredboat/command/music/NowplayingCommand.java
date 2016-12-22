@@ -64,7 +64,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
             } else if (at instanceof HttpAudioTrack && at.getIdentifier().contains("gensokyoradio.net")){
                 //Special handling for GR
-                sendGensokyoRadioEmbed(channel, (HttpAudioTrack) at);
+                sendGensokyoRadioEmbed(channel);
             } else if (at instanceof HttpAudioTrack) {
                 sendHttpEmbed(channel, (HttpAudioTrack) at);
             } else if (at instanceof BandcampAudioTrack) {
@@ -160,7 +160,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendGensokyoRadioEmbed(TextChannel channel, HttpAudioTrack at) {
+    static void sendGensokyoRadioEmbed(TextChannel channel) {
         try {
             JSONObject data = XML.toJSONObject(Unirest.get("https://gensokyoradio.net/xml/").asString().getBody()).getJSONObject("GENSOKYORADIODATA");
 

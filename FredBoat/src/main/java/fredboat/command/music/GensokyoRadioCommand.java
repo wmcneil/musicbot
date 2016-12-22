@@ -23,15 +23,18 @@
  *
  */
 
-package fredboat.util;
+package fredboat.command.music;
 
-public class ExitCodes {
+import fredboat.commandmeta.abs.Command;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
-    private ExitCodes() {
+public class GensokyoRadioCommand extends Command {
+
+    @Override
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        NowplayingCommand.sendGensokyoRadioEmbed(channel);
     }
-
-    public static final int EXIT_CODE_NORMAL = 0;
-    public static final int EXIT_CODE_UPDATE = 20;
-    public static final int EXIT_CODE_RESTART = 21;
-
 }
