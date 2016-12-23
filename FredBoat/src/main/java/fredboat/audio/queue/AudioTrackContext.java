@@ -26,6 +26,7 @@
 package fredboat.audio.queue;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.util.Random;
@@ -33,12 +34,16 @@ import java.util.Random;
 public class AudioTrackContext {
 
     private final AudioTrack track;
-    private final Member member;
+    private final String userId;
+    private final String guildId;
+    private final JDA jda;
     private int rand;
 
     public AudioTrackContext(AudioTrack at, Member member) {
         this.track = at;
-        this.member = member;
+        this.userId = member.getUser().getId();
+        this.guildId = member.getGuild().getId();
+        this.jda = member.getJDA();
         this.rand = new Random().nextInt();
     }
 
@@ -47,7 +52,7 @@ public class AudioTrackContext {
     }
 
     public Member getMember() {
-        return member;
+        return jda.getGuildById(guildId).getMember(jda.getUserById(userId));
     }
 
     public int getRand() {
@@ -57,6 +62,10 @@ public class AudioTrackContext {
     public int randomize() {
         rand = new Random().nextInt();
         return rand;
+    }
+
+    public AudioTrackContext makeClone() {
+        return new AudioTrackContext(track.makeClone(), getMember());
     }
 
 }
