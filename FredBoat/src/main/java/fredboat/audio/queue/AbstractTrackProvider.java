@@ -25,6 +25,8 @@
 
 package fredboat.audio.queue;
 
+import java.util.List;
+
 public abstract class AbstractTrackProvider implements ITrackProvider {
 
     private boolean repeat = false;
@@ -44,6 +46,10 @@ public abstract class AbstractTrackProvider implements ITrackProvider {
 
     public void setShuffle(boolean shuffle) {
         this.shuffle = shuffle;
+    }
+
+    public List<AudioTrackContext> getAsListOrdered() {
+        return getAsList();
     }
     
 }

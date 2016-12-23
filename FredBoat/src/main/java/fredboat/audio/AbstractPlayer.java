@@ -61,7 +61,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private AudioTrackContext context;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    protected AbstractPlayer() {
+    AbstractPlayer() {
         initAudioPlayerManager();
         player = playerManager.createPlayer();
 
@@ -197,8 +197,9 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         if (audioTrackProvider != null) {
             context = audioTrackProvider.provideAudioTrack(skipped);
 
-            if(context != null)
+            if(context != null) {
                 player.playTrack(context.getTrack());
+            }
         } else {
             log.warn("TrackProvider doesn't exist");
         }
