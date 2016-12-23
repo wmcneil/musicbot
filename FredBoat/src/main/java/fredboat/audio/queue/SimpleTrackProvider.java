@@ -25,18 +25,15 @@
 
 package fredboat.audio.queue;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimpleTrackProvider extends AbstractTrackProvider {
 
     private volatile ConcurrentLinkedQueue<AudioTrackContext> queue = new ConcurrentLinkedQueue<>();
     private AudioTrackContext lastTrack = null;
+    private List<AudioTrackContext> cachedShuffledQueue;
+    private boolean shouldUpdateShuffledQueue = true;
 
     @Override
     public AudioTrackContext getNext() {
@@ -55,7 +52,8 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
             if (list.isEmpty()) {
                 return null;
             }
-            
+
+            shouldUpdateShuffledQueue = true;
             lastTrack = (AudioTrackContext) list.get(new Random().nextInt(list.size()));
             queue.remove(lastTrack);
             return lastTrack;
@@ -73,6 +71,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
             int i2 = 0;
             for(Object obj : Arrays.asList(queue.toArray())){
                 if(i == i2){
+                    shouldUpdateShuffledQueue = true;
                     //noinspection SuspiciousMethodCalls
                     queue.remove(obj);
                     return (AudioTrackContext) obj;
@@ -90,17 +89,46 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
+    public synchronized List<AudioTrackContext> getAsListOrdered() {
+        if(!isShuffle()){
+            return getAsList();
+        }
+
+        if(!shouldUpdateShuffledQueue){
+            return cachedShuffledQueue;
+        }
+
+        List<AudioTrackContext> newList = new ArrayList<>();
+
+        //Update the new queue
+        int i = 1;
+        for (AudioTrackContext atc : getAsList()) {
+            atc.setChronologicalIndex(i);
+            cachedShuffledQueue.add(atc);
+            i++;
+        }
+
+        Collections.sort(newList);
+        cachedShuffledQueue = newList;
+
+        shouldUpdateShuffledQueue = false;
+        return newList;
+    }
+
+    @Override
     public boolean isEmpty() {
         return queue.isEmpty();
     }
 
     @Override
     public void add(AudioTrackContext track) {
+        shouldUpdateShuffledQueue = true;
         queue.add(track);
     }
 
     @Override
     public void clear() {
+        shouldUpdateShuffledQueue = true;
         queue.clear();
     }
 }

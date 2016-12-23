@@ -31,7 +31,7 @@ import net.dv8tion.jda.core.entities.Member;
 
 import java.util.Random;
 
-public class AudioTrackContext {
+public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
     private final AudioTrack track;
     private final String userId;
@@ -86,4 +86,8 @@ public class AudioTrackContext {
         return new AudioTrackContext(track.makeClone(), getMember());
     }
 
+    @Override
+    public int compareTo(AudioTrackContext atc) {
+        return chronologicalIndex - atc.getChronologicalIndex();
+    }
 }
