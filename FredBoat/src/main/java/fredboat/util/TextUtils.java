@@ -182,8 +182,6 @@ public class TextUtils {
         if(m.group(2) != null) capturedGroups++;
         if(m.group(3) != null) capturedGroups++;
 
-        log.info(Integer.toString(m.groupCount()));
-
         switch(capturedGroups){
             case 0:
                 throw new IllegalStateException("Unable to match " + str);
