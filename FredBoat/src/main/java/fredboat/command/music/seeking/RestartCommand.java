@@ -29,6 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -41,10 +42,10 @@ public class RestartCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.getExisting(guild);
 
         if(player != null && !player.isQueueEmpty()){
-            player.getPlayingTrack().setPosition(0L);
-            channel.sendMessage("**" + player.getPlayingTrack().getInfo().title + "** has been restarted.").queue();
+            player.getPlayingTrack().getTrack().setPosition(0L);
+            channel.sendMessage("**" + player.getPlayingTrack().getTrack().getInfo().title + "** has been restarted.").queue();
         } else {
-            channel.sendMessage("The queue is empty.").queue();
+            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
         }
     }
 

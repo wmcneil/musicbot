@@ -35,16 +35,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimpleTrackProvider extends AbstractTrackProvider {
 
-    private volatile ConcurrentLinkedQueue<AudioTrack> queue = new ConcurrentLinkedQueue<>();
-    private AudioTrack lastTrack = null;
+    private volatile ConcurrentLinkedQueue<AudioTrackContext> queue = new ConcurrentLinkedQueue<>();
+    private AudioTrackContext lastTrack = null;
 
     @Override
-    public AudioTrack getNext() {
+    public AudioTrackContext getNext() {
         return queue.peek();
     }
 
     @Override
-    public AudioTrack provideAudioTrack(boolean skipped) {
+    public AudioTrackContext provideAudioTrack(boolean skipped) {
         if (isRepeat() && !skipped && lastTrack != null) {
             return lastTrack.makeClone();
         }
@@ -56,7 +56,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
                 return null;
             }
             
-            lastTrack = (AudioTrack) list.get(new Random().nextInt(list.size()));
+            lastTrack = (AudioTrackContext) list.get(new Random().nextInt(list.size()));
             queue.remove(lastTrack);
             return lastTrack;
         } else {
@@ -66,7 +66,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
-    public AudioTrack removeAt(int i) {
+    public AudioTrackContext removeAt(int i) {
         if(queue.size() < i){
             return null;
         } else {
@@ -75,7 +75,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
                 if(i == i2){
                     //noinspection SuspiciousMethodCalls
                     queue.remove(obj);
-                    return (AudioTrack) obj;
+                    return (AudioTrackContext) obj;
                 }
                 i2++;
             }
@@ -85,7 +85,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
-    public List<AudioTrack> getAsList() {
+    public List<AudioTrackContext> getAsList() {
         return new ArrayList<>(queue);
     }
 
@@ -95,7 +95,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
-    public void add(AudioTrack track) {
+    public void add(AudioTrackContext track) {
         queue.add(track);
     }
 

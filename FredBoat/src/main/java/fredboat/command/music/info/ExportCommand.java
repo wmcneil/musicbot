@@ -30,6 +30,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
@@ -51,10 +52,11 @@ public class ExportCommand extends Command implements IMusicCommand {
             throw new MessagingException("Nothing to export, the queue is empty.");
         }
         
-        List<AudioTrack> tracks = player.getRemainingTracks();
+        List<AudioTrackContext> tracks = player.getRemainingTracks();
         String out = "";
         
-        for(AudioTrack at : tracks){
+        for(AudioTrackContext atc : tracks){
+            AudioTrack at = atc.getTrack();
             if(at instanceof YoutubeAudioTrack){
                 out = out + "https://www.youtube.com/watch?v=" + at.getIdentifier() + "\n";
             } else {

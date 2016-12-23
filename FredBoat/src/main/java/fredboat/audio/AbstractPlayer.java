@@ -40,6 +40,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.FredBoat;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import fredboat.util.DistributionEnum;
@@ -57,6 +58,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     AudioPlayer player;
     ITrackProvider audioTrackProvider;
     private AudioFrame lastFrame = null;
+    private AudioTrackContext context;
 
     @SuppressWarnings("LeakingThisInConstructor")
     protected AbstractPlayer() {
@@ -134,21 +136,26 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         return player.getPlayingTrack().getPosition();
     }
 
-    public AudioTrack getPlayingTrack() {
+    public AudioTrackContext getPlayingTrack() {
         if (player.getPlayingTrack() == null) {
             play0(true);//Ensure we have something to return, unless the queue is really empty
         }
-        return player.getPlayingTrack();
+
+        if (player.getPlayingTrack() == null) {
+            context = null;
+        }
+
+        return context;
     }
 
-    public List<AudioTrack> getQueuedTracks() {
+    public List<AudioTrackContext> getQueuedTracks() {
         return audioTrackProvider.getAsList();
     }
 
-    public List<AudioTrack> getRemainingTracks() {
+    public List<AudioTrackContext> getRemainingTracks() {
         //Includes currently playing track, which comes first
         if (getPlayingTrack() != null) {
-            ArrayList<AudioTrack> list = new ArrayList<>();
+            ArrayList<AudioTrackContext> list = new ArrayList<>();
             list.add(getPlayingTrack());
             list.addAll(getQueuedTracks());
             return list;
@@ -186,9 +193,12 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         }
     }
 
-    public void play0(boolean skipped) {
+    private void play0(boolean skipped) {
         if (audioTrackProvider != null) {
-            player.playTrack(audioTrackProvider.provideAudioTrack(skipped));
+            context = audioTrackProvider.provideAudioTrack(skipped);
+
+            if(context != null)
+                player.playTrack(context.getTrack());
         } else {
             log.warn("TrackProvider doesn't exist");
         }

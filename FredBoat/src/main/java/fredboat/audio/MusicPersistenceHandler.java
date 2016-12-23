@@ -27,6 +27,7 @@ package fredboat.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.JDA;
@@ -102,12 +103,12 @@ public class MusicPersistenceHandler {
 
                 ArrayList<String> identifiers = new ArrayList<>();
                 
-                for (AudioTrack at : player.getRemainingTracks()) {
-                    identifiers.add(at.getIdentifier());
+                for (AudioTrackContext atc : player.getRemainingTracks()) {
+                    identifiers.add(atc.getTrack().getIdentifier());
                 }
 
                 if (player.getPlayingTrack() != null) {
-                    data.put("position", player.getPlayingTrack().getPosition());
+                    data.put("position", player.getPlayingTrack().getTrack().getPosition());
                 }
 
                 data.put("sources", identifiers);

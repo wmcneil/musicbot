@@ -60,14 +60,14 @@ public class RewindCommand extends Command implements IMusicCommand {
             return;
         }
 
-        AudioTrack at = player.getPlayingTrack();
+        AudioTrack at = player.getPlayingTrack().getTrack();
 
         //Ensure bounds
         t = Math.max(0, t);
         t = Math.min(at.getPosition(), t);
 
         at.setPosition(at.getPosition() - t);
-        channel.sendMessage("Rewinding **" + player.getPlayingTrack().getInfo().title + "** by " + TextUtils.formatTime(t) + ".").queue();
+        channel.sendMessage("Rewinding **" + at.getInfo().title + "** by " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }

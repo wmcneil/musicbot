@@ -25,24 +25,22 @@
 
 package fredboat.audio.queue;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
 import java.util.List;
 
 public interface ITrackProvider {
     
-    AudioTrack provideAudioTrack(boolean skipped);
+    AudioTrackContext provideAudioTrack(boolean skipped);
     
-    AudioTrack getNext();
+    AudioTrackContext getNext();
 
-    List<AudioTrack> getAsList();
+    List<AudioTrackContext> getAsList();
     
     boolean isEmpty();
     
-    void add(AudioTrack track);
+    void add(AudioTrackContext track);
     
     void clear();
 
-    AudioTrack removeAt(int i);
+    AudioTrackContext removeAt(int i);
     
 }

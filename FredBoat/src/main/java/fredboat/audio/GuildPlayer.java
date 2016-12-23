@@ -27,6 +27,7 @@ package fredboat.audio;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.queue.AudioLoader;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
@@ -146,13 +147,13 @@ public class GuildPlayer extends AbstractPlayer {
     public long getTotalRemainingMusicTimeSeconds() {
         //Live streams are considered to have a length of 0
         long millis = 0;
-        for (AudioTrack at : getQueuedTracks()) {
-            if (!at.getInfo().isStream) {
-                millis += at.getDuration();
+        for (AudioTrackContext atc : getQueuedTracks()) {
+            if (!atc.getTrack().getInfo().isStream) {
+                millis += atc.getTrack().getDuration();
             }
         }
 
-        AudioTrack at = getPlayingTrack();
+        AudioTrack at = getPlayingTrack().getTrack();
         if (at != null && !at.getInfo().isStream) {
             millis += Math.max(0, at.getDuration() - at.getPosition());
         }
@@ -163,9 +164,9 @@ public class GuildPlayer extends AbstractPlayer {
     public List<AudioTrack> getLiveTracks() {
         ArrayList<AudioTrack> l = new ArrayList<>();
         
-        for(AudioTrack at : getRemainingTracks()){
-            if(at.getInfo().isStream){
-                l.add(at);
+        for(AudioTrackContext atc : getRemainingTracks()){
+            if(atc.getTrack().getInfo().isStream){
+                l.add(atc.getTrack());
             }
         }
         

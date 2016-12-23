@@ -28,6 +28,7 @@ package fredboat.command.music.info;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.TextUtils;
@@ -46,16 +47,16 @@ public class ListCommand extends Command implements IMusicCommand {
         if (!player.isQueueEmpty()) {
             MessageBuilder mb = new MessageBuilder();
             int i = 0;
-            for (AudioTrack at : player.getRemainingTracks()) {
+            for (AudioTrackContext atc : player.getRemainingTracks()) {
                 if (i == 0) {
                     String status = player.isPlaying() ? " \\▶" : " \\\u23F8"; //Escaped play and pause emojis
                     mb.append("["+forceTwoDigits(i+1)+"]" , MessageBuilder.Formatting.BLOCK)
                             .append(status)
-                            .append(at.getInfo().title)
+                            .append(atc.getTrack().getInfo().title)
                             .append("\n");
                 } else {
                     mb.append("["+forceTwoDigits(i+1)+"]", MessageBuilder.Formatting.BLOCK)
-                            .append(" " + at.getInfo().title)
+                            .append(" " + atc.getTrack().getInfo().title)
                             .append("\n");
                     if (i == 10) {
                         break;

@@ -89,7 +89,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 
             at.setPosition(context.getPosition());
 
-            trackProvider.add(at);
+            trackProvider.add(new AudioTrackContext(at, context.member));
             if (!gplayer.isPaused()) {
                 gplayer.play();
             }
@@ -107,7 +107,7 @@ public class AudioLoader implements AudioLoadResultHandler {
             ).queue();
 
             for (AudioTrack at : ap.getTracks()) {
-                trackProvider.add(at);
+                trackProvider.add(new AudioTrackContext(at, context.member));
             }
             if (!gplayer.isPaused()) {
                 gplayer.play();

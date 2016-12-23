@@ -56,7 +56,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (player.isPlaying()) {
 
-            AudioTrack at = player.getPlayingTrack();
+            AudioTrack at = player.getPlayingTrack().getTrack();
 
             if (at instanceof YoutubeAudioTrack) {
                 sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);

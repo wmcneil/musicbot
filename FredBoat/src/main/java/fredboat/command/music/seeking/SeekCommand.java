@@ -60,14 +60,14 @@ public class SeekCommand extends Command implements IMusicCommand {
             return;
         }
 
-        AudioTrack at = player.getPlayingTrack();
+        AudioTrack at = player.getPlayingTrack().getTrack();
 
         //Ensure bounds
         t = Math.max(0, t);
         t = Math.min(at.getDuration(), t);
 
         at.setPosition(t);
-        channel.sendMessage("Seeking **" + player.getPlayingTrack().getInfo().title + "** to " + TextUtils.formatTime(t) + ".").queue();
+        channel.sendMessage("Seeking **" + at.getInfo().title + "** to " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }
