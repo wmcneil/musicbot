@@ -32,12 +32,16 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
 
     private volatile ConcurrentLinkedQueue<AudioTrackContext> queue = new ConcurrentLinkedQueue<>();
     private AudioTrackContext lastTrack = null;
-    private List<AudioTrackContext> cachedShuffledQueue;
+    private List<AudioTrackContext> cachedShuffledQueue = new ArrayList<>();
     private boolean shouldUpdateShuffledQueue = true;
 
     @Override
     public AudioTrackContext getNext() {
-        return queue.peek();
+        if(!isShuffle()) {
+            return queue.peek();
+        } else {
+            return getAsListOrdered().get(0);
+        }
     }
 
     @Override
@@ -47,14 +51,14 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         }
         if (isShuffle()) {
             //Get random int from queue, remove it and then return it
-            List<Object> list = Arrays.asList(queue.toArray());
-            
+            List<AudioTrackContext> list = getAsListOrdered();
+
             if (list.isEmpty()) {
                 return null;
             }
 
             shouldUpdateShuffledQueue = true;
-            lastTrack = (AudioTrackContext) list.get(new Random().nextInt(list.size()));
+            lastTrack = list.get(0);
             queue.remove(lastTrack);
             return lastTrack;
         } else {
@@ -91,7 +95,15 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public synchronized List<AudioTrackContext> getAsListOrdered() {
         if(!isShuffle()){
-            return getAsList();
+            List<AudioTrackContext> list = getAsList();
+
+            int i = 1;
+            for (AudioTrackContext atc : getAsList()) {
+                atc.setChronologicalIndex(i);
+                i++;
+            }
+
+            return list;
         }
 
         if(!shouldUpdateShuffledQueue){
@@ -104,7 +116,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         int i = 1;
         for (AudioTrackContext atc : getAsList()) {
             atc.setChronologicalIndex(i);
-            cachedShuffledQueue.add(atc);
+            newList.add(atc);
             i++;
         }
 

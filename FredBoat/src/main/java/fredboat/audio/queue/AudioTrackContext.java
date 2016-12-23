@@ -88,6 +88,6 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
     @Override
     public int compareTo(AudioTrackContext atc) {
-        return chronologicalIndex - atc.getChronologicalIndex();
+        return rand - atc.getRand();
     }
 }

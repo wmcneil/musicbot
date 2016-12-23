@@ -37,8 +37,13 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ListCommand extends Command implements IMusicCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ListCommand.class);
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -46,22 +51,40 @@ public class ListCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (!player.isQueueEmpty()) {
             MessageBuilder mb = new MessageBuilder();
+
+            int numberLength;
+            if(player.isShuffle()) {
+                numberLength = Integer.toString(player.getSongCount()).length();
+                numberLength = Math.max(2, numberLength);
+            } else {
+                numberLength = 2;
+            }
+
             int i = 0;
-            for (AudioTrackContext atc : player.getRemainingTracks()) {
+            AudioTrackContext firstAtc = null;
+            for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
+                log.info(i + ":" + atc.getChronologicalIndex());
+
                 if (i == 0) {
+                    firstAtc = atc;
                     String status = player.isPlaying() ? " \\▶" : " \\\u23F8"; //Escaped play and pause emojis
-                    mb.append("["+forceTwoDigits(i+1)+"]" , MessageBuilder.Formatting.BLOCK)
+                    mb.append("[" +
+                            forceNDigits(player.isShuffle() ? atc.getChronologicalIndex() : atc.getChronologicalIndex() + 1, numberLength)
+                            + "]", MessageBuilder.Formatting.BLOCK)
                             .append(status)
                             .append(atc.getTrack().getInfo().title)
                             .append("\n");
                 } else {
-                    mb.append("["+forceTwoDigits(i+1)+"]", MessageBuilder.Formatting.BLOCK)
+                    mb.append("[" +
+                            forceNDigits(player.isShuffle() && firstAtc.getChronologicalIndex() > atc.getChronologicalIndex() ? atc.getChronologicalIndex() : atc.getChronologicalIndex() + 1, numberLength)
+                            + "]", MessageBuilder.Formatting.BLOCK)
                             .append(" " + atc.getTrack().getInfo().title)
                             .append("\n");
                     if (i == 10) {
                         break;
                     }
                 }
+
                 i++;
             }
 
@@ -87,15 +110,37 @@ public class ListCommand extends Command implements IMusicCommand {
             }
             
             mb.append("\n" + desc);
-            
+
             channel.sendMessage(mb.build()).queue();
         } else {
             channel.sendMessage("Not currently playing anything.").queue();
         }
     }
 
-    public String forceTwoDigits(int i) {
-        return i < 10 ? "0" + i : Integer.toString(i);
+    private String forceNDigits(int i, int n) {
+        String str = Integer.toString(i);
+
+        while (str.length() < n) {
+            str = "0" + str;
+        }
+
+        return str;
     }
+
+    /*private int findFirstShuffledTrackIndex(List<AudioTrackContext> list) {
+        int min = list.size();
+        boolean first = true;
+
+        for(AudioTrackContext atc : list){
+            if(first){
+                first = false;
+                continue;
+            }
+
+            min = Math.min(min, atc.getChronologicalIndex());
+        }
+
+        return min -1;
+    }*/
 
 }

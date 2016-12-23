@@ -34,6 +34,8 @@ public interface ITrackProvider {
     AudioTrackContext getNext();
 
     List<AudioTrackContext> getAsList();
+
+    List<AudioTrackContext> getAsListOrdered();
     
     boolean isEmpty();
     

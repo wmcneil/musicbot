@@ -40,6 +40,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.FredBoat;
+import fredboat.audio.queue.AbstractTrackProvider;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
@@ -132,10 +133,6 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         return getPlayingTrack() == null && audioTrackProvider.isEmpty();
     }
 
-    public long getCurrentTimestamp() {
-        return player.getPlayingTrack().getPosition();
-    }
-
     public AudioTrackContext getPlayingTrack() {
         if (player.getPlayingTrack() == null) {
             play0(true);//Ensure we have something to return, unless the queue is really empty
@@ -162,6 +159,22 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         } else {
             return getQueuedTracks();
         }
+    }
+
+    public List<AudioTrackContext> getRemainingTracksOrdered() {
+        List<AudioTrackContext> list = new ArrayList<>();
+        list.add(getPlayingTrack());
+
+        AbstractTrackProvider provider = (AbstractTrackProvider) getAudioTrackProvider(); //TODO: Remove this cast
+        if(!provider.isShuffle() && !list.isEmpty()){
+            AudioTrackContext first = list.get(0);
+            first.setChronologicalIndex(0);
+        } else if(!list.isEmpty() && list.get(0).getChronologicalIndex() == 0) {
+            list.get(0).setChronologicalIndex(2);
+        }
+
+        list.addAll(getAudioTrackProvider().getAsListOrdered());
+        return list;
     }
 
     public void setVolume(float vol) {
