@@ -28,7 +28,7 @@ package fredboat.util;
 public enum DistributionEnum {
     MAIN("production"),
     MUSIC("music"),
-    BETA("beta"),
+    DEVELOPMENT("beta"),
     PATRON("patron");
 
     private final String id;

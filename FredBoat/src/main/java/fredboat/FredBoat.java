@@ -65,7 +65,7 @@ public abstract class FredBoat {
     private static final ArrayList<FredBoat> shards = new ArrayList<>();
     public static JCA jca;
     public static final long START_TIME = System.currentTimeMillis();
-    public static DistributionEnum distribution = DistributionEnum.BETA;
+    public static DistributionEnum distribution = DistributionEnum.DEVELOPMENT;
     public static final int UNKNOWN_SHUTDOWN_CODE = -991023;
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
     static EventListenerBoat listenerBot;
@@ -149,8 +149,8 @@ public abstract class FredBoat {
         if (config.optBoolean("patron")) {
             distribution = DistributionEnum.PATRON;
         } else //Determine distribution
-        if (BotConstants.IS_BETA) {
-            distribution = DistributionEnum.BETA;
+        if (config.optBoolean("development")) {
+            distribution = DistributionEnum.DEVELOPMENT;
         } else {
             distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
         }
@@ -159,8 +159,8 @@ public abstract class FredBoat {
         log.info("Determined distribution: " + distribution);
 
         //Initialise event listeners
-        listenerBot = new EventListenerBoat(scopes & 0x110, BotConstants.DEFAULT_BOT_PREFIX);
-        listenerSelf = new EventListenerSelf(scopes & 0x001, BotConstants.DEFAULT_SELF_PREFIX);
+        listenerBot = new EventListenerBoat(scopes & 0x110, distribution == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_BOT_PREFIX_BETA : BotConstants.DEFAULT_BOT_PREFIX);
+        listenerSelf = new EventListenerSelf(scopes & 0x001, distribution == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_SELF_PREFIX_BETA : BotConstants.DEFAULT_SELF_PREFIX);
 
         /* Init JDA */
 

@@ -40,12 +40,13 @@ public class BotConstants {
     public static final String PATRON_BOT_ID = "241950106125860865";
 
     public static final String FREDBOAT_HANGOUT_ID = "174820236481134592";
-    
-    public static final boolean IS_BETA = System.getProperty("os.name").toLowerCase().contains("windows");
+
     public static final String HELP_TEXT = getHelpText();
 
-    public static final String DEFAULT_BOT_PREFIX = IS_BETA ? "¤" : ";;";
-    public static final String DEFAULT_SELF_PREFIX = IS_BETA ? "::" : "<<";
+    public static final String DEFAULT_BOT_PREFIX = ";;";
+    public static final String DEFAULT_BOT_PREFIX_BETA = "¤";
+    public static final String DEFAULT_SELF_PREFIX = "::";
+    public static final String DEFAULT_SELF_PREFIX_BETA = "<<";
     public static final boolean DEBUG_BETA_USE_CUSTOM_PREFIXES = false;//TODO
 
     public static final Color FREDBOAT_COLOR = new Color(28, 191, 226);
