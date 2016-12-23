@@ -38,6 +38,7 @@ public class AudioTrackContext {
     private final String guildId;
     private final JDA jda;
     private int rand;
+    private int chronologicalIndex = -1;
 
     public AudioTrackContext(AudioTrack at, Member member) {
         this.track = at;
@@ -47,12 +48,29 @@ public class AudioTrackContext {
         this.rand = new Random().nextInt();
     }
 
+    public AudioTrackContext(AudioTrack at, Member member, int chronologicalIndex) {
+        this.track = at;
+        this.userId = member.getUser().getId();
+        this.guildId = member.getGuild().getId();
+        this.jda = member.getJDA();
+        this.rand = new Random().nextInt();
+        this.chronologicalIndex = chronologicalIndex;
+    }
+
     public AudioTrack getTrack() {
         return track;
     }
 
     public Member getMember() {
         return jda.getGuildById(guildId).getMember(jda.getUserById(userId));
+    }
+
+    public int getChronologicalIndex() {
+        return chronologicalIndex;
+    }
+
+    public void setChronologicalIndex(int chronologicalIndex) {
+        this.chronologicalIndex = chronologicalIndex;
     }
 
     public int getRand() {
