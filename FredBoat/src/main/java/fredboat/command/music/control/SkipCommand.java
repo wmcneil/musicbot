@@ -76,7 +76,11 @@ public class SkipCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         AudioTrackContext atc = player.getPlayingTrack();
         player.skip();
-        channel.sendMessage("Skipped track #1: **" + atc.getTrack().getInfo().title + "**").queue();
+        if(atc == null) {
+            channel.sendMessage("Couldn't find track to skip.").queue();
+        } else {
+            channel.sendMessage("Skipped track #1: **" + atc.getTrack().getInfo().title + "**").queue();
+        }
     }
 
 }
