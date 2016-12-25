@@ -95,7 +95,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 if(entry != null) {
                     invoked = entry.command;
                 } else {
-                    log.info("Unknown command:" +  cmdName);
+                    log.info("Unknown command:", cmdName);
                 }
             }
 
