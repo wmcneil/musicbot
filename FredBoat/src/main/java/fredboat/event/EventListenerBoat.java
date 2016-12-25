@@ -86,16 +86,17 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
         if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
             Command invoked = null;
-            try {
-                log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
-                Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
+            log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
+            Matcher matcher = COMMAND_NAME_PREFIX.matcher(event.getMessage().getContent());
 
-                if(matcher.find()) {
-                    //noinspection ConstantConditions
-                    invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
+            if(matcher.find()) {
+                String cmdName = matcher.group();
+                CommandRegistry.CommandEntry entry = CommandRegistry.getCommandFromScope(scope, cmdName);
+                if(entry != null) {
+                    invoked = entry.command;
+                } else {
+                    log.info("Unknown command:" +  cmdName);
                 }
-            } catch (NullPointerException e) {
-                log.warn("Got a NPE while handling a prefixed message", e);
             }
 
             if (invoked == null) {
