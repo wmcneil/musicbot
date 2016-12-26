@@ -42,7 +42,7 @@ public class API {
 
     private API() {}
 
-    public static void start(String oauthSecret) {
+    public static void start() {
         log.info("Igniting Spark API on port: " + PORT);
 
         Spark.port(PORT);
