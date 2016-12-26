@@ -36,10 +36,10 @@ import org.json.JSONObject;
 
 public class Bootloader {
 
-    public static JSONArray command;
-    public static String jarName;
-    public static int recentBoots = 0;
-    public static long lastBoot = 0L;
+    private static JSONArray command;
+    private static String jarName;
+    private static int recentBoots = 0;
+    private static long lastBoot = 0L;
     
     public static void main(String[] args) throws IOException, InterruptedException {
         OUTER:
@@ -73,9 +73,9 @@ public class Bootloader {
         }
     }
 
-    public static Process boot() throws IOException {
+    private static Process boot() throws IOException {
         //Check that we are not booting too quick (we could be stuck in a login loop)
-        if(System.currentTimeMillis() - lastBoot > 20000){
+        if(System.currentTimeMillis() - lastBoot > 3000 * 1000){
             recentBoots = 0;
         }
         
@@ -101,7 +101,7 @@ public class Bootloader {
         return process;
     }
 
-    public static void update() {
+    private static void update() {
         //The main program has already prepared the shaded jar. We just need to replace the jars.
         File oldJar = new File("./" + jarName);
         oldJar.delete();
