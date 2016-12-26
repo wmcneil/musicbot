@@ -27,6 +27,7 @@ package fredboat;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonitexAgent;
+import fredboat.api.API;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.commandmeta.CommandInitializer;
 import fredboat.event.EventListenerBoat;
@@ -171,6 +172,8 @@ public abstract class FredBoat {
         if ((scopes & 0x001) != 0) {
             fbClient = new FredBoatClient();
         }
+
+        API.start();
 
         //Initialise JCA
         String cbUser = credsjson.optString("cbUser");
