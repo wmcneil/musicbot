@@ -25,6 +25,7 @@
 
 package fredboat;
 
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import fredboat.event.EventLogger;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
@@ -49,7 +50,8 @@ public class FredBoatBot extends FredBoat {
                         .addListener(listenerBot)
                         .addListener(new EventLogger("216689009110417408"))
                         .setToken(accountToken)
-                        .setBulkDeleteSplittingEnabled(true);
+                        .setBulkDeleteSplittingEnabled(true)
+                        .setAudioSendFactory(new NativeAudioSendFactory());
                 if (numShards > 1) {
                     builder.useSharding(shardId, numShards);
                 }
