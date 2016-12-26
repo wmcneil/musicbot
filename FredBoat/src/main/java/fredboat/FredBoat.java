@@ -173,7 +173,11 @@ public abstract class FredBoat {
             fbClient = new FredBoatClient();
         }
 
-        API.start();
+        try {
+            API.start();
+        } catch (Exception e) {
+            log.info("Failed to ignite Spark, FredBoat API unavailable", e);
+        }
 
         //Initialise JCA
         String cbUser = credsjson.optString("cbUser");
