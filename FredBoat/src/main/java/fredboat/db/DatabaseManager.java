@@ -44,15 +44,16 @@ import org.json.JSONObject;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+@SuppressWarnings("Duplicates")//TODO: Remove later
 public class DatabaseManager {
 
     private static final Map<Thread, EntityManager> EM_MAP = new ConcurrentHashMap<>();
     private static EntityManagerFactory emf;
     private static final Map<String, GuildConfig> GUILD_CONFIGS = new HashMap<>();
 
-    public static void startup(JSONObject credsJson) {
+    public static void startup(String jdbcUrl) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(credsJson.getString("jdbcUrl"));
+        config.setJdbcUrl(jdbcUrl);
         DataSource dataSource = new HikariDataSource(config);
 
         Properties properties = new Properties();
@@ -61,7 +62,7 @@ public class DatabaseManager {
 
         LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
         emfb.setDataSource(dataSource);
-        emfb.setPackagesToScan("fredboat.db");
+        emfb.setPackagesToScan("fredboat.db.entities");
         emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         emfb.setJpaProperties(properties);
         emfb.setPersistenceUnitName("fredboat.test");
@@ -100,7 +101,7 @@ public class DatabaseManager {
         return em;
     }
 
-    public static GuildConfig getGuildConfig(Guild guild) {
+    /*public static GuildConfig getGuildConfig(Guild guild) {
         return GUILD_CONFIGS.get(guild.getId());
     }
 
@@ -177,6 +178,6 @@ public class DatabaseManager {
         if (commit) {
             em.getTransaction().commit();
         }
-    }
+    }*/
 
 }
