@@ -325,6 +325,10 @@ public abstract class FredBoat {
         throw new IllegalStateException("Attempted to get instance for JDA shard that is not indexed");
     }
 
+    public static JDA getFirstJDA(){
+        return shards.get(0).getJda();
+    }
+
     public ShardInfo getShardInfo() {
         int sId = jda.getShardInfo() == null ? 0 : jda.getShardInfo().getShardId();
 
