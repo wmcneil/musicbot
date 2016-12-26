@@ -182,7 +182,7 @@ public abstract class FredBoat {
         //Initialise JCA
         String cbUser = credsjson.optString("cbUser");
         String cbKey = credsjson.optString("cbKey");
-        if(cbUser != null && cbKey != null) {
+        if(cbUser != null && cbKey != null && !cbUser.equals("") && !cbKey.equals("")) {
             log.info("Starting CleverBot");
             jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
         } else {
