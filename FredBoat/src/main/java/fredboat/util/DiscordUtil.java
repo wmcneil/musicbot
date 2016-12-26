@@ -42,6 +42,8 @@ import java.util.List;
 
 public class DiscordUtil {
 
+    private static final String USER_AGENT = "FredBoat DiscordBot (https://github.com/Frederikam/FredBoat, 1.0)";
+
     private DiscordUtil() {
     }
 
@@ -108,7 +110,7 @@ public class DiscordUtil {
     public static int getRecommendedShardCount(String token) throws UnirestException {
         return Unirest.get(Requester.DISCORD_API_PREFIX + "gateway/bot")
                 .header("Authorization", "Bot " + token)
-                .header("User-agent", "FredBoat DiscordBot (https://github.com/Frederikam/FredBoat, 1.0)")
+                .header("User-agent", USER_AGENT)
                 .asJson()
                 .getBody()
                 .getObject()
@@ -117,9 +119,9 @@ public class DiscordUtil {
 
     public static User getUserFromBearer(JDA jda, String token) {
         try {
-            JSONObject user =  Unirest.get(Requester.DISCORD_API_PREFIX + "/users/{@me}")
+            JSONObject user =  Unirest.get(Requester.DISCORD_API_PREFIX + "/users/@me")
                     .header("Authorization", "Bearer " + token)
-                    .header("User-agent", "FredBoat DiscordBot (https://github.com/Frederikam/FredBoat, 1.0)")
+                    .header("User-agent", USER_AGENT)
                     .asJson()
                     .getBody()
                     .getObject();
@@ -130,6 +132,16 @@ public class DiscordUtil {
         } catch (UnirestException | RateLimitedException ignored) {}
 
         return null;
+    }
+
+    // https://discordapp.com/developers/docs/topics/oauth2
+    public static JSONObject getApplicationInfo(String token) throws UnirestException {
+        return Unirest.get(Requester.DISCORD_API_PREFIX + "/oauth2/applications/@me")
+                .header("Authorization", "Bot " + token)
+                .header("User-agent", USER_AGENT)
+                .asJson()
+                .getBody()
+                .getObject();
     }
 
 }

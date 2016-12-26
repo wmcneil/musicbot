@@ -38,10 +38,11 @@ public class API {
     private static final Logger log = LoggerFactory.getLogger(API.class);
 
     private static final int PORT = 1356;
+    private static String secret = "";
 
     private API() {}
 
-    public static void start() {
+    public static void start(String oauthSecret) {
         log.info("Igniting Spark API on port: " + PORT);
 
         Spark.port(PORT);

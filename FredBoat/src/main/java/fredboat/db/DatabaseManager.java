@@ -51,6 +51,7 @@ public class DatabaseManager {
     private static EntityManagerFactory emf;
     private static final Map<String, GuildConfig> GUILD_CONFIGS = new HashMap<>();
 
+    //TODO: Use this
     public static void startup(String jdbcUrl) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
@@ -101,6 +102,7 @@ public class DatabaseManager {
         return em;
     }
 
+    //TODO: Remove this
     /*public static GuildConfig getGuildConfig(Guild guild) {
         return GUILD_CONFIGS.get(guild.getId());
     }
