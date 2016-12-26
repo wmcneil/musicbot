@@ -56,7 +56,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
             Command invoked = null;
             try {
                 log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
-                Matcher matcher = commandNamePrefix.matcher(event.getMessage().getContent());
+                Matcher matcher = COMMAND_NAME_PREFIX.matcher(event.getMessage().getContent());
                 matcher.find();
 
                 invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
