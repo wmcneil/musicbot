@@ -31,6 +31,7 @@ import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.UConfig;
 import fredboat.util.DiscordUtil;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.User;
 import org.dmfs.httpessentials.client.HttpRequestExecutor;
 import org.dmfs.httpessentials.exceptions.ProtocolError;
@@ -46,15 +47,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 
-class OAuthManager {
+public class OAuthManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(OAuthManager.class);
 
     private static OAuth2Client oauth = null;
     private static final HttpRequestExecutor EXECUTOR = new HttpUrlConnectionExecutor();
 
-    //TODO: Use this
-    static void start(String token, String secret) throws UnirestException {
+    public static void start(String botToken, String secret) throws UnirestException {
         // Create OAuth2 provider
         OAuth2AuthorizationProvider provider = new BasicOAuth2AuthorizationProvider(
                 URI.create("https://discordapp.com/api/oauth2/authorize"),
@@ -62,7 +62,7 @@ class OAuthManager {
                 new Duration(1, 0, 3600) /* default expiration time in case the server doesn't return any */);
 
         OAuth2ClientCredentials credentials = new BasicOAuth2ClientCredentials(
-                DiscordUtil.getApplicationInfo(token).getString("id"), secret);
+                DiscordUtil.getApplicationInfo(botToken).getString("id"), secret);
 
         oauth = new BasicOAuth2Client(
                 provider,

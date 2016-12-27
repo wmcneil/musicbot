@@ -44,14 +44,12 @@ import org.json.JSONObject;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-@SuppressWarnings("Duplicates")//TODO: Remove later
 public class DatabaseManager {
 
     private static final Map<Thread, EntityManager> EM_MAP = new ConcurrentHashMap<>();
     private static EntityManagerFactory emf;
     private static final Map<String, GuildConfig> GUILD_CONFIGS = new HashMap<>();
 
-    //TODO: Use this
     public static void startup(String jdbcUrl) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
