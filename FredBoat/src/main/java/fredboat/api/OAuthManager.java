@@ -74,7 +74,8 @@ public class OAuthManager {
         try {
             // Request access token using a Client Credentials Grant
             OAuth2AccessToken token = new ClientCredentialsGrant(oauth, new BasicScope("scope")).accessToken(EXECUTOR);
-            if (!token.scope().hasToken("guild") || !token.scope().hasToken("identify")) {
+            if (!token.scope().hasToken("guild")
+                    || !token.scope().hasToken("identify")) {
                 log.warn("Got invalid OAuth2 scopes.");
                 return null;
             }

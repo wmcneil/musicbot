@@ -71,6 +71,6 @@ public class DiscordOAuth2Token implements OAuth2AccessToken {
 
     @Override
     public OAuth2Scope scope() throws ProtocolException {
-        return new BasicScope("identify");
+        return new BasicScope("identify", "guilds");
     }
 }
