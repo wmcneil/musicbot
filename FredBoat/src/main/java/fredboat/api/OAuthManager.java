@@ -27,7 +27,6 @@ package fredboat.api;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
-import fredboat.db.DatabaseManager;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.UConfig;
@@ -47,7 +46,7 @@ import java.io.IOException;
 import java.net.URI;
 
 @SuppressWarnings("Duplicates") //TODO: Remove this
-public class OAuthManager {
+class OAuthManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(OAuthManager.class);
 
@@ -74,7 +73,7 @@ public class OAuthManager {
     static UConfig handleCallback(String code) {
         try {
             // Request access token using a Client Credentials Grant
-            OAuth2AccessToken token = new ClientCredentialsGrant(oauth, new BasicScope("scope")).accessToken(executor);
+            OAuth2AccessToken token = new ClientCredentialsGrant(oauth, new BasicScope("scope")).accessToken(EXECUTOR);
             if (!token.scope().hasToken("guild") || !token.scope().hasToken("identify")) {
                 log.warn("Got invalid OAuth2 scopes.");
                 return null;
@@ -86,14 +85,13 @@ public class OAuthManager {
 
             uconfig = uconfig == null ? new UConfig() : uconfig;
 
-            uconfig = uconfig
-                    .setBearer(token.accessToken())
+            uconfig.setBearer(token.accessToken())
                     .setBearerExpiration(token.expiriationDate().getTimestamp())
                     .setRefresh(token.refreshToken())
                     .setUserId(user.getId());
 
             //Save to database
-            EntityWriter.mergeUserConfig(uconfig, true);
+            EntityWriter.mergeUConfig(uconfig);
 
             return uconfig;
         } catch (IOException | ProtocolError | ProtocolException ex) {

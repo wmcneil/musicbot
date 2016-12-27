@@ -9,10 +9,10 @@ import javax.persistence.Table;
 public class UConfig {
 
     @Id
-    private long userId;
+    private String userId;
     private String bearer;
     private String refresh;
-    private String webtoken;
+    private long bearerexpiration;
 
     public String getBearer() {
         return bearer;
@@ -22,28 +22,31 @@ public class UConfig {
         return refresh;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public String getWebtoken() {
-        return webtoken;
+    public long getBearerExpiration() {
+        return bearerexpiration;
     }
 
-    public void setBearer(String bearer) {
+    public UConfig setBearer(String bearer) {
         this.bearer = bearer;
+        return this;
     }
 
-    public void setRefresh(String refresh) {
+    public UConfig setRefresh(String refresh) {
         this.refresh = refresh;
+        return this;
     }
 
-    public void setUserId(long userId) {
+    public UConfig setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
-    public void setWebtoken(String webtoken) {
-        this.webtoken = webtoken;
+    public UConfig setBearerExpiration(long bearerExpiration) {
+        this.bearerexpiration = bearerExpiration;
+        return this;
     }
-
 }
