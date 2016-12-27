@@ -38,6 +38,7 @@ import org.dmfs.httpessentials.exceptions.ProtocolException;
 import org.dmfs.httpessentials.httpurlconnection.HttpUrlConnectionExecutor;
 import org.dmfs.oauth2.client.*;
 import org.dmfs.oauth2.client.grants.ClientCredentialsGrant;
+import org.dmfs.oauth2.client.grants.TokenRefreshGrant;
 import org.dmfs.oauth2.client.scope.BasicScope;
 import org.dmfs.rfc5545.Duration;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 
-@SuppressWarnings("Duplicates") //TODO: Remove this
 class OAuthManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(OAuthManager.class);
@@ -79,6 +79,32 @@ class OAuthManager {
                 return null;
             }
 
+            return saveTokenToConfig(token);
+        } catch (IOException | ProtocolError | ProtocolException ex) {
+            throw new RuntimeException("Failed oauth access token grant", ex);
+        }
+    }
+
+    public static UConfig ensureUnexpiredBearer(UConfig config) {
+        long cur = System.currentTimeMillis() / 1000;
+
+        try {
+            if(cur + 60 > config.getBearerExpiration()){
+                //Will soon expire if it hasn't already
+                OAuth2AccessToken oldToken = new DiscordOAuth2Token(config);
+                OAuth2AccessToken token = new TokenRefreshGrant(oauth, oldToken).accessToken(EXECUTOR);
+
+                saveTokenToConfig(token);
+            }
+        } catch (IOException | ProtocolError | ProtocolException e) {
+            throw new RuntimeException(e);
+        }
+
+        return config;
+    }
+
+    private static UConfig saveTokenToConfig(OAuth2AccessToken token){
+        try {
             User user = DiscordUtil.getUserFromBearer(FredBoat.getFirstJDA(), token.accessToken());
 
             UConfig uconfig = EntityReader.getUConfig(user.getId());
@@ -94,8 +120,9 @@ class OAuthManager {
             EntityWriter.mergeUConfig(uconfig);
 
             return uconfig;
-        } catch (IOException | ProtocolError | ProtocolException ex) {
+        } catch (ProtocolException ex) {
             throw new RuntimeException("Failed oauth access token grant", ex);
         }
     }
+
 }
