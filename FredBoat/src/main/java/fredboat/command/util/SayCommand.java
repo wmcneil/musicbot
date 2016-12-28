@@ -51,7 +51,7 @@ public class SayCommand extends Command {
         res = res.substring(1);
         Message myMsg;
         try {
-            myMsg = channel.sendMessage('\u200b' + res).block();
+            myMsg = channel.sendMessage('\u200b' + res).complete(true);
 
             EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), myMsg);
         } catch (RateLimitedException e) {
