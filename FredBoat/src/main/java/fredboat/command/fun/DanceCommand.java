@@ -43,15 +43,15 @@ public class DanceCommand extends Command implements ICommand {
             public void run() {
                 synchronized (channel) {
                     try {
-                    Message msg = channel.sendMessage('\u200b' + "\\o\\").block();
+                    Message msg = channel.sendMessage('\u200b' + "\\o\\").complete(true);
                     EventListenerBoat.messagesToDeleteIfIdDeleted.put(message.getId(), msg);
                     long start = System.currentTimeMillis();
                         synchronized (this) {
                             while (start + 60000 > System.currentTimeMillis()) {
                                 wait(1000);
-                                msg = msg.editMessage("/o/").block();
+                                msg = msg.editMessage("/o/").complete(true);
                                 wait(1000);
-                                msg = msg.editMessage("\\o\\").block();
+                                msg = msg.editMessage("\\o\\").complete(true);
                             }
                         }
                     } catch (InterruptedException | RateLimitedException ignored) {

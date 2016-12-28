@@ -40,7 +40,7 @@ public class HelpCommand extends Command implements IMusicBackupCommand {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(!invoker.getUser().hasPrivateChannel()){
             try {
-                invoker.getUser().openPrivateChannel().block();
+                invoker.getUser().openPrivateChannel().complete(true);
             } catch (RateLimitedException e) {
                 throw new RuntimeException(e);
             }

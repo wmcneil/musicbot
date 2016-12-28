@@ -71,7 +71,7 @@ public class LeetCommand extends Command implements ICommand {
         }
         Message myMsg = null;
         try {
-            myMsg = channel.sendMessage(res).block();
+            myMsg = channel.sendMessage(res).complete(true);
         } catch (RateLimitedException e) {
             throw new RuntimeException(e);
         }

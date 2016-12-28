@@ -55,7 +55,7 @@ public class DumpCommand extends Command {
 
         if(!invoker.getUser().hasPrivateChannel()){
             try {
-                invoker.getUser().openPrivateChannel().block();
+                invoker.getUser().openPrivateChannel().complete(true);
             } catch (RateLimitedException e) {
                 throw new RuntimeException(e);
             }
@@ -77,7 +77,7 @@ public class DumpCommand extends Command {
             while (availableMessages < realDumpSize) {
                 int nextMessages = Math.min(100, realDumpSize - availableMessages);
                 availableMessages = nextMessages + availableMessages;
-                mh.retrievePast(nextMessages).block();
+                mh.retrievePast(nextMessages).complete(true);
             }
 
             String dump = "**------BEGIN DUMP------**\n";
