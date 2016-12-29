@@ -111,10 +111,16 @@ public class TextUtils {
         }
         builder.append("\t...```");
 
+        Message out = builder.build();
+
         try {
-            channel.sendMessage(builder.build()).queue();
+            channel.sendMessage(out).queue();
         } catch (UnsupportedOperationException tooLongEx) {
-            channel.sendMessage("An error occured :anger: Error was too long to display.").queue();
+            try {
+                channel.sendMessage("An error occured :anger: Error was too long to display.\n" + postToHastebin(out.getRawContent()) + ".txt").queue();
+            } catch (UnirestException e1) {
+                channel.sendMessage("An error occured :anger: Was too long and was unable to post to Hastebin!").queue();
+            }
         }
     }
 
