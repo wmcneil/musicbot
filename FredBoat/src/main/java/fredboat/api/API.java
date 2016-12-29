@@ -28,6 +28,7 @@ package fredboat.api;
 import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.db.entities.UConfig;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class API {
         Spark.before((request, response) -> {
             log.info(request.requestMethod() + " " + request.pathInfo());
             response.header("Access-Control-Allow-Origin", "*");
+            response.type("application/json");
         });
 
         Spark.get("/stats", (req, res) -> {
@@ -91,6 +93,16 @@ public class API {
                     .put("userId", uconfig.getUserId());
 
             return out;
+        });
+
+
+        /* Exception handling */
+        Spark.exception(Exception.class, (e, request, response) -> {
+            log.error(request.requestMethod() + " " + request.pathInfo() + " :", e);
+
+            response.body(ExceptionUtils.getStackTrace(e));
+            response.type("text/plain");
+            response.status(500);
         });
     }
 
