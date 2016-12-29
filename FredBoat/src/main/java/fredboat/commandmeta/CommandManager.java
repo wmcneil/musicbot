@@ -27,10 +27,7 @@ package fredboat.commandmeta;
 
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.*;
-import fredboat.util.BotConstants;
-import fredboat.util.DiscordUtil;
-import fredboat.util.DistributionEnum;
-import fredboat.util.TextUtils;
+import fredboat.util.*;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -40,28 +37,17 @@ import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class CommandManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(CommandManager.class);
 
-    public static HashMap<String, ICommand> commands = new HashMap<>();
-    public static ICommand defaultCmd = new UnknownCommand();
     public static int commandsExecuted = 0;
 
     public static void prefixCalled(Command invoked, Guild guild, TextChannel channel, Member invoker, Message message) {
-        //String[] args = message.getRawContent().replace("\n", " ").split(" ");
         String[] args = commandToArguments(message.getRawContent());
         commandsExecuted++;
-        if (invoked instanceof ICommandOwnerRestricted) {
-            //This command is restricted to only Frederikam
-            //Check if invoker is actually Fre_d
-            if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
-                channel.sendMessage(TextUtils.prefaceWithName(invoker, " you are not allowed to use that command!")).queue();
-                return;
-            }
-        }
 
         if (invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)) {
             log.info("Ignored command because main bot is present");
@@ -88,13 +74,29 @@ public class CommandManager {
             return;
         }
 
+        if (invoked instanceof ICommandOwnerRestricted) {
+            //Check if invoker is actually Fre_d
+            if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
+                channel.sendMessage(TextUtils.prefaceWithName(invoker, " you are not allowed to use that command!")).queue();
+                return;
+            }
+        }
+
         //Hardcode music commands in FredBoatHangout. Blacklist any channel that isn't #general or #staff, but whitelist Frederikam
         if (invoked instanceof IMusicCommand && guild.getId().equals("174820236481134592")) {
             if (!channel.getId().equals("174821093633294338")
                     && !channel.getId().equals("217526705298866177")
+                    //&& !invoker.getUser().getId().equals("203330266461110272")//Cynth
                     && !invoker.getUser().getId().equals("81011298891993088")) {
                 message.deleteMessage().queue();
-                channel.sendMessage("Please don't spam music commands outside of <#174821093633294338>.").queue();
+                channel.sendMessage(invoker.getEffectiveName() + ": Please don't spam music commands outside of <#174821093633294338>.").queue(message1 -> {
+                    RestActionScheduler.schedule(
+                            message1.deleteMessage(),
+                            5,
+                            TimeUnit.SECONDS
+                    );
+                });
+
                 return;
             }
         }
