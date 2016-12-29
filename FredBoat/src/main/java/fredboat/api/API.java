@@ -98,7 +98,7 @@ public class API {
 
         /* Exception handling */
         Spark.exception(Exception.class, (e, request, response) -> {
-            log.error(request.requestMethod() + " " + request.pathInfo() + " :", e);
+            log.error(request.requestMethod() + " " + request.pathInfo(), e);
 
             response.body(ExceptionUtils.getStackTrace(e));
             response.type("text/plain");
