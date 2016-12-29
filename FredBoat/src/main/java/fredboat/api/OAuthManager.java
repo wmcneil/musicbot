@@ -113,7 +113,7 @@ public class OAuthManager {
             uconfig = uconfig == null ? new UConfig() : uconfig;
 
             uconfig.setBearer(token.accessToken())
-                    .setBearerExpiration(token.expiriationDate().getTimestamp())
+                    .setBearerExpiration(token.expirationDate().getTimestamp())
                     .setRefresh(token.refreshToken())
                     .setUserId(user.getId());
 

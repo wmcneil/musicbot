@@ -65,7 +65,7 @@ public class DiscordOAuth2Token implements OAuth2AccessToken {
     }
 
     @Override
-    public DateTime expiriationDate() throws ProtocolException {
+    public DateTime expirationDate() throws ProtocolException {
         return new DateTime(expiration);
     }
 
