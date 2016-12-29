@@ -47,6 +47,8 @@ public class API {
 
         Spark.port(PORT);
 
+        Spark.before((request, response) -> log.info(request.requestMethod() + " " + request.pathInfo()));
+
         Spark.get("/stats", (req, res) -> {
             res.type("application/json");
 
@@ -87,6 +89,8 @@ public class API {
 
             return out;
         });
+
+        Spark.after((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     }
 
 }
