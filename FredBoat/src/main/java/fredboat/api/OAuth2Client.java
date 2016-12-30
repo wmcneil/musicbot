@@ -61,7 +61,23 @@ public class OAuth2Client {
     }
 
     public TokenGrant refreshToken(String refresh) throws UnirestException {
-        //TODO
-        return null;
+        JSONObject json = Unirest.post(tokenUrl)
+                .field("refresh_token", refresh)
+                .field("client_id", clientId)
+                .field("client_secret", secret)
+                .field("grant_type", "refresh_token")
+                .asJson().getBody().getObject();
+
+        // According to the standard, a new token may optionally be given
+        if(json.has("refresh_token")){
+            refresh = json.getString("refresh_token");
+        }
+
+        return new TokenGrant(
+                json.getString("access_token"),
+                refresh,
+                json.getString("scope"),
+                json.getLong("expires_in")
+        );
     }
 }
