@@ -250,17 +250,16 @@ public abstract class FredBoat {
         if(!firstReadyEventReceived.getAndSet(true)){
             onInitFirstShard(readyEvent);
         }
-    }
-
-    private static void onInitFirstShard(ReadyEvent readyEvent) {
-        //Commands
-        CommandInitializer.initCommands();
-
 
         if(ready == numShards) {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
+    }
+
+    private static void onInitFirstShard(ReadyEvent readyEvent) {
+        //Commands
+        CommandInitializer.initCommands();
     }
 
     //Shutdown hook
