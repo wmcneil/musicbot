@@ -31,57 +31,38 @@ import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.UConfig;
 import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.User;
-import org.dmfs.httpessentials.client.HttpRequestExecutor;
-import org.dmfs.httpessentials.exceptions.ProtocolError;
-import org.dmfs.httpessentials.exceptions.ProtocolException;
-import org.dmfs.httpessentials.httpurlconnection.HttpUrlConnectionExecutor;
-import org.dmfs.oauth2.client.*;
-import org.dmfs.oauth2.client.grants.ClientCredentialsGrant;
-import org.dmfs.oauth2.client.grants.TokenRefreshGrant;
-import org.dmfs.oauth2.client.scope.BasicScope;
-import org.dmfs.rfc5545.Duration;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
 
 public class OAuthManager {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(OAuthManager.class);
 
     private static OAuth2Client oauth = null;
-    private static final HttpRequestExecutor EXECUTOR = new HttpUrlConnectionExecutor();
 
     public static void start(String botToken, String secret) throws UnirestException {
         // Create OAuth2 provider
-        OAuth2AuthorizationProvider provider = new BasicOAuth2AuthorizationProvider(
-                URI.create("https://discordapp.com/api/oauth2/authorize"),
-                URI.create("https://discordapp.com/api/oauth2/token"),
-                new Duration(1, 0, 3600) /* default expiration time in case the server doesn't return any */);
-
-        OAuth2ClientCredentials credentials = new BasicOAuth2ClientCredentials(
-                DiscordUtil.getApplicationInfo(botToken).getString("id"), secret);
-
-        oauth = new BasicOAuth2Client(
-                provider,
-                credentials,
-                URI.create("http://localhost/") /* Redirect URL, unused */);
+        oauth = new OAuth2Client(
+                DiscordUtil.getApplicationInfo(botToken).getString("id"),
+                secret,
+                "https://discordapp.com/api/oauth2/token",
+                "http://localhost:1337/callback"
+        );
     }
 
     static UConfig handleCallback(String code) {
         try {
             // Request access token using a Client Credentials Grant
-            OAuth2AccessToken token = new ClientCredentialsGrant(oauth, new BasicScope("scope")).accessToken(EXECUTOR);
-            if (!token.scope().hasToken("guild")
-                    || !token.scope().hasToken("identify")) {
-                log.warn("Got invalid OAuth2 scopes.");
-                return null;
+            TokenGrant token = oauth.grantToken(code);
+            if (!token.getScope().contains("guild")
+                    || !token.getScope().contains("identify")) {
+                throw new RuntimeException("Got invalid OAuth2 scopes.");
             }
 
             return saveTokenToConfig(token);
-        } catch (IOException | ProtocolError | ProtocolException ex) {
+        } catch (UnirestException ex) {
             throw new RuntimeException("Failed oauth access token grant", ex);
         }
     }
@@ -92,38 +73,33 @@ public class OAuthManager {
         try {
             if(cur + 60 > config.getBearerExpiration()){
                 //Will soon expire if it hasn't already
-                OAuth2AccessToken oldToken = new DiscordOAuth2Token(config);
-                OAuth2AccessToken token = new TokenRefreshGrant(oauth, oldToken).accessToken(EXECUTOR);
+                TokenGrant token = oauth.refreshToken(config.getRefresh());
 
-                saveTokenToConfig(token);
+                config = saveTokenToConfig(token);
             }
-        } catch (IOException | ProtocolError | ProtocolException e) {
+        } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
 
         return config;
     }
 
-    private static UConfig saveTokenToConfig(OAuth2AccessToken token){
-        try {
-            User user = DiscordUtil.getUserFromBearer(FredBoat.getFirstJDA(), token.accessToken());
+    private static UConfig saveTokenToConfig(TokenGrant token){
+        User user = DiscordUtil.getUserFromBearer(FredBoat.getFirstJDA(), token.getBearer());
 
-            UConfig uconfig = EntityReader.getUConfig(user.getId());
+        UConfig uconfig = EntityReader.getUConfig(user.getId());
 
-            uconfig = uconfig == null ? new UConfig() : uconfig;
+        uconfig = uconfig == null ? new UConfig() : uconfig;
 
-            uconfig.setBearer(token.accessToken())
-                    .setBearerExpiration(token.expirationDate().getTimestamp())
-                    .setRefresh(token.refreshToken())
-                    .setUserId(user.getId());
+        uconfig.setBearer(token.getBearer())
+                .setBearerExpiration(token.getExpirationTime())
+                .setRefresh(token.getRefresh())
+                .setUserId(user.getId());
 
-            //Save to database
-            EntityWriter.mergeUConfig(uconfig);
+        //Save to database
+        EntityWriter.mergeUConfig(uconfig);
 
-            return uconfig;
-        } catch (ProtocolException ex) {
-            throw new RuntimeException("Failed oauth access token grant", ex);
-        }
+        return uconfig;
     }
 
 }

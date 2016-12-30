@@ -25,52 +25,34 @@
 
 package fredboat.api;
 
-import fredboat.db.entities.UConfig;
-import org.dmfs.httpessentials.exceptions.ProtocolException;
-import org.dmfs.oauth2.client.OAuth2AccessToken;
-import org.dmfs.oauth2.client.OAuth2Scope;
-import org.dmfs.oauth2.client.scope.BasicScope;
-import org.dmfs.rfc5545.DateTime;
-
-public class DiscordOAuth2Token implements OAuth2AccessToken {
+public class TokenGrant {
 
     private final String bearer;
     private final String refresh;
-    private final long expiration;
+    private final String scope;
+    private final long expireEpoch;
 
-    public DiscordOAuth2Token(UConfig config) {
-        bearer = config.getBearer();
-        refresh = config.getRefresh();
-        expiration = config.getBearerExpiration() * 1000;
+    TokenGrant(String bearer, String refresh, String scope, long expireSecs) {
+        this.bearer = bearer;
+        this.refresh = refresh;
+        this.scope = scope;
+        this.expireEpoch = (System.currentTimeMillis() / 1000) + expireSecs;
     }
 
-    @Override
-    public String accessToken() throws ProtocolException {
+    public String getBearer() {
         return bearer;
     }
 
-    @Override
-    public String tokenType() throws ProtocolException {
-        return null;
-    }
-
-    @Override
-    public boolean hasRefreshToken() {
-        return true;
-    }
-
-    @Override
-    public String refreshToken() throws ProtocolException {
+    public String getRefresh() {
         return refresh;
     }
 
-    @Override
-    public DateTime expirationDate() throws ProtocolException {
-        return new DateTime(expiration);
+    public String getScope() {
+        return scope;
     }
 
-    @Override
-    public OAuth2Scope scope() throws ProtocolException {
-        return new BasicScope("identify", "guilds");
+    public long getExpirationTime() {
+        return expireEpoch;
     }
+
 }
