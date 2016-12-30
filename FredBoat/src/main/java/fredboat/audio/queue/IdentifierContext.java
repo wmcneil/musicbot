@@ -36,12 +36,6 @@ public class IdentifierContext {
     private boolean quiet = false;
     private long position = 0L;
 
-    public IdentifierContext(String identifier, TextChannel textChannel) {
-        this.identifier = identifier;
-        this.textChannel = textChannel;
-        this.member = null;
-    }
-
     public IdentifierContext(String identifier, TextChannel textChannel, Member member) {
         this.identifier = identifier;
         this.textChannel = textChannel;

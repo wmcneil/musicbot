@@ -29,7 +29,7 @@ import fredboat.command.admin.*;
 import fredboat.command.fun.*;
 import fredboat.command.maintenance.GetIdCommand;
 import fredboat.command.maintenance.StatsCommand;
-import fredboat.command.maintenance.TestCommand;
+import fredboat.command.admin.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.SoftbanCommand;
 import fredboat.command.music.control.*;
