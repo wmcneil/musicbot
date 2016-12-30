@@ -23,24 +23,42 @@
  *
  */
 
-package fredboat.command.maintenance;
+package fredboat.command.admin;
 
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fredboat.audio.AbstractPlayer;
+import fredboat.audio.GuildPlayer;
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.apache.commons.codec.binary.Base64;
 
-/**
- *
- * @author frederik
- */
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class TestCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        throw new NullPointerException("Test!");
-    }
+        try {
+            GuildPlayer player = PlayerRegistry.get(guild);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            AbstractPlayer.getPlayerManager().encodeTrack(new MessageOutput(baos), player.getPlayingTrack().getTrack());
 
+            String msg = Base64.encodeBase64String(baos.toByteArray());
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(msg));
+            AudioTrack at = AbstractPlayer.getPlayerManager().decodeTrack(new MessageInput(bais)).decodedTrack;
+            channel.sendMessage("Loaded track " + at.getInfo().title).queue();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

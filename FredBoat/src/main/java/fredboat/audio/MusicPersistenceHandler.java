@@ -25,7 +25,10 @@
 
 package fredboat.audio;
 
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
@@ -34,15 +37,13 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class MusicPersistenceHandler {
         boolean isUpdate = code == ExitCodes.EXIT_CODE_UPDATE;
         boolean isRestart = code == ExitCodes.EXIT_CODE_RESTART;
 
-        String msg = null;
+        String msg;
 
         if (isUpdate) {
             msg = "FredBoat♪♪ is updating. This should only take a minute and will reload the current playlist.";
@@ -109,8 +110,11 @@ public class MusicPersistenceHandler {
                 ArrayList<JSONObject> identifiers = new ArrayList<>();
 
                 for (AudioTrackContext atc : player.getRemainingTracks()) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    AbstractPlayer.getPlayerManager().encodeTrack(new MessageOutput(baos), atc.getTrack());
+
                     JSONObject ident = new JSONObject()
-                            .put("identifier", atc.getTrack().getIdentifier())
+                            .put("message", Base64.encodeBase64String(baos.toByteArray()))
                             .put("user", atc.getMember().getUser().getId());
 
                     identifiers.add(ident);
@@ -163,26 +167,38 @@ public class MusicPersistenceHandler {
                 player.setRepeat(repeat);
                 player.setShuffle(shuffle);
 
+                final boolean[] isFirst = {true};
+
                 sources.forEach((Object t) -> {
                     JSONObject json = (JSONObject) t;
-                    String identifier = json.getString("identifier");
+                    byte[] message = Base64.decodeBase64(json.getString("message"));
                     Member member = vc.getGuild().getMember(vc.getJDA().getUserById(json.getString("user")));
 
-                    IdentifierContext ic = new IdentifierContext(identifier, tc, member);
+                    AudioTrack at;
+                    try {
+                        ByteArrayInputStream bais = new ByteArrayInputStream(message);
+                        at = AbstractPlayer.getPlayerManager().decodeTrack(new MessageInput(bais)).decodedTrack;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                    ic.setQuiet(true);
 
-                    if (identifier.equals(sources.get(0))) {
+                    if (at == null) {
+                        log.error("Loaded track that was null! Skipping...");
+                    }
+
+                    if (isFirst[0]) {
+                        isFirst[0] = false;
                         if (data.has("position")) {
-                            ic.setPosition(data.getLong("position"));
+                            at.setPosition(data.getLong("position"));
                         }
                     }
 
-                    player.queue(ic);
+                    player.queue(new AudioTrackContext(at, member));
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage("Started reloading playlist. `" + sources.length() + "` tracks found.").queue();
+                tc.sendMessage("Reloading playlist. `" + sources.length() + "` tracks found.").queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             } finally {
