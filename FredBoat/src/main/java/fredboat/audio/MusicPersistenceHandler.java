@@ -28,10 +28,8 @@ package fredboat.audio;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.DecodedTrackHolder;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
-import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
@@ -163,7 +161,9 @@ public class MusicPersistenceHandler {
 
                 player.joinChannel(vc);
                 player.setCurrentTC(tc);
-                player.setVolume(volume);
+                if(FredBoat.distribution.volumeSupported()) {
+                    player.setVolume(volume);
+                }
                 player.setRepeat(repeat);
                 player.setShuffle(shuffle);
 
@@ -181,7 +181,6 @@ public class MusicPersistenceHandler {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
 
                     if (at == null) {
                         log.error("Loaded track that was null! Skipping...");
