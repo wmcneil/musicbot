@@ -122,7 +122,7 @@ public class PlayCommand extends Command implements IMusicCommand {
         //Now remove all punctuation
         query = query.replaceAll("[.,/#!$%\\^&*;:{}=\\-_`~()]", "");
 
-        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query)).block();
+        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query)).complete(true);
 
         ArrayList<YoutubeVideo> vids = null;
         try {

@@ -58,7 +58,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                     YoutubeVideo selected = selection.choices.get(i - 1);
                     player.selections.remove(invoker.getUser().getId());
                     String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
-                    selection.getOutMsg().editMessage(msg).block();
+                    selection.getOutMsg().editMessage(msg).complete(true);
                     player.queue("https://www.youtube.com/watch?v=" + selected.getId(), channel, invoker);
                     player.setPause(false);
                     try {

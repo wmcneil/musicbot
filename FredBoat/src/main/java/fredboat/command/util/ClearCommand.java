@@ -56,7 +56,7 @@ public class ClearCommand extends Command {
         MessageHistory history = new MessageHistory(channel);
         List<Message> msgs;
         try {
-            msgs = history.retrievePast(50).block();
+            msgs = history.retrievePast(50).complete(true);
 
             ArrayList<Message> myMessages = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class ClearCommand extends Command {
             if(myMessages.isEmpty()){
                 throw new MessagingException("No messages found.");
             } else if(myMessages.size() == 1) {
-                myMessages.get(0).deleteMessage().block();
+                myMessages.get(0).deleteMessage().complete(true);
                 channel.sendMessage("Deleted one message.").queue();
             } else {
 
@@ -77,7 +77,7 @@ public class ClearCommand extends Command {
                     throw new MessagingException("I must have the `Manage Messages` permission to delete my own messages in bulk.");
                 }
 
-                channel.deleteMessages(myMessages).block();
+                channel.deleteMessages(myMessages).complete(true);
                 channel.sendMessage("Deleted **" + myMessages.size() + "** messages.").queue();
             }
         } catch (RateLimitedException e) {

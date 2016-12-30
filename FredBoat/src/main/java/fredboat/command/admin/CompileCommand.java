@@ -51,7 +51,7 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
             Runtime rt = Runtime.getRuntime();
             Message msg;
 
-            msg = channel.sendMessage("*Now updating...*\n\nRunning `git clone`... ").block();
+            msg = channel.sendMessage("*Now updating...*\n\nRunning `git clone`... ").complete(true);
 
             String branch = "master";
             if (args.length > 1) {
@@ -71,14 +71,14 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
             new SLF4JInputStreamErrorLogger(log, gitClone.getInputStream()).start();
 
             if (!gitClone.waitFor(120, TimeUnit.SECONDS)) {
-                msg = msg.editMessage(msg.getRawContent() + "[:anger: timed out]\n\n").block();
+                msg = msg.editMessage(msg.getRawContent() + "[:anger: timed out]\n\n").complete(true);
                 throw new RuntimeException("Operation timed out: git clone");
             } else if (gitClone.exitValue() != 0) {
-                msg = msg.editMessage(msg.getRawContent() + "[:anger: returned code " + gitClone.exitValue() + "]\n\n").block();
+                msg = msg.editMessage(msg.getRawContent() + "[:anger: returned code " + gitClone.exitValue() + "]\n\n").complete(true);
                 throw new RuntimeException("Bad response code");
             }
 
-            msg = msg.editMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ").block();
+            msg = msg.editMessage(msg.getRawContent() + "👌🏽\n\nRunning `mvn package shade:shade`... ").complete(true);
             File updateDir = new File("update/FredBoat");
 
             Process mvnBuild = rt.exec("mvn -f " + updateDir.getAbsolutePath() + "/pom.xml package shade:shade");
@@ -86,10 +86,10 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
             new SLF4JInputStreamErrorLogger(log, mvnBuild.getInputStream()).start();
 
             if (!mvnBuild.waitFor(600, TimeUnit.SECONDS)) {
-                msg = msg.editMessage(msg.getRawContent() + "[:anger: timed out]\n\n").block();
+                msg = msg.editMessage(msg.getRawContent() + "[:anger: timed out]\n\n").complete(true);
                 throw new RuntimeException("Operation timed out: mvn package shade:shade");
             } else if (mvnBuild.exitValue() != 0) {
-                msg = msg.editMessage(msg.getRawContent() + "[:anger: returned code " + mvnBuild.exitValue() + "]\n\n").block();
+                msg = msg.editMessage(msg.getRawContent() + "[:anger: returned code " + mvnBuild.exitValue() + "]\n\n").complete(true);
                 throw new RuntimeException("Bad response code");
             }
 

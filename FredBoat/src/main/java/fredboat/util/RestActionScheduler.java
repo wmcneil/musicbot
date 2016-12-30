@@ -23,33 +23,18 @@
  *
  */
 
-package fredboat.command.admin;
+package fredboat.util;
 
-import fredboat.FredBoat;
-import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.ICommandOwnerRestricted;
-import fredboat.util.ExitCodes;
-import fredboat.util.TextUtils;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.core.requests.RestAction;
 
-public class BotRestartCommand extends Command implements ICommandOwnerRestricted {
+import java.util.concurrent.*;
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(BotRestartCommand.class);
+public class RestActionScheduler {
 
-    @Override
-    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        try {
-            channel.sendMessage(TextUtils.prefaceWithName(invoker, " Restarting..")).complete(true);
-        } catch (RateLimitedException e) {
-            log.warn("Rate limited", e);
-        }
+    private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
 
-        FredBoat.shutdown(ExitCodes.EXIT_CODE_RESTART);
+    public static void schedule(RestAction action, long time, TimeUnit unit) {
+        SCHEDULER.schedule((Runnable) action::queue, time, unit);
     }
 
 }
