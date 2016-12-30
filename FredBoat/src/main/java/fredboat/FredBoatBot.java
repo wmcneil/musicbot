@@ -51,6 +51,7 @@ public class FredBoatBot extends FredBoat {
                         .addListener(new EventLogger("216689009110417408"))
                         .setToken(accountToken)
                         .setBulkDeleteSplittingEnabled(true)
+                        .setEnableShutdownHook(false)
                         .setAudioSendFactory(new NativeAudioSendFactory());
                 if (numShards > 1) {
                     builder.useSharding(shardId, numShards);

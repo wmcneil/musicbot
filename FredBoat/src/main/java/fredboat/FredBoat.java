@@ -25,6 +25,7 @@
 
 package fredboat;
 
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.api.API;
@@ -42,7 +43,9 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONArray;
@@ -56,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class FredBoat {
 
@@ -76,6 +80,7 @@ public abstract class FredBoat {
     private static JSONObject config = null;
     private static int scopes = 0;
     public static int numShards = 1;
+    private static AtomicInteger numShardsReady = new AtomicInteger(0);
 
     /* Credentials */
     private static JSONObject credsjson;
@@ -219,12 +224,16 @@ public abstract class FredBoat {
     }
 
     public static void onInit(ReadyEvent readyEvent) {
+        int ready = numShardsReady.incrementAndGet();
         log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
 
         //Commands
         CommandInitializer.initCommands();
 
-        MusicPersistenceHandler.reloadPlaylists();
+        if(ready == numShards) {
+            log.info("All " + ready + " shards are ready.");
+            MusicPersistenceHandler.reloadPlaylists();
+        }
     }
 
     //Shutdown hook
@@ -236,6 +245,14 @@ public abstract class FredBoat {
         } catch (Exception e) {
             log.error("Critical error while handling music persistence.", e);
         }
+
+        for(FredBoat fb : shards) {
+            fb.getJda().shutdown(false);
+        }
+
+        try {
+            Unirest.shutdown();
+        } catch (IOException ignored) {}
     };
 
     public static void shutdown(int code) {
@@ -303,6 +320,26 @@ public abstract class FredBoat {
         }
 
         return map;
+    }
+
+    public static TextChannel getTextChannelById(String id) {
+        for (FredBoat fb : shards) {
+            for (TextChannel channel : fb.getJda().getTextChannels()) {
+                if(channel.getId().equals(id)) return channel;
+            }
+        }
+
+        return null;
+    }
+
+    public static VoiceChannel getVoiceChannelById(String id) {
+        for (FredBoat fb : shards) {
+            for (VoiceChannel channel : fb.getJda().getVoiceChannels()) {
+                if(channel.getId().equals(id)) return channel;
+            }
+        }
+
+        return null;
     }
 
     public static FredBoatClient getClient() {

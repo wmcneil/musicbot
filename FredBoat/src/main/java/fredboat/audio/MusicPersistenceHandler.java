@@ -31,6 +31,7 @@ import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.apache.commons.io.FileUtils;
@@ -101,14 +102,18 @@ public class MusicPersistenceHandler {
                 data.put("repeat", player.isRepeat());
                 data.put("shuffle", player.isShuffle());
 
-                ArrayList<String> identifiers = new ArrayList<>();
-                
-                for (AudioTrackContext atc : player.getRemainingTracks()) {
-                    identifiers.add(atc.getTrack().getIdentifier());
-                }
-
                 if (player.getPlayingTrack() != null) {
                     data.put("position", player.getPlayingTrack().getTrack().getPosition());
+                }
+
+                ArrayList<JSONObject> identifiers = new ArrayList<>();
+
+                for (AudioTrackContext atc : player.getRemainingTracks()) {
+                    JSONObject ident = new JSONObject()
+                            .put("identifier", atc.getTrack().getIdentifier())
+                            .put("user", atc.getMember().getUser().getId());
+
+                    identifiers.add(ident);
                 }
 
                 data.put("sources", identifiers);
@@ -125,14 +130,7 @@ public class MusicPersistenceHandler {
     }
 
     public static void reloadPlaylists() {
-        for(FredBoat fb : FredBoat.getShards()){
-            reloadPlaylists(fb);
-        }
-    }
-
-    public static void reloadPlaylists(FredBoat fb) {
-        JDA jda = fb.getJda();
-
+        log.info("Began reloading playlists");
         File dir = new File("music_persistence");
         if (!dir.exists()) {
             return;
@@ -148,15 +146,16 @@ public class MusicPersistenceHandler {
                 JSONObject data = new JSONObject(scanner.useDelimiter("\\A").next());
                 scanner.close();
 
-                GuildPlayer player = PlayerRegistry.get(jda, gId);
-
+                //TODO: Make shard in-specific
                 boolean isPaused = data.getBoolean("isPaused");
                 final JSONArray sources = data.getJSONArray("sources");
-                VoiceChannel vc = jda.getVoiceChannelById(data.getString("vc"));
-                TextChannel tc = jda.getTextChannelById(data.getString("tc"));
+                VoiceChannel vc = FredBoat.getVoiceChannelById(data.getString("vc"));
+                TextChannel tc = FredBoat.getTextChannelById(data.getString("tc"));
                 float volume = Float.parseFloat(data.getString("volume"));
                 boolean repeat = data.getBoolean("repeat");
                 boolean shuffle = data.getBoolean("shuffle");
+
+                GuildPlayer player = PlayerRegistry.get(vc.getJDA(), gId);
 
                 player.joinChannel(vc);
                 player.setCurrentTC(tc);
@@ -165,9 +164,11 @@ public class MusicPersistenceHandler {
                 player.setShuffle(shuffle);
 
                 sources.forEach((Object t) -> {
-                    String identifier = (String) t;
+                    JSONObject json = (JSONObject) t;
+                    String identifier = json.getString("identifier");
+                    Member member = vc.getGuild().getMember(vc.getJDA().getUserById(json.getString("user")));
 
-                    IdentifierContext ic = new IdentifierContext(identifier, tc);
+                    IdentifierContext ic = new IdentifierContext(identifier, tc, member);
 
                     ic.setQuiet(true);
 
@@ -181,7 +182,7 @@ public class MusicPersistenceHandler {
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage("Started reloading playlist :ok_hand::skin-tone-3:").queue();
+                tc.sendMessage("Started reloading playlist. `" + sources.length() + "` tracks found.").queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             } finally {
