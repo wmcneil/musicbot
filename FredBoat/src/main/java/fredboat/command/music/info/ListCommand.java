@@ -25,7 +25,6 @@
 
 package fredboat.command.music.info;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
@@ -39,8 +38,6 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 public class ListCommand extends Command implements IMusicCommand {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(ListCommand.class);
@@ -52,31 +49,32 @@ public class ListCommand extends Command implements IMusicCommand {
         if (!player.isQueueEmpty()) {
             MessageBuilder mb = new MessageBuilder();
 
-            int numberLength;
-            if(player.isShuffle()) {
+            int numberLength = 2;
+            /*if(player.isShuffle()) {
                 numberLength = Integer.toString(player.getSongCount()).length();
                 numberLength = Math.max(2, numberLength);
             } else {
                 numberLength = 2;
-            }
+            }*/
 
             int i = 0;
-            AudioTrackContext firstAtc = null;
-            for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
-                log.info(i + ":" + atc.getChronologicalIndex());
 
+            if(player.isShuffle()){
+                mb.append("Showing shuffled playlist.\n\n");
+            }
+
+            for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
                 if (i == 0) {
-                    firstAtc = atc;
                     String status = player.isPlaying() ? " \\▶" : " \\\u23F8"; //Escaped play and pause emojis
                     mb.append("[" +
-                            forceNDigits(player.isShuffle() ? atc.getChronologicalIndex() : atc.getChronologicalIndex() + 1, numberLength)
+                            forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
                             .append(status)
                             .append(atc.getTrack().getInfo().title)
                             .append("\n");
                 } else {
                     mb.append("[" +
-                            forceNDigits(player.isShuffle() && firstAtc.getChronologicalIndex() > atc.getChronologicalIndex() ? atc.getChronologicalIndex() : atc.getChronologicalIndex() + 1, numberLength)
+                            forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
                             .append(" " + atc.getTrack().getInfo().title)
                             .append("\n");
@@ -84,7 +82,6 @@ public class ListCommand extends Command implements IMusicCommand {
                         break;
                     }
                 }
-
                 i++;
             }
 
@@ -126,21 +123,5 @@ public class ListCommand extends Command implements IMusicCommand {
 
         return str;
     }
-
-    /*private int findFirstShuffledTrackIndex(List<AudioTrackContext> list) {
-        int min = list.size();
-        boolean first = true;
-
-        for(AudioTrackContext atc : list){
-            if(first){
-                first = false;
-                continue;
-            }
-
-            min = Math.min(min, atc.getChronologicalIndex());
-        }
-
-        return min -1;
-    }*/
 
 }

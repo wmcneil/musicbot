@@ -40,7 +40,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.FredBoat;
-import fredboat.audio.queue.AbstractTrackProvider;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.source.PlaylistImportSourceManager;
@@ -164,14 +163,6 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public List<AudioTrackContext> getRemainingTracksOrdered() {
         List<AudioTrackContext> list = new ArrayList<>();
         list.add(getPlayingTrack());
-
-        AbstractTrackProvider provider = (AbstractTrackProvider) getAudioTrackProvider(); //TODO: Remove this cast
-        if(!provider.isShuffle() && !list.isEmpty()){
-            AudioTrackContext first = list.get(0);
-            first.setChronologicalIndex(0);
-        } else if(!list.isEmpty() && list.get(0).getChronologicalIndex() == 0) {
-            list.get(0).setChronologicalIndex(2);
-        }
 
         list.addAll(getAudioTrackProvider().getAsListOrdered());
         return list;
