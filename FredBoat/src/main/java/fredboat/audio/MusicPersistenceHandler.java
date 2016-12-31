@@ -31,7 +31,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.util.ExitCodes;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -56,14 +55,6 @@ public class MusicPersistenceHandler {
     }
 
     public static void handlePreShutdown(int code) {
-        for(FredBoat fb : FredBoat.getShards()){
-            handlePreShutdown(code, fb);
-        }
-    }
-
-    public static void handlePreShutdown(int code, FredBoat fb) {
-        JDA jda = fb.getJda();
-
         File dir = new File("music_persistence");
         if (!dir.exists()) {
             dir.mkdir();
@@ -94,7 +85,7 @@ public class MusicPersistenceHandler {
                 player.getActiveTextChannel().sendMessage(msg).queue();
 
                 JSONObject data = new JSONObject();
-                data.put("vc", player.getUserCurrentVoiceChannel(jda.getSelfUser()).getId());
+                data.put("vc", player.getUserCurrentVoiceChannel(player.getGuild().getSelfMember().getUser()).getId());
                 data.put("tc", player.getActiveTextChannel().getId());
                 data.put("isPaused", player.isPaused());
                 data.put("volume", Float.toString(player.getVolume()));
