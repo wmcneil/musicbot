@@ -78,6 +78,12 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
     @Override
     public int compareTo(AudioTrackContext atc) {
-        return rand - atc.getRand();
+        if(rand > atc.getRand()) {
+            return 1;
+        } else if (rand < atc.getRand()) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }
