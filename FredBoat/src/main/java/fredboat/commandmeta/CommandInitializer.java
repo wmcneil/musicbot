@@ -118,6 +118,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "gr", new GensokyoRadioCommand());
         CommandRegistry.registerAlias("gr", "gensokyo");
         CommandRegistry.registerAlias("gr", "gensokyoradio");
+        CommandRegistry.registerCommand(0x010, "mshards", new ShardsCommand());
 
         CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
         CommandRegistry.registerCommand(0x010, "forward", new ForwardCommand());
