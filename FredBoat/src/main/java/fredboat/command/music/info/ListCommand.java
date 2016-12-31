@@ -49,13 +49,13 @@ public class ListCommand extends Command implements IMusicCommand {
         if (!player.isQueueEmpty()) {
             MessageBuilder mb = new MessageBuilder();
 
-            int numberLength;
-            if(player.isShuffle()) {
+            int numberLength = 2;
+            /*if(player.isShuffle()) {
                 numberLength = Integer.toString(player.getSongCount()).length();
                 numberLength = Math.max(2, numberLength);
             } else {
                 numberLength = 2;
-            }
+            }*/
 
             int i = 0;
 
