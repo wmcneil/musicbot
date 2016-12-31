@@ -27,6 +27,7 @@ package fredboat.command.maintenance;
 
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -38,15 +39,17 @@ public class ShardsCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         MessageBuilder mb = new MessageBuilder()
-                .append("```\n");
+                .append("```diff\n");
 
         for(FredBoat fb : FredBoat.getShards()) {
-            mb.append(fb.getShardInfo().getShardString())
+            mb.append(fb.getJda().getStatus() == JDA.Status.CONNECTED ? "+" : "-")
+                    .append(" ")
+                    .append(fb.getShardInfo().getShardString())
                     .append(" ")
                     .append(fb.getJda().getStatus())
-                    .append(" Guilds: ")
+                    .append(" -- Guilds: ")
                     .append(fb.getJda().getGuilds().size())
-                    .append(" Users: ")
+                    .append(" -- Users: ")
                     .append(fb.getJda().getUsers().size())
                     .append("\n");
         }
