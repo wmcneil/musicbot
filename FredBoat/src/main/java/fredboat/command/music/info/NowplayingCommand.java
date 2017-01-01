@@ -85,9 +85,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
     private void sendYoutubeEmbed(TextChannel channel, AudioTrackContext atc, YoutubeAudioTrack at){
         YoutubeVideo yv = YoutubeAPI.getVideoFromID(at.getIdentifier(), true);
         String timeField = "["
-                + TextUtils.formatTime(at.getPosition())
+                + TextUtils.formatTime(atc.getEffectivePosition())
                 + "/"
-                + TextUtils.formatTime(at.getDuration())
+                + TextUtils.formatTime(atc.getEffectiveDuration())
                 + "]";
 
         String desc = yv.getDescription();
@@ -119,9 +119,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(atc.getEffectiveTitle())
                 .setDescription("["
-                        + TextUtils.formatTime(at.getPosition())
+                        + TextUtils.formatTime(atc.getEffectivePosition())
                         + "/"
-                        + TextUtils.formatTime(at.getDuration())
+                        + TextUtils.formatTime(atc.getEffectiveDuration())
                         + "]\n\nLoaded from Soundcloud") //TODO: Gather description, thumbnail, etc
                 .setColor(new Color(255, 85, 0))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -134,9 +134,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
-                        + TextUtils.formatTime(at.getPosition())
+                        + TextUtils.formatTime(atc.getEffectivePosition())
                         + "/"
-                        + TextUtils.formatTime(at.getDuration())
+                        + TextUtils.formatTime(atc.getEffectiveDuration())
                         + "]";
 
         MessageEmbed embed = new EmbedBuilder()
@@ -206,9 +206,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
-                        + TextUtils.formatTime(at.getPosition())
+                        + TextUtils.formatTime(atc.getEffectivePosition())
                         + "/"
-                        + TextUtils.formatTime(at.getDuration())
+                        + TextUtils.formatTime(atc.getEffectiveDuration())
                         + "]";
 
         MessageEmbed embed = new EmbedBuilder()
@@ -227,9 +227,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
-                        + TextUtils.formatTime(at.getPosition())
+                        + TextUtils.formatTime(atc.getEffectivePosition())
                         + "/"
-                        + TextUtils.formatTime(at.getDuration())
+                        + TextUtils.formatTime(atc.getEffectiveDuration())
                         + "]";
 
         MessageEmbed embed = new EmbedBuilder()
