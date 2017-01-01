@@ -35,6 +35,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.BotConstants;
@@ -56,23 +57,24 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         player.setCurrentTC(channel);
         if (player.isPlaying()) {
 
-            AudioTrack at = player.getPlayingTrack().getTrack();
+            AudioTrackContext atc = player.getPlayingTrack();
+            AudioTrack at = atc.getTrack();
 
             if (at instanceof YoutubeAudioTrack) {
-                sendYoutubeEmbed(channel, (YoutubeAudioTrack) at);
+                sendYoutubeEmbed(channel, atc, (YoutubeAudioTrack) at);
             } else if (at instanceof SoundCloudAudioTrack) {
-                sendSoundcloudEmbed(channel, (SoundCloudAudioTrack) at);
+                sendSoundcloudEmbed(channel, atc, (SoundCloudAudioTrack) at);
             } else if (at instanceof HttpAudioTrack && at.getIdentifier().contains("gensokyoradio.net")){
                 //Special handling for GR
                 sendGensokyoRadioEmbed(channel);
             } else if (at instanceof HttpAudioTrack) {
-                sendHttpEmbed(channel, (HttpAudioTrack) at);
+                sendHttpEmbed(channel, atc, (HttpAudioTrack) at);
             } else if (at instanceof BandcampAudioTrack) {
-                sendBandcampResponse(channel, (BandcampAudioTrack) at);
+                sendBandcampResponse(channel, atc, (BandcampAudioTrack) at);
             } else if (at instanceof TwitchStreamAudioTrack) {
-                sendTwitchEmbed(channel, (TwitchStreamAudioTrack) at);
+                sendTwitchEmbed(channel, atc, (TwitchStreamAudioTrack) at);
             } else {
-                sendDefaultEmbed(channel, at);
+                sendDefaultEmbed(channel, atc, at);
             }
 
         } else {
@@ -80,7 +82,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         }
     }
 
-    private void sendYoutubeEmbed(TextChannel channel, YoutubeAudioTrack at){
+    private void sendYoutubeEmbed(TextChannel channel, AudioTrackContext atc, YoutubeAudioTrack at){
         YoutubeVideo yv = YoutubeAPI.getVideoFromID(at.getIdentifier(), true);
         String timeField = "["
                 + TextUtils.formatTime(at.getPosition())
@@ -96,7 +98,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         }
 
         EmbedBuilder eb = new EmbedBuilder()
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
                 .addField("Time", timeField, true);
 
@@ -112,10 +114,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendSoundcloudEmbed(TextChannel channel, SoundCloudAudioTrack at) {
+    private void sendSoundcloudEmbed(TextChannel channel, AudioTrackContext atc, SoundCloudAudioTrack at) {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setDescription("["
                         + TextUtils.formatTime(at.getPosition())
                         + "/"
@@ -128,7 +130,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendBandcampResponse(TextChannel channel, BandcampAudioTrack at){
+    private void sendBandcampResponse(TextChannel channel, AudioTrackContext atc, BandcampAudioTrack at){
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
@@ -139,7 +141,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setDescription(desc + "\n\nLoaded from Bandcamp")
                 .setColor(new Color(99, 154, 169))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -148,10 +150,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendTwitchEmbed(TextChannel channel, TwitchStreamAudioTrack at){
+    private void sendTwitchEmbed(TextChannel channel, AudioTrackContext atc, TwitchStreamAudioTrack at){
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setDescription("Loaded from Twitch")
                 .setColor(new Color(100, 65, 164))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -200,7 +202,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         }
     }
 
-    private void sendHttpEmbed(TextChannel channel, HttpAudioTrack at){
+    private void sendHttpEmbed(TextChannel channel, AudioTrackContext atc, HttpAudioTrack at){
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
@@ -211,7 +213,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setUrl(at.getIdentifier())
                 .setDescription(desc + "\n\nLoaded from " + at.getIdentifier()) //TODO: Probe data
                 .setColor(BotConstants.FREDBOAT_COLOR)
@@ -221,7 +223,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
-    private void sendDefaultEmbed(TextChannel channel, AudioTrack at){
+    private void sendDefaultEmbed(TextChannel channel, AudioTrackContext atc, AudioTrack at){
         String desc = at.getDuration() == Long.MAX_VALUE ?
                 "[LIVE]" :
                 "["
@@ -232,7 +234,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(atc.getEffectiveTitle())
                 .setDescription(desc + "\n\nLoaded from " + at.getSourceManager().getSourceName())
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())

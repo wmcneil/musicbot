@@ -35,6 +35,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.util.TextUtils;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
+import net.dv8tion.jda.core.MessageBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
@@ -170,7 +171,7 @@ public class AudioLoader implements AudioLoadResultHandler {
             } catch (NumberFormatException e) {
                 continue;
             }
-            pairs.add(new ImmutablePair<>(timestamp / 1000, m.group(2)));
+            pairs.add(new ImmutablePair<>(timestamp, m.group(2)));
         }
 
         if(pairs.size() < 2) {
@@ -178,6 +179,45 @@ public class AudioLoader implements AudioLoadResultHandler {
             return;
         }
 
+        ArrayList<SplitAudioTrackContext> list = new ArrayList<>();
+
+        int i = 0;
+        for(Pair<Long, String> pair : pairs){
+            long startPos;
+            long endPos;
+
+            if(i != pairs.size() - 1){
+                // Not last
+                startPos = pair.getLeft();
+                endPos = pairs.get(i + 1).getLeft();
+            } else {
+                // Last
+                startPos = pair.getLeft();
+                endPos = at.getDuration();
+            }
+
+            AudioTrack newAt = at.makeClone();
+            newAt.setPosition(startPos);
+
+            SplitAudioTrackContext atc = new SplitAudioTrackContext(newAt, ic.member, startPos, endPos, pair.getRight());
+
+            list.add(atc);
+            gplayer.queue(atc);
+
+            i++;
+        }
+
+        MessageBuilder mb = new MessageBuilder()
+                .append("The following tracks were added:\n");
+        for(SplitAudioTrackContext atc : list) {
+            mb.append("`[")
+                    .append(TextUtils.formatTime(atc.getEffectiveDuration()))
+                    .append("]` ")
+                    .append(atc.getEffectiveTitle())
+                    .append("\n");
+        }
+
+        context.textChannel.sendMessage(mb.build()).queue();
 
     }
 

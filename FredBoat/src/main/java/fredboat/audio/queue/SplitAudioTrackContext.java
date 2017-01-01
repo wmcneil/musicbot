@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,46 @@
  *
  */
 
-package fredboat.command.music.seeking;
+package fredboat.audio.queue;
 
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
-import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.TextUtils;
-import net.dv8tion.jda.core.entities.Guild;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
 
-public class RestartCommand extends Command implements IMusicCommand {
+public class SplitAudioTrackContext extends AudioTrackContext {
 
-    @Override
-    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.getExisting(guild);
+    private final long startPos;
+    private final long endPos;
+    private final String title;
 
-        if(player != null && !player.isQueueEmpty()){
-            player.getPlayingTrack().getTrack().setPosition(0L);
-            channel.sendMessage("**" + player.getPlayingTrack().getEffectiveTitle() + "** has been restarted.").queue();
-        } else {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
-        }
+    public SplitAudioTrackContext(AudioTrack at, Member member, long startPos, long endPos, String title) {
+        super(at, member);
+        this.startPos = startPos;
+        this.endPos = endPos;
+        this.title = title;
     }
 
+    @Override
+    public long getEffectiveDuration() {
+        return endPos - startPos;
+    }
+
+    @Override
+    public long getEffectivePosition() {
+        return track.getPosition() - startPos;
+    }
+
+    @Override
+    public void setEffectivePosition(long position) {
+        track.setPosition(startPos + position);
+    }
+
+    @Override
+    public String getEffectiveTitle() {
+        return title;
+    }
+
+    @Override
+    public long getStartPosition() {
+        return startPos;
+    }
 }

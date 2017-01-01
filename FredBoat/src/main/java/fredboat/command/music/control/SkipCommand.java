@@ -25,7 +25,6 @@
 
 package fredboat.command.music.control;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
@@ -66,7 +65,7 @@ public class SkipCommand extends Command implements IMusicCommand {
             }
 
             AudioTrackContext atc = player.getAudioTrackProvider().removeAt(givenIndex - 2);
-            channel.sendMessage("Skipped track #" + givenIndex + ": **" + atc.getTrack().getInfo().title + "**").queue();
+            channel.sendMessage("Skipped track #" + givenIndex + ": **" + atc.getEffectiveTitle() + "**").queue();
         } else {
             channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
         }
@@ -79,7 +78,7 @@ public class SkipCommand extends Command implements IMusicCommand {
         if(atc == null) {
             channel.sendMessage("Couldn't find track to skip.").queue();
         } else {
-            channel.sendMessage("Skipped track #1: **" + atc.getTrack().getInfo().title + "**").queue();
+            channel.sendMessage("Skipped track #1: **" + atc.getEffectiveTitle() + "**").queue();
         }
     }
 

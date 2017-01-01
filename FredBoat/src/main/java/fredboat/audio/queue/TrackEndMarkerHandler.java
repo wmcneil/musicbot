@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,32 @@
  *
  */
 
-package fredboat.command.music.seeking;
+package fredboat.audio.queue;
 
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
-import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.TextUtils;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler;
+import fredboat.audio.AbstractPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class RestartCommand extends Command implements IMusicCommand {
+public class TrackEndMarkerHandler implements TrackMarkerHandler {
 
-    @Override
-    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.getExisting(guild);
+    private static final Logger log = LoggerFactory.getLogger(TrackEndMarkerHandler.class);
 
-        if(player != null && !player.isQueueEmpty()){
-            player.getPlayingTrack().getTrack().setPosition(0L);
-            channel.sendMessage("**" + player.getPlayingTrack().getEffectiveTitle() + "** has been restarted.").queue();
-        } else {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
-        }
+    private final AbstractPlayer player;
+    private final AudioTrackContext track;
+
+    public TrackEndMarkerHandler(AbstractPlayer player, AudioTrackContext track) {
+        this.player = player;
+        this.track = track;
     }
 
+    @Override
+    public void handle(MarkerState state) {
+        if(true)
+        throw new RuntimeException("Test");
+        log.info("Stopping track " + track.getEffectiveTitle() + " because of end state: " + state);
+        if(player.getPlayingTrack().getRand() == track.getRand()){
+            player.skip();
+        }
+    }
 }
