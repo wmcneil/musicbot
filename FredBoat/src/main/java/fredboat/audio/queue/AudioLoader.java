@@ -118,6 +118,12 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void playlistLoaded(AudioPlaylist ap) {
         try {
+            if(context.isSplit()){
+                TextUtils.replyWithName(context.textChannel, context.member, "That link leads to a playlist, not a track. Try `;;play` instead");
+                loadNextAsync();
+                return;
+            }
+
             context.textChannel.sendMessage(
                     "Found and added `" + ap.getTracks().size() + "` songs from playlist **" + ap.getName() + "**."
             ).queue();
