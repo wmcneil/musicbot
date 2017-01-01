@@ -23,48 +23,38 @@
  *
  */
 
-package fredboat.audio.queue;
+package fredboat.command.music.control;
 
+import fredboat.audio.GuildPlayer;
+import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.IdentifierContext;
+import fredboat.commandmeta.abs.Command;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class IdentifierContext {
+public class PlaySplitCommand extends Command {
 
-    public final String identifier;
-    public final TextChannel textChannel;
-    public final Member member;
-    private boolean quiet = false;
-    private boolean split = false;
-    private long position = 0L;
 
-    public IdentifierContext(String identifier, TextChannel textChannel, Member member) {
-        this.identifier = identifier;
-        this.textChannel = textChannel;
-        this.member = member;
+    @Override
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        if (args.length < 2) {
+            channel.sendMessage("Proper usage:\n`;;split <url>`");
+            return;
+        }
+
+        IdentifierContext ic = new IdentifierContext(args[1], channel, invoker);
+        ic.setSplit(true);
+
+        GuildPlayer player = PlayerRegistry.get(guild);
+        player.queue(ic);
+        player.setPause(false);
+
+        try {
+            message.deleteMessage().queue();
+        } catch (Exception ignored) {
+
+        }
     }
-
-    public boolean isQuiet() {
-        return quiet;
-    }
-
-    public void setQuiet(boolean quiet) {
-        this.quiet = quiet;
-    }
-
-    public long getPosition() {
-        return position;
-    }
-
-    public boolean isSplit() {
-        return split;
-    }
-
-    public void setSplit(boolean split) {
-        this.split = split;
-    }
-
-    public void setPosition(long position) {
-        this.position = position;
-    }
-
 }
