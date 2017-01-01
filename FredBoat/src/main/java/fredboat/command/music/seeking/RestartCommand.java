@@ -42,7 +42,7 @@ public class RestartCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.getExisting(guild);
 
         if(player != null && !player.isQueueEmpty()){
-            player.getPlayingTrack().getTrack().setPosition(0L);
+            player.getPlayingTrack().getTrack().setPosition(player.getPlayingTrack().getStartPosition());
             channel.sendMessage("**" + player.getPlayingTrack().getEffectiveTitle() + "** has been restarted.").queue();
         } else {
             TextUtils.replyWithName(channel, invoker, "The queue is empty.");
