@@ -49,7 +49,8 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AudioLoader.class);
 
-    private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("(\\d?\\d:\\d\\d)]?\\)? ?(.+)");
+    //Matches a timestamp and the description
+    private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("((?:\\d?\\d:)?\\d?\\d:\\d\\d)]?\\)? ?(.+)");
 
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
@@ -157,7 +158,6 @@ public class AudioLoader implements AudioLoadResultHandler {
         loadNextAsync();
     }
 
-    //TODO: Fix this
     private void loadSplit(AudioTrack at, IdentifierContext ic){
         if(!(at instanceof YoutubeAudioTrack)){
             ic.textChannel.sendMessage("This is not a YouTube track. Only YouTube tracks are supported with the `;;split` command. Try using `;;play` instead.").queue();
@@ -225,7 +225,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         }
 
         //This is pretty spammy .. let's use a shorter one
-        if(mb.length() < 1800){
+        if(mb.length() > 1800){
             mb = new MessageBuilder()
                     .append("Added " + list.size() + " tracks. Found too many tracks to display.");
         }
