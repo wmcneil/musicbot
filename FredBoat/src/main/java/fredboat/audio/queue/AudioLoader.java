@@ -120,7 +120,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     public void playlistLoaded(AudioPlaylist ap) {
         try {
             if(context.isSplit()){
-                TextUtils.replyWithName(context.textChannel, context.member, "That link leads to a playlist, not a track. Try `;;play` instead");
+                TextUtils.replyWithName(context.textChannel, context.member, "That link leads to a playlist, not a track. Try `;;play` instead.");
                 loadNextAsync();
                 return;
             }

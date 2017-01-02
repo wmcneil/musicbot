@@ -30,6 +30,7 @@ import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
+import fredboat.audio.queue.SplitAudioTrackContext;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -105,6 +106,16 @@ public class MusicPersistenceHandler {
                     JSONObject ident = new JSONObject()
                             .put("message", Base64.encodeBase64String(baos.toByteArray()))
                             .put("user", atc.getMember().getUser().getId());
+
+                    if(atc instanceof SplitAudioTrackContext) {
+                        JSONObject split = new JSONObject();
+                        SplitAudioTrackContext c = (SplitAudioTrackContext) atc;
+                        split.put("title", c.getEffectiveTitle())
+                                .put("startPos", c.getStartPosition())
+                                .put("endPos", c.getStartPosition() + c.getEffectiveDuration());
+
+                        ident.put("split", split);
+                    }
 
                     identifiers.add(ident);
                 }
@@ -184,7 +195,21 @@ public class MusicPersistenceHandler {
                         }
                     }
 
-                    player.queue(new AudioTrackContext(at, member));
+                    // Handle split tracks
+                    AudioTrackContext atc;
+                    JSONObject split = data.optJSONObject("split");
+                    if(split != null) {
+                        atc = new SplitAudioTrackContext(at, member,
+                                split.getLong("startPos"),
+                                split.getLong("endPos"),
+                                split.getString("title")
+                        );
+                        at.setPosition(split.getLong("startPos"));
+                    } else {
+                        atc = new AudioTrackContext(at, member);
+                    }
+
+                    player.queue(atc);
                 });
 
                 player.setPause(isPaused);
