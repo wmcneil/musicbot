@@ -128,6 +128,11 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
+        if (event.getAuthor().equals(event.getJDA().getSelfUser())) {
+            //Don't reply to ourselves
+            return;
+        }
+
         event.getChannel().sendMessage(BotConstants.HELP_TEXT).queue();
         lastUserToReceiveHelp = event.getAuthor();
     }
