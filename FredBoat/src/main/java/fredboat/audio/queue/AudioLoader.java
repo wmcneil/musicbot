@@ -157,8 +157,9 @@ public class AudioLoader implements AudioLoadResultHandler {
         loadNextAsync();
     }
 
+    //TODO: Fix this
     private void loadSplit(AudioTrack at, IdentifierContext ic){
-        if(at instanceof YoutubeAudioTrack == false){
+        if(!(at instanceof YoutubeAudioTrack)){
             ic.textChannel.sendMessage("This is not a YouTube track. Only YouTube tracks are supported with the `;;split` command. Try using `;;play` instead.").queue();
             return;
         }
