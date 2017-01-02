@@ -224,6 +224,12 @@ public class AudioLoader implements AudioLoadResultHandler {
                     .append("\n");
         }
 
+        //This is pretty spammy .. let's use a shorter one
+        if(mb.length() < 1800){
+            mb = new MessageBuilder()
+                    .append("Added " + list.size() + " tracks. Found too many tracks to display.");
+        }
+
         context.textChannel.sendMessage(mb.build()).queue();
 
     }
