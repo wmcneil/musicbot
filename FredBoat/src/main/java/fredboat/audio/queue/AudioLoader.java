@@ -225,7 +225,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         }
 
         //This is pretty spammy .. let's use a shorter one
-        if(mb.length() > 1800){
+        if(mb.length() > 800){
             mb = new MessageBuilder()
                     .append("Added " + list.size() + " tracks. Found too many tracks to display.");
         }
