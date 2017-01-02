@@ -68,7 +68,7 @@ public class SeekCommand extends Command implements IMusicCommand {
         t = Math.max(0, t);
         t = Math.min(atc.getEffectiveDuration(), t);
 
-        at.setPosition(at.getPosition() + t);
+        at.setPosition(atc.getStartPosition() + t);
         channel.sendMessage("Seeking **" + atc.getEffectiveTitle() + "** to " + TextUtils.formatTime(t) + ".").queue();
     }
 
