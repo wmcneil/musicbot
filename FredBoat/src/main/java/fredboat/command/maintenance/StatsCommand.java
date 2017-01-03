@@ -64,7 +64,7 @@ public class StatsCommand extends Command {
 
         str = str + "Sharding:                       " + FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString() + "\n";
         if(DiscordUtil.isMusicBot()){
-            str = str + "Players playing (this shard):   " + PlayerRegistry.getPlayingPlayers().size() + "\n";
+            str = str + "Players playing:                " + PlayerRegistry.getPlayingPlayers().size() + "\n";
         }
         str = str + "Known servers:                  " + FredBoat.getAllGuilds().size() + "\n";
         str = str + "Known users in servers:         " + FredBoat.getAllUsersAsMap().size() + "\n";
