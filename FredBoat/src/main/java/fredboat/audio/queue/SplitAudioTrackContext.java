@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,46 +25,44 @@
 
 package fredboat.audio.queue;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
 
-public class IdentifierContext {
+public class SplitAudioTrackContext extends AudioTrackContext {
 
-    public final String identifier;
-    public final TextChannel textChannel;
-    public final Member member;
-    private boolean quiet = false;
-    private boolean split = false;
-    private long position = 0L;
+    private final long startPos;
+    private final long endPos;
+    private final String title;
 
-    public IdentifierContext(String identifier, TextChannel textChannel, Member member) {
-        this.identifier = identifier;
-        this.textChannel = textChannel;
-        this.member = member;
+    public SplitAudioTrackContext(AudioTrack at, Member member, long startPos, long endPos, String title) {
+        super(at, member);
+        this.startPos = startPos;
+        this.endPos = endPos;
+        this.title = title;
     }
 
-    public boolean isQuiet() {
-        return quiet;
+    @Override
+    public long getEffectiveDuration() {
+        return endPos - startPos;
     }
 
-    public void setQuiet(boolean quiet) {
-        this.quiet = quiet;
+    @Override
+    public long getEffectivePosition() {
+        return track.getPosition() - startPos;
     }
 
-    public long getPosition() {
-        return position;
+    @Override
+    public void setEffectivePosition(long position) {
+        track.setPosition(startPos + position);
     }
 
-    public boolean isSplit() {
-        return split;
+    @Override
+    public String getEffectiveTitle() {
+        return title;
     }
 
-    public void setSplit(boolean split) {
-        this.split = split;
+    @Override
+    public long getStartPosition() {
+        return startPos;
     }
-
-    public void setPosition(long position) {
-        this.position = position;
-    }
-
 }

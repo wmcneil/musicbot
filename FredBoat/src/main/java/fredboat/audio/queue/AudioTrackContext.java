@@ -33,12 +33,11 @@ import java.util.Random;
 
 public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
-    private final AudioTrack track;
+    protected final AudioTrack track;
     private final String userId;
     private final String guildId;
-    private final JDA jda;
+    protected final JDA jda;
     private int rand;
-    private int chronologicalIndex = -1;
 
     public AudioTrackContext(AudioTrack at, Member member) {
         this.track = at;
@@ -54,7 +53,6 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
         this.guildId = member.getGuild().getId();
         this.jda = member.getJDA();
         this.rand = new Random().nextInt();
-        this.chronologicalIndex = chronologicalIndex;
     }
 
     public AudioTrack getTrack() {
@@ -63,14 +61,6 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
     public Member getMember() {
         return jda.getGuildById(guildId).getMember(jda.getUserById(userId));
-    }
-
-    public int getChronologicalIndex() {
-        return chronologicalIndex;
-    }
-
-    public void setChronologicalIndex(int chronologicalIndex) {
-        this.chronologicalIndex = chronologicalIndex;
     }
 
     public int getRand() {
@@ -86,8 +76,34 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
         return new AudioTrackContext(track.makeClone(), getMember());
     }
 
+    public long getEffectiveDuration() {
+        return track.getDuration();
+    }
+
+    public long getEffectivePosition() {
+        return track.getPosition();
+    }
+
+    public void setEffectivePosition(long position) {
+        track.setPosition(position);
+    }
+
+    public String getEffectiveTitle() {
+        return track.getInfo().title;
+    }
+
+    public long getStartPosition() {
+        return 0;
+    }
+
     @Override
     public int compareTo(AudioTrackContext atc) {
-        return rand - atc.getRand();
+        if(rand > atc.getRand()) {
+            return 1;
+        } else if (rand < atc.getRand()) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

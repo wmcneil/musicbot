@@ -28,6 +28,7 @@ package fredboat.commandmeta;
 import fredboat.command.admin.*;
 import fredboat.command.fun.*;
 import fredboat.command.maintenance.GetIdCommand;
+import fredboat.command.maintenance.ShardsCommand;
 import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.admin.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
@@ -81,8 +82,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "fuzzy", new FuzzyUserSearchCommand());
         CommandRegistry.registerCommand(0x101, "softban", new SoftbanCommand());
         CommandRegistry.registerCommand(0x101, "catgirl", new CatgirlCommand());
-        CommandRegistry.registerCommand(0x101, "lood", new TextCommand("T-that's l-lewd, baka!!!"));
-        CommandRegistry.registerAlias("lood", "lewd");
+        CommandRegistry.registerCommand(0x101, "shards", new ShardsCommand());
         
         /* Music commands */
         CommandRegistry.registerCommand(0x010, "mexit", new ExitCommand());
@@ -118,6 +118,8 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "gr", new GensokyoRadioCommand());
         CommandRegistry.registerAlias("gr", "gensokyo");
         CommandRegistry.registerAlias("gr", "gensokyoradio");
+        CommandRegistry.registerCommand(0x010, "mshards", new ShardsCommand());
+        CommandRegistry.registerCommand(0x010, "split", new PlaySplitCommand());
 
         CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
         CommandRegistry.registerCommand(0x010, "forward", new ForwardCommand());
@@ -150,6 +152,8 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "cooldog", new DogCommand());
         CommandRegistry.registerAlias("cooldog", "dog");
         CommandRegistry.registerAlias("cooldog", "dogmeme");
+        CommandRegistry.registerCommand(0x101, "lood", new TextCommand("T-that's l-lewd, baka!!!"));
+        CommandRegistry.registerAlias("lood", "lewd");
 
         CommandRegistry.registerCommand(0x101, "github", new TextCommand("https://github.com/Frederikam"));
         CommandRegistry.registerCommand(0x101, "repo", new TextCommand("https://github.com/Frederikam/FredBoat"));

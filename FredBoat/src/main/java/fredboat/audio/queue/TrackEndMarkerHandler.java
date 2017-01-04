@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,46 +25,28 @@
 
 package fredboat.audio.queue;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler;
+import fredboat.audio.AbstractPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class IdentifierContext {
+public class TrackEndMarkerHandler implements TrackMarkerHandler {
 
-    public final String identifier;
-    public final TextChannel textChannel;
-    public final Member member;
-    private boolean quiet = false;
-    private boolean split = false;
-    private long position = 0L;
+    private static final Logger log = LoggerFactory.getLogger(TrackEndMarkerHandler.class);
 
-    public IdentifierContext(String identifier, TextChannel textChannel, Member member) {
-        this.identifier = identifier;
-        this.textChannel = textChannel;
-        this.member = member;
+    private final AbstractPlayer player;
+    private final AudioTrackContext track;
+
+    public TrackEndMarkerHandler(AbstractPlayer player, AudioTrackContext track) {
+        this.player = player;
+        this.track = track;
     }
 
-    public boolean isQuiet() {
-        return quiet;
+    @Override
+    public void handle(MarkerState state) {
+        log.info("Stopping track " + track.getEffectiveTitle() + " because of end state: " + state);
+        if(player.getPlayingTrack().getRand() == track.getRand()){
+            player.skip();
+        }
     }
-
-    public void setQuiet(boolean quiet) {
-        this.quiet = quiet;
-    }
-
-    public long getPosition() {
-        return position;
-    }
-
-    public boolean isSplit() {
-        return split;
-    }
-
-    public void setSplit(boolean split) {
-        this.split = split;
-    }
-
-    public void setPosition(long position) {
-        this.position = position;
-    }
-
 }

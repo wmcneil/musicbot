@@ -73,12 +73,12 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
             return null;
         } else {
             int i2 = 0;
-            for(Object obj : Arrays.asList(queue.toArray())){
+            for(AudioTrackContext obj : getAsListOrdered()){
                 if(i == i2){
                     shouldUpdateShuffledQueue = true;
                     //noinspection SuspiciousMethodCalls
                     queue.remove(obj);
-                    return (AudioTrackContext) obj;
+                    return obj;
                 }
                 i2++;
             }
@@ -97,12 +97,6 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         if(!isShuffle()){
             List<AudioTrackContext> list = getAsList();
 
-            int i = 1;
-            for (AudioTrackContext atc : getAsList()) {
-                atc.setChronologicalIndex(i);
-                i++;
-            }
-
             return list;
         }
 
@@ -115,7 +109,6 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         //Update the new queue
         int i = 1;
         for (AudioTrackContext atc : getAsList()) {
-            atc.setChronologicalIndex(i);
             newList.add(atc);
             i++;
         }

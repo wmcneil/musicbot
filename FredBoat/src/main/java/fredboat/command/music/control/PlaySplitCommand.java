@@ -23,53 +23,38 @@
  *
  */
 
-package fredboat.command.music.seeking;
+package fredboat.command.music.control;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
-import fredboat.audio.queue.AudioTrackContext;
+import fredboat.audio.queue.IdentifierContext;
 import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class SeekCommand extends Command implements IMusicCommand {
+public class PlaySplitCommand extends Command {
+
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.getExisting(guild);
-
-        if(player == null || player.isQueueEmpty()) {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+        if (args.length < 2) {
+            channel.sendMessage("Proper usage:\n`;;split <url>`");
             return;
         }
 
-        if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
-            return;
-        }
+        IdentifierContext ic = new IdentifierContext(args[1], channel, invoker);
+        ic.setSplit(true);
 
-        long t;
+        GuildPlayer player = PlayerRegistry.get(guild);
+        player.queue(ic);
+        player.setPause(false);
+
         try {
-            t = TextUtils.parseTimeString(args[1]);
-        } catch (IllegalStateException e){
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
-            return;
+            message.deleteMessage().queue();
+        } catch (Exception ignored) {
+
         }
-
-        AudioTrackContext atc = player.getPlayingTrack();
-        AudioTrack at = atc.getTrack();
-
-        //Ensure bounds
-        t = Math.max(0, t);
-        t = Math.min(atc.getEffectiveDuration(), t);
-
-        at.setPosition(atc.getStartPosition() + t);
-        channel.sendMessage("Seeking **" + atc.getEffectiveTitle() + "** to " + TextUtils.formatTime(t) + ".").queue();
     }
-
 }

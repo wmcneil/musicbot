@@ -222,13 +222,18 @@ public abstract class FredBoat {
     }
 
     private static void initBotShards() {
-        try {
-            numShards = DiscordUtil.getRecommendedShardCount(accountToken);
-        } catch (UnirestException e) {
-            throw new RuntimeException("Unable to get recommended shard count!", e);
-        }
+        if(distribution == DistributionEnum.DEVELOPMENT) {
+            log.info("Development distribution; forcing 2 shards");
+            numShards = 2;
+        } else {
+            try {
+                numShards = DiscordUtil.getRecommendedShardCount(accountToken);
+            } catch (UnirestException e) {
+                throw new RuntimeException("Unable to get recommended shard count!", e);
+            }
 
-        log.info("Discord recommends " + numShards + " shard(s)");
+            log.info("Discord recommends " + numShards + " shard(s)");
+        }
 
         for(int i = 0; i < numShards; i++){
             shards.add(i, new FredBoatBot(i));

@@ -23,53 +23,38 @@
  *
  */
 
-package fredboat.command.music.seeking;
+package fredboat.command.maintenance;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
-import fredboat.audio.queue.AudioTrackContext;
+import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.util.TextUtils;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class SeekCommand extends Command implements IMusicCommand {
+public class ShardsCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.getExisting(guild);
+        MessageBuilder mb = new MessageBuilder()
+                .append("```diff\n");
 
-        if(player == null || player.isQueueEmpty()) {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
-            return;
+        for(FredBoat fb : FredBoat.getShards()) {
+            mb.append(fb.getJda().getStatus() == JDA.Status.CONNECTED ? "+" : "-")
+                    .append(" ")
+                    .append(fb.getShardInfo().getShardString())
+                    .append(" ")
+                    .append(fb.getJda().getStatus())
+                    .append(" -- Guilds: ")
+                    .append(fb.getJda().getGuilds().size())
+                    .append(" -- Users: ")
+                    .append(fb.getJda().getUsers().size())
+                    .append("\n");
         }
 
-        if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
-            return;
-        }
-
-        long t;
-        try {
-            t = TextUtils.parseTimeString(args[1]);
-        } catch (IllegalStateException e){
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
-            return;
-        }
-
-        AudioTrackContext atc = player.getPlayingTrack();
-        AudioTrack at = atc.getTrack();
-
-        //Ensure bounds
-        t = Math.max(0, t);
-        t = Math.min(atc.getEffectiveDuration(), t);
-
-        at.setPosition(atc.getStartPosition() + t);
-        channel.sendMessage("Seeking **" + atc.getEffectiveTitle() + "** to " + TextUtils.formatTime(t) + ".").queue();
+        mb.append("```");
+        channel.sendMessage(mb.build()).queue();
     }
-
 }

@@ -38,11 +38,13 @@ import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.FredBoat;
-import fredboat.audio.queue.AbstractTrackProvider;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
+import fredboat.audio.queue.SplitAudioTrackContext;
+import fredboat.audio.queue.TrackEndMarkerHandler;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
@@ -165,14 +167,6 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         List<AudioTrackContext> list = new ArrayList<>();
         list.add(getPlayingTrack());
 
-        AbstractTrackProvider provider = (AbstractTrackProvider) getAudioTrackProvider(); //TODO: Remove this cast
-        if(!provider.isShuffle() && !list.isEmpty()){
-            AudioTrackContext first = list.get(0);
-            first.setChronologicalIndex(0);
-        } else if(!list.isEmpty() && list.get(0).getChronologicalIndex() == 0) {
-            list.get(0).setChronologicalIndex(2);
-        }
-
         list.addAll(getAudioTrackProvider().getAsListOrdered());
         return list;
     }
@@ -212,6 +206,16 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
             if(context != null) {
                 player.playTrack(context.getTrack());
+                context.getTrack().setPosition(context.getStartPosition());
+
+                if(context instanceof SplitAudioTrackContext){
+                    //Ensure we don't step over our bounds
+                    log.info("Start: " + context.getStartPosition() + "End: " + (context.getStartPosition() + context.getEffectiveDuration()));
+
+                    context.getTrack().setMarker(
+                            new TrackMarker(context.getStartPosition() + context.getEffectiveDuration(),
+                                    new TrackEndMarkerHandler(this, context)));
+                }
             }
         } else {
             log.warn("TrackProvider doesn't exist");
