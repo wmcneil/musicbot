@@ -50,7 +50,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AudioLoader.class);
 
     //Matches a timestamp and the description
-    private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("((?:\\d?\\d:)?\\d?\\d:\\d\\d)]?\\)? ?(.+)");
+    private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("(.*?)[( \\[]*((?:\\d?\\d:)?\\d?\\d:\\d\\d)[) \\]]*(.*)");
 
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
@@ -174,11 +174,21 @@ public class AudioLoader implements AudioLoadResultHandler {
         while(m.find()) {
             long timestamp;
             try {
-                timestamp = TextUtils.parseTimeString(m.group(1));
+                timestamp = TextUtils.parseTimeString(m.group(2));
             } catch (NumberFormatException e) {
                 continue;
             }
-            pairs.add(new ImmutablePair<>(timestamp, m.group(2)));
+
+            String title1 = m.group(1);
+            String title2 = m.group(3);
+            
+            if(title1.length() > title2.length()) {
+                pairs.add(new ImmutablePair<>(timestamp, title1));
+            } else {
+                pairs.add(new ImmutablePair<>(timestamp, title2));
+            }
+
+
         }
 
         if(pairs.size() < 2) {
