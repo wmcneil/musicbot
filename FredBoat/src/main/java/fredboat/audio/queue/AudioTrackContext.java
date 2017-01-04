@@ -33,10 +33,10 @@ import java.util.Random;
 
 public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
-    private final AudioTrack track;
+    protected final AudioTrack track;
     private final String userId;
     private final String guildId;
-    private final JDA jda;
+    protected final JDA jda;
     private int rand;
 
     public AudioTrackContext(AudioTrack at, Member member) {
@@ -74,6 +74,26 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
 
     public AudioTrackContext makeClone() {
         return new AudioTrackContext(track.makeClone(), getMember());
+    }
+
+    public long getEffectiveDuration() {
+        return track.getDuration();
+    }
+
+    public long getEffectivePosition() {
+        return track.getPosition();
+    }
+
+    public void setEffectivePosition(long position) {
+        track.setPosition(position);
+    }
+
+    public String getEffectiveTitle() {
+        return track.getInfo().title;
+    }
+
+    public long getStartPosition() {
+        return 0;
     }
 
     @Override

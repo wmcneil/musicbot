@@ -38,10 +38,13 @@ import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
+import fredboat.audio.queue.SplitAudioTrackContext;
+import fredboat.audio.queue.TrackEndMarkerHandler;
 import fredboat.audio.source.PlaylistImportSourceManager;
 import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.core.audio.AudioSendHandler;
@@ -203,6 +206,16 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
             if(context != null) {
                 player.playTrack(context.getTrack());
+                context.getTrack().setPosition(context.getStartPosition());
+
+                if(context instanceof SplitAudioTrackContext){
+                    //Ensure we don't step over our bounds
+                    log.info("Start: " + context.getStartPosition() + "End: " + (context.getStartPosition() + context.getEffectiveDuration()));
+
+                    context.getTrack().setMarker(
+                            new TrackMarker(context.getStartPosition() + context.getEffectiveDuration(),
+                                    new TrackEndMarkerHandler(this, context)));
+                }
             }
         } else {
             log.warn("TrackProvider doesn't exist");

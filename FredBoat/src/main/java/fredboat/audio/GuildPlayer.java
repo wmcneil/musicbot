@@ -142,6 +142,7 @@ public class GuildPlayer extends AbstractPlayer {
 
     public void queue(AudioTrackContext atc){
         audioTrackProvider.add(atc);
+        play();
     }
 
     public int getSongCount() {
@@ -153,13 +154,13 @@ public class GuildPlayer extends AbstractPlayer {
         long millis = 0;
         for (AudioTrackContext atc : getQueuedTracks()) {
             if (!atc.getTrack().getInfo().isStream) {
-                millis += atc.getTrack().getDuration();
+                millis += atc.getEffectiveDuration();
             }
         }
 
-        AudioTrack at = getPlayingTrack().getTrack();
-        if (at != null && !at.getInfo().isStream) {
-            millis += Math.max(0, at.getDuration() - at.getPosition());
+        AudioTrackContext atc = getPlayingTrack();
+        if (atc != null && !atc.getTrack().getInfo().isStream) {
+            millis += Math.max(0, atc.getEffectiveDuration() - atc.getEffectivePosition());
         }
 
         return millis / 1000;

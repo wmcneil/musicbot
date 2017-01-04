@@ -70,13 +70,13 @@ public class ListCommand extends Command implements IMusicCommand {
                             forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
                             .append(status)
-                            .append(atc.getTrack().getInfo().title)
+                            .append(atc.getEffectiveTitle())
                             .append("\n");
                 } else {
                     mb.append("[" +
                             forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
-                            .append(" " + atc.getTrack().getInfo().title)
+                            .append(" " + atc.getEffectiveTitle())
                             .append("\n");
                     if (i == 10) {
                         break;

@@ -27,18 +27,30 @@ package fredboat.audio.queue;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.util.TextUtils;
+import fredboat.util.YoutubeAPI;
+import fredboat.util.YoutubeVideo;
+import net.dv8tion.jda.core.MessageBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AudioLoader implements AudioLoadResultHandler {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AudioLoader.class);
+
+    //Matches a timestamp and the description
+    private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("(.*?)[( \\[]*((?:\\d?\\d:)?\\d?\\d:\\d\\d)[) \\]]*(.*)");
 
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
@@ -79,19 +91,24 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void trackLoaded(AudioTrack at) {
         try {
-            if (!context.isQuiet()) {
-                context.textChannel.sendMessage(
-                        gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
-                ).queue();
+            if(context.isSplit()){
+                loadSplit(at, context);
             } else {
-                log.info("Quietly loaded " + at.getIdentifier());
-            }
 
-            at.setPosition(context.getPosition());
+                if (!context.isQuiet()) {
+                    context.textChannel.sendMessage(
+                            gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
+                    ).queue();
+                } else {
+                    log.info("Quietly loaded " + at.getIdentifier());
+                }
 
-            trackProvider.add(new AudioTrackContext(at, context.member));
-            if (!gplayer.isPaused()) {
-                gplayer.play();
+                at.setPosition(context.getPosition());
+
+                trackProvider.add(new AudioTrackContext(at, context.member));
+                if (!gplayer.isPaused()) {
+                    gplayer.play();
+                }
             }
         } catch (Throwable th) {
             handleThrowable(context, th);
@@ -102,6 +119,12 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void playlistLoaded(AudioPlaylist ap) {
         try {
+            if(context.isSplit()){
+                TextUtils.replyWithName(context.textChannel, context.member, "That link leads to a playlist, not a track. Try `;;play` instead.");
+                loadNextAsync();
+                return;
+            }
+
             context.textChannel.sendMessage(
                     "Found and added `" + ap.getTracks().size() + "` songs from playlist **" + ap.getName() + "**."
             ).queue();
@@ -133,6 +156,92 @@ public class AudioLoader implements AudioLoadResultHandler {
         handleThrowable(context, fe);
 
         loadNextAsync();
+    }
+
+    private void loadSplit(AudioTrack at, IdentifierContext ic){
+        if(!(at instanceof YoutubeAudioTrack)){
+            ic.textChannel.sendMessage("This is not a YouTube track. Only YouTube tracks are supported with the `;;split` command. Try using `;;play` instead.").queue();
+            return;
+        }
+        YoutubeAudioTrack yat = (YoutubeAudioTrack) at;
+
+        YoutubeVideo yv = YoutubeAPI.getVideoFromID(yat.getIdentifier(), true);
+        String desc = yv.getDescription();
+        Matcher m = SPLIT_DESCRIPTION_PATTERN.matcher(desc);
+
+        ArrayList<Pair<Long, String>> pairs = new ArrayList<>();
+
+        while(m.find()) {
+            long timestamp;
+            try {
+                timestamp = TextUtils.parseTimeString(m.group(2));
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            String title1 = m.group(1);
+            String title2 = m.group(3);
+            
+            if(title1.length() > title2.length()) {
+                pairs.add(new ImmutablePair<>(timestamp, title1));
+            } else {
+                pairs.add(new ImmutablePair<>(timestamp, title2));
+            }
+
+
+        }
+
+        if(pairs.size() < 2) {
+            ic.textChannel.sendMessage("Couldn't resolve that video's tracklist. Try using `;;play` instead.").queue();
+            return;
+        }
+
+        ArrayList<SplitAudioTrackContext> list = new ArrayList<>();
+
+        int i = 0;
+        for(Pair<Long, String> pair : pairs){
+            long startPos;
+            long endPos;
+
+            if(i != pairs.size() - 1){
+                // Not last
+                startPos = pair.getLeft();
+                endPos = pairs.get(i + 1).getLeft();
+            } else {
+                // Last
+                startPos = pair.getLeft();
+                endPos = at.getDuration();
+            }
+
+            AudioTrack newAt = at.makeClone();
+            newAt.setPosition(startPos);
+
+            SplitAudioTrackContext atc = new SplitAudioTrackContext(newAt, ic.member, startPos, endPos, pair.getRight());
+
+            list.add(atc);
+            gplayer.queue(atc);
+
+            i++;
+        }
+
+        MessageBuilder mb = new MessageBuilder()
+                .append("The following tracks were added:\n");
+        for(SplitAudioTrackContext atc : list) {
+            mb.append("`[")
+                    .append(TextUtils.formatTime(atc.getEffectiveDuration()))
+                    .append("]` ")
+                    .append(atc.getEffectiveTitle())
+                    .append("\n");
+        }
+
+        //This is pretty spammy .. let's use a shorter one
+        if(mb.length() > 800){
+            mb = new MessageBuilder()
+                    .append("Added " + list.size() + " tracks. Found too many tracks to display.");
+        }
+
+        context.textChannel.sendMessage(mb.build()).queue();
+
     }
 
     @SuppressWarnings("ThrowableResultIgnored")
