@@ -69,7 +69,7 @@ public class ForwardCommand extends Command implements IMusicCommand {
         t = Math.min(atc.getEffectiveDuration(), t);
 
         at.setPosition(at.getPosition() + t);
-        channel.sendMessage("Forwarding **" + at.getInfo().title + "** by " + TextUtils.formatTime(t) + ".").queue();
+        channel.sendMessage("Forwarding **" + atc.getEffectiveTitle() + "** by " + TextUtils.formatTime(t) + ".").queue();
     }
 
 }
