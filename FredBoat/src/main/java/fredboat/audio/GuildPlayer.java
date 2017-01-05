@@ -64,6 +64,7 @@ public class GuildPlayer extends AbstractPlayer {
         manager.setSendingHandler(this);
         audioTrackProvider = new SimpleTrackProvider();
         audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager(), this);
+        player.addListener(new PlayerEventListener(this));
     }
 
     public void joinChannel(Member usr) throws MessagingException {

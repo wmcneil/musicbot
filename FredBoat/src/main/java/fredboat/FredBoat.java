@@ -29,8 +29,10 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonitexAgent;
 import fredboat.api.API;
+import fredboat.api.OAuthManager;
 import fredboat.audio.MusicPersistenceHandler;
 import fredboat.commandmeta.CommandInitializer;
+import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.util.BotConstants;
@@ -60,6 +62,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class FredBoat {
 
@@ -75,6 +78,7 @@ public abstract class FredBoat {
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
     static EventListenerBoat listenerBot;
     static EventListenerSelf listenerSelf;
+    private static AtomicBoolean firstReadyEventReceived = new AtomicBoolean(false);
 
     /* Config */
     private static JSONObject config = null;
@@ -184,10 +188,26 @@ public abstract class FredBoat {
             log.info("Failed to ignite Spark, FredBoat API unavailable", e);
         }
 
+        String secret = "";
+        if(credsjson.has("oauthSecret")){
+            secret = credsjson.getJSONObject("oauthSecret").optString(distribution.getId());
+        }
+
+        try {
+            if(credsjson.has("jdbcUrl") && !credsjson.get("jdbcUrl").equals("") && !secret.equals("")) {
+                DatabaseManager.startup(credsjson.getString("jdbcUrl"));
+                OAuthManager.start(accountToken, secret);
+            } else {
+                log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
+            }
+        } catch (Exception e) {
+            log.info("Failed to start DatabaseManager and OAuth2 client", e);
+        }
+
         //Initialise JCA
         String cbUser = credsjson.optString("cbUser");
         String cbKey = credsjson.optString("cbKey");
-        if(cbUser != null && cbKey != null && !cbUser.equals("") && !cbKey.equals("")) {
+        if(!cbUser.equals("") && !cbKey.equals("")) {
             log.info("Starting CleverBot");
             jca = new JCABuilder().setKey(cbKey).setUser(cbUser).buildBlocking();
         } else {
@@ -232,13 +252,19 @@ public abstract class FredBoat {
         int ready = numShardsReady.incrementAndGet();
         log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
 
-        //Commands
-        CommandInitializer.initCommands();
+        if(!firstReadyEventReceived.getAndSet(true)){
+            onInitFirstShard(readyEvent);
+        }
 
         if(ready == numShards) {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
+    }
+
+    private static void onInitFirstShard(ReadyEvent readyEvent) {
+        //Commands
+        CommandInitializer.initCommands();
     }
 
     //Shutdown hook
@@ -365,6 +391,10 @@ public abstract class FredBoat {
         }
 
         throw new IllegalStateException("Attempted to get instance for JDA shard that is not indexed");
+    }
+
+    public static JDA getFirstJDA(){
+        return shards.get(0).getJda();
     }
 
     public ShardInfo getShardInfo() {

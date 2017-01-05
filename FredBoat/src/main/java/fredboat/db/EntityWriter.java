@@ -23,39 +23,31 @@
  *
  */
 
-package fredboat.common.db.entities;
+package fredboat.db;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import fredboat.db.entities.GuildConfig;
+import fredboat.db.entities.UConfig;
 
-@Entity
-@Table(name = "user_session")
-public class UserSession {
+import javax.persistence.EntityManager;
 
-    private long userId;
-    @Id
-    private String token;
+public class EntityWriter {
 
-    public UserSession(long userId, String token) {
-        this.userId = userId;
-        this.token = token;
+    public static void mergeUConfig(UConfig config) {
+        EntityManager em = DatabaseManager.getEntityManager();
+        em.getTransaction().begin();
+
+        em.merge(config);
+
+        em.getTransaction().commit();
     }
 
-    public String getToken() {
-        return token;
-    }
+    public static void mergeGuildConfig(GuildConfig config) {
+        EntityManager em = DatabaseManager.getEntityManager();
+        em.getTransaction().begin();
 
-    public long getUserId() {
-        return userId;
-    }
+        em.merge(config);
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
+        em.getTransaction().commit();
     }
 
 }

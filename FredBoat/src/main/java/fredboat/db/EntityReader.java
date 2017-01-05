@@ -23,39 +23,35 @@
  *
  */
 
-package fredboat.server;
+package fredboat.db;
 
-import fredboat.common.Crypto;
-import fredboat.common.db.DatabaseManager;
-import fredboat.common.db.entities.UserSession;
-import java.util.List;
+import fredboat.db.entities.GuildConfig;
+import fredboat.db.entities.UConfig;
+
 import javax.persistence.EntityManager;
 
-public class SessionManager {
-    
-    public static void mergeSession(UserSession us){
-        EntityManager em = DatabaseManager.getEntityManager();
-        
-        em.getTransaction().begin();
-        em.merge(us);
-        em.getTransaction().commit();
-    }
-    
-    public static UserSession findSession(long id) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        
-        return em.find(UserSession.class, id);
-    }
-    
-    public static UserSession findSession(String token){
-        EntityManager em = DatabaseManager.getEntityManager();
-        List list = em.createQuery("SELECT ses FROM user_session ses WHERE ses.token = :token").setParameter("token", Crypto.hash(token)).getResultList();
+public class EntityReader {
 
-        if (list.isEmpty()) {
-            return null;
+    public static UConfig getUConfig(String id){
+        EntityManager em = DatabaseManager.getEntityManager();
+        UConfig config = em.find(UConfig.class, id);
+
+        if(config == null) {
+            config = new UConfig(id);
         }
 
-        return (UserSession) list.get(0);
+        return config;
     }
-    
+
+    public static GuildConfig getGuildConfig(String id) {
+        EntityManager em = DatabaseManager.getEntityManager();
+        GuildConfig config = em.find(GuildConfig.class, id);
+
+        if(config == null) {
+            config = new GuildConfig(id);
+        }
+
+        return config;
+    }
+
 }

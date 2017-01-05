@@ -23,23 +23,22 @@
  *
  */
 
-package fredboat.common.db;
+package fredboat.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fredboat.common.db.entities.*;
-import fredboat.common.Crypto;
+import fredboat.db.entities.GuildConfig;
+import fredboat.db.entities.TCConfig;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.TextChannel;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.json.JSONObject;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -51,9 +50,9 @@ public class DatabaseManager {
     private static EntityManagerFactory emf;
     private static final Map<String, GuildConfig> GUILD_CONFIGS = new HashMap<>();
 
-    public static void startup(JSONObject credsJson) {
+    public static void startup(String jdbcUrl) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(credsJson.getString("jdbcUrl"));
+        config.setJdbcUrl(jdbcUrl);
         DataSource dataSource = new HikariDataSource(config);
 
         Properties properties = new Properties();
@@ -62,7 +61,7 @@ public class DatabaseManager {
 
         LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
         emfb.setDataSource(dataSource);
-        emfb.setPackagesToScan("fredboat.db");
+        emfb.setPackagesToScan("fredboat.db.entities");
         emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         emfb.setJpaProperties(properties);
         emfb.setPersistenceUnitName("fredboat.test");
@@ -72,7 +71,7 @@ public class DatabaseManager {
         emf = emfb.getObject();
     }
 
-    public static void initBotEntities(JDA jda) {
+    public static void initBotEntities(JDA jda){
         EntityManager em = getEntityManager();
 
         em.getTransaction().begin();
@@ -83,7 +82,7 @@ public class DatabaseManager {
             GuildConfig gc = em.find(GuildConfig.class, Long.parseLong(guild.getId()));
             if (gc == null) {
                 System.err.println("NEW");
-                gc = new GuildConfig(guild);
+                gc = new GuildConfig();
                 em.persist(gc);
             }
         }
@@ -91,17 +90,22 @@ public class DatabaseManager {
         em.getTransaction().commit();
     }
 
-    public static EntityManager getEntityManager() {
+    static EntityManager getEntityManager() {
         EntityManager em = EM_MAP.get(Thread.currentThread());
 
         if (em == null) {
+            if(emf == null) {
+                throw new DatabaseNotReadyException();
+            }
+            em = emf.createEntityManager();
             EM_MAP.put(Thread.currentThread(), em);
         }
 
         return em;
     }
 
-    public static GuildConfig getGuildConfig(Guild guild) {
+    //TODO: Remove this
+    /*public static GuildConfig getGuildConfig(Guild guild) {
         return GUILD_CONFIGS.get(guild.getId());
     }
 
@@ -119,12 +123,6 @@ public class DatabaseManager {
 
         return null;
     }
-    
-    public static UConfig getUConfig(long id) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        
-        return em.find(UConfig.class, id);
-    }
 
     public static void persistGuildConfig(GuildConfig gc, boolean commit) {
         EntityManager em = getEntityManager();
@@ -132,7 +130,7 @@ public class DatabaseManager {
             em.getTransaction().begin();
         }
 
-        em.merge(gc);
+        em.persist(gc);
         GUILD_CONFIGS.put(Long.toString(gc.getGuildId()), gc);
 
         if (commit) {
@@ -146,7 +144,7 @@ public class DatabaseManager {
             em.getTransaction().begin();
         }
 
-        em.merge(tcc);
+        em.persist(tcc);
         tcc.getGuildConfiguration().addTextChannel(tcc);
 
         if (commit) {
@@ -154,20 +152,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void mergeUserConfig(UConfig config, boolean commit) {
-        EntityManager em = getEntityManager();
-        if (commit) {
-            em.getTransaction().begin();
-        }
-
-        em.merge(config);
-
-        if (commit) {
-            em.getTransaction().commit();
-        }
-    }
-
-    public static void remove(GuildConfig gc, boolean commit) {
+    public static void remove(GuildConfig gc, boolean commit){
         EntityManager em = getEntityManager();
         if (commit) {
             em.getTransaction().begin();
@@ -175,7 +160,7 @@ public class DatabaseManager {
 
         em.remove(gc);
         GUILD_CONFIGS.remove(Long.toString(gc.getGuildId()));
-        for (TCConfig tcc : gc.getTextChannels()) {
+        for(TCConfig tcc : gc.getTextChannels()){
             gc.removeTextChannel(tcc);
             em.remove(tcc);
         }
@@ -185,7 +170,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void remove(TCConfig tcc, boolean commit) {
+    public static void remove(TCConfig tcc, boolean commit){
         EntityManager em = getEntityManager();
         if (commit) {
             em.getTransaction().begin();
@@ -197,6 +182,6 @@ public class DatabaseManager {
         if (commit) {
             em.getTransaction().commit();
         }
-    }
+    }*/
 
 }

@@ -27,6 +27,8 @@ package fredboat.api;
 
 import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
+import fredboat.db.entities.UConfig;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -46,6 +48,12 @@ public class API {
 
         Spark.port(PORT);
 
+        Spark.before((request, response) -> {
+            log.info(request.requestMethod() + " " + request.pathInfo());
+            response.header("Access-Control-Allow-Origin", "*");
+            response.type("application/json");
+        });
+
         Spark.get("/stats", (req, res) -> {
             res.type("application/json");
 
@@ -54,25 +62,47 @@ public class API {
 
             for(FredBoat fb : FredBoat.getShards()) {
                 JSONObject fbStats = new JSONObject();
-                fbStats.put("id", fb.getShardInfo().getShardId());
-                fbStats.put("guilds", fb.getJda().getGuilds().size());
-                fbStats.put("users", fb.getJda().getUsers().size());
-                fbStats.put("status", fb.getJda().getStatus());
+                fbStats.put("id", fb.getShardInfo().getShardId())
+                        .put("guilds", fb.getJda().getGuilds().size())
+                        .put("users", fb.getJda().getUsers().size())
+                        .put("status", fb.getJda().getStatus());
 
                 a.put(fbStats);
             }
 
             JSONObject g = new JSONObject();
-            g.put("playingPlayers", PlayerRegistry.getPlayingPlayers().size());
-            g.put("totalPlayers", PlayerRegistry.getRegistry().size());
-            g.put("distribution", FredBoat.distribution);
-            g.put("guilds", FredBoat.getAllGuilds().size());
-            g.put("users", FredBoat.getAllUsersAsMap().size());
+            g.put("playingPlayers", PlayerRegistry.getPlayingPlayers().size())
+                    .put("totalPlayers", PlayerRegistry.getRegistry().size())
+                    .put("distribution", FredBoat.distribution)
+                    .put("guilds", FredBoat.getAllGuilds().size())
+                    .put("users", FredBoat.getAllUsersAsMap().size());
 
             root.put("shards", a);
             root.put("global", g);
 
             return root;
+        });
+
+        Spark.post("/callback", (request, response) -> {
+            JSONObject out = new JSONObject();
+            JSONObject body = new JSONObject(request.body());
+
+            UConfig uconfig = OAuthManager.handleCallback(body.getString("code"));
+            out.put("bearer", uconfig.getBearer())
+                    .put("refresh", uconfig.getRefresh())
+                    .put("userId", uconfig.getUserId());
+
+            return out;
+        });
+
+
+        /* Exception handling */
+        Spark.exception(Exception.class, (e, request, response) -> {
+            log.error(request.requestMethod() + " " + request.pathInfo(), e);
+
+            response.body(ExceptionUtils.getStackTrace(e));
+            response.type("text/plain");
+            response.status(500);
         });
     }
 
