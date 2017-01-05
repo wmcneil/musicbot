@@ -4,6 +4,7 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.GuildConfig;
+import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -37,7 +38,8 @@ public class ConfigCommand extends Command {
     }
 
     private void setConfig(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if(!PermissionUtil.checkPermission(guild, invoker, Permission.ADMINISTRATOR)){
+        if(!PermissionUtil.checkPermission(guild, invoker, Permission.ADMINISTRATOR)
+                && !invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
             channel.sendMessage(invoker.getEffectiveName() + ": You need to be an administrator in order to alter server configuration.").queue();
             return;
         }
@@ -52,7 +54,7 @@ public class ConfigCommand extends Command {
         String val = args[2];
 
         if(key.equals("track_announce")) {
-            if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("true")) {
+            if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                 gc.setTrackAnnounce(Boolean.valueOf(val));
                 TextUtils.replyWithName(channel, invoker, "`track_announce` is now set to `"+val+"`.");
                 EntityWriter.mergeGuildConfig(gc);

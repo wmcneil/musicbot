@@ -65,6 +65,7 @@ public class SkipCommand extends Command implements IMusicCommand {
             }
 
             AudioTrackContext atc = player.getAudioTrackProvider().removeAt(givenIndex - 2);
+
             channel.sendMessage("Skipped track #" + givenIndex + ": **" + atc.getEffectiveTitle() + "**").queue();
         } else {
             channel.sendMessage("Incorrect number of arguments. Proper usage: ```\n;;skip\n;;skip <index>```").queue();
@@ -74,12 +75,12 @@ public class SkipCommand extends Command implements IMusicCommand {
     private void skipNext(Guild guild, TextChannel channel, Member invoker, Message message, String[] args){
         GuildPlayer player = PlayerRegistry.get(guild);
         AudioTrackContext atc = player.getPlayingTrack();
-        player.skip();
         if(atc == null) {
             channel.sendMessage("Couldn't find track to skip.").queue();
         } else {
             channel.sendMessage("Skipped track #1: **" + atc.getEffectiveTitle() + "**").queue();
         }
+        player.skip();
     }
 
 }
