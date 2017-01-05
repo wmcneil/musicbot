@@ -18,6 +18,9 @@ public class GuildConfig {
     @Column(name = "track_announce", nullable = false)
     private boolean trackAnnounce = false;
 
+    @Column(name = "autoplay", nullable = false)
+    private boolean autoplay = false;
+
     public GuildConfig() {
     }
 
@@ -31,6 +34,14 @@ public class GuildConfig {
 
     public void setTrackAnnounce(boolean trackAnnounce) {
         this.trackAnnounce = trackAnnounce;
+    }
+
+    public boolean isAutoplay() {
+        return autoplay;
+    }
+
+    public void setAutoplay(boolean autoplay) {
+        this.autoplay = autoplay;
     }
 
     /*@OneToMany
