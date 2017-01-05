@@ -31,6 +31,7 @@ import fredboat.command.fun.TalkCommand;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
+import fredboat.db.EntityReader;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
@@ -38,6 +39,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -162,6 +164,21 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 && !player.isPaused()) {
             player.pause();
             player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.").queue();
+        }
+    }
+
+    @Override
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+        GuildPlayer player = PlayerRegistry.getExisting(event.getGuild());
+
+        if(player != null
+                && player.isPaused()
+                && player.getPlayingTrack() != null
+                && event.getChannelJoined().getMembers().contains(event.getGuild().getSelfMember())
+                && EntityReader.getGuildConfig(event.getGuild().getId()).isAutoResume()
+                ) {
+            player.getActiveTextChannel().sendMessage("Automatically unpaused player because of user join.").queue();
+            player.setPause(false);
         }
     }
 
