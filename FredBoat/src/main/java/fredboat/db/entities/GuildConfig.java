@@ -3,11 +3,8 @@ package fredboat.db.entities;
 import fredboat.db.DatabaseManager;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 
@@ -16,18 +13,31 @@ import net.dv8tion.jda.core.entities.TextChannel;
 public class GuildConfig {
 
     @Id
-    private long guildId;
+    private String guildId;
 
-    @OneToMany
+    @Column(name = "track_announce", nullable = false)
+    private boolean trackAnnounce = false;
+
+    public GuildConfig() {
+    }
+
+    public GuildConfig(String id) {
+        this.guildId = id;
+    }
+
+    public boolean isTrackAnnounce() {
+        return trackAnnounce;
+    }
+
+    public void setTrackAnnounce(boolean trackAnnounce) {
+        this.trackAnnounce = trackAnnounce;
+    }
+
+    /*@OneToMany
     @JoinColumn(name = "guildconfig")
     private Set<TCConfig> textChannels;
 
-    public GuildConfig() {
-        System.out.println("Instantiated!");
-    }
-
     public GuildConfig(Guild guild) {
-        System.out.println("Instantiated!" + guild.getId());
         this.guildId = Long.parseLong(guild.getId());
 
         textChannels = new CopyOnWriteArraySet<>();
@@ -57,5 +67,6 @@ public class GuildConfig {
     public long getGuildId() {
         return guildId;
     }
+    */
 
 }

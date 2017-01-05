@@ -25,6 +25,7 @@
 
 package fredboat.db;
 
+import fredboat.db.entities.GuildConfig;
 import fredboat.db.entities.UConfig;
 
 import javax.persistence.EntityManager;
@@ -32,6 +33,15 @@ import javax.persistence.EntityManager;
 public class EntityWriter {
 
     public static void mergeUConfig(UConfig config) {
+        EntityManager em = DatabaseManager.getEntityManager();
+        em.getTransaction().begin();
+
+        em.merge(config);
+
+        em.getTransaction().commit();
+    }
+
+    public static void mergeGuildConfig(GuildConfig config) {
         EntityManager em = DatabaseManager.getEntityManager();
         em.getTransaction().begin();
 

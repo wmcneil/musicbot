@@ -25,6 +25,7 @@
 
 package fredboat.db;
 
+import fredboat.db.entities.GuildConfig;
 import fredboat.db.entities.UConfig;
 
 import javax.persistence.EntityManager;
@@ -33,8 +34,24 @@ public class EntityReader {
 
     public static UConfig getUConfig(String id){
         EntityManager em = DatabaseManager.getEntityManager();
-        UConfig u = em.find(UConfig.class, id);
-        return u;
+        UConfig config = em.find(UConfig.class, id);
+
+        if(config == null) {
+            config = new UConfig(id);
+        }
+
+        return config;
+    }
+
+    public static GuildConfig getGuildConfig(String id) {
+        EntityManager em = DatabaseManager.getEntityManager();
+        GuildConfig config = em.find(GuildConfig.class, id);
+
+        if(config == null) {
+            config = new GuildConfig(id);
+        }
+
+        return config;
     }
 
 }

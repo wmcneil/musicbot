@@ -82,7 +82,7 @@ public class DatabaseManager {
             GuildConfig gc = em.find(GuildConfig.class, Long.parseLong(guild.getId()));
             if (gc == null) {
                 System.err.println("NEW");
-                gc = new GuildConfig(guild);
+                gc = new GuildConfig();
                 em.persist(gc);
             }
         }
@@ -90,10 +90,14 @@ public class DatabaseManager {
         em.getTransaction().commit();
     }
 
-    public static EntityManager getEntityManager() {
+    static EntityManager getEntityManager() {
         EntityManager em = EM_MAP.get(Thread.currentThread());
 
         if (em == null) {
+            if(emf == null) {
+                throw new DatabaseNotReadyException();
+            }
+            em = emf.createEntityManager();
             EM_MAP.put(Thread.currentThread(), em);
         }
 

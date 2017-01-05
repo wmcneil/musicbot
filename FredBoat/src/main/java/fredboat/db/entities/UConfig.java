@@ -30,6 +30,13 @@ public class UConfig {
         return bearerexpiration;
     }
 
+    public UConfig() {
+    }
+
+    public UConfig(String id) {
+        this.userId = id;
+    }
+
     public UConfig setBearer(String bearer) {
         this.bearer = bearer;
         return this;
