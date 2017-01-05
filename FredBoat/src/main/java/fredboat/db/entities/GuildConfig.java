@@ -1,12 +1,9 @@
 package fredboat.db.entities;
 
-import fredboat.db.DatabaseManager;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import javax.persistence.*;
-
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "guild_config")
@@ -18,8 +15,8 @@ public class GuildConfig {
     @Column(name = "track_announce", nullable = false)
     private boolean trackAnnounce = false;
 
-    @Column(name = "autoplay", nullable = false)
-    private boolean autoplay = false;
+    @Column(name = "auto_resume", nullable = false)
+    private boolean autoResume = false;
 
     public GuildConfig() {
     }
@@ -36,12 +33,12 @@ public class GuildConfig {
         this.trackAnnounce = trackAnnounce;
     }
 
-    public boolean isAutoplay() {
-        return autoplay;
+    public boolean isAutoResume() {
+        return autoResume;
     }
 
-    public void setAutoplay(boolean autoplay) {
-        this.autoplay = autoplay;
+    public void setAutoResume(boolean autoplay) {
+        this.autoResume = autoplay;
     }
 
     /*@OneToMany
@@ -66,11 +63,11 @@ public class GuildConfig {
     public Set<TCConfig> getTextChannels() {
         return textChannels;
     }
-    
+
     public void addTextChannel(TCConfig tcc){
         textChannels.add(tcc);
     }
-    
+
     public void removeTextChannel(TCConfig tcc){
         textChannels.remove(tcc);
     }

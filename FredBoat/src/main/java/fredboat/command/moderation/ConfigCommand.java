@@ -31,7 +31,7 @@ public class ConfigCommand extends Command {
         MessageBuilder mb = new MessageBuilder()
                 .append("Configuration for **" + guild.getName() + "**:```\n")
                 .append("track_announce = ").append(gc.isTrackAnnounce()).append("\n")
-                .append("autoplay = ").append(gc.isAutoplay()).append("\n")
+                .append("auto_resume = ").append(gc.isAutoResume()).append("\n")
                 .append("```");
 
         channel.sendMessage(mb.build()).queue();
@@ -61,10 +61,10 @@ public class ConfigCommand extends Command {
             } else {
                 channel.sendMessage(invoker.getEffectiveName() + ": This value must be true or false.").queue();
             }
-        } else if(key.equals("authoplay")) {
+        } else if(key.equals("auto_resume")) {
             if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
-                gc.setAutoplay(Boolean.valueOf(val));
-                TextUtils.replyWithName(channel, invoker, "`authoplay` is now set to `"+val+"`.");
+                gc.setAutoResume(Boolean.valueOf(val));
+                TextUtils.replyWithName(channel, invoker, "`auto_resume` is now set to `"+val+"`.");
                 EntityWriter.mergeGuildConfig(gc);
             } else {
                 channel.sendMessage(invoker.getEffectiveName() + ": This value must be true or false.").queue();
