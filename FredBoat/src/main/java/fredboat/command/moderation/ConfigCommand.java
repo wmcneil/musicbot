@@ -30,9 +30,9 @@ public class ConfigCommand extends Command {
 
         MessageBuilder mb = new MessageBuilder()
                 .append("Configuration for **" + guild.getName() + "**:```\n")
-                .append("track_announce = ")
-                .append(gc.isTrackAnnounce())
-                .append("\n```");
+                .append("track_announce = ").append(gc.isTrackAnnounce()).append("\n")
+                .append("auto_resume = ").append(gc.isAutoResume()).append("\n")
+                .append("```");
 
         channel.sendMessage(mb.build()).queue();
     }
@@ -54,9 +54,17 @@ public class ConfigCommand extends Command {
         String val = args[2];
 
         if(key.equals("track_announce")) {
-            if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
+            if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                 gc.setTrackAnnounce(Boolean.valueOf(val));
-                TextUtils.replyWithName(channel, invoker, "`track_announce` is now set to `"+val+"`.");
+                TextUtils.replyWithName(channel, invoker, "`track_announce` is now set to `" + val + "`.");
+                EntityWriter.mergeGuildConfig(gc);
+            } else {
+                channel.sendMessage(invoker.getEffectiveName() + ": This value must be true or false.").queue();
+            }
+        } else if(key.equals("auto_resume")) {
+            if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
+                gc.setAutoResume(Boolean.valueOf(val));
+                TextUtils.replyWithName(channel, invoker, "`auto_resume` is now set to `"+val+"`.");
                 EntityWriter.mergeGuildConfig(gc);
             } else {
                 channel.sendMessage(invoker.getEffectiveName() + ": This value must be true or false.").queue();

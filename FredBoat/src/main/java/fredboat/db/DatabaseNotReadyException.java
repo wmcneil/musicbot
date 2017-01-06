@@ -4,11 +4,11 @@ import fredboat.commandmeta.MessagingException;
 
 public class DatabaseNotReadyException extends MessagingException {
 
-    public DatabaseNotReadyException(String str) {
+    DatabaseNotReadyException(String str) {
         super(str);
     }
 
-    public DatabaseNotReadyException() {
+    DatabaseNotReadyException() {
         super("The database isn't ready yet. The bot might have just started. Please try again in a moment.");
     }
 }
