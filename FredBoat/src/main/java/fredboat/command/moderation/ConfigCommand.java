@@ -29,7 +29,7 @@ public class ConfigCommand extends Command {
         GuildConfig gc = EntityReader.getGuildConfig(guild.getId());
 
         MessageBuilder mb = new MessageBuilder()
-                .append("Configuration for **" + guild.getName() + "**:```\n")
+                .append("Config for **" + guild.getName() + "**:```\n")
                 .append("track_announce = ").append(gc.isTrackAnnounce()).append("\n")
                 .append("auto_resume = ").append(gc.isAutoResume()).append("\n")
                 .append("```");
