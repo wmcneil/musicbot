@@ -38,6 +38,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I13n;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import fredboat.util.YoutubeAPI;
@@ -48,6 +49,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import java.awt.*;
+import java.text.MessageFormat;
 
 public class NowplayingCommand extends Command implements IMusicCommand {
 
@@ -78,7 +80,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
             }
 
         } else {
-            channel.sendMessage("Not currently playing anything.").queue();
+            channel.sendMessage(I13n.get(guild).getString("npNotPlaying")).queue();
         }
     }
 
@@ -103,7 +105,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .addField("Time", timeField, true);
 
         if(desc != null && !desc.equals("")) {
-                eb.addField("Description", desc, false);
+                eb.addField(I13n.get(channel.getGuild()).getString("npDescription"), desc, false);
         }
 
         MessageEmbed embed = eb.setColor(new Color(205, 32, 31))
@@ -118,11 +120,9 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(atc.getEffectiveTitle())
-                .setDescription("["
-                        + TextUtils.formatTime(atc.getEffectivePosition())
-                        + "/"
-                        + TextUtils.formatTime(atc.getEffectiveDuration())
-                        + "]\n\nLoaded from Soundcloud") //TODO: Gather description, thumbnail, etc
+                .setDescription(MessageFormat.format(
+                        I13n.get(channel.getGuild()).getString("npLoadedSoundcloud"),
+                        TextUtils.formatTime(atc.getEffectivePosition()), TextUtils.formatTime(atc.getEffectiveDuration()))) //TODO: Gather description, thumbnail, etc
                 .setColor(new Color(255, 85, 0))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
@@ -142,7 +142,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(atc.getEffectiveTitle())
-                .setDescription(desc + "\n\nLoaded from Bandcamp")
+                .setDescription(MessageFormat.format(I13n.get(channel.getGuild()).getString("npLoadedBandcamp"), desc))
                 .setColor(new Color(99, 154, 169))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
@@ -154,7 +154,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
                 .setTitle(atc.getEffectiveTitle())
-                .setDescription("Loaded from Twitch")
+                .setDescription(I13n.get(channel.getGuild()).getString("npLoadedTwitch"))
                 .setColor(new Color(100, 65, 164))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
@@ -167,8 +167,8 @@ public class NowplayingCommand extends Command implements IMusicCommand {
             JSONObject data = XML.toJSONObject(Unirest.get("https://gensokyoradio.net/xml/").asString().getBody()).getJSONObject("GENSOKYORADIODATA");
 
             String rating = data.getJSONObject("MISC").getInt("TIMESRATED") == 0 ?
-                    "None yet" :
-                    data.getJSONObject("MISC").getInt("RATING") + "/5 from " + data.getJSONObject("MISC").getInt("TIMESRATED") + " vote(s)";
+                    I13n.get(channel.getGuild()).getString("noneYet") :
+                    MessageFormat.format(I13n.get(channel.getGuild()).getString("npRatingRange"), data.getJSONObject("MISC").getInt("RATING"), data.getJSONObject("MISC").getInt("TIMESRATED"));
 
             String albumArt = data.getJSONObject("MISC").getString("ALBUMART").equals("") ?
                     "https://gensokyoradio.net/images/albums/c200/gr6_circular.png" :
@@ -181,16 +181,16 @@ public class NowplayingCommand extends Command implements IMusicCommand {
             EmbedBuilder eb = new EmbedBuilder()
                     .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"))
                     .setUrl(titleUrl)
-                    .addField("Album", data.getJSONObject("SONGINFO").getString("ALBUM"), true)
-                    .addField("Artist", data.getJSONObject("SONGINFO").getString("ARTIST"), true)
-                    .addField("Circle", data.getJSONObject("SONGINFO").getString("CIRCLE"), true);
+                    .addField(I13n.get(channel.getGuild()).getString("album"), data.getJSONObject("SONGINFO").getString("ALBUM"), true)
+                    .addField(I13n.get(channel.getGuild()).getString("artist"), data.getJSONObject("SONGINFO").getString("ARTIST"), true)
+                    .addField(I13n.get(channel.getGuild()).getString("circle"), data.getJSONObject("SONGINFO").getString("CIRCLE"), true);
 
             if(data.getJSONObject("SONGINFO").optInt("YEAR") != 0){
-                eb.addField("Year", Integer.toString(data.getJSONObject("SONGINFO").getInt("YEAR")), true);
+                eb.addField(I13n.get(channel.getGuild()).getString("year"), Integer.toString(data.getJSONObject("SONGINFO").getInt("YEAR")), true);
             }
 
-            eb.addField("Rating", rating, true)
-                    .addField("Listeners", Integer.toString(data.getJSONObject("SERVERINFO").getInt("LISTENERS")), true)
+            eb.addField(I13n.get(channel.getGuild()).getString("rating"), rating, true)
+                    .addField(I13n.get(channel.getGuild()).getString("listeners"), Integer.toString(data.getJSONObject("SERVERINFO").getInt("LISTENERS")), true)
                     .setImage(albumArt)
                     .setColor(new Color(66, 16, 80))
                     .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -215,7 +215,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(atc.getEffectiveTitle())
                 .setUrl(at.getIdentifier())
-                .setDescription(desc + "\n\nLoaded from " + at.getIdentifier()) //TODO: Probe data
+                .setDescription(MessageFormat.format(I13n.get(channel.getGuild()).getString("npLoadedFromHTTP"), desc, at.getIdentifier())) //TODO: Probe data
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
@@ -235,7 +235,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
                 .setTitle(atc.getEffectiveTitle())
-                .setDescription(desc + "\n\nLoaded from " + at.getSourceManager().getSourceName())
+                .setDescription(MessageFormat.format(I13n.get(channel.getGuild()).getString("npLoadedDefault"), desc, at.getSourceManager().getSourceName()))
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();

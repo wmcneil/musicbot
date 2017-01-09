@@ -31,11 +31,12 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I13n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.TextChannel;import java.text.MessageFormat;
 
 public class RewindCommand extends Command implements IMusicCommand {
 
@@ -44,12 +45,12 @@ public class RewindCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.getExisting(guild);
 
         if(player == null || player.isQueueEmpty()) {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+            TextUtils.replyWithName(channel, invoker, I13n.get(guild).getString("queueEmpty"));
             return;
         }
 
         if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;rewind [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, I13n.get(guild).getString("rewUsage"));
             return;
         }
 
@@ -57,7 +58,7 @@ public class RewindCommand extends Command implements IMusicCommand {
         try {
             t = TextUtils.parseTimeString(args[1]);
         } catch (IllegalStateException e){
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;rewind [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, I13n.get(guild).getString("rewUsage"));
             return;
         }
 
@@ -69,7 +70,7 @@ public class RewindCommand extends Command implements IMusicCommand {
         t = Math.min(atc.getEffectivePosition(), t);
 
         at.setPosition(at.getPosition() - t);
-        channel.sendMessage("Rewinding **" + player.getPlayingTrack().getEffectiveTitle() + "** by " + TextUtils.formatTime(t) + ".").queue();
+        channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("rewSuccess"), player.getPlayingTrack().getEffectiveTitle(), TextUtils.formatTime(t))).queue();
     }
 
 }

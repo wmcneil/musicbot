@@ -43,7 +43,7 @@ public class RepeatCommand extends Command implements IMusicCommand {
         player.setRepeat(!player.isRepeat());
 
         if (player.isRepeat()) {
-            channel.sendMessage(I13n.get(guild).getString("repaetOn")).queue();
+            channel.sendMessage(I13n.get(guild).getString("repeatOn")).queue();
         } else {
             channel.sendMessage(I13n.get(guild).getString("repeatOff")).queue();
         }
