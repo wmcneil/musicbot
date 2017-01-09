@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,25 @@
  *
  */
 
-package fredboat.command.music.control;
+package fredboat.feature;
 
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
-import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ShuffleCommand extends Command implements IMusicCommand {
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-    @Override
-    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild);
-        player.setShuffle(!player.isShuffle());
+public class I13n {
 
-        if (player.isShuffle()) {
-            channel.sendMessage(I13n.get(guild).getString("shuffleOn")).queue();
-        } else {
-            channel.sendMessage(I13n.get(guild).getString("shuffleOff")).queue();
-        }
+    private static final Logger log = LoggerFactory.getLogger(I13n.class);
+
+    public static void start() {
+        ResourceBundle bundle = ResourceBundle.getBundle("lang.da_DK", new Locale("da", "DK"));
+    }
+
+    public static ResourceBundle get(Guild guild) {
+        return ResourceBundle.getBundle("lang.da_DK", new Locale("da", "DK"));
     }
 
 }

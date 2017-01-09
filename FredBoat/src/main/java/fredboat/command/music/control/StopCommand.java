@@ -29,13 +29,14 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I13n;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.utils.PermissionUtil;
+import net.dv8tion.jda.core.utils.PermissionUtil;import java.text.MessageFormat;
 
 public class StopCommand extends Command implements IMusicCommand {
 
@@ -51,18 +52,18 @@ public class StopCommand extends Command implements IMusicCommand {
 
             switch (count) {
                 case 0:
-                    channel.sendMessage("The queue was already empty.").queue();
+                    channel.sendMessage(I13n.get(guild).getString("stopAlreadyEmpty")).queue();
                     break;
                 case 1:
-                    channel.sendMessage("The queue has been emptied, `1` tracks has been removed.").queue();
+                    channel.sendMessage(I13n.get(guild).getString("stopEmptyOne")).queue();
                     break;
                 default:
-                    channel.sendMessage("The queue has been emptied, `" + count + "` tracks have been removed.").queue();
+                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("stopEmptySeveral"), count)).queue();
                     break;
             }
             player.leaveVoiceChannelRequest(channel, true);
         } else {
-            channel.sendMessage("In order to prevent abuse, this command is only available to those who can manage messages.").queue();
+            channel.sendMessage(I13n.get(guild).getString("stopAccessDenied")).queue();
         }
     }
 

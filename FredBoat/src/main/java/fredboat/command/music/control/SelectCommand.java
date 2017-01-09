@@ -30,6 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I13n;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -37,6 +38,8 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+
+import java.text.MessageFormat;
 
 public class SelectCommand extends Command implements IMusicCommand {
 
@@ -57,7 +60,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                 } else {
                     YoutubeVideo selected = selection.choices.get(i - 1);
                     player.selections.remove(invoker.getUser().getId());
-                    String msg = "Song **#" + i + "** has been selected: **" + selected.getName() + "** (" + selected.getDurationFormatted() + ")";
+                    String msg = MessageFormat.format(I13n.get(guild).getString("selectSuccess"), i, selected.getName(), selected.getDurationFormatted());
                     selection.getOutMsg().editMessage(msg).complete(true);
                     player.queue("https://www.youtube.com/watch?v=" + selected.getId(), channel, invoker);
                     player.setPause(false);
@@ -68,12 +71,12 @@ public class SelectCommand extends Command implements IMusicCommand {
                     }
                 }
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                channel.sendMessage("Must be a number 1-" + selection.getChoices().size() + ".").queue();
+                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("selectInterval"), selection.getChoices().size())).queue();
             } catch (RateLimitedException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            channel.sendMessage("You must first be given a selection to choose from.").queue();
+            channel.sendMessage(I13n.get(guild).getString("selectSelectionNotGiven")).queue();
         }
     }
 
