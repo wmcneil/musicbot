@@ -43,7 +43,7 @@ public class I13n {
     }
 
     public static ResourceBundle get(Guild guild) {
-        return ResourceBundle.getBundle("lang.da_DK", new Locale("da", "DK"));
+        return ResourceBundle.getBundle("lang.pt_BR", new Locale("pt", "BR"));
     }
 
 }
