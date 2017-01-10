@@ -27,6 +27,7 @@ package fredboat.commandmeta;
 
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.*;
+import fredboat.feature.I13n;
 import fredboat.util.*;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -77,7 +78,7 @@ public class CommandManager {
         if (invoked instanceof ICommandOwnerRestricted) {
             //Check if invoker is actually Fre_d
             if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
-                channel.sendMessage(TextUtils.prefaceWithName(invoker, " you are not allowed to use that command!")).queue();
+                channel.sendMessage(TextUtils.prefaceWithName(invoker, I13n.get(guild).getString("cmdAccessDenied"))).queue();
                 return;
             }
         }

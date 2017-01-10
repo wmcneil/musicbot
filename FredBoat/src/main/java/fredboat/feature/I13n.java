@@ -36,6 +36,8 @@ public class I13n {
 
     private static final Logger log = LoggerFactory.getLogger(I13n.class);
 
+    public static final ResourceBundle DEFAULT = ResourceBundle.getBundle("lang.en_US", new Locale("en", "US"));
+
     public static void start() {
         ResourceBundle bundle = ResourceBundle.getBundle("lang.da_DK", new Locale("da", "DK"));
     }
