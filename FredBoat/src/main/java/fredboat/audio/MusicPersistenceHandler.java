@@ -31,6 +31,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.SplitAudioTrackContext;
+import fredboat.feature.I13n;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -46,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,22 +69,22 @@ public class MusicPersistenceHandler {
         boolean isUpdate = code == ExitCodes.EXIT_CODE_UPDATE;
         boolean isRestart = code == ExitCodes.EXIT_CODE_RESTART;
 
-        String msg;
-
-        if (isUpdate) {
-            msg = "FredBoat♪♪ is updating. This should only take a minute and will reload the current playlist.";
-        } else if (isRestart) {
-            msg = "FredBoat♪♪ is restarting. This should only take a minute and will reload the current playlist.";
-        } else {
-            msg = "FredBoat♪♪ is shutting down. Once the bot comes back the current playlist will reload.";
-        }
-
         for (String gId : reg.keySet()) {
             try {
                 GuildPlayer player = reg.get(gId);
 
                 if (!player.isPlaying()) {
                     continue;//Nothing to see here
+                }
+
+                String msg;
+
+                if (isUpdate) {
+                    msg = I13n.get(player.getGuild()).getString("shutdownUpdating");
+                } else if (isRestart) {
+                    msg = I13n.get(player.getGuild()).getString("shutdownRestarting");
+                } else {
+                    msg = I13n.get(player.getGuild()).getString("shutdownIndef");
                 }
 
                 player.getActiveTextChannel().sendMessage(msg).queue();
@@ -127,7 +129,7 @@ public class MusicPersistenceHandler {
                 try {
                     FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
-                    player.getActiveTextChannel().sendMessage("Error occurred when saving persistence file: " + ex.getMessage()).queue();
+                    player.getActiveTextChannel().sendMessage(MessageFormat.format(I13n.get(player.getGuild()).getString("shutdownPersistenceFail"), ex.getMessage())).queue();
                 }
             } catch (Exception ex) {
                 log.error("Error when saving persistence file", ex);
@@ -184,6 +186,7 @@ public class MusicPersistenceHandler {
 
                     if (at == null) {
                         log.error("Loaded track that was null! Skipping...");
+                        return;
                     }
 
                     // Handle split tracks
@@ -218,7 +221,7 @@ public class MusicPersistenceHandler {
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage("Reloading playlist. `" + sources.length() + "` tracks found.").queue();
+                tc.sendMessage(MessageFormat.format(I13n.get(player.getGuild()).getString("reloadSuccess"), sources.length())).queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             }
