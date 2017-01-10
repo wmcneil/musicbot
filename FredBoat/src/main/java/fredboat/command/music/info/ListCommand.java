@@ -115,7 +115,7 @@ public class ListCommand extends Command implements IMusicCommand {
 
             channel.sendMessage(mb.build()).queue();
         } else {
-            channel.sendMessage(I13n.get(guild).getString("listNotPlaying")).queue();
+            channel.sendMessage(I13n.get(guild).getString("npNotPlaying")).queue();
         }
     }
 

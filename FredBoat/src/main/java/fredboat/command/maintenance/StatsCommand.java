@@ -29,6 +29,7 @@ import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.abs.Command;
+import fredboat.feature.I13n;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDAInfo;
@@ -36,6 +37,8 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+
+import java.text.MessageFormat;
 
 public class StatsCommand extends Command {
 
@@ -47,30 +50,27 @@ public class StatsCommand extends Command {
         int mins = (int) ((totalSecs / 60) % 60);
         int secs = (int) (totalSecs % 60);
         
-        String str = " This bot has been running for "
-                + days + " days, "
-                + hours + " hours, "
-                + mins + " minutes and "
-                + secs + " seconds.\n"
-                + "This shard has executed " + (CommandManager.commandsExecuted - 1) + " commands this session.\n";
+        String str = MessageFormat.format(
+                I13n.get(guild).getString("statsParagraph"),
+                days, hours, mins, secs, CommandManager.commandsExecuted - 1);
         
-        str = str + "That's a rate of " + (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)) + " commands per hour\n\n```";
-        str = str + "Reserved memory:                " + Runtime.getRuntime().totalMemory() / 1000000 + "MB\n";
-        str = str + "-> Of which is used:            " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000 + "MB\n";
-        str = str + "-> Of which is free:            " + Runtime.getRuntime().freeMemory() / 1000000 + "MB\n";
-        str = str + "Max reservable:                 " + Runtime.getRuntime().maxMemory() / 1000000 + "MB\n";
+        str = MessageFormat.format(I13n.get(guild).getString("statsRate"), str, (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)));
+        str = MessageFormat.format(I13n.get(guild).getString("statsResMem"), str, Runtime.getRuntime().totalMemory() / 1000000);
+        str = MessageFormat.format(I13n.get(guild).getString("statsMemUsed"), str, (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000);
+        str = MessageFormat.format(I13n.get(guild).getString("statsMemFree"), str, Runtime.getRuntime().freeMemory() / 1000000);
+        str = MessageFormat.format(I13n.get(guild).getString("statsMaxRes"), str, Runtime.getRuntime().maxMemory() / 1000000);
 
         str = str + "\n----------\n\n";
 
-        str = str + "Sharding:                       " + FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString() + "\n";
+        str = MessageFormat.format(I13n.get(guild).getString("statsSharding"), str, FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString());
         if(DiscordUtil.isMusicBot()){
-            str = str + "Players playing:                " + PlayerRegistry.getPlayingPlayers().size() + "\n";
+            str = MessageFormat.format(I13n.get(guild).getString("statsPlaying"), str, PlayerRegistry.getPlayingPlayers().size());
         }
-        str = str + "Known servers:                  " + FredBoat.getAllGuilds().size() + "\n";
-        str = str + "Known users in servers:         " + FredBoat.getAllUsersAsMap().size() + "\n";
-        str = str + "Distribution:                   " + FredBoat.distribution + "\n";
-        str = str + "JDA responses total:            " + guild.getJDA().getResponseTotal() + "\n";
-        str = str + "JDA version:                    " + JDAInfo.VERSION;
+        str = MessageFormat.format(I13n.get(guild).getString("statsServers"), str, FredBoat.getAllGuilds().size());
+        str = MessageFormat.format(I13n.get(guild).getString("statsUsers"), str, FredBoat.getAllUsersAsMap().size());
+        str = MessageFormat.format(I13n.get(guild).getString("statsDistribution"), str, FredBoat.distribution);
+        str = MessageFormat.format(I13n.get(guild).getString("statsJDAResp"), str, guild.getJDA().getResponseTotal());
+        str = MessageFormat.format(I13n.get(guild).getString("statsJDAVersion"), str, JDAInfo.VERSION);
         
         str = str + "```";
 
