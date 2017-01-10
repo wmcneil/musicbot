@@ -68,7 +68,6 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "update", new UpdateCommand());
         CommandRegistry.registerCommand(0x101, "compile", new CompileCommand());
         CommandRegistry.registerCommand(0x101, "botrestart", new BotRestartCommand());
-        CommandRegistry.registerCommand(0x101, "find", new FindCommand());
         CommandRegistry.registerCommand(0x101, "dance", new DanceCommand());
         CommandRegistry.registerCommand(0x101, "eval", new EvalCommand());
         CommandRegistry.registerCommand(0x101, "s", new TextCommand("¯\\_(ツ)_/¯"));
@@ -77,7 +76,6 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "useless", new TextCommand("This command is useless."));
         CommandRegistry.registerCommand(0x101, "clear", new ClearCommand());
         CommandRegistry.registerCommand(0x101, "talk", new TalkCommand());
-        CommandRegistry.registerCommand(0x101, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
         CommandRegistry.registerCommand(0x101, "akinator", new AkinatorCommand());
         CommandRegistry.registerCommand(0x101, "fuzzy", new FuzzyUserSearchCommand());

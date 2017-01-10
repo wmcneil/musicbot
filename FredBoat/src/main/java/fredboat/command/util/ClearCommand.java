@@ -44,6 +44,7 @@ import java.util.List;
 
 public class ClearCommand extends Command {
 
+    //TODO: Redo this
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         JDA jda = guild.getJDA();
