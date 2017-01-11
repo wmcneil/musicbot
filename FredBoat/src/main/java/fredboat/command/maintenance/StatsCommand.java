@@ -52,26 +52,27 @@ public class StatsCommand extends Command {
         
         String str = MessageFormat.format(
                 I13n.get(guild).getString("statsParagraph"),
-                days, hours, mins, secs, CommandManager.commandsExecuted - 1);
-        
-        str = MessageFormat.format(I13n.get(guild).getString("statsRate"), str, (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)));
-        str = MessageFormat.format(I13n.get(guild).getString("statsResMem"), str, Runtime.getRuntime().totalMemory() / 1000000);
-        str = MessageFormat.format(I13n.get(guild).getString("statsMemUsed"), str, (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000);
-        str = MessageFormat.format(I13n.get(guild).getString("statsMemFree"), str, Runtime.getRuntime().freeMemory() / 1000000);
-        str = MessageFormat.format(I13n.get(guild).getString("statsMaxRes"), str, Runtime.getRuntime().maxMemory() / 1000000);
+                days, hours, mins, secs, CommandManager.commandsExecuted - 1)
+                + "\n";
+
+        str = str + "That's a rate of " + (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)) + " commands per hour\n\n```";
+        str = str + "Reserved memory:                " + Runtime.getRuntime().totalMemory() / 1000000 + "MB\n";
+        str = str + "-> Of which is used:            " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000 + "MB\n";
+        str = str + "-> Of which is free:            " + Runtime.getRuntime().freeMemory() / 1000000 + "MB\n";
+        str = str + "Max reservable:                 " + Runtime.getRuntime().maxMemory() / 1000000 + "MB\n";
 
         str = str + "\n----------\n\n";
 
-        str = MessageFormat.format(I13n.get(guild).getString("statsSharding"), str, FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString());
+        str = str + "Sharding:                       " + FredBoat.getInstance(guild.getJDA()).getShardInfo().getShardString() + "\n";
         if(DiscordUtil.isMusicBot()){
-            str = MessageFormat.format(I13n.get(guild).getString("statsPlaying"), str, PlayerRegistry.getPlayingPlayers().size());
+            str = str + "Players playing:                " + PlayerRegistry.getPlayingPlayers().size() + "\n";
         }
-        str = MessageFormat.format(I13n.get(guild).getString("statsServers"), str, FredBoat.getAllGuilds().size());
-        str = MessageFormat.format(I13n.get(guild).getString("statsUsers"), str, FredBoat.getAllUsersAsMap().size());
-        str = MessageFormat.format(I13n.get(guild).getString("statsDistribution"), str, FredBoat.distribution);
-        str = MessageFormat.format(I13n.get(guild).getString("statsJDAResp"), str, guild.getJDA().getResponseTotal());
-        str = MessageFormat.format(I13n.get(guild).getString("statsJDAVersion"), str, JDAInfo.VERSION);
-        
+        str = str + "Known servers:                  " + FredBoat.getAllGuilds().size() + "\n";
+        str = str + "Known users in servers:         " + FredBoat.getAllUsersAsMap().size() + "\n";
+        str = str + "Distribution:                   " + FredBoat.distribution + "\n";
+        str = str + "JDA responses total:            " + guild.getJDA().getResponseTotal() + "\n";
+        str = str + "JDA version:                    " + JDAInfo.VERSION;
+
         str = str + "```";
 
         channel.sendMessage(TextUtils.prefaceWithName(invoker, str)).queue();
