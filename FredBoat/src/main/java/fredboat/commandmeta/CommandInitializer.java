@@ -33,6 +33,7 @@ import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.admin.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.ConfigCommand;
+import fredboat.command.moderation.LanguageCommand;
 import fredboat.command.moderation.SoftbanCommand;
 import fredboat.command.music.control.*;
 import fredboat.command.music.info.ExportCommand;
@@ -120,6 +121,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "mshards", new ShardsCommand());
         CommandRegistry.registerCommand(0x010, "split", new PlaySplitCommand());
         CommandRegistry.registerCommand(0x010, "config", new ConfigCommand());
+        CommandRegistry.registerCommand(0x010, "lang", new LanguageCommand());
 
         CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
         CommandRegistry.registerCommand(0x010, "forward", new ForwardCommand());

@@ -25,25 +25,112 @@
 
 package fredboat.feature;
 
+import fredboat.db.DatabaseNotReadyException;
+import fredboat.db.EntityReader;
+import fredboat.db.EntityWriter;
+import fredboat.db.entities.GuildConfig;
 import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class I13n {
 
     private static final Logger log = LoggerFactory.getLogger(I13n.class);
 
-    public static final ResourceBundle DEFAULT = ResourceBundle.getBundle("lang.en_US", new Locale("en", "US"));
+    public static FredBoatLocale DEFAULT = new FredBoatLocale(new Locale("en","US"), "en_US", "English");
+    public static final HashMap<String, FredBoatLocale> LANGS = new HashMap<>();
 
     public static void start() {
-        ResourceBundle bundle = ResourceBundle.getBundle("lang.da_DK", new Locale("da", "DK"));
+        LANGS.put("en_US", DEFAULT);
+        LANGS.put("da_DK", new FredBoatLocale(new Locale("da", "DK"), "da_DK", "Dansk"));
+        LANGS.put("fr_FR", new FredBoatLocale(new Locale("fr", "FR"), "fr_FR", "Français"));
+        LANGS.put("de_DE", new FredBoatLocale(new Locale("de", "DE"), "de_DE", "Deutsch"));
+        LANGS.put("id_ID", new FredBoatLocale(new Locale("id", "ID"), "id_ID", "Bahasa Indonesia"));
+        LANGS.put("it_IT", new FredBoatLocale(new Locale("it", "IT"), "it_IT", "Italiano"));
+        LANGS.put("pt_BR", new FredBoatLocale(new Locale("pt", "BR"), "pt_BR", "Português (Brazil)"));
+        LANGS.put("ro_RO", new FredBoatLocale(new Locale("ro", "RO"), "ro_RO", "Română"));
+        LANGS.put("ru_RU", new FredBoatLocale(new Locale("ru", "RU"), "ru_RU", "Русский"));
+
+        log.info("Loaded " + LANGS.size() + " languages: " + LANGS);
     }
 
     public static ResourceBundle get(Guild guild) {
-        return ResourceBundle.getBundle("lang.pt_BR", new Locale("pt", "BR"));
+        GuildConfig config;
+        try {
+            config = EntityReader.getGuildConfig(guild.getId());
+        } catch (DatabaseNotReadyException e) {
+            return DEFAULT.getProps();
+        }
+        return LANGS.getOrDefault(config.getLang(), DEFAULT).getProps();
+    }
+
+    public static FredBoatLocale getLocale(Guild guild) {
+        GuildConfig config;
+        try {
+            config = EntityReader.getGuildConfig(guild.getId());
+        } catch (DatabaseNotReadyException e) {
+            return DEFAULT;
+        }
+        return LANGS.getOrDefault(config.getLang(), DEFAULT);
+    }
+
+    public static void set(Guild guild, String lang) throws LanguageNotSupportedException {
+        GuildConfig config = EntityReader.getGuildConfig(guild.getId());
+
+        if(!LANGS.containsKey(lang))
+            throw new LanguageNotSupportedException("Language not found");
+
+        config.setLang(lang);
+
+        EntityWriter.mergeGuildConfig(config);
+    }
+
+    public static class FredBoatLocale {
+
+        private final Locale locale;
+        private final String code;
+        private final ResourceBundle props;
+        private final String nativeName;
+
+        FredBoatLocale(Locale locale, String code, String nativeName) throws MissingResourceException {
+            this.locale = locale;
+            this.code = code;
+            props = ResourceBundle.getBundle("lang." + code, locale);
+            this.nativeName = nativeName;
+        }
+
+        public Locale getLocale() {
+            return locale;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public ResourceBundle getProps() {
+            return props;
+        }
+
+        public String getNativeName() {
+            return nativeName;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + nativeName + '}';
+        }
+    }
+
+    public static class LanguageNotSupportedException extends Exception {
+
+        public LanguageNotSupportedException(String message) {
+            super(message);
+        }
     }
 
 }

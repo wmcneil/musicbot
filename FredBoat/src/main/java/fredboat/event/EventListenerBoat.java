@@ -31,9 +31,7 @@ import fredboat.command.fun.TalkCommand;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
-import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
-import fredboat.db.entities.GuildConfig;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
@@ -112,12 +110,6 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             CommandManager.commandsExecuted++;
             TalkCommand.talk(event.getMember(), event.getTextChannel(), event.getMessage().getRawContent().substring(event.getJDA().getSelfUser().getAsMention().length() + 1));
-        }
-
-        try {
-            GuildConfig guildConfig = EntityReader.getGuildConfig(event.getGuild().getId());
-        } catch (DatabaseNotReadyException e) {
-            log.error("test");
         }
     }
 
