@@ -25,11 +25,13 @@
 
 package fredboat.feature;
 
+import fredboat.db.DatabaseManager;
 import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.GuildConfig;
 import net.dv8tion.jda.core.entities.Guild;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,20 +62,32 @@ public class I13n {
     }
 
     public static ResourceBundle get(Guild guild) {
+        if(DatabaseManager.state != DatabaseManager.DatabaseState.READY){
+            return DEFAULT.getProps();
+        }
+
         GuildConfig config;
+
         try {
             config = EntityReader.getGuildConfig(guild.getId());
-        } catch (DatabaseNotReadyException e) {
+        } catch (Exception e) {
+            log.error("Error when reading entity", e);
             return DEFAULT.getProps();
         }
         return LANGS.getOrDefault(config.getLang(), DEFAULT).getProps();
     }
 
     public static FredBoatLocale getLocale(Guild guild) {
+        if(DatabaseManager.state != DatabaseManager.DatabaseState.READY){
+            return DEFAULT;
+        }
+
         GuildConfig config;
+
         try {
             config = EntityReader.getGuildConfig(guild.getId());
-        } catch (DatabaseNotReadyException e) {
+        } catch (Exception e) {
+            log.error("Errpr when reading entity", e);
             return DEFAULT;
         }
         return LANGS.getOrDefault(config.getLang(), DEFAULT);
