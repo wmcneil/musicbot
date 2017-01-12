@@ -95,7 +95,7 @@ public class TextUtils {
 
             builder.append(filtered);
         } else {
-            String filtered = MessageFormat.format(I13n.DEFAULT.getString("utilErrorOccurred"), e.toString());
+            String filtered = MessageFormat.format(I13n.DEFAULT.getProps().getString("utilErrorOccurred"), e.toString());
 
             for (String str : FredBoat.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
