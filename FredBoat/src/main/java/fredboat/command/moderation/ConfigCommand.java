@@ -56,24 +56,28 @@ public class ConfigCommand extends Command {
         String key = args[1];
         String val = args[2];
 
-        if(key.equals("track_announce")) {
-            if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
-                gc.setTrackAnnounce(Boolean.valueOf(val));
-                TextUtils.replyWithName(channel, invoker, "`track_announce`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
-                EntityWriter.mergeGuildConfig(gc);
-            } else {
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
-            }
-        } else if(key.equals("auto_resume")) {
-            if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
-                gc.setAutoResume(Boolean.valueOf(val));
-                TextUtils.replyWithName(channel, invoker, "`auto_resume`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
-                EntityWriter.mergeGuildConfig(gc);
-            } else {
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
-            }
-        } else {
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configUnknownKey"), invoker.getEffectiveName())).queue();
+        switch (key) {
+            case "track_announce":
+                if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
+                    gc.setTrackAnnounce(Boolean.valueOf(val));
+                    TextUtils.replyWithName(channel, invoker, "`track_announce`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
+                    EntityWriter.mergeGuildConfig(gc);
+                } else {
+                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
+                }
+                break;
+            case "auto_resume":
+                if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
+                    gc.setAutoResume(Boolean.valueOf(val));
+                    TextUtils.replyWithName(channel, invoker, "`auto_resume`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
+                    EntityWriter.mergeGuildConfig(gc);
+                } else {
+                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
+                }
+                break;
+            default:
+                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configUnknownKey"), invoker.getEffectiveName())).queue();
+                break;
         }
     }
 }
