@@ -32,7 +32,7 @@ public class ConfigCommand extends Command {
         GuildConfig gc = EntityReader.getGuildConfig(guild.getId());
 
         MessageBuilder mb = new MessageBuilder()
-                .append(MessageFormat.format(I13n.get(guild).getString("configNoArgs"), guild.getName()))
+                .append(MessageFormat.format(I13n.get(guild).getString("configNoArgs") + "\n", guild.getName()))
                 .append("track_announce = ").append(gc.isTrackAnnounce()).append("\n")
                 .append("auto_resume = ").append(gc.isAutoResume()).append("\n")
                 .append("```");
@@ -62,7 +62,7 @@ public class ConfigCommand extends Command {
                 TextUtils.replyWithName(channel, invoker, "`track_announce`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
                 EntityWriter.mergeGuildConfig(gc);
             } else {
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("confugMustBeBoolean"), invoker.getEffectiveName())).queue();
+                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
             }
         } else if(key.equals("auto_resume")) {
             if(val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
@@ -70,7 +70,7 @@ public class ConfigCommand extends Command {
                 TextUtils.replyWithName(channel, invoker, "`auto_resume`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
                 EntityWriter.mergeGuildConfig(gc);
             } else {
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("confugMustBeBoolean"), invoker.getEffectiveName())).queue();
+                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
             }
         } else {
             channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configUnknownKey"), invoker.getEffectiveName())).queue();
