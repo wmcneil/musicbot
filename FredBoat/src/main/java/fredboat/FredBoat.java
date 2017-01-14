@@ -35,7 +35,7 @@ import fredboat.commandmeta.CommandInitializer;
 import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
@@ -104,7 +104,7 @@ public abstract class FredBoat {
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
 
-        I13n.start();
+        I18n.start();
 
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());

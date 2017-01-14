@@ -29,7 +29,7 @@ import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDAInfo;
@@ -51,11 +51,11 @@ public class StatsCommand extends Command {
         int secs = (int) (totalSecs % 60);
         
         String str = MessageFormat.format(
-                I13n.get(guild).getString("statsParagraph"),
+                I18n.get(guild).getString("statsParagraph"),
                 days, hours, mins, secs, CommandManager.commandsExecuted - 1)
                 + "\n";
 
-        str = MessageFormat.format(I13n.get(guild).getString("statsRate"), str, (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)));
+        str = MessageFormat.format(I18n.get(guild).getString("statsRate"), str, (float) (CommandManager.commandsExecuted - 1) / ((float) totalSecs / (float) (60 * 60)));
         str = str + "Reserved memory:                " + Runtime.getRuntime().totalMemory() / 1000000 + "MB\n";
         str = str + "-> Of which is used:            " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000 + "MB\n";
         str = str + "-> Of which is free:            " + Runtime.getRuntime().freeMemory() / 1000000 + "MB\n";

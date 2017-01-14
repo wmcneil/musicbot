@@ -26,12 +26,10 @@
 package fredboat.feature;
 
 import fredboat.db.DatabaseManager;
-import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.GuildConfig;
 import net.dv8tion.jda.core.entities.Guild;
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +38,9 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class I13n {
+public class I18n {
 
-    private static final Logger log = LoggerFactory.getLogger(I13n.class);
+    private static final Logger log = LoggerFactory.getLogger(I18n.class);
 
     public static FredBoatLocale DEFAULT = new FredBoatLocale(new Locale("en","US"), "en_US", "English");
     public static final HashMap<String, FredBoatLocale> LANGS = new HashMap<>();

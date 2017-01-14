@@ -25,7 +25,7 @@
 
 package fredboat.command.fun;
 
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -44,10 +44,10 @@ public class PatCommand extends RandomImageCommand {
 
         if (message.getMentionedUsers().size() > 0) {
             if (message.getMentionedUsers().get(0) == guild.getJDA().getSelfUser()) {
-                channel.sendMessage(I13n.get(guild).getString("patBot")).queue();
+                channel.sendMessage(I18n.get(guild).getString("patBot")).queue();
             } else {
                 channel.sendMessage(new MessageBuilder()
-                        .append(I13n.get(guild).getString("patSuccess"))
+                        .append(I18n.get(guild).getString("patSuccess"))
                         .append(message.getMentionedUsers().get(0))
                         .append("_")
                         .build()).queue();

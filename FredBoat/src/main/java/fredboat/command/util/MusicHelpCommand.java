@@ -26,7 +26,7 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -36,6 +36,6 @@ public class MusicHelpCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        channel.sendMessage(I13n.get(guild).getString("musicHelp")).queue();
+        channel.sendMessage(I18n.get(guild).getString("musicHelp")).queue();
     }
 }

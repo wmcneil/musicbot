@@ -32,7 +32,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
@@ -122,13 +122,13 @@ public class AudioLoader implements AudioLoadResultHandler {
     public void playlistLoaded(AudioPlaylist ap) {
         try {
             if(context.isSplit()){
-                TextUtils.replyWithName(context.textChannel, context.member, I13n.get(context.textChannel.getGuild()).getString("loadPlaySplitListFail"));
+                TextUtils.replyWithName(context.textChannel, context.member, I18n.get(context.textChannel.getGuild()).getString("loadPlaySplitListFail"));
                 loadNextAsync();
                 return;
             }
 
             context.textChannel.sendMessage(
-                    MessageFormat.format(I13n.get(context.textChannel.getGuild()).getString("loadListSuccess"), ap.getTracks().size(), ap.getName())
+                    MessageFormat.format(I18n.get(context.textChannel.getGuild()).getString("loadListSuccess"), ap.getTracks().size(), ap.getName())
             ).queue();
 
             for (AudioTrack at : ap.getTracks()) {
@@ -146,7 +146,7 @@ public class AudioLoader implements AudioLoadResultHandler {
     @Override
     public void noMatches() {
         try {
-            context.textChannel.sendMessage(MessageFormat.format(I13n.get(context.textChannel.getGuild()).getString("loadNoMatches"), context.identifier)).queue();
+            context.textChannel.sendMessage(MessageFormat.format(I18n.get(context.textChannel.getGuild()).getString("loadNoMatches"), context.identifier)).queue();
         } catch (Throwable th) {
             handleThrowable(context, th);
         }
@@ -162,7 +162,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     private void loadSplit(AudioTrack at, IdentifierContext ic){
         if(!(at instanceof YoutubeAudioTrack)){
-            ic.textChannel.sendMessage(I13n.get(ic.textChannel.getGuild()).getString("loadSplitNotYouTube")).queue();
+            ic.textChannel.sendMessage(I18n.get(ic.textChannel.getGuild()).getString("loadSplitNotYouTube")).queue();
             return;
         }
         YoutubeAudioTrack yat = (YoutubeAudioTrack) at;
@@ -194,7 +194,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         }
 
         if(pairs.size() < 2) {
-            ic.textChannel.sendMessage(I13n.get(ic.textChannel.getGuild()).getString("loadSplitNotResolves")).queue();
+            ic.textChannel.sendMessage(I18n.get(ic.textChannel.getGuild()).getString("loadSplitNotResolves")).queue();
             return;
         }
 
@@ -227,7 +227,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         }
 
         MessageBuilder mb = new MessageBuilder()
-                .append(I13n.get(ic.textChannel.getGuild()).getString("loadFollowingTracksAdded"));
+                .append(I18n.get(ic.textChannel.getGuild()).getString("loadFollowingTracksAdded"));
         for(SplitAudioTrackContext atc : list) {
             mb.append("`[")
                     .append(TextUtils.formatTime(atc.getEffectiveDuration()))
@@ -239,7 +239,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         //This is pretty spammy .. let's use a shorter one
         if(mb.length() > 800){
             mb = new MessageBuilder()
-                    .append(MessageFormat.format(I13n.get(ic.textChannel.getGuild()).getString("loadPlaylistTooMany"), list.size()));
+                    .append(MessageFormat.format(I18n.get(ic.textChannel.getGuild()).getString("loadPlaylistTooMany"), list.size()));
         }
 
         context.textChannel.sendMessage(mb.build()).queue();
@@ -253,19 +253,19 @@ public class AudioLoader implements AudioLoadResultHandler {
                 FriendlyException fe = (FriendlyException) th;
                 if (fe.severity == FriendlyException.Severity.COMMON) {
                     if (ic.textChannel != null) {
-                        context.textChannel.sendMessage(MessageFormat.format(I13n.get(ic.textChannel.getGuild()).getString("loadErrorCommon"), context.identifier, fe.getMessage())).queue();
+                        context.textChannel.sendMessage(MessageFormat.format(I18n.get(ic.textChannel.getGuild()).getString("loadErrorCommon"), context.identifier, fe.getMessage())).queue();
                     } else {
                         log.error("Error while loading track ", th);
                     }
                 } else if (ic.textChannel != null) {
-                    context.textChannel.sendMessage(MessageFormat.format(I13n.get(ic.textChannel.getGuild()).getString("loadErrorSusp"), context.identifier)).queue();
+                    context.textChannel.sendMessage(MessageFormat.format(I18n.get(ic.textChannel.getGuild()).getString("loadErrorSusp"), context.identifier)).queue();
                     Throwable exposed = fe.getCause() == null ? fe : fe.getCause();
                     TextUtils.handleException(exposed, context.textChannel);
                 } else {
                     log.error("Error while loading track ", th);
                 }
             } else if (ic.textChannel != null) {
-                context.textChannel.sendMessage(I13n.get(ic.textChannel.getGuild()).getString("loadErrorSusp")).queue();
+                context.textChannel.sendMessage(I18n.get(ic.textChannel.getGuild()).getString("loadErrorSusp")).queue();
                 TextUtils.handleException(th, context.textChannel);
             } else {
                 log.error("Error while loading track ", th);

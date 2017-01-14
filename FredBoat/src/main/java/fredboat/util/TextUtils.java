@@ -29,11 +29,10 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +86,7 @@ public class TextUtils {
         if (invoker != null) {
             builder.append(invoker);
 
-            String filtered = MessageFormat.format(I13n.get(invoker.getGuild()).getString("utilErrorOccurred"), e.toString());
+            String filtered = MessageFormat.format(I18n.get(invoker.getGuild()).getString("utilErrorOccurred"), e.toString());
 
             for (String str : FredBoat.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
@@ -95,7 +94,7 @@ public class TextUtils {
 
             builder.append(filtered);
         } else {
-            String filtered = MessageFormat.format(I13n.DEFAULT.getProps().getString("utilErrorOccurred"), e.toString());
+            String filtered = MessageFormat.format(I18n.DEFAULT.getProps().getString("utilErrorOccurred"), e.toString());
 
             for (String str : FredBoat.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
@@ -118,9 +117,9 @@ public class TextUtils {
         try {
             channel.sendMessage(out).queue();
         } catch (UnsupportedOperationException tooLongEx) {
-            try {channel.sendMessage(MessageFormat.format(I13n.get(channel.getGuild()).getString("errorOccurredTooLong"), postToHastebin(out.getRawContent()))).queue();
+            try {channel.sendMessage(MessageFormat.format(I18n.get(channel.getGuild()).getString("errorOccurredTooLong"), postToHastebin(out.getRawContent()))).queue();
             } catch (UnirestException e1) {
-                channel.sendMessage(I13n.get(channel.getGuild()).getString("errorOccurredTooLongAndUnirestException")).queue();
+                channel.sendMessage(I18n.get(channel.getGuild()).getString("errorOccurredTooLongAndUnirestException")).queue();
             }
         }
     }

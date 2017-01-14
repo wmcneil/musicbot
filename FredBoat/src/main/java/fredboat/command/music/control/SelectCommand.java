@@ -30,7 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -60,7 +60,7 @@ public class SelectCommand extends Command implements IMusicCommand {
                 } else {
                     YoutubeVideo selected = selection.choices.get(i - 1);
                     player.selections.remove(invoker.getUser().getId());
-                    String msg = MessageFormat.format(I13n.get(guild).getString("selectSuccess"), i, selected.getName(), selected.getDurationFormatted());
+                    String msg = MessageFormat.format(I18n.get(guild).getString("selectSuccess"), i, selected.getName(), selected.getDurationFormatted());
                     selection.getOutMsg().editMessage(msg).complete(true);
                     player.queue("https://www.youtube.com/watch?v=" + selected.getId(), channel, invoker);
                     player.setPause(false);
@@ -71,12 +71,12 @@ public class SelectCommand extends Command implements IMusicCommand {
                     }
                 }
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("selectInterval"), selection.getChoices().size())).queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("selectInterval"), selection.getChoices().size())).queue();
             } catch (RateLimitedException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            channel.sendMessage(I13n.get(guild).getString("selectSelectionNotGiven")).queue();
+            channel.sendMessage(I18n.get(guild).getString("selectSelectionNotGiven")).queue();
         }
     }
 

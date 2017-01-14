@@ -34,7 +34,7 @@ import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -50,7 +50,7 @@ public class ExportCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         
         if(player.getRemainingTracks().isEmpty()){
-            throw new MessagingException(I13n.get(guild).getString("exportEmpty"));
+            throw new MessagingException(I18n.get(guild).getString("exportEmpty"));
         }
         
         List<AudioTrackContext> tracks = player.getRemainingTracks();
@@ -67,9 +67,9 @@ public class ExportCommand extends Command implements IMusicCommand {
         
         try {
             String url = TextUtils.postToHastebin(out, true) + ".fredboat";
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("exportPlaylistResulted"), url)).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("exportPlaylistResulted"), url)).queue();
         } catch (UnirestException ex) {
-            throw new MessagingException(I13n.get(guild).getString("exportPlaylistFail"));
+            throw new MessagingException(I18n.get(guild).getString("exportPlaylistFail"));
         }
         
         

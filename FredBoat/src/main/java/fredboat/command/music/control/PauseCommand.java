@@ -29,7 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -42,9 +42,9 @@ public class PauseCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage(I13n.get(guild).getString("playQueueEmpty")).queue();
+            channel.sendMessage(I18n.get(guild).getString("playQueueEmpty")).queue();
         } else if (player.isPaused()) {
-            channel.sendMessage(I13n.get(guild).getString("pauseAlreadyPaused")).queue();
+            channel.sendMessage(I18n.get(guild).getString("pauseAlreadyPaused")).queue();
         } else {
             player.pause();
             channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.").queue();

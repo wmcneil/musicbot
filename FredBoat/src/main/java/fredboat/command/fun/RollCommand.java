@@ -25,7 +25,7 @@
 
 package fredboat.command.fun;
 
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -47,7 +47,7 @@ public class RollCommand extends RandomImageCommand {
                 channel.sendMessage(new MessageBuilder()
                         .append("_")
                         .append(invoker)
-                        .append(I13n.get(guild).getString("rollSuccess"))
+                        .append(I18n.get(guild).getString("rollSuccess"))
                         .build()).queue();
             
         }

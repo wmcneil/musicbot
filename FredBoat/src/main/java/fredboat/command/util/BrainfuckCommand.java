@@ -26,7 +26,7 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.BrainfuckException;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
@@ -52,7 +52,7 @@ public class BrainfuckCommand extends Command {
         for (int instruction = 0; instruction < code.length; ++instruction) {
             cycleCount++;
             if (cycleCount > MAX_CYCLE_COUNT) {
-                throw new BrainfuckException(MessageFormat.format(I13n.get(guild).getString("brainfuckCycleLimit"), MAX_CYCLE_COUNT));
+                throw new BrainfuckException(MessageFormat.format(I18n.get(guild).getString("brainfuckCycleLimit"), MAX_CYCLE_COUNT));
             }
             char command = code[instruction];
             switch (command) {
@@ -62,7 +62,7 @@ public class BrainfuckCommand extends Command {
                 case '<':
                     --data;
                     if(data < 0){
-                        throw new BrainfuckException(MessageFormat.format(I13n.get(guild).getString("brainfuckDataPointerOutOfBounds"), data));
+                        throw new BrainfuckException(MessageFormat.format(I18n.get(guild).getString("brainfuckDataPointerOutOfBounds"), data));
                     }
                     break;
                 case '+':
@@ -79,7 +79,7 @@ public class BrainfuckCommand extends Command {
                         bytes.put(data, (byte) inChars[inChar++]);
                         break;
                     } catch (IndexOutOfBoundsException ex) {
-                        throw new BrainfuckException(MessageFormat.format(I13n.get(guild).getString("brainfuckInputOOB"), inChar - 1), ex);
+                        throw new BrainfuckException(MessageFormat.format(I18n.get(guild).getString("brainfuckInputOOB"), inChar - 1), ex);
                     }
                 case '[':
                     if (bytes.get(data) == 0) {
@@ -136,7 +136,7 @@ public class BrainfuckCommand extends Command {
         try {
             TextUtils.replyWithName(channel, invoker, " " + out + "\n-------\n" + out2.substring(1));
         } catch (IndexOutOfBoundsException ex) {
-TextUtils.replyWithName(channel, invoker, I13n.get(guild).getString("brainfuckNoOutput"));
+TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("brainfuckNoOutput"));
         }
     }
 

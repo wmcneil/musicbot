@@ -26,7 +26,7 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.lua.LuaParser;
 import fredboat.lua.LuaParser.Outcome;
 import fredboat.util.TextUtils;
@@ -53,17 +53,17 @@ public class LuaCommand extends Command {
             String finalOutMsg = outcome.output;
 
             if (outcome.timedOut) {
-                TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("luaTimeout"), MAX_COMPUTATION_TIME));
+                TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("luaTimeout"), MAX_COMPUTATION_TIME));
             } else if (!finalOutMsg.equals("")) {
                 if (finalOutMsg.length() > 2000) {
-                    TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("luaErrorOutputTooBig"), finalOutMsg.length()));
+                    TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("luaErrorOutputTooBig"), finalOutMsg.length()));
                 } else {
                     TextUtils.replyWithName(channel, invoker, " " + finalOutMsg);
                 }
             }
 
             if (outcome.luaError != null) {
-                TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("luaError"), outcome.luaError));
+                TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("luaError"), outcome.luaError));
             }
 
         } catch (InterruptedException ex) {

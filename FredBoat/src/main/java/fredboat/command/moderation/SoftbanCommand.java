@@ -26,7 +26,7 @@
 package fredboat.command.moderation;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.ArgumentUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.Permission;
@@ -46,7 +46,7 @@ public class SoftbanCommand extends Command {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Ensure we have a search term
         if(args.length == 1){
-            channel.sendMessage(I13n.get(guild).getString("softbanUsage")).queue();
+            channel.sendMessage(I18n.get(guild).getString("softbanUsage")).queue();
             return;
         }
 
@@ -59,45 +59,45 @@ public class SoftbanCommand extends Command {
         target.getGuild().getController().ban(target, 7).queue(
                 aVoid -> {
                     target.getGuild().getController().unban(target.getUser()).queue();
-                    TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("softbanSuccess"), target.getUser().getName(), target.getUser().getDiscriminator(), target.getUser().getId()));
+                    TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("softbanSuccess"), target.getUser().getName(), target.getUser().getDiscriminator(), target.getUser().getId()));
                 },
-                throwable -> log.error(MessageFormat.format(I13n.get(guild).getString("softbanFail"), target.getUser()))
+                throwable -> log.error(MessageFormat.format(I18n.get(guild).getString("softbanFail"), target.getUser()))
         );
     }
 
     private boolean checkAuthorization(TextChannel channel, Member mod, Member target) {
         if(mod == target) {
-            TextUtils.replyWithName(channel, mod, I13n.get(channel.getGuild()).getString("softbanFailSelf"));
+            TextUtils.replyWithName(channel, mod, I18n.get(channel.getGuild()).getString("softbanFailSelf"));
             return false;
         }
 
         if(target.isOwner()) {
-            TextUtils.replyWithName(channel, mod, I13n.get(channel.getGuild()).getString("softbanFailOwner"));
+            TextUtils.replyWithName(channel, mod, I18n.get(channel.getGuild()).getString("softbanFailOwner"));
             return false;
         }
 
         if(target == target.getGuild().getSelfMember()) {
-            TextUtils.replyWithName(channel, mod, I13n.get(channel.getGuild()).getString("softbanFailMyself"));
+            TextUtils.replyWithName(channel, mod, I18n.get(channel.getGuild()).getString("softbanFailMyself"));
             return false;
         }
 
         if(!PermissionUtil.checkPermission(mod.getGuild(), mod, Permission.BAN_MEMBERS, Permission.KICK_MEMBERS) && !mod.isOwner()) {
-            TextUtils.replyWithName(channel, mod, I13n.get(channel.getGuild()).getString("softbanFailUserPerms"));
+            TextUtils.replyWithName(channel, mod, I18n.get(channel.getGuild()).getString("softbanFailUserPerms"));
             return false;
         }
 
         if(getHighestRolePosition(mod) <= getHighestRolePosition(target) && !mod.isOwner()) {
-            TextUtils.replyWithName(channel, mod, MessageFormat.format(I13n.get(channel.getGuild()).getString("softbanFailUserHierachy"), target.getEffectiveName()));
+            TextUtils.replyWithName(channel, mod, MessageFormat.format(I18n.get(channel.getGuild()).getString("softbanFailUserHierachy"), target.getEffectiveName()));
             return false;
         }
 
         if(!PermissionUtil.checkPermission(mod.getGuild(), mod.getGuild().getSelfMember(), Permission.BAN_MEMBERS)) {
-            TextUtils.replyWithName(channel, mod, I13n.get(channel.getGuild()).getString("softbanBotPerms"));
+            TextUtils.replyWithName(channel, mod, I18n.get(channel.getGuild()).getString("softbanBotPerms"));
             return false;
         }
 
         if(getHighestRolePosition(mod.getGuild().getSelfMember()) <= getHighestRolePosition(target)) {
-            TextUtils.replyWithName(channel, mod, MessageFormat.format(I13n.get(channel.getGuild()).getString("softbanFailBotHierachy"), target.getEffectiveName()));
+            TextUtils.replyWithName(channel, mod, MessageFormat.format(I18n.get(channel.getGuild()).getString("softbanFailBotHierachy"), target.getEffectiveName()));
             return false;
         }
 

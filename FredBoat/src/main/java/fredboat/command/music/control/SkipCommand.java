@@ -30,7 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -44,7 +44,7 @@ public class SkipCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage(I13n.get(guild).getString("skipEmpty")).queue();
+            channel.sendMessage(I18n.get(guild).getString("skipEmpty")).queue();
         }
 
         if(args.length == 1){
@@ -58,18 +58,18 @@ public class SkipCommand extends Command implements IMusicCommand {
             }
 
             if(player.getRemainingTracks().size() < givenIndex){
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("skipOutOfBounds"), givenIndex, player.getRemainingTracks().size())).queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipOutOfBounds"), givenIndex, player.getRemainingTracks().size())).queue();
                 return;
             } else if (givenIndex < 1){
-                channel.sendMessage(I13n.get(guild).getString("skipNumberTooLow")).queue();
+                channel.sendMessage(I18n.get(guild).getString("skipNumberTooLow")).queue();
                 return;
             }
 
             AudioTrackContext atc = player.getAudioTrackProvider().removeAt(givenIndex - 2);
 
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("skipSuccess"), givenIndex, atc.getEffectiveTitle())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), givenIndex, atc.getEffectiveTitle())).queue();
         } else {
-            channel.sendMessage(I13n.get(guild).getString("skipInvalidArgCount")).queue();
+            channel.sendMessage(I18n.get(guild).getString("skipInvalidArgCount")).queue();
         }
     }
 
@@ -77,9 +77,9 @@ public class SkipCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         AudioTrackContext atc = player.getPlayingTrack();
         if(atc == null) {
-            channel.sendMessage(I13n.get(guild).getString("skipTrackNotFound")).queue();
+            channel.sendMessage(I18n.get(guild).getString("skipTrackNotFound")).queue();
         } else {
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("skipSuccess"), atc.getEffectiveTitle())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), atc.getEffectiveTitle())).queue();
         }
         player.skip();
     }

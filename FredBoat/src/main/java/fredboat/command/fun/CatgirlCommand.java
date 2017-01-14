@@ -28,7 +28,7 @@ package fredboat.command.fun;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.CacheUtil;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -54,14 +54,14 @@ public class CatgirlCommand extends Command {
             Matcher m = IMAGE_PATTERN.matcher(str);
 
             if(!m.find()){
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("catgirlFail"), BASE_URL)).queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("catgirlFail"), BASE_URL)).queue();
                 return;
             }
 
             File tmp = CacheUtil.getImageFromURL(BASE_URL + m.group(1));
             channel.sendFile(tmp, null).queue();
         } catch (UnirestException e) {
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("catgirlFailConn"), BASE_URL)).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("catgirlFailConn"), BASE_URL)).queue();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

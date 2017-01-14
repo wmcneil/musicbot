@@ -29,7 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -52,18 +52,18 @@ public class StopCommand extends Command implements IMusicCommand {
 
             switch (count) {
                 case 0:
-                    channel.sendMessage(I13n.get(guild).getString("stopAlreadyEmpty")).queue();
+                    channel.sendMessage(I18n.get(guild).getString("stopAlreadyEmpty")).queue();
                     break;
                 case 1:
-                    channel.sendMessage(I13n.get(guild).getString("stopEmptyOne")).queue();
+                    channel.sendMessage(I18n.get(guild).getString("stopEmptyOne")).queue();
                     break;
                 default:
-                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("stopEmptySeveral"), count)).queue();
+                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("stopEmptySeveral"), count)).queue();
                     break;
             }
             player.leaveVoiceChannelRequest(channel, true);
         } else {
-            channel.sendMessage(I13n.get(guild).getString("stopAccessDenied")).queue();
+            channel.sendMessage(I18n.get(guild).getString("stopAccessDenied")).queue();
         }
     }
 

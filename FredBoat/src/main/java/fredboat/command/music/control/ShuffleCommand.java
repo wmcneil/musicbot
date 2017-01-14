@@ -29,7 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -43,9 +43,9 @@ public class ShuffleCommand extends Command implements IMusicCommand {
         player.setShuffle(!player.isShuffle());
 
         if (player.isShuffle()) {
-            channel.sendMessage(I13n.get(guild).getString("shuffleOn")).queue();
+            channel.sendMessage(I18n.get(guild).getString("shuffleOn")).queue();
         } else {
-            channel.sendMessage(I13n.get(guild).getString("shuffleOff")).queue();
+            channel.sendMessage(I18n.get(guild).getString("shuffleOff")).queue();
         }
     }
 

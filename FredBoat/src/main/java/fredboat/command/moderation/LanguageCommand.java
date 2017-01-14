@@ -26,7 +26,7 @@
 package fredboat.command.moderation;
 
 import fredboat.commandmeta.abs.Command;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -49,30 +49,30 @@ public class LanguageCommand extends Command {
 
         //Assume proper usage and that we are about to set a new language
         try {
-            I13n.set(guild, args[1]);
-        } catch (I13n.LanguageNotSupportedException e) {
-            TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("langInvalidCode"), args[1]));
+            I18n.set(guild, args[1]);
+        } catch (I18n.LanguageNotSupportedException e) {
+            TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("langInvalidCode"), args[1]));
         }
 
-        TextUtils.replyWithName(channel, invoker, MessageFormat.format(I13n.get(guild).getString("langSuccess"), I13n.getLocale(guild).getNativeName()));
+        TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("langSuccess"), I18n.getLocale(guild).getNativeName()));
     }
 
     private void handleNoArgs(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         MessageBuilder mb = new MessageBuilder()
-                .append(I13n.get(guild).getString("langInfo"))
+                .append(I18n.get(guild).getString("langInfo"))
                 .append("\n\n");
 
-        List<String> keys = new ArrayList<>(I13n.LANGS.keySet());
+        List<String> keys = new ArrayList<>(I18n.LANGS.keySet());
         Collections.sort(keys);
 
         for (String key : keys) {
-            I13n.FredBoatLocale loc = I13n.LANGS.get(key);
+            I18n.FredBoatLocale loc = I18n.LANGS.get(key);
             mb.append("__`" + loc.getCode() + "`__ - " + loc.getNativeName());
             mb.append("\n");
         }
 
         mb.append("\n");
-        mb.append(I13n.get(guild).getString("langDisclaimer"));
+        mb.append(I18n.get(guild).getString("langDisclaimer"));
 
         channel.sendMessage(mb.build()).queue();
     }

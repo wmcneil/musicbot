@@ -4,7 +4,7 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
 import fredboat.db.entities.GuildConfig;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -32,7 +32,7 @@ public class ConfigCommand extends Command {
         GuildConfig gc = EntityReader.getGuildConfig(guild.getId());
 
         MessageBuilder mb = new MessageBuilder()
-                .append(MessageFormat.format(I13n.get(guild).getString("configNoArgs") + "\n", guild.getName()))
+                .append(MessageFormat.format(I18n.get(guild).getString("configNoArgs") + "\n", guild.getName()))
                 .append("track_announce = ").append(gc.isTrackAnnounce()).append("\n")
                 .append("auto_resume = ").append(gc.isAutoResume()).append("\n")
                 .append("```");
@@ -43,12 +43,12 @@ public class ConfigCommand extends Command {
     private void setConfig(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(!PermissionUtil.checkPermission(guild, invoker, Permission.ADMINISTRATOR)
                 && !invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configNotAdmin"), invoker.getEffectiveName())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configNotAdmin"), invoker.getEffectiveName())).queue();
             return;
         }
 
         if(args.length != 3) {
-            channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configUsage"), invoker.getEffectiveName())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configUsage"), invoker.getEffectiveName())).queue();
             return;
         }
 
@@ -60,23 +60,23 @@ public class ConfigCommand extends Command {
             case "track_announce":
                 if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                     gc.setTrackAnnounce(Boolean.valueOf(val));
-                    TextUtils.replyWithName(channel, invoker, "`track_announce`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
+                    TextUtils.replyWithName(channel, invoker, "`track_announce`" + MessageFormat.format(I18n.get(guild).getString("configSetTo"), val));
                     EntityWriter.mergeGuildConfig(gc);
                 } else {
-                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
+                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
                 }
                 break;
             case "auto_resume":
                 if (val.equalsIgnoreCase("true") | val.equalsIgnoreCase("false")) {
                     gc.setAutoResume(Boolean.valueOf(val));
-                    TextUtils.replyWithName(channel, invoker, "`auto_resume`" + MessageFormat.format(I13n.get(guild).getString("configSetTo"), val));
+                    TextUtils.replyWithName(channel, invoker, "`auto_resume`" + MessageFormat.format(I18n.get(guild).getString("configSetTo"), val));
                     EntityWriter.mergeGuildConfig(gc);
                 } else {
-                    channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
+                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configMustBeBoolean"), invoker.getEffectiveName())).queue();
                 }
                 break;
             default:
-                channel.sendMessage(MessageFormat.format(I13n.get(guild).getString("configUnknownKey"), invoker.getEffectiveName())).queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configUnknownKey"), invoker.getEffectiveName())).queue();
                 break;
         }
     }

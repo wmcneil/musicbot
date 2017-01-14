@@ -29,7 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -42,14 +42,14 @@ public class UnpauseCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.get(guild);
         player.setCurrentTC(channel);
         if (player.isQueueEmpty()) {
-            channel.sendMessage(I13n.get(guild).getString("unpauseQueueEmpty")).queue();
+            channel.sendMessage(I18n.get(guild).getString("unpauseQueueEmpty")).queue();
         } else if (!player.isPaused()) {
-            channel.sendMessage(I13n.get(guild).getString("unpausePlayerNotPaused")).queue();
+            channel.sendMessage(I18n.get(guild).getString("unpausePlayerNotPaused")).queue();
         } else if (player.getUsersInVC().isEmpty() && player.isPaused()) {
-            channel.sendMessage(I13n.get(guild).getString("unpauseNoUsers")).queue();
+            channel.sendMessage(I18n.get(guild).getString("unpauseNoUsers")).queue();
         } else {
             player.play();
-            channel.sendMessage(I13n.get(guild).getString("unpauseSuccess")).queue();
+            channel.sendMessage(I18n.get(guild).getString("unpauseSuccess")).queue();
         }
     }
 

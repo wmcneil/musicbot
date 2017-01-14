@@ -31,7 +31,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.SplitAudioTrackContext;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -80,11 +80,11 @@ public class MusicPersistenceHandler {
                 String msg;
 
                 if (isUpdate) {
-                    msg = I13n.get(player.getGuild()).getString("shutdownUpdating");
+                    msg = I18n.get(player.getGuild()).getString("shutdownUpdating");
                 } else if (isRestart) {
-                    msg = I13n.get(player.getGuild()).getString("shutdownRestarting");
+                    msg = I18n.get(player.getGuild()).getString("shutdownRestarting");
                 } else {
-                    msg = I13n.get(player.getGuild()).getString("shutdownIndef");
+                    msg = I18n.get(player.getGuild()).getString("shutdownIndef");
                 }
 
                 player.getActiveTextChannel().sendMessage(msg).queue();
@@ -129,7 +129,7 @@ public class MusicPersistenceHandler {
                 try {
                     FileUtils.writeStringToFile(new File(dir, gId), data.toString(), Charset.forName("UTF-8"));
                 } catch (IOException ex) {
-                    player.getActiveTextChannel().sendMessage(MessageFormat.format(I13n.get(player.getGuild()).getString("shutdownPersistenceFail"), ex.getMessage())).queue();
+                    player.getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(player.getGuild()).getString("shutdownPersistenceFail"), ex.getMessage())).queue();
                 }
             } catch (Exception ex) {
                 log.error("Error when saving persistence file", ex);
@@ -221,7 +221,7 @@ public class MusicPersistenceHandler {
                 });
 
                 player.setPause(isPaused);
-                tc.sendMessage(MessageFormat.format(I13n.get(player.getGuild()).getString("reloadSuccess"), sources.length())).queue();
+                tc.sendMessage(MessageFormat.format(I18n.get(player.getGuild()).getString("reloadSuccess"), sources.length())).queue();
             } catch (Exception ex) {
                 log.error("Error when loading persistence file", ex);
             }

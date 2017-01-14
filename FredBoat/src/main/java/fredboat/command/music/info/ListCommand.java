@@ -30,7 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -63,7 +63,7 @@ public class ListCommand extends Command implements IMusicCommand {
             int i = 0;
 
             if(player.isShuffle()){
-                mb.append(I13n.get(guild).getString("listShowShuffled"));
+                mb.append(I18n.get(guild).getString("listShowShuffled"));
             }
 
             for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
@@ -99,23 +99,23 @@ public class ListCommand extends Command implements IMusicCommand {
 
             if (tracks == 0) {
                 //We are only listening to streams
-                desc = MessageFormat.format(I13n.get(guild).getString("listStreamsOnly"), streams == 1 ?
-                        I13n.get(guild).getString("isSingular") : I13n.get(guild).getString("arePlural"), streams, streams == 1 ?
-                        I13n.get(guild).getString("streamSingular") : I13n.get(guild).getString("streamPlural"));
+                desc = MessageFormat.format(I18n.get(guild).getString("listStreamsOnly"), streams == 1 ?
+                        I18n.get(guild).getString("isSingular") : I18n.get(guild).getString("arePlural"), streams, streams == 1 ?
+                        I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural"));
             } else {
 
-                desc = MessageFormat.format(I13n.get(guild).getString("listStreamsOrTracks"), tracks == 1 ?
-                        I13n.get(guild).getString("isSingular") : I13n.get(guild).getString("arePlural"), tracks, tracks == 1 ?
-                        I13n.get(guild).getString("trackSingular") : I13n.get(guild).getString("trackPlural"), timestamp, streams == 0
-                        ? "" : MessageFormat.format(I13n.get(guild).getString("listAsWellAsLiveStreams"), streams, streams == 1
-                        ? I13n.get(guild).getString("streamSingular") : I13n.get(guild).getString("streamPlural")));
+                desc = MessageFormat.format(I18n.get(guild).getString("listStreamsOrTracks"), tracks == 1 ?
+                        I18n.get(guild).getString("isSingular") : I18n.get(guild).getString("arePlural"), tracks, tracks == 1 ?
+                        I18n.get(guild).getString("trackSingular") : I18n.get(guild).getString("trackPlural"), timestamp, streams == 0
+                        ? "" : MessageFormat.format(I18n.get(guild).getString("listAsWellAsLiveStreams"), streams, streams == 1
+                        ? I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural")));
             }
             
             mb.append("\n" + desc);
 
             channel.sendMessage(mb.build()).queue();
         } else {
-            channel.sendMessage(I13n.get(guild).getString("npNotPlaying")).queue();
+            channel.sendMessage(I18n.get(guild).getString("npNotPlaying")).queue();
         }
     }
 

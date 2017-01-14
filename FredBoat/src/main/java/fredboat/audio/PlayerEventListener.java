@@ -8,7 +8,7 @@ import fredboat.audio.queue.AudioTrackContext;
 import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
 import fredboat.db.entities.GuildConfig;
-import fredboat.feature.I13n;
+import fredboat.feature.I18n;
 
 import java.text.MessageFormat;
 
@@ -32,7 +32,7 @@ class PlayerEventListener extends AudioEventAdapter {
                 && (endReason == AudioTrackEndReason.FINISHED || endReason == AudioTrackEndReason.STOPPED)
                 && next != null
                 && !guildPlayer.isRepeat()){
-            guildPlayer.getActiveTextChannel().sendMessage(MessageFormat.format(I13n.get(guildPlayer.getGuild()).getString("trackAnnounce"), next.getEffectiveTitle())).queue();
+            guildPlayer.getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(guildPlayer.getGuild()).getString("trackAnnounce"), next.getEffectiveTitle())).queue();
         }
     }
 }
