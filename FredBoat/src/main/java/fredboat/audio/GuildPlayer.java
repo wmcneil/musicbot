@@ -79,7 +79,8 @@ public class GuildPlayer extends AbstractPlayer {
             throw new MessagingException(I18n.get(getGuild()).getString("playerUserNotInChannel"));
         }
 
-        if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_CONNECT)) {
+        if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_CONNECT)
+                && !targetChannel.getMembers().contains(getGuild().getSelfMember())) {
             throw new MessagingException(I18n.get(getGuild()).getString("playerJoinConnectDenied"));
         }
 
