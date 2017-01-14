@@ -109,16 +109,16 @@ public abstract class FredBoat {
         );
 
         //Initialise event listeners
-        listenerBot = new EventListenerBoat(Config.CONFIG.scope & 0x110, Config.CONFIG.distribution == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_BOT_PREFIX_BETA : BotConstants.DEFAULT_BOT_PREFIX);
-        listenerSelf = new EventListenerSelf(Config.CONFIG.scope & 0x001, Config.CONFIG.distribution == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_SELF_PREFIX_BETA : BotConstants.DEFAULT_SELF_PREFIX);
+        listenerBot = new EventListenerBoat(Config.CONFIG.getScope() & 0x110, Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_BOT_PREFIX_BETA : BotConstants.DEFAULT_BOT_PREFIX);
+        listenerSelf = new EventListenerSelf(Config.CONFIG.getScope() & 0x001, Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_SELF_PREFIX_BETA : BotConstants.DEFAULT_SELF_PREFIX);
 
         /* Init JDA */
 
-        if ((Config.CONFIG.scope & 0x110) != 0) {
+        if ((Config.CONFIG.getScope() & 0x110) != 0) {
             initBotShards();
         }
 
-        if ((Config.CONFIG.scope & 0x001) != 0) {
+        if ((Config.CONFIG.getScope() & 0x001) != 0) {
             fbClient = new FredBoatClient();
         }
 
@@ -129,9 +129,9 @@ public abstract class FredBoat {
         }
 
         try {
-            if(!Config.CONFIG.jdbcUrl.equals("") && !Config.CONFIG.oauthSecret.equals("")) {
-                DatabaseManager.startup(Config.CONFIG.jdbcUrl);
-                OAuthManager.start(Config.CONFIG.botToken, Config.CONFIG.oauthSecret);
+            if(!Config.CONFIG.getJdbcUrl().equals("") && !Config.CONFIG.getOauthSecret().equals("")) {
+                DatabaseManager.startup(Config.CONFIG.getJdbcUrl());
+                OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
             } else {
                 log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
             }
@@ -141,22 +141,22 @@ public abstract class FredBoat {
 
         //Initialise JCA
 
-        if(!Config.CONFIG.cbUser.equals("") && !Config.CONFIG.cbKey.equals("")) {
+        if(!Config.CONFIG.getCbUser().equals("") && !Config.CONFIG.getCbKey().equals("")) {
             log.info("Starting CleverBot");
-            jca = new JCABuilder().setKey(Config.CONFIG.cbKey).setUser(Config.CONFIG.cbUser).buildBlocking();
+            jca = new JCABuilder().setKey(Config.CONFIG.getCbKey()).setUser(Config.CONFIG.getCbUser()).buildBlocking();
         } else {
             log.warn("Credentials not found for cleverbot authentication. Skipping...");
         }
 
-        if (Config.CONFIG.distribution == DistributionEnum.MAIN && Config.CONFIG.carbonKey != null) {
-            CarbonitexAgent carbonitexAgent = new CarbonitexAgent(Config.CONFIG.carbonKey);
+        if (Config.CONFIG.getDistribution() == DistributionEnum.MAIN && Config.CONFIG.getCarbonKey() != null) {
+            CarbonitexAgent carbonitexAgent = new CarbonitexAgent(Config.CONFIG.getCarbonKey());
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
     }
 
     private static void initBotShards() {
-        for(int i = 0; i < Config.CONFIG.numShards; i++){
+        for(int i = 0; i < Config.CONFIG.getNumShards(); i++){
             shards.add(i, new FredBoatBot(i));
             try {
                 Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
@@ -165,7 +165,7 @@ public abstract class FredBoat {
             }
         }
 
-        log.info(Config.CONFIG.numShards + " shards have been constructed");
+        log.info(Config.CONFIG.getNumShards() + " shards have been constructed");
 
     }
 
@@ -177,7 +177,7 @@ public abstract class FredBoat {
             onInitFirstShard(readyEvent);
         }
 
-        if(ready == Config.CONFIG.numShards) {
+        if(ready == Config.CONFIG.getNumShards()) {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
@@ -304,7 +304,7 @@ public abstract class FredBoat {
         if(jda.getAccountType() == AccountType.CLIENT) {
             return new ShardInfo(0, 1);
         } else {
-            return new ShardInfo(sId, Config.CONFIG.numShards);
+            return new ShardInfo(sId, Config.CONFIG.getNumShards());
         }
     }
 

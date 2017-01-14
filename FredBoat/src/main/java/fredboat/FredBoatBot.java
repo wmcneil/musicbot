@@ -49,12 +49,12 @@ public class FredBoatBot extends FredBoat {
                 JDABuilder builder = new JDABuilder(AccountType.BOT)
                         .addListener(listenerBot)
                         .addListener(new EventLogger("216689009110417408"))
-                        .setToken(accountToken)
+                        .setToken(Config.CONFIG.getBotToken())
                         .setBulkDeleteSplittingEnabled(true)
                         .setEnableShutdownHook(false)
                         .setAudioSendFactory(new NativeAudioSendFactory());
-                if (numShards > 1) {
-                    builder.useSharding(shardId, numShards);
+                if (Config.CONFIG.getNumShards() > 1) {
+                    builder.useSharding(shardId, Config.CONFIG.getNumShards());
                 }
                 try {
                     jda = builder.buildAsync();

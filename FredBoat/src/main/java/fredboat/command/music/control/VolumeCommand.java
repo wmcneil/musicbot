@@ -25,7 +25,7 @@
 
 package fredboat.command.music.control;
 
-import fredboat.FredBoat;
+import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.MessagingException;
@@ -44,7 +44,7 @@ public class VolumeCommand extends Command implements IMusicCommand {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
 
-        if(FredBoat.distribution.volumeSupported()) {
+        if(Config.CONFIG.getDistribution().volumeSupported()) {
 
             GuildPlayer player = PlayerRegistry.get(guild);
             try {

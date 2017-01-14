@@ -25,8 +25,11 @@
 
 package fredboat.commandmeta;
 
-import fredboat.FredBoat;
-import fredboat.commandmeta.abs.*;
+import fredboat.Config;
+import fredboat.commandmeta.abs.Command;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
+import fredboat.commandmeta.abs.IMusicBackupCommand;
+import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.util.*;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -54,12 +57,12 @@ public class CommandManager {
             return;
         }
 
-        if (FredBoat.distribution == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
+        if (Config.CONFIG.getDistribution() == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is not allowed in FredBoatHangout");
             return;
         }
 
-        if (FredBoat.distribution == DistributionEnum.MUSIC
+        if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
                 && DiscordUtil.isPatronBotPresentAndOnline(guild)
                 && !guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is present");

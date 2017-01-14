@@ -28,6 +28,7 @@ package fredboat.audio;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.SplitAudioTrackContext;
@@ -161,7 +162,7 @@ public class MusicPersistenceHandler {
 
                 player.joinChannel(vc);
                 player.setCurrentTC(tc);
-                if(FredBoat.distribution.volumeSupported()) {
+                if(Config.CONFIG.getDistribution().volumeSupported()) {
                     player.setVolume(volume);
                 }
                 player.setRepeat(repeat);

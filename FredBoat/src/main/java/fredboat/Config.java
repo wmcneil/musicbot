@@ -46,20 +46,20 @@ public class Config {
     
     public static Config CONFIG;
 
-    public final DistributionEnum distribution;
-    public final String botToken;
-    public String oauthSecret;
-    public final String jdbcUrl;
-    public final int numShards;
-    public String mashapeKey;
-    public String malPassword;
-    public int scope;
-    public List<String> googleKeys = new ArrayList<>();
-    public final String[] lavaplayerNodes = new String[64];;
-    public final boolean lavaplayerNodesEnabled;
-    public String carbonKey;
-    public String cbUser;
-    public String cbKey;
+    private final DistributionEnum distribution;
+    private final String botToken;
+    private String oauthSecret;
+    private final String jdbcUrl;
+    private final int numShards;
+    private String mashapeKey;
+    private String malPassword;
+    private int scope;
+    private List<String> googleKeys = new ArrayList<>();
+    private final String[] lavaplayerNodes = new String[64];;
+    private final boolean lavaplayerNodesEnabled;
+    private String carbonKey;
+    private String cbUser;
+    private String cbKey;
 
     public Config(File credentialsFile, File configFile, int scope) throws IOException, UnirestException {
         this.scope = scope;
@@ -75,17 +75,17 @@ public class Config {
             distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
         }
 
-        log.info("Determined distribution: " + distribution);
+        log.info("Determined distribution: " + getDistribution());
 
         mashapeKey = creds.optString("mashapeKey");
         malPassword = creds.optString("malPassword");
         carbonKey = creds.optString("carbonKey");
         cbUser = creds.optString("cbUser");
         cbKey = creds.optString("cbKey");
-        botToken = creds.getJSONObject("token").getString(distribution.getId());
+        botToken = creds.getJSONObject("token").getString(getDistribution().getId());
         cbKey = creds.optString("cbKey");
         if(creds.has("oauthSecret")){
-            oauthSecret = creds.getJSONObject("oauthSecret").optString(distribution.getId());
+            oauthSecret = creds.getJSONObject("oauthSecret").optString(getDistribution().getId());
         }
         if(creds.has("jdbcUrl")){
             jdbcUrl = creds.getString("jdbcUrl");
@@ -95,7 +95,7 @@ public class Config {
 
         JSONArray gkeys = creds.optJSONArray("googleServerKeys");
         if (gkeys != null) {
-            gkeys.forEach((Object str) -> googleKeys.add((String) str));
+            gkeys.forEach((Object str) -> getGoogleKeys().add((String) str));
         }
 
         JSONArray nodesArray = creds.optJSONArray("lavaplayerNodes");
@@ -105,7 +105,7 @@ public class Config {
             Iterator<Object> itr = nodesArray.iterator();
             int i = 0;
             while(itr.hasNext()) {
-                lavaplayerNodes[i] = (String) itr.next();
+                getLavaplayerNodes()[i] = (String) itr.next();
                 i++;
             }
         } else {
@@ -113,17 +113,72 @@ public class Config {
             log.info("Not using lavaplayer nodes. Audio playback will be processed locally.");
         }
 
-        if(distribution == DistributionEnum.DEVELOPMENT) {
+        if(getDistribution() == DistributionEnum.DEVELOPMENT) {
             log.info("Development distribution; forcing 2 shards");
             numShards = 2;
         } else {
-            numShards = DiscordUtil.getRecommendedShardCount(botToken);
-            log.info("Discord recommends " + numShards + " shard(s)");
+            numShards = DiscordUtil.getRecommendedShardCount(getBotToken());
+            log.info("Discord recommends " + getNumShards() + " shard(s)");
         }
     }
 
     public String getRandomGoogleKey() {
-        return googleKeys.get((int) Math.floor(Math.random() * googleKeys.size()));
+        return getGoogleKeys().get((int) Math.floor(Math.random() * getGoogleKeys().size()));
     }
 
+    public DistributionEnum getDistribution() {
+        return distribution;
+    }
+
+    public String getBotToken() {
+        return botToken;
+    }
+
+    public String getOauthSecret() {
+        return oauthSecret;
+    }
+
+    public String getJdbcUrl() {
+        return jdbcUrl;
+    }
+
+    public int getNumShards() {
+        return numShards;
+    }
+
+    public String getMashapeKey() {
+        return mashapeKey;
+    }
+
+    public String getMalPassword() {
+        return malPassword;
+    }
+
+    public int getScope() {
+        return scope;
+    }
+
+    public List<String> getGoogleKeys() {
+        return googleKeys;
+    }
+
+    public String[] getLavaplayerNodes() {
+        return lavaplayerNodes;
+    }
+
+    public boolean isLavaplayerNodesEnabled() {
+        return lavaplayerNodesEnabled;
+    }
+
+    public String getCarbonKey() {
+        return carbonKey;
+    }
+
+    public String getCbUser() {
+        return cbUser;
+    }
+
+    public String getCbKey() {
+        return cbKey;
+    }
 }

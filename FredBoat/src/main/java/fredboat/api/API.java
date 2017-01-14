@@ -25,6 +25,7 @@
 
 package fredboat.api;
 
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.db.entities.UConfig;
@@ -73,7 +74,7 @@ public class API {
             JSONObject g = new JSONObject();
             g.put("playingPlayers", PlayerRegistry.getPlayingPlayers().size())
                     .put("totalPlayers", PlayerRegistry.getRegistry().size())
-                    .put("distribution", FredBoat.distribution)
+                    .put("distribution", Config.CONFIG.getDistribution())
                     .put("guilds", FredBoat.getAllGuilds().size())
                     .put("users", FredBoat.getAllUsersAsMap().size());
 

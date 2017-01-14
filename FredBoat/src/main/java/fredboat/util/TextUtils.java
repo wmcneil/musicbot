@@ -27,6 +27,7 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -87,7 +88,7 @@ public class TextUtils {
 
             String filtered = " an error occured :anger: ```java\n" + e.toString() + "\n";
 
-            for (String str : FredBoat.getGoogleKeys()) {
+            for (String str : Config.CONFIG.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
@@ -95,7 +96,7 @@ public class TextUtils {
         } else {
             String filtered = "An error occured :anger: ```java\n" + e.toString() + "\n";
 
-            for (String str : FredBoat.getGoogleKeys()) {
+            for (String str : Config.CONFIG.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 

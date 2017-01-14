@@ -27,17 +27,17 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import fredboat.FredBoat;
+import fredboat.Config;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.requests.*;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DiscordUtil {
@@ -48,15 +48,15 @@ public class DiscordUtil {
     }
 
     public static boolean isMainBot() {
-        return (FredBoat.getScopes() & 0x100) != 0;
+        return (Config.CONFIG.getScope() & 0x100) != 0;
     }
 
     public static boolean isMusicBot() {
-        return (FredBoat.getScopes() & 0x010) != 0;
+        return (Config.CONFIG.getScope() & 0x010) != 0;
     }
 
     public static boolean isSelfBot() {
-        return (FredBoat.getScopes() & 0x001) != 0;
+        return (Config.CONFIG.getScope() & 0x001) != 0;
     }
 
     public static boolean isMainBotPresent(Guild guild) {

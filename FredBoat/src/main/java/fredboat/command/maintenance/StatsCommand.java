@@ -25,6 +25,7 @@
 
 package fredboat.command.maintenance;
 
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandManager;
@@ -68,7 +69,7 @@ public class StatsCommand extends Command {
         }
         str = str + "Known servers:                  " + FredBoat.getAllGuilds().size() + "\n";
         str = str + "Known users in servers:         " + FredBoat.getAllUsersAsMap().size() + "\n";
-        str = str + "Distribution:                   " + FredBoat.distribution + "\n";
+        str = str + "Distribution:                   " + Config.CONFIG.getDistribution() + "\n";
         str = str + "JDA responses total:            " + guild.getJDA().getResponseTotal() + "\n";
         str = str + "JDA version:                    " + JDAInfo.VERSION;
         

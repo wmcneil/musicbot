@@ -40,6 +40,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
@@ -77,12 +78,12 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
             registerSourceManagers(playerManager);
 
             //Patrons get higher quality
-            AudioConfiguration.ResamplingQuality quality = FredBoat.distribution == DistributionEnum.PATRON ? AudioConfiguration.ResamplingQuality.HIGH : AudioConfiguration.ResamplingQuality.LOW;
+            AudioConfiguration.ResamplingQuality quality = Config.CONFIG.getDistribution() == DistributionEnum.PATRON ? AudioConfiguration.ResamplingQuality.HIGH : AudioConfiguration.ResamplingQuality.LOW;
             playerManager.getConfiguration().setResamplingQuality(quality);
             playerManager.enableGcMonitoring();
 
-            if (FredBoat.distribution != DistributionEnum.PATRON && FredBoat.distribution != DistributionEnum.DEVELOPMENT && FredBoat.isLavaplayerNodesEnabled()) {
-                playerManager.useRemoteNodes(FredBoat.getLavaplayerNodes());
+            if (Config.CONFIG.getDistribution() != DistributionEnum.PATRON && Config.CONFIG.getDistribution() != DistributionEnum.DEVELOPMENT && Config.CONFIG.isLavaplayerNodesEnabled()) {
+                playerManager.useRemoteNodes(Config.CONFIG.getLavaplayerNodes());
             }
         }
     }
