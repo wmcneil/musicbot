@@ -7,6 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "guild_config")
+//@Cache(usage= CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region="guild_config")
 public class GuildConfig {
 
     @Id
@@ -17,6 +18,9 @@ public class GuildConfig {
 
     @Column(name = "auto_resume", nullable = false)
     private boolean autoResume = false;
+
+    @Column(name = "lang", nullable = false)
+    private String lang = "en_US";
 
     public GuildConfig() {
     }
@@ -39,6 +43,14 @@ public class GuildConfig {
 
     public void setAutoResume(boolean autoplay) {
         this.autoResume = autoplay;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     /*@OneToMany

@@ -31,12 +31,14 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I18n;
 import fredboat.util.RestActionScheduler;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 
 public class VolumeCommand extends Command implements IMusicCommand {
@@ -51,17 +53,14 @@ public class VolumeCommand extends Command implements IMusicCommand {
                 float volume = Float.parseFloat(args[1]) / 100;
                 volume = Math.max(0, Math.min(1.5f, volume));
 
-                channel.sendMessage("Changed volume from **" + (int) Math.floor(player.getVolume() * 100) + "%** to **" + (int) Math.floor(volume * 100) + "%**.").queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("volumeSuccess"), Math.floor(player.getVolume() * 100), Math.floor(volume * 100))).queue();
 
                 player.setVolume(volume);
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
-                throw new MessagingException("Use `;;volume <0-150>`. " + (int) (100 * PlayerRegistry.DEFAULT_VOLUME) + "% is the default.\nThe player is currently at **" + (int) Math.floor(player.getVolume() * 100) + "%**.");
+                throw new MessagingException(MessageFormat.format(I18n.get(guild).getString("volumeSyntax"), 100 * PlayerRegistry.DEFAULT_VOLUME, Math.floor(player.getVolume() * 100)));
             }
         } else {
-            channel.sendMessage("Sorry! The ;;volume command has now been deprecated on the public music bot. "
-                    + "This is because of how it causes the bot to spend a lot more time processing audio, some tracks up to 5 times more, causing everyone to hear stutter. "
-                    + "By disabling this feature FredBoat can play much more music without lag.\n"
-                    + "I recommend setting the bot's volume via the dropdown menu https://fred.moe/1vD.png").queue(message1 -> RestActionScheduler.schedule(
+            channel.sendMessage(I18n.get(guild).getString("volumeApology")).queue(message1 -> RestActionScheduler.schedule(
                             message1.deleteMessage(),
                             2,
                             TimeUnit.MINUTES

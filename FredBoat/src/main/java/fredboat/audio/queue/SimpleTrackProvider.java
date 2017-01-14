@@ -95,9 +95,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public synchronized List<AudioTrackContext> getAsListOrdered() {
         if(!isShuffle()){
-            List<AudioTrackContext> list = getAsList();
-
-            return list;
+            return getAsList();
         }
 
         if(!shouldUpdateShuffledQueue){

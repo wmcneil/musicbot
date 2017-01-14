@@ -31,11 +31,12 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.TextChannel;import java.text.MessageFormat;
 
 public class SeekCommand extends Command implements IMusicCommand {
 
@@ -44,12 +45,12 @@ public class SeekCommand extends Command implements IMusicCommand {
         GuildPlayer player = PlayerRegistry.getExisting(guild);
 
         if(player == null || player.isQueueEmpty()) {
-            TextUtils.replyWithName(channel, invoker, "The queue is empty.");
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("queueEmpty"));
             return;
         }
 
         if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("seekUsage"));
             return;
         }
 
@@ -57,7 +58,7 @@ public class SeekCommand extends Command implements IMusicCommand {
         try {
             t = TextUtils.parseTimeString(args[1]);
         } catch (IllegalStateException e){
-            TextUtils.replyWithName(channel, invoker, "Proper usage:\n`;;seek [[hh:]mm:]ss`");
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("seekUsage"));
             return;
         }
 
@@ -69,7 +70,7 @@ public class SeekCommand extends Command implements IMusicCommand {
         t = Math.min(atc.getEffectiveDuration(), t);
 
         at.setPosition(atc.getStartPosition() + t);
-        channel.sendMessage("Seeking **" + atc.getEffectiveTitle() + "** to " + TextUtils.formatTime(t) + ".").queue();
+        channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("seekSuccess"), atc.getEffectiveTitle(), TextUtils.formatTime(t))).queue();
     }
 
 }

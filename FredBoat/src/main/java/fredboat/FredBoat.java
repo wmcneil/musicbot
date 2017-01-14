@@ -35,6 +35,7 @@ import fredboat.commandmeta.CommandInitializer;
 import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
+import fredboat.feature.I18n;
 import fredboat.util.BotConstants;
 import fredboat.util.DiscordUtil;
 import fredboat.util.DistributionEnum;
@@ -61,8 +62,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class FredBoat {
 
@@ -102,6 +103,8 @@ public abstract class FredBoat {
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
+
+        I18n.start();
 
         //Attach log adapter
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());

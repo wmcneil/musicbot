@@ -29,6 +29,7 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.commandmeta.abs.Command;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -40,7 +41,7 @@ public class PlaySplitCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (args.length < 2) {
-            channel.sendMessage("Proper usage:\n`;;split <url>`");
+            channel.sendMessage(I18n.get(guild).getString("splitProperUsage"));
             return;
         }
 

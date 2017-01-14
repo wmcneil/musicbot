@@ -31,6 +31,7 @@ import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
@@ -39,6 +40,7 @@ import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,15 +76,15 @@ public class GuildPlayer extends AbstractPlayer {
 
     public void joinChannel(VoiceChannel targetChannel) throws MessagingException {
         if (targetChannel == null) {
-            throw new MessagingException("You must join a voice channel first.");
+            throw new MessagingException(I18n.get(getGuild()).getString("playerUserNotInChannel"));
         }
 
         if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_CONNECT)) {
-            throw new MessagingException("I am not permitted to connect to that voice channel.");
+            throw new MessagingException(I18n.get(getGuild()).getString("playerJoinConnectDenied"));
         }
 
         if (!PermissionUtil.checkPermission(targetChannel, targetChannel.getGuild().getSelfMember(), Permission.VOICE_SPEAK)) {
-            throw new MessagingException("I am not permitted to play music in that voice channel.");
+            throw new MessagingException(I18n.get(getGuild()).getString("playerJoinSpeakDenied"));
         }
 
         AudioManager manager = getGuild().getAudioManager();
@@ -96,9 +98,9 @@ public class GuildPlayer extends AbstractPlayer {
         AudioManager manager = getGuild().getAudioManager();
         if (!silent) {
             if (manager.getConnectedChannel() == null) {
-                channel.sendMessage("Not currently in a channel.").queue();
+                channel.sendMessage(I18n.get(getGuild()).getString("playerNotInChannel")).queue();
             } else {
-                channel.sendMessage("Left channel " + getChannel().getName() + ".").queue();
+                channel.sendMessage(MessageFormat.format(I18n.get(getGuild()).getString("playerLeftChannel"), getChannel().getName())).queue();
             }
         }
         manager.closeAudioConnection();

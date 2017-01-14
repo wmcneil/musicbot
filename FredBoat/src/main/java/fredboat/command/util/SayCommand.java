@@ -26,6 +26,7 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
 import fredboat.event.EventListenerBoat;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -41,7 +42,7 @@ public class SayCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (args.length < 2) {
-            channel.sendMessage("Proper syntax: ;;say <text>").queue();
+            channel.sendMessage(I18n.get(guild).getString("sayUsage")).queue();
             return;
         }
         String res = "";

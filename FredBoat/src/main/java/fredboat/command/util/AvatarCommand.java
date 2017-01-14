@@ -26,20 +26,21 @@
 package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.TextChannel;import java.text.MessageFormat;
 
 public class AvatarCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(message.getMentionedUsers().isEmpty()){
-            TextUtils.replyWithName(channel, invoker, " proper usage is: ```;;avatar @<username>```");
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("avatarUsage"));
         } else {
-            TextUtils.replyWithName(channel, invoker, " found it\n"+message.getMentionedUsers().get(0).getAvatarUrl());
+            TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("avatarSuccess"), message.getMentionedUsers().get(0).getAvatarUrl()));
         }
     }
 

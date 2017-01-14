@@ -30,6 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I18n;
 import fredboat.util.YoutubeAPI;
 import fredboat.util.YoutubeVideo;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -103,14 +104,14 @@ public class PlayCommand extends Command implements IMusicCommand {
     private void handleNoArguments(Guild guild, TextChannel channel, Member invoker, Message message) {
         GuildPlayer player = PlayerRegistry.get(guild);
         if (player.isQueueEmpty()) {
-            channel.sendMessage("The player is not currently playing anything. Use the following syntax to add a song:\n;;play <url-or-search-terms>").queue();
+            channel.sendMessage(I18n.get(guild).getString("playQueueEmpty")).queue();
         } else if (player.isPlaying()) {
-            channel.sendMessage("The player is already playing.").queue();
+            channel.sendMessage(I18n.get(guild).getString("playAlreadyPlaying")).queue();
         } else if (player.getUsersInVC().isEmpty()) {
-            channel.sendMessage("There are no users in the voice chat.").queue();
+            channel.sendMessage(I18n.get(guild).getString("playVCEmpty")).queue();
         } else {
             player.play();
-            channel.sendMessage("The player will now play.").queue();
+            channel.sendMessage(I18n.get(guild).getString("playWillNowPlay")).queue();
         }
     }
 
@@ -122,19 +123,19 @@ public class PlayCommand extends Command implements IMusicCommand {
         //Now remove all punctuation
         query = query.replaceAll("[.,/#!$%\\^&*;:{}=\\-_`~()]", "");
 
-        Message outMsg = channel.sendMessage("Searching YouTube for `{q}`...".replace("{q}", query)).complete(true);
+        Message outMsg = channel.sendMessage(I18n.get(guild).getString("playSearching").replace("{q}", query)).complete(true);
 
         ArrayList<YoutubeVideo> vids = null;
         try {
             vids = YoutubeAPI.searchForVideos(query);
         } catch (JSONException e) {
-            channel.sendMessage("An error occurred when searching YouTube. Consider linking directly to audio sources instead.\n```\n;;play <url>```").queue();
+            channel.sendMessage(I18n.get(guild).getString("playYoutubeSearchError")).queue();
             log.debug("YouTube search exception", e);
             return;
         }
 
         if (vids.isEmpty()) {
-            outMsg.editMessage("No results for `{q}`".replace("{q}", query)).queue();
+            outMsg.editMessage(I18n.get(guild).getString("playSearchNoResults").replace("{q}", query)).queue();
         } else {
             //Clean up any last search by this user
             GuildPlayer player = PlayerRegistry.get(guild);
@@ -145,7 +146,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             }
 
             MessageBuilder builder = new MessageBuilder();
-            builder.append("**Please select a video with the `;;play n` command:**");
+            builder.append(I18n.get(guild).getString("playSelectVideo"));
 
             int i = 1;
             for (YoutubeVideo vid : vids) {

@@ -28,47 +28,60 @@ package fredboat.db;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import fredboat.db.entities.GuildConfig;
-import fredboat.db.entities.TCConfig;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class DatabaseManager {
 
+    private static final Logger log = LoggerFactory.getLogger(DatabaseManager.class);
+    
     private static final Map<Thread, EntityManager> EM_MAP = new ConcurrentHashMap<>();
     private static EntityManagerFactory emf;
-    private static final Map<String, GuildConfig> GUILD_CONFIGS = new HashMap<>();
+    public static DatabaseState state = DatabaseState.UNINITIALIZED;
 
     public static void startup(String jdbcUrl) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(jdbcUrl);
-        DataSource dataSource = new HikariDataSource(config);
+        state = DatabaseState.INITIALIZING;
 
-        Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.put("hibernate.connection.driver_class", "org.postgresql.Driver");
+        try {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(jdbcUrl);
+            DataSource dataSource = new HikariDataSource(config);
 
-        LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-        emfb.setDataSource(dataSource);
-        emfb.setPackagesToScan("fredboat.db.entities");
-        emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        emfb.setJpaProperties(properties);
-        emfb.setPersistenceUnitName("fredboat.test");
-        emfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        emfb.afterPropertiesSet();
+            //These are now located in the resources directory as XML
+            Properties properties = new Properties();
+            //properties.put("configLocation", "hibernate.cfg.xml");
 
-        emf = emfb.getObject();
+            properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+            properties.put("hibernate.connection.driver_class", "org.postgresql.Driver");
+
+            LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
+            emfb.setDataSource(dataSource);
+            emfb.setPackagesToScan("fredboat.db.entities");
+            emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+            emfb.setJpaProperties(properties);
+            emfb.setPersistenceUnitName("fredboat.test");
+            emfb.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+            emfb.afterPropertiesSet();
+            emf = emfb.getObject();
+
+            log.info("Started Hibernate");
+            state = DatabaseState.READY;
+        } catch (Exception ex) {
+            state = DatabaseState.FAILED;
+            throw new RuntimeException("Failed starting database connection", ex);
+        }
     }
 
     public static void initBotEntities(JDA jda){
@@ -81,7 +94,6 @@ public class DatabaseManager {
         for (Guild guild : jda.getGuilds()) {
             GuildConfig gc = em.find(GuildConfig.class, Long.parseLong(guild.getId()));
             if (gc == null) {
-                System.err.println("NEW");
                 gc = new GuildConfig();
                 em.persist(gc);
             }
@@ -104,84 +116,11 @@ public class DatabaseManager {
         return em;
     }
 
-    //TODO: Remove this
-    /*public static GuildConfig getGuildConfig(Guild guild) {
-        return GUILD_CONFIGS.get(guild.getId());
+    public enum DatabaseState {
+        UNINITIALIZED,
+        INITIALIZING,
+        FAILED,
+        READY
     }
-
-    public static TCConfig getTextChannelConfig(TextChannel tc) {
-        GuildConfig gc = getGuildConfig(tc.getGuild());
-
-        if (gc != null) {
-            long tcId = Long.getLong(tc.getId());
-            for (TCConfig tcc : gc.getTextChannels()) {
-                if (tcc.getTextChannelId() == tcId) {
-                    return tcc;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static void persistGuildConfig(GuildConfig gc, boolean commit) {
-        EntityManager em = getEntityManager();
-        if (commit) {
-            em.getTransaction().begin();
-        }
-
-        em.persist(gc);
-        GUILD_CONFIGS.put(Long.toString(gc.getGuildId()), gc);
-
-        if (commit) {
-            em.getTransaction().commit();
-        }
-    }
-
-    public static void persistTextChannelConfig(TCConfig tcc, boolean commit) {
-        EntityManager em = getEntityManager();
-        if (commit) {
-            em.getTransaction().begin();
-        }
-
-        em.persist(tcc);
-        tcc.getGuildConfiguration().addTextChannel(tcc);
-
-        if (commit) {
-            em.getTransaction().commit();
-        }
-    }
-
-    public static void remove(GuildConfig gc, boolean commit){
-        EntityManager em = getEntityManager();
-        if (commit) {
-            em.getTransaction().begin();
-        }
-
-        em.remove(gc);
-        GUILD_CONFIGS.remove(Long.toString(gc.getGuildId()));
-        for(TCConfig tcc : gc.getTextChannels()){
-            gc.removeTextChannel(tcc);
-            em.remove(tcc);
-        }
-
-        if (commit) {
-            em.getTransaction().commit();
-        }
-    }
-
-    public static void remove(TCConfig tcc, boolean commit){
-        EntityManager em = getEntityManager();
-        if (commit) {
-            em.getTransaction().begin();
-        }
-
-        em.remove(tcc);
-        tcc.getGuildConfiguration().removeTextChannel(tcc);
-
-        if (commit) {
-            em.getTransaction().commit();
-        }
-    }*/
 
 }

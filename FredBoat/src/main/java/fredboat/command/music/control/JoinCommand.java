@@ -29,7 +29,10 @@ import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.*;
+
+import java.text.MessageFormat;
 
 public class JoinCommand extends Command implements IMusicCommand {
 
@@ -41,12 +44,12 @@ public class JoinCommand extends Command implements IMusicCommand {
         try {
             player.joinChannel(vc);
             if (vc != null) {
-                channel.sendMessage("Joining " + vc.getName())
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("joinJoining"), vc.getName()))
                         .queue();
             }
         } catch (IllegalStateException ex) {
             if(vc != null) {
-                channel.sendMessage("An error occurred. Couldn't join " + vc.getName() + " because I am already trying to connect to that channel. Please try again.")
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("joinErrorAlreadyJoining"), vc.getName()))
                         .queue();
             } else {
                 throw ex;

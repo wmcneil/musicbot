@@ -33,6 +33,7 @@ import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.admin.TestCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.ConfigCommand;
+import fredboat.command.moderation.LanguageCommand;
 import fredboat.command.moderation.SoftbanCommand;
 import fredboat.command.music.control.*;
 import fredboat.command.music.info.ExportCommand;
@@ -68,7 +69,6 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "update", new UpdateCommand());
         CommandRegistry.registerCommand(0x101, "compile", new CompileCommand());
         CommandRegistry.registerCommand(0x101, "botrestart", new BotRestartCommand());
-        CommandRegistry.registerCommand(0x101, "find", new FindCommand());
         CommandRegistry.registerCommand(0x101, "dance", new DanceCommand());
         CommandRegistry.registerCommand(0x101, "eval", new EvalCommand());
         CommandRegistry.registerCommand(0x101, "s", new TextCommand("¯\\_(ツ)_/¯"));
@@ -77,7 +77,6 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "useless", new TextCommand("This command is useless."));
         CommandRegistry.registerCommand(0x101, "clear", new ClearCommand());
         CommandRegistry.registerCommand(0x101, "talk", new TalkCommand());
-        CommandRegistry.registerCommand(0x101, "dump", new DumpCommand());
         CommandRegistry.registerCommand(0x101, "mal", new MALCommand());
         CommandRegistry.registerCommand(0x101, "akinator", new AkinatorCommand());
         CommandRegistry.registerCommand(0x101, "fuzzy", new FuzzyUserSearchCommand());
@@ -122,6 +121,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x010, "mshards", new ShardsCommand());
         CommandRegistry.registerCommand(0x010, "split", new PlaySplitCommand());
         CommandRegistry.registerCommand(0x010, "config", new ConfigCommand());
+        CommandRegistry.registerCommand(0x010, "lang", new LanguageCommand());
 
         CommandRegistry.registerCommand(0x010, "seek", new SeekCommand());
         CommandRegistry.registerCommand(0x010, "forward", new ForwardCommand());
