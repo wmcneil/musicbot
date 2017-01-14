@@ -42,7 +42,7 @@ public class FredBoatClient extends FredBoat {
                 try {
                     jda = new JDABuilder(AccountType.CLIENT)
                             .addListener(listenerSelf)
-                            .setToken(clientToken)
+                            .setToken(null)//todo: remove
                             .setEnableShutdownHook(false)
                             .buildAsync();
 

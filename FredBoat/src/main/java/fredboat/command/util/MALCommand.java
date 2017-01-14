@@ -27,7 +27,7 @@ package fredboat.command.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import fredboat.FredBoat;
+import fredboat.Config;
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
@@ -65,14 +65,14 @@ public class MALCommand extends Command {
         log.debug("TERM:"+term);
 
         try {
-            String body = Unirest.get("https://myanimelist.net/api/anime/search.xml?q=" + term).basicAuth("FredBoat", FredBoat.MALPassword).asString().getBody();
+            String body = Unirest.get("https://myanimelist.net/api/anime/search.xml?q=" + term).basicAuth("FredBoat", Config.CONFIG.getMalPassword()).asString().getBody();
             if (body != null && body.length() > 0) {
                 if(handleAnime(channel, invoker, term, body)){
                     return;
                 }
             }
 
-            body = Unirest.get("http://myanimelist.net/search/prefix.json?type=user&keyword=" + term).basicAuth("FredBoat", FredBoat.MALPassword).asString().getBody();
+            body = Unirest.get("http://myanimelist.net/search/prefix.json?type=user&keyword=" + term).basicAuth("FredBoat", Config.CONFIG.getMalPassword()).asString().getBody();
             handleUser(channel, invoker, body);
         } catch (UnirestException ex) {
             throw new RuntimeException(ex);

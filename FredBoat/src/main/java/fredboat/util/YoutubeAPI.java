@@ -26,6 +26,7 @@
 package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
+import fredboat.Config;
 import fredboat.FredBoat;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class YoutubeAPI {
         try {
             data = Unirest.get("https://www.googleapis.com/youtube/v3/search?part=id&type=video&maxResults=5&regionCode=US&fields=items(id/videoId)")
                     .queryString("q", URLEncoder.encode(query, "UTF-8"))
-                    .queryString("key", FredBoat.getRandomGoogleKey())
+                    .queryString("key", Config.CONFIG.getRandomGoogleKey())
                     .asJson()
                     .getBody()
                     .getObject();
@@ -69,7 +70,7 @@ public class YoutubeAPI {
         try {
             data = Unirest.get("https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&fields=items(id,snippet/title,contentDetails/duration)")
                     .queryString("id", id)
-                    .queryString("key", FredBoat.getRandomGoogleKey())
+                    .queryString("key", Config.CONFIG.getRandomGoogleKey())
                     .asJson()
                     .getBody()
                     .getObject();
@@ -94,7 +95,7 @@ public class YoutubeAPI {
             try {
                 data = Unirest.get("https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet")
                         .queryString("id", id)
-                        .queryString("key", FredBoat.getRandomGoogleKey())
+                        .queryString("key", Config.CONFIG.getRandomGoogleKey())
                         .asJson()
                         .getBody()
                         .getObject();

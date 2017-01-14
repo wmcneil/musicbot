@@ -27,6 +27,7 @@ package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.commandmeta.MessagingException;
 import fredboat.feature.I18n;
@@ -88,7 +89,7 @@ public class TextUtils {
 
             String filtered = MessageFormat.format(I18n.get(invoker.getGuild()).getString("utilErrorOccurred"), e.toString());
 
-            for (String str : FredBoat.getGoogleKeys()) {
+            for (String str : Config.CONFIG.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
@@ -96,7 +97,7 @@ public class TextUtils {
         } else {
             String filtered = MessageFormat.format(I18n.DEFAULT.getProps().getString("utilErrorOccurred"), e.toString());
 
-            for (String str : FredBoat.getGoogleKeys()) {
+            for (String str : Config.CONFIG.getGoogleKeys()) {
                 filtered = filtered.replace(str, "GOOGLE_SERVER_KEY");
             }
 
