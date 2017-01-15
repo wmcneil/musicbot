@@ -99,13 +99,13 @@ public class ListCommand extends Command implements IMusicCommand {
 
             if (tracks == 0) {
                 //We are only listening to streams
-                desc = MessageFormat.format(I18n.get(guild).getString("listStreamsOnly"), streams == 1 ?
-                        I18n.get(guild).getString("isSingular") : I18n.get(guild).getString("arePlural"), streams, streams == 1 ?
+                desc = MessageFormat.format(I18n.get(guild).getString(streams == 1 ? "listStreamsOnlySingle" : "listStreamsOnlyMultiple"),
+                        streams, streams == 1 ?
                         I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural"));
             } else {
 
-                desc = MessageFormat.format(I18n.get(guild).getString("listStreamsOrTracks"), tracks == 1 ?
-                        I18n.get(guild).getString("isSingular") : I18n.get(guild).getString("arePlural"), tracks, tracks == 1 ?
+                desc = MessageFormat.format(I18n.get(guild).getString(tracks == 1 ? "listStreamsOrTracksSingle" : "listStreamsOrTracksMultiple"),
+                        tracks, tracks == 1 ?
                         I18n.get(guild).getString("trackSingular") : I18n.get(guild).getString("trackPlural"), timestamp, streams == 0
                         ? "" : MessageFormat.format(I18n.get(guild).getString("listAsWellAsLiveStreams"), streams, streams == 1
                         ? I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural")));
