@@ -99,7 +99,10 @@ public class AudioLoader implements AudioLoadResultHandler {
 
                 if (!context.isQuiet()) {
                     context.textChannel.sendMessage(
-                            gplayer.isPlaying() ? "**" + at.getInfo().title + "** has been added to the queue." : "**" + at.getInfo().title + "** will now play."
+                            gplayer.isPlaying() ?
+                                    MessageFormat.format(I18n.get(context.member.getGuild()).getString("loadSingleTrack"), at.getInfo().title)
+                                    :
+                                    MessageFormat.format(I18n.get(context.member.getGuild()).getString("loadSingleTrackAndPlay"), at.getInfo().title)
                     ).queue();
                 } else {
                     log.info("Quietly loaded " + at.getIdentifier());
