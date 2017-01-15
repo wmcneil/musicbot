@@ -27,7 +27,6 @@ package fredboat.event;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
-import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (!event.getAuthor().getId().equals(BotConstants.OWNER_ID)) {
+        if (!event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
             return;
         }
 

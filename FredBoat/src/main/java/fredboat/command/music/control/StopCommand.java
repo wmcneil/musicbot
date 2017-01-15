@@ -30,19 +30,21 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.feature.I18n;
-import fredboat.util.BotConstants;
+import fredboat.util.DiscordUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.utils.PermissionUtil;import java.text.MessageFormat;
+import net.dv8tion.jda.core.utils.PermissionUtil;
+
+import java.text.MessageFormat;
 
 public class StopCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if (PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) || invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
+        if (PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) || DiscordUtil.isUserBotOwner(invoker.getUser())) {
             GuildPlayer player = PlayerRegistry.get(guild);
             player.setCurrentTC(channel);
             int count = player.getRemainingTracks().size();

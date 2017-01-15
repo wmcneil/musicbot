@@ -27,7 +27,7 @@ package fredboat.command.util;
 
 import fredboat.commandmeta.MessagingException;
 import fredboat.commandmeta.abs.Command;
-import fredboat.util.BotConstants;
+import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageHistory;
@@ -49,7 +49,7 @@ public class ClearCommand extends Command {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         JDA jda = guild.getJDA();
         
-        if(!PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) && !invoker.getUser().getId().equals(BotConstants.OWNER_ID)){
+        if(!PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) && !DiscordUtil.isUserBotOwner(invoker.getUser())){
             TextUtils.replyWithName(channel, invoker, " You must have Manage Messages to do that!");
             return;
         }
