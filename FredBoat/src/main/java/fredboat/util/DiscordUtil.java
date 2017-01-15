@@ -37,10 +37,14 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.requests.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class DiscordUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(DiscordUtil.class);
 
     private static final String USER_AGENT = "FredBoat DiscordBot (https://github.com/Frederikam/FredBoat, 1.0)";
 
@@ -57,6 +61,18 @@ public class DiscordUtil {
 
     public static boolean isSelfBot() {
         return (Config.CONFIG.getScope() & 0x001) != 0;
+    }
+
+    public static boolean isUserBotOwner(User user) {
+        return getOwnerId(user.getJDA()).equals(user.getId());
+    }
+
+    public static String getOwnerId(JDA jda) {
+        try {
+            return getApplicationInfo(jda.getToken().substring(4)).getJSONObject("owner").getString("id");
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static boolean isMainBotPresent(Guild guild) {

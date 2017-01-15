@@ -80,8 +80,8 @@ public class CommandManager {
         }
 
         if (invoked instanceof ICommandOwnerRestricted) {
-            //Check if invoker is actually Fre_d
-            if (!invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
+            //Check if invoker is actually the owner
+            if (!invoker.getUser().getId().equals(DiscordUtil.getOwnerId(guild.getJDA()))) {
                 channel.sendMessage(TextUtils.prefaceWithName(invoker, I18n.get(guild).getString("cmdAccessDenied"))).queue();
                 return;
             }
