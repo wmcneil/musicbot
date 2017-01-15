@@ -38,7 +38,7 @@
     </defaultCache>
 
     <cache name="guild_config" maxEntriesLocalHeap="10000" eternal="false"
-           timeToIdleSeconds="5" timeToLiveSeconds="10">
+           timeToIdleSeconds="30" timeToLiveSeconds="300">
         <persistence strategy="localTempSwap" />
     </cache>
 
