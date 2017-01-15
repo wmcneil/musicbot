@@ -52,15 +52,27 @@ public class DiscordUtil {
     }
 
     public static boolean isMainBot() {
-        return (Config.CONFIG.getScope() & 0x100) != 0;
+        return isMainBot(Config.CONFIG);
     }
 
     public static boolean isMusicBot() {
-        return (Config.CONFIG.getScope() & 0x010) != 0;
+        return isMusicBot(Config.CONFIG);
     }
 
     public static boolean isSelfBot() {
-        return (Config.CONFIG.getScope() & 0x001) != 0;
+        return isSelfBot(Config.CONFIG);
+    }
+
+    public static boolean isMainBot(Config conf) {
+        return (conf.getScope() & 0x100) != 0;
+    }
+
+    public static boolean isMusicBot(Config conf) {
+        return (conf.getScope() & 0x010) != 0;
+    }
+
+    public static boolean isSelfBot(Config conf) {
+        return (conf.getScope() & 0x001) != 0;
     }
 
     public static boolean isUserBotOwner(User user) {

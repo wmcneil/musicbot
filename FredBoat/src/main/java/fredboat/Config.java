@@ -44,7 +44,7 @@ public class Config {
 
     private static final Logger log = LoggerFactory.getLogger(Config.class);
     
-    public static Config CONFIG;
+    public static Config CONFIG = null;
 
     private final DistributionEnum distribution;
     private final String botToken;
@@ -61,64 +61,69 @@ public class Config {
     private String cbUser;
     private String cbKey;
 
-    public Config(File credentialsFile, File configFile, int scope) throws IOException, UnirestException {
-        this.scope = scope;
-        JSONObject creds = new JSONObject(FileUtils.readFileToString(credentialsFile, "UTF-8"));
-        JSONObject config = new JSONObject(FileUtils.readFileToString(configFile, "UTF-8"));
+    public Config(File credentialsFile, File configFile, int scope) {
+        try {
+            this.scope = scope;
+            JSONObject creds = new JSONObject(FileUtils.readFileToString(credentialsFile, "UTF-8"));
+            JSONObject config = new JSONObject(FileUtils.readFileToString(configFile, "UTF-8"));
 
-        // Determine distribution
-        if (config.optBoolean("patron")) {
-            distribution = DistributionEnum.PATRON;
-        } else if (config.optBoolean("development")) {//Determine distribution
-            distribution = DistributionEnum.DEVELOPMENT;
-        } else {
-            distribution = DiscordUtil.isMainBot() ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
-        }
-
-        log.info("Determined distribution: " + getDistribution());
-
-        mashapeKey = creds.optString("mashapeKey");
-        malPassword = creds.optString("malPassword");
-        carbonKey = creds.optString("carbonKey");
-        cbUser = creds.optString("cbUser");
-        cbKey = creds.optString("cbKey");
-        botToken = creds.getJSONObject("token").getString(getDistribution().getId());
-        cbKey = creds.optString("cbKey");
-        if(creds.has("oauthSecret")){
-            oauthSecret = creds.getJSONObject("oauthSecret").optString(getDistribution().getId());
-        }
-        if(creds.has("jdbcUrl")){
-            jdbcUrl = creds.getString("jdbcUrl");
-        } else {
-            jdbcUrl = "";
-        }
-
-        JSONArray gkeys = creds.optJSONArray("googleServerKeys");
-        if (gkeys != null) {
-            gkeys.forEach((Object str) -> getGoogleKeys().add((String) str));
-        }
-
-        JSONArray nodesArray = creds.optJSONArray("lavaplayerNodes");
-        if(nodesArray != null) {
-            lavaplayerNodesEnabled = true;
-            log.info("Using lavaplayer nodes");
-            Iterator<Object> itr = nodesArray.iterator();
-            int i = 0;
-            while(itr.hasNext()) {
-                getLavaplayerNodes()[i] = (String) itr.next();
-                i++;
+            // Determine distribution
+            if (config.optBoolean("patron")) {
+                distribution = DistributionEnum.PATRON;
+            } else if (config.optBoolean("development")) {//Determine distribution
+                distribution = DistributionEnum.DEVELOPMENT;
+            } else {
+                distribution = DiscordUtil.isMainBot(this) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
             }
-        } else {
-            lavaplayerNodesEnabled = false;
-            log.info("Not using lavaplayer nodes. Audio playback will be processed locally.");
-        }
 
-        if(getDistribution() == DistributionEnum.DEVELOPMENT) {
-            log.info("Development distribution; forcing 2 shards");
-            numShards = 2;
-        } else {
-            numShards = DiscordUtil.getRecommendedShardCount(getBotToken());
-            log.info("Discord recommends " + getNumShards() + " shard(s)");
+            log.info("Determined distribution: " + getDistribution());
+
+            mashapeKey = creds.optString("mashapeKey");
+            malPassword = creds.optString("malPassword");
+            carbonKey = creds.optString("carbonKey");
+            cbUser = creds.optString("cbUser");
+            cbKey = creds.optString("cbKey");
+            botToken = creds.getJSONObject("token").getString(getDistribution().getId());
+            cbKey = creds.optString("cbKey");
+            if(creds.has("oauthSecret")){
+                oauthSecret = creds.getJSONObject("oauthSecret").optString(getDistribution().getId());
+            }
+            if(creds.has("jdbcUrl")){
+                jdbcUrl = creds.getString("jdbcUrl");
+            } else {
+                jdbcUrl = "";
+            }
+
+            JSONArray gkeys = creds.optJSONArray("googleServerKeys");
+            if (gkeys != null) {
+                gkeys.forEach((Object str) -> getGoogleKeys().add((String) str));
+            }
+
+            JSONArray nodesArray = creds.optJSONArray("lavaplayerNodes");
+            if(nodesArray != null) {
+                lavaplayerNodesEnabled = true;
+                log.info("Using lavaplayer nodes");
+                Iterator<Object> itr = nodesArray.iterator();
+                int i = 0;
+                while(itr.hasNext()) {
+                    getLavaplayerNodes()[i] = (String) itr.next();
+                    i++;
+                }
+            } else {
+                lavaplayerNodesEnabled = false;
+                log.info("Not using lavaplayer nodes. Audio playback will be processed locally.");
+            }
+
+            if(getDistribution() == DistributionEnum.DEVELOPMENT) {
+                log.info("Development distribution; forcing 2 shards");
+                numShards = 2;
+            } else {
+                numShards = DiscordUtil.getRecommendedShardCount(getBotToken());
+                log.info("Discord recommends " + getNumShards() + " shard(s)");
+            }
+
+        } catch (IOException | UnirestException e) {
+            throw new RuntimeException(e);
         }
     }
 
