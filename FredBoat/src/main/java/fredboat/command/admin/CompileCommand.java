@@ -66,7 +66,7 @@ public class CompileCommand extends Command implements ICommandOwnerRestricted {
                 throw new RuntimeException(ex);
             }
 
-            Process gitClone = rt.exec("git clone https://github.com/Frederikam/FredBoat.git --branch " + branch + " --recursive -j8 --single-branch update");
+            Process gitClone = rt.exec("git clone https://github.com/Frederikam/FredBoat.git --branch " + branch + " --recursive --single-branch update");
             new SLF4JInputStreamLogger(log, gitClone.getInputStream()).start();
             new SLF4JInputStreamErrorLogger(log, gitClone.getInputStream()).start();
 
