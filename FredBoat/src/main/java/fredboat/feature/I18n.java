@@ -48,6 +48,7 @@ public class I18n {
     public static void start() {
         LANGS.put("en_US", DEFAULT);
         LANGS.put("da_DK", new FredBoatLocale(new Locale("da", "DK"), "da_DK", "Dansk"));
+        LANGS.put("nl_NL", new FredBoatLocale(new Locale("nl", "NL"), "nl_NL", "Nederlands"));
         LANGS.put("fr_FR", new FredBoatLocale(new Locale("fr", "FR"), "fr_FR", "Français"));
         LANGS.put("de_DE", new FredBoatLocale(new Locale("de", "DE"), "de_DE", "Deutsch"));
         LANGS.put("id_ID", new FredBoatLocale(new Locale("id", "ID"), "id_ID", "Bahasa Indonesia"));
@@ -55,6 +56,9 @@ public class I18n {
         LANGS.put("pt_BR", new FredBoatLocale(new Locale("pt", "BR"), "pt_BR", "Português (Brazil)"));
         LANGS.put("ro_RO", new FredBoatLocale(new Locale("ro", "RO"), "ro_RO", "Română"));
         LANGS.put("ru_RU", new FredBoatLocale(new Locale("ru", "RU"), "ru_RU", "Русский"));
+        LANGS.put("tr_TR", new FredBoatLocale(new Locale("tr", "TR"), "tr_TR", "Türkçe"));
+
+        LANGS.put("en_TS", new FredBoatLocale(new Locale("en", "TS"), "en_TS", "Tsundere English"));
 
         log.info("Loaded " + LANGS.size() + " languages: " + LANGS);
     }
