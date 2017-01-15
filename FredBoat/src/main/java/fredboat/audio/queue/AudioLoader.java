@@ -227,7 +227,7 @@ public class AudioLoader implements AudioLoadResultHandler {
         }
 
         MessageBuilder mb = new MessageBuilder()
-                .append(I18n.get(ic.textChannel.getGuild()).getString("loadFollowingTracksAdded"));
+                .append(I18n.get(ic.textChannel.getGuild()).getString("loadFollowingTracksAdded") + "\n");
         for(SplitAudioTrackContext atc : list) {
             mb.append("`[")
                     .append(TextUtils.formatTime(atc.getEffectiveDuration()))
