@@ -3,6 +3,8 @@ FredBoat is a bot that has various features, but most notably is that it can pla
 
 FredBoat is licensed under the MIT license, so feel free to copy small or large parts of the code here without having to ask.
 
+[![Join FredBoat Hangout](https://discordapp.com/api/guilds/174820236481134592/embed.png?style=banner2)](https://discord.gg/Uu9CEnE)
+
 ## Documentation
 Help can be found at https://frederikam.github.io/FredBoat/
 
