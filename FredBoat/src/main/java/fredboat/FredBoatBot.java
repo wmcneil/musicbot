@@ -51,8 +51,11 @@ public class FredBoatBot extends FredBoat {
                         .addListener(new EventLogger("216689009110417408"))
                         .setToken(Config.CONFIG.getBotToken())
                         .setBulkDeleteSplittingEnabled(true)
-                        .setEnableShutdownHook(false)
-                        .setAudioSendFactory(new NativeAudioSendFactory());
+                        .setEnableShutdownHook(false);
+                
+                if (!System.getProperty("os.arch").equalsIgnoreCase("arm")) {
+                    builder.setAudioSendFactory(new NativeAudioSendFactory());
+                }
                 if (Config.CONFIG.getNumShards() > 1) {
                     builder.useSharding(shardId, Config.CONFIG.getNumShards());
                 }
