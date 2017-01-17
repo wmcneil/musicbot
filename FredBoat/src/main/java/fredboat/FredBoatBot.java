@@ -52,9 +52,10 @@ public class FredBoatBot extends FredBoat {
                         .setToken(Config.CONFIG.getBotToken())
                         .setBulkDeleteSplittingEnabled(true)
                         .setEnableShutdownHook(false);
-                        if(!System.getProperty("os.arch").equalsIgnoreCase("arm")) {
-                        builder.setAudioSendFactory(new NativeAudioSendFactory());
-                        }
+                
+                if (!System.getProperty("os.arch").equalsIgnoreCase("arm")) {
+                    builder.setAudioSendFactory(new NativeAudioSendFactory());
+                }
                 if (Config.CONFIG.getNumShards() > 1) {
                     builder.useSharding(shardId, Config.CONFIG.getNumShards());
                 }
