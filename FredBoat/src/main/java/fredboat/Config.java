@@ -55,7 +55,7 @@ public class Config {
     private String malPassword;
     private int scope;
     private List<String> googleKeys = new ArrayList<>();
-    private final String[] lavaplayerNodes = new String[64];;
+    private final String[] lavaplayerNodes;
     private final boolean lavaplayerNodesEnabled;
     private String carbonKey;
     private String cbUser;
@@ -76,17 +76,17 @@ public class Config {
                 distribution = DiscordUtil.isMainBot(this) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
             }
 
-            log.info("Determined distribution: " + getDistribution());
+            log.info("Determined distribution: " + distribution);
 
             mashapeKey = creds.optString("mashapeKey");
             malPassword = creds.optString("malPassword");
             carbonKey = creds.optString("carbonKey");
             cbUser = creds.optString("cbUser");
             cbKey = creds.optString("cbKey");
-            botToken = creds.getJSONObject("token").getString(getDistribution().getId());
+            botToken = creds.getJSONObject("token").getString(distribution.getId());
             cbKey = creds.optString("cbKey");
             if(creds.has("oauthSecret")){
-                oauthSecret = creds.getJSONObject("oauthSecret").optString(getDistribution().getId());
+                oauthSecret = creds.getJSONObject("oauthSecret").optString(distribution.getId());
             }
             if(creds.has("jdbcUrl")){
                 jdbcUrl = creds.getString("jdbcUrl");
@@ -96,21 +96,23 @@ public class Config {
 
             JSONArray gkeys = creds.optJSONArray("googleServerKeys");
             if (gkeys != null) {
-                gkeys.forEach((Object str) -> getGoogleKeys().add((String) str));
+                gkeys.forEach((Object str) -> googleKeys.add((String) str));
             }
 
             JSONArray nodesArray = creds.optJSONArray("lavaplayerNodes");
             if(nodesArray != null) {
                 lavaplayerNodesEnabled = true;
+                lavaplayerNodes = new String[nodesArray.length()];
                 log.info("Using lavaplayer nodes");
                 Iterator<Object> itr = nodesArray.iterator();
                 int i = 0;
                 while(itr.hasNext()) {
-                    getLavaplayerNodes()[i] = (String) itr.next();
+                    lavaplayerNodes[i] = (String) itr.next();
                     i++;
                 }
             } else {
                 lavaplayerNodesEnabled = false;
+                lavaplayerNodes = new String[0];
                 log.info("Not using lavaplayer nodes. Audio playback will be processed locally.");
             }
 
@@ -119,7 +121,7 @@ public class Config {
                 numShards = 2;
             } else {
                 numShards = DiscordUtil.getRecommendedShardCount(getBotToken());
-                log.info("Discord recommends " + getNumShards() + " shard(s)");
+                log.info("Discord recommends " + numShards + " shard(s)");
             }
 
         } catch (IOException | UnirestException e) {
