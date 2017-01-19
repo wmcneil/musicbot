@@ -18,11 +18,16 @@ import java.text.MessageFormat;
  */
 public class InviteCommand extends Command {
     @Override
-    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) throws UnirestException {
-        String str;
-        str = "https://discordapp.com/oauth2/authorize?&client_id=" + DiscordUtil.getApplicationInfo(invoker.getJDA().getToken().substring(4)).getString("id") + "&scope=bot";
-        String send = MessageFormat.format(I18n.get(guild).getString("invite"),DiscordUtil.getApplicationInfo(message.getJDA().getToken().substring(4)).getString("name"));
-        channel.sendMessage(send + "\n" + str).queue();
+    public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args)  {
+        try {
+            String str = "https://discordapp.com/oauth2/authorize?&client_id=" + DiscordUtil.getApplicationInfo(invoker.getJDA().getToken().substring(4)).getString("id") + "&scope=bot";
+            String send = MessageFormat.format(I18n.get(guild).getString("invite"),DiscordUtil.getApplicationInfo(message.getJDA().getToken().substring(4)).getString("name"));
+            channel.sendMessage(send + "\n" + str).queue();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+
         //return;
     }
 }

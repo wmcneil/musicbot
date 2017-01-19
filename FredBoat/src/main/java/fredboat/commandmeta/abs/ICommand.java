@@ -33,6 +33,6 @@ import net.dv8tion.jda.core.entities.TextChannel;
 
 public interface ICommand {
 
-    public abstract void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) throws UnirestException;
+    public abstract void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args);
 
 }
