@@ -27,11 +27,8 @@ package fredboat.commandmeta;
 
 import fredboat.command.admin.*;
 import fredboat.command.fun.*;
-import fredboat.command.maintenance.GetIdCommand;
-import fredboat.command.maintenance.ShardsCommand;
-import fredboat.command.maintenance.StatsCommand;
+import fredboat.command.maintenance.*;
 import fredboat.command.admin.TestCommand;
-import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.ConfigCommand;
 import fredboat.command.moderation.LanguageCommand;
 import fredboat.command.moderation.SoftbanCommand;
@@ -54,6 +51,8 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "version", new VersionCommand());
         CommandRegistry.registerCommand(0x101, "say", new SayCommand());
         CommandRegistry.registerCommand(0x101, "uptime", new StatsCommand());
+        CommandRegistry.registerCommand(0x101,"serverinfo",new ServerInfoCommand());
+        CommandRegistry.registerCommand(0x101, "invite", new InviteCommand());
         CommandRegistry.registerAlias("uptime", "stats");
         CommandRegistry.registerCommand(0x101, "exit", new ExitCommand());
         CommandRegistry.registerCommand(0x101, "avatar", new AvatarCommand());
