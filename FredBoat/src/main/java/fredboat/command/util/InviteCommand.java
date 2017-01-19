@@ -24,7 +24,7 @@ public class InviteCommand extends Command {
             String send = MessageFormat.format(I18n.get(guild).getString("invite"),DiscordUtil.getApplicationInfo(message.getJDA().getToken().substring(4)).getString("name"));
             channel.sendMessage(send + "\n" + str).queue();
         } catch (UnirestException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
 
