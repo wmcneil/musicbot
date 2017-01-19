@@ -37,7 +37,6 @@ public class FredBoatBot extends FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoatBot.class);
     private final int shardId;
-
     FredBoatBot(int shardId) {
         this.shardId = shardId;
 
