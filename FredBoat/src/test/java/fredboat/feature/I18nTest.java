@@ -26,8 +26,6 @@
 package fredboat.feature;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,16 +35,6 @@ import java.util.ResourceBundle;
 public class I18nTest {
 
     private static final Logger log = LoggerFactory.getLogger(I18nTest.class);
-
-    @BeforeAll
-    public static void test() {
-        log.info("Testing from I18nTest");
-    }
-
-    @BeforeEach
-    public void test2() {
-        log.info("Testing from I18nTest before each");
-    }
 
     @Test
     public void testTranslatedStrings() {

@@ -30,7 +30,7 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +43,13 @@ import java.util.concurrent.TimeUnit;
 public class BotTest {
 
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
+    private static boolean ranSetup = false;
 
-    @BeforeAll
-    public static void setup() {
+    @BeforeEach
+    public void setup() {
+        if(ranSetup) return;
+        ranSetup = true;
+
         File creds = new File("credentials_test.json");
         if(creds.exists()) {
             log.info("Using existing test credentials from credentials_test.json");
