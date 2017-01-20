@@ -30,7 +30,6 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +44,7 @@ public class BotTest {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
     private static boolean ranSetup = false;
 
-    @BeforeEach
-    public void setup() {
+    public BotTest() {
         if(ranSetup) return;
         ranSetup = true;
 
