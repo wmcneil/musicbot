@@ -53,6 +53,7 @@ public class CommandInitializer {
         CommandRegistry.registerCommand(0x101, "uptime", new StatsCommand());
         CommandRegistry.registerCommand(0x101,"serverinfo",new ServerInfoCommand());
         CommandRegistry.registerCommand(0x101, "invite", new InviteCommand());
+        CommandRegistry.registerCommand(0x101,"userinfo",new UserInfoCommand());
         CommandRegistry.registerAlias("uptime", "stats");
         CommandRegistry.registerCommand(0x101, "exit", new ExitCommand());
         CommandRegistry.registerCommand(0x101, "avatar", new AvatarCommand());

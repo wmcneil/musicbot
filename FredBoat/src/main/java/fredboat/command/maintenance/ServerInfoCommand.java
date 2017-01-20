@@ -7,11 +7,8 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.*;
 
-import java.awt.*;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -39,6 +36,8 @@ public class ServerInfoCommand extends Command{
         eb.addField(rb.getString("serverinfoText"), String.valueOf(guild.getTextChannels().size()),true);
         eb.addField(rb.getString("serverinfoVoice"), String.valueOf(guild.getVoiceChannels().size()),true);
         eb.addField(rb.getString("serverinfoCreationDate"), guild.getCreationTime().format(dtf),true);
+        eb.addField(rb.getString("serverinfoGuildID"),guild.getId(),true);
+        eb.addField(rb.getString("serverinfoVLv"), guild.getVerificationLevel().name(),true);
         eb.addField(rb.getString("serverinfoOwner"), guild.getOwner().getAsMention(),true);
         //eb.setTitle("Hello world");
 
