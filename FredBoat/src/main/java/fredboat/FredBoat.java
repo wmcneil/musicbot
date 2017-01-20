@@ -49,6 +49,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.hooks.EventListener;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,10 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -118,7 +122,7 @@ public abstract class FredBoat {
         /* Init JDA */
 
         if ((Config.CONFIG.getScope() & 0x110) != 0) {
-            initBotShards();
+            initBotShards(listenerBot);
         }
 
         if ((Config.CONFIG.getScope() & 0x001) != 0) {
@@ -158,9 +162,9 @@ public abstract class FredBoat {
         }
     }
 
-    private static void initBotShards() {
+    static void initBotShards(EventListener listener) {
         for(int i = 0; i < Config.CONFIG.getNumShards(); i++){
-            shards.add(i, new FredBoatBot(i));
+            shards.add(i, new FredBoatBot(i, listener));
             try {
                 Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
             } catch (InterruptedException e) {

@@ -30,6 +30,7 @@ import fredboat.event.EventLogger;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.hooks.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,12 @@ public class FredBoatBot extends FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoatBot.class);
     private final int shardId;
-    FredBoatBot(int shardId) {
+
+    public FredBoatBot(int shardId) {
+        this(shardId, null);
+    }
+
+    public FredBoatBot(int shardId, EventListener listener) {
         this.shardId = shardId;
 
         log.info("Building shard " + shardId);
@@ -46,11 +52,14 @@ public class FredBoatBot extends FredBoat {
             boolean success = false;
             while (!success) {
                 JDABuilder builder = new JDABuilder(AccountType.BOT)
-                        .addListener(listenerBot)
                         .addListener(new EventLogger("216689009110417408"))
                         .setToken(Config.CONFIG.getBotToken())
                         .setBulkDeleteSplittingEnabled(true)
                         .setEnableShutdownHook(false);
+
+                if(listener != null) {
+                    builder.addListener(listener);
+                }
                 
                 if (!System.getProperty("os.arch").equalsIgnoreCase("arm")) {
                     builder.setAudioSendFactory(new NativeAudioSendFactory());
