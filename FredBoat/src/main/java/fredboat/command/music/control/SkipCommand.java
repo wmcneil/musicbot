@@ -79,7 +79,7 @@ public class SkipCommand extends Command implements IMusicCommand {
         if(atc == null) {
             channel.sendMessage(I18n.get(guild).getString("skipTrackNotFound")).queue();
         } else {
-            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), atc.getEffectiveTitle())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), 1, atc.getEffectiveTitle())).queue();
         }
         player.skip();
     }
