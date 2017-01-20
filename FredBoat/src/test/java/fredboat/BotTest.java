@@ -25,10 +25,12 @@
 
 package fredboat;
 
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,15 +40,12 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class ConfigTest {
+public class BotTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigTest.class);
+    private static final Logger log = LoggerFactory.getLogger(BotTest.class);
 
-    private Config getConfig() {
-        if(Config.CONFIG != null) {
-            return Config.CONFIG;
-        }
-
+    @BeforeAll
+    private void setup() {
         File creds = new File("credentials_test.json");
         if(creds.exists()) {
             log.info("Using existing test credentials from credentials_test.json");
@@ -62,24 +61,21 @@ public class ConfigTest {
         }
 
         Config.CONFIG = new Config(creds, new File("config.json"), 0x111);
-
-        return Config.CONFIG;
     }
 
     @Test
     public void testConfig() {
-        Assertions.assertNotNull(getConfig());
+        Assertions.assertNotNull(Config.CONFIG);
     }
 
     @Test
     public void testShardBuild() {
-        getConfig();
-
         CountDownLatch latch = new CountDownLatch(Config.CONFIG.getNumShards());
 
         FredBoat.initBotShards(new ListenerAdapter() {
             @Override
             public void onReady(ReadyEvent event) {
+                event.getJDA().getPresence().setGame(Game.of("running tests..."));
                 latch.countDown();
             }
         });
