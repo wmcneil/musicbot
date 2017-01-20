@@ -45,7 +45,7 @@ public class BotTest {
     private static final Logger log = LoggerFactory.getLogger(BotTest.class);
 
     @BeforeAll
-    private void setup() {
+    public static void setup() {
         File creds = new File("credentials_test.json");
         if(creds.exists()) {
             log.info("Using existing test credentials from credentials_test.json");
@@ -77,6 +77,7 @@ public class BotTest {
             public void onReady(ReadyEvent event) {
                 event.getJDA().getPresence().setGame(Game.of("running tests..."));
                 latch.countDown();
+                event.getJDA().shutdown(false);
             }
         });
 
