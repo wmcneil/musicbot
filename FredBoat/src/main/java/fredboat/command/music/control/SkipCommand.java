@@ -35,9 +35,15 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import org.apache.commons.lang3.StringUtils;import java.text.MessageFormat;
+import org.apache.commons.lang3.StringUtils;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SkipCommand extends Command implements IMusicCommand {
+    private static final String TRACK_RANGE_REGEX = "^(0?\\d+)-(0?\\d+)$";
+    private static final Pattern trackRangePattern = Pattern.compile(TRACK_RANGE_REGEX);
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -68,6 +74,33 @@ public class SkipCommand extends Command implements IMusicCommand {
             AudioTrackContext atc = player.getAudioTrackProvider().removeAt(givenIndex - 2);
 
             channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), givenIndex, atc.getEffectiveTitle())).queue();
+        } else if (args.length == 2 && trackRangePattern.matcher(args[1]).matches()){
+            Matcher trackMatch = trackRangePattern.matcher(args[1]);
+            trackMatch.matches();
+
+            Integer startTrackIndex = Integer.parseInt(trackMatch.group(1));
+            Integer endTrackIndex = Integer.parseInt(trackMatch.group(2));
+
+            if (startTrackIndex < 1) {
+                channel.sendMessage(I18n.get(guild).getString("skipNumberTooLow")).queue();
+                return;
+            } else if (endTrackIndex <= startTrackIndex) {
+                channel.sendMessage(I18n.get(guild).getString("skipRangeInvalid")).queue();
+                return;
+            } else if (player.getRemainingTracks().size() < endTrackIndex) {
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipOutOfBounds"), endTrackIndex, player.getRemainingTracks().size())).queue();
+                return;
+            }
+
+            if (startTrackIndex == 1) {
+                List<AudioTrackContext> atc = player.getAudioTrackProvider().removeRange(startTrackIndex - 1, endTrackIndex - 2);
+                player.stop();
+                player.play();
+            } else {
+                List<AudioTrackContext> atc = player.getAudioTrackProvider().removeRange(startTrackIndex - 2, endTrackIndex - 2);
+            }
+
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipRangeSuccess"), startTrackIndex, endTrackIndex)).queue();
         } else {
             channel.sendMessage(I18n.get(guild).getString("skipInvalidArgCount")).queue();
         }
