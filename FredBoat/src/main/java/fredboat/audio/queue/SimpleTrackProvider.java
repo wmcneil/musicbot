@@ -88,6 +88,33 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
+    public List removeRange(int startIndex, int endIndex) {
+        if(queue.size() < endIndex){
+            return null;
+        } else {
+            int remain = endIndex - startIndex + 1;
+            int i = 0;
+            List<AudioTrackContext> atl = new ArrayList<>();
+            for(AudioTrackContext obj : getAsListOrdered()){
+                if(i >= startIndex && remain > 0){
+                    shouldUpdateShuffledQueue = true;
+                    //noinspection SuspiciousMethodCalls
+                    queue.remove(obj);
+                    atl.add(obj);
+                    remain--;
+                    System.out.println(obj.getTrack().getInfo().title);
+                }
+                else if (remain <= 0) {
+                    return atl;
+                }
+                i++;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<AudioTrackContext> getAsList() {
         return new ArrayList<>(queue);
     }
