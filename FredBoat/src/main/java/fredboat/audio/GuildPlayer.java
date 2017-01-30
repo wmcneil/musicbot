@@ -32,6 +32,7 @@ import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import fredboat.feature.I18n;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
@@ -264,10 +265,6 @@ public class GuildPlayer extends AbstractPlayer {
         return currentTC;
     }
 
-    public void clear() {
-        audioTrackProvider.clear();
-    }
-
     //Success, fail message
     private Pair<Boolean, String> canMemberSkipTracks(Member member, List<AudioTrackContext> list) {
         if(PermissionUtil.checkPermission(getGuild(), member, Permission.MESSAGE_MANAGE)){
@@ -288,11 +285,19 @@ public class GuildPlayer extends AbstractPlayer {
         }
     }
 
-    public Pair<Boolean, String> skipTracksForMemberPerms(Member member, List<AudioTrackContext> list) {
+    public Pair<Boolean, String> skipTracksForMemberPerms(TextChannel channel, Member member, AudioTrackContext atc) {
+        List<AudioTrackContext> list = new ArrayList<>();
+        list.add(atc);
+        return skipTracksForMemberPerms(channel, member, list);
+    }
+
+    public Pair<Boolean, String> skipTracksForMemberPerms(TextChannel channel, Member member, List<AudioTrackContext> list) {
         Pair<Boolean, String> pair = canMemberSkipTracks(member, list);
 
         if (pair.getLeft()) {
             skipTracks(list);
+        } else {
+            TextUtils.replyWithName(channel, member, pair.getRight());
         }
 
         return pair;

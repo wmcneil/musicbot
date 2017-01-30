@@ -36,7 +36,10 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,15 +74,18 @@ public class SkipCommand extends Command implements IMusicCommand {
                 return;
             }
 
-            AudioTrackContext atc = player.getAudioTrackProvider().removeAt(givenIndex - 2);
+            AudioTrackContext atc = player.getAudioTrackProvider().getAsListOrdered().get(givenIndex - 2);
+            player.skipTracksForMemberPerms(channel, invoker, atc);
 
-            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), givenIndex, atc.getEffectiveTitle())).queue();
+            Pair<Boolean, String> result = player.skipTracksForMemberPerms(channel, invoker, atc);
+            if(result.getLeft()) {
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), givenIndex, atc.getEffectiveTitle())).queue();
+            }
         } else if (args.length == 2 && trackRangePattern.matcher(args[1]).matches()){
             Matcher trackMatch = trackRangePattern.matcher(args[1]);
-            trackMatch.matches();
 
-            Integer startTrackIndex = Integer.parseInt(trackMatch.group(1));
-            Integer endTrackIndex = Integer.parseInt(trackMatch.group(2));
+            int startTrackIndex = Integer.parseInt(trackMatch.group(1));
+            int endTrackIndex = Integer.parseInt(trackMatch.group(2));
 
             if (startTrackIndex < 1) {
                 channel.sendMessage(I18n.get(guild).getString("skipNumberTooLow")).queue();
@@ -92,15 +98,18 @@ public class SkipCommand extends Command implements IMusicCommand {
                 return;
             }
 
+            List<AudioTrackContext> tracks = new ArrayList<>();
             if (startTrackIndex == 1) {
-                List<AudioTrackContext> atc = player.getAudioTrackProvider().removeRange(startTrackIndex - 1, endTrackIndex - 2);
-                player.stop();
-                player.play();
-            } else {
-                List<AudioTrackContext> atc = player.getAudioTrackProvider().removeRange(startTrackIndex - 2, endTrackIndex - 2);
+                //Add the currently playing track
+                tracks.add(player.getPlayingTrack());
             }
+            tracks.addAll(player.getAudioTrackProvider().getInRange(startTrackIndex - 1, endTrackIndex - 2));
 
-            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipRangeSuccess"), startTrackIndex, endTrackIndex)).queue();
+            Pair<Boolean, String> pair = player.skipTracksForMemberPerms(channel, invoker, tracks);
+
+            if(pair.getLeft()) {
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipRangeSuccess"), startTrackIndex, endTrackIndex)).queue();
+            }
         } else {
             channel.sendMessage(I18n.get(guild).getString("skipInvalidArgCount")).queue();
         }
@@ -112,9 +121,11 @@ public class SkipCommand extends Command implements IMusicCommand {
         if(atc == null) {
             channel.sendMessage(I18n.get(guild).getString("skipTrackNotFound")).queue();
         } else {
-            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), 1, atc.getEffectiveTitle())).queue();
+            Pair<Boolean, String> result = player.skipTracksForMemberPerms(channel, invoker, atc);
+            if(result.getLeft()) {
+                channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipSuccess"), 1, atc.getEffectiveTitle())).queue();
+            }
         }
-        player.skip();
     }
 
 }

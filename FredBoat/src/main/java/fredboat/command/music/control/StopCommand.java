@@ -27,32 +27,31 @@ package fredboat.command.music.control;
 
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.feature.I18n;
-import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.utils.PermissionUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 public class StopCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if (PermissionUtil.checkPermission(channel, invoker, Permission.MESSAGE_MANAGE) || DiscordUtil.isUserBotOwner(invoker.getUser())) {
-            GuildPlayer player = PlayerRegistry.get(guild);
-            player.setCurrentTC(channel);
-            int count = player.getRemainingTracks().size();
+        GuildPlayer player = PlayerRegistry.get(guild);
+        player.setCurrentTC(channel);
+        List<AudioTrackContext> tracks = player.getRemainingTracks();
 
-            player.clear();
-            player.skip();
+        Pair<Boolean, String> pair = player.skipTracksForMemberPerms(channel, invoker, tracks);
 
-            switch (count) {
+        if(pair.getLeft()) {
+            switch (tracks.size()) {
                 case 0:
                     channel.sendMessage(I18n.get(guild).getString("stopAlreadyEmpty")).queue();
                     break;
@@ -60,12 +59,10 @@ public class StopCommand extends Command implements IMusicCommand {
                     channel.sendMessage(I18n.get(guild).getString("stopEmptyOne")).queue();
                     break;
                 default:
-                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("stopEmptySeveral"), count)).queue();
+                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("stopEmptySeveral"), tracks.size())).queue();
                     break;
             }
             player.leaveVoiceChannelRequest(channel, true);
-        } else {
-            channel.sendMessage(I18n.get(guild).getString("stopAccessDenied")).queue();
         }
     }
 
