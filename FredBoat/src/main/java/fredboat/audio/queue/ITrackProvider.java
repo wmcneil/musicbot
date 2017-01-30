@@ -43,6 +43,8 @@ public interface ITrackProvider {
     
     void clear();
 
+    boolean remove(AudioTrackContext atc);
+
     AudioTrackContext removeAt(int i);
 
     List<AudioTrackContext> removeRange(int startIndex, int endIndex);

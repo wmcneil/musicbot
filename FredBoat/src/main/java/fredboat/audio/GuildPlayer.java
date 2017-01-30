@@ -38,6 +38,8 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.entities.impl.MemberImpl;
 import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.PermissionUtil;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
@@ -51,7 +53,7 @@ public class GuildPlayer extends AbstractPlayer {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
 
     public final JDA jda;
-    public final String guildId;
+    final String guildId;
     public final Map<String, VideoSelection> selections = new HashMap<>();
     private TextChannel currentTC;
 
@@ -264,6 +266,48 @@ public class GuildPlayer extends AbstractPlayer {
 
     public void clear() {
         audioTrackProvider.clear();
+    }
+
+    //Success, fail message
+    private Pair<Boolean, String> canMemberSkipTracks(Member member, List<AudioTrackContext> list) {
+        if(PermissionUtil.checkPermission(getGuild(), member, Permission.MESSAGE_MANAGE)){
+            return new ImmutablePair<>(true, null);
+        } else {
+            //We are not a mod
+            int otherPeoplesTracks = 0;
+
+            for (AudioTrackContext atc : list) {
+                if(!atc.getMember().equals(member)) otherPeoplesTracks++;
+            }
+
+            if (otherPeoplesTracks > 1) {
+                return new ImmutablePair<>(false, I18n.get(getGuild()).getString("skipDeniedTooManyTracks"));
+            } else {
+                return new ImmutablePair<>(true, null);
+            }
+        }
+    }
+
+    public Pair<Boolean, String> skipTracksForMemberPerms(Member member, List<AudioTrackContext> list) {
+        Pair<Boolean, String> pair = canMemberSkipTracks(member, list);
+
+        if (pair.getLeft()) {
+            skipTracks(list);
+        }
+
+        return pair;
+    }
+
+    private void skipTracks(List<AudioTrackContext> list) {
+        list.forEach(this::skipTrack);
+    }
+
+    private void skipTrack(AudioTrackContext atc) {
+        if(getPlayingTrack().equals(atc)) {
+            skip();
+        } else {
+            audioTrackProvider.remove(atc);
+        }
     }
 
 }

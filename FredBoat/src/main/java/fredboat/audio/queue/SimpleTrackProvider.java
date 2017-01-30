@@ -67,6 +67,15 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         }
     }
 
+    public boolean remove(AudioTrackContext atc) {
+        if(queue.remove(atc)){
+            shouldUpdateShuffledQueue = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public AudioTrackContext removeAt(int i) {
         if(queue.size() < i){

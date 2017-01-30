@@ -106,4 +106,27 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
             return 0;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AudioTrackContext)) return false;
+
+        AudioTrackContext that = (AudioTrackContext) o;
+
+        if (getRand() != that.getRand()) return false;
+        if (!getTrack().equals(that.getTrack())) return false;
+        if (!userId.equals(that.userId)) return false;
+        return guildId.equals(that.guildId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTrack().hashCode();
+        result = 31 * result + userId.hashCode();
+        result = 31 * result + guildId.hashCode();
+        result = 31 * result + getRand();
+        return result;
+    }
 }
