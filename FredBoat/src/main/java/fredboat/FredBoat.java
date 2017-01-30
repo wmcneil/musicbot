@@ -315,7 +315,7 @@ public abstract class FredBoat {
         }
     }
 
-    private class ShardInfo {
+    public class ShardInfo {
 
         int shardId;
         int shardTotal;
