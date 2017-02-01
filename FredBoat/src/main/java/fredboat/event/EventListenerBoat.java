@@ -32,6 +32,7 @@ import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
+import fredboat.feature.I18n;
 import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
@@ -55,9 +56,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     private static final Logger log = LoggerFactory.getLogger(EventListenerBoat.class);
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
-    public User lastUserToReceiveHelp;
-
-    public static int messagesReceived = 0;
+    private User lastUserToReceiveHelp;
 
     public EventListenerBoat(int scope, String defaultPrefix) {
         super(scope, defaultPrefix);
@@ -65,13 +64,6 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        /*log.info(event.getJDA().getSelfInfo().getUsername());
-        log.info(event);
-        log.info(event.getAuthor());
-        log.info(event.getAuthor().getId());*/
-
-        messagesReceived++;
-
         if (event.getPrivateChannel() != null) {
             log.info("PRIVATE" + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             return;
@@ -135,7 +127,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        event.getChannel().sendMessage(BotConstants.HELP_TEXT).queue();
+        event.getChannel().sendMessage(I18n.DEFAULT.getProps().getString("helpDM")).queue();
         lastUserToReceiveHelp = event.getAuthor();
     }
 
@@ -163,7 +155,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 && player.getUserCurrentVoiceChannel(event.getGuild().getSelfMember()) == event.getChannelLeft()
                 && !player.isPaused()) {
             player.pause();
-            player.getActiveTextChannel().sendMessage("All users have left the voice channel. The player has been paused.").queue();
+            player.getActiveTextChannel().sendMessage(I18n.get(event.getGuild()).getString("eventUsersLeftVC")).queue();
         }
     }
 
@@ -177,7 +169,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
                 && event.getChannelJoined().getMembers().contains(event.getGuild().getSelfMember())
                 && EntityReader.getGuildConfig(event.getGuild().getId()).isAutoResume()
                 ) {
-            player.getActiveTextChannel().sendMessage("Automatically unpaused player because of user join.").queue();
+            player.getActiveTextChannel().sendMessage(I18n.get(event.getGuild()).getString("eventAutoResumed")).queue();
             player.setPause(false);
         }
     }

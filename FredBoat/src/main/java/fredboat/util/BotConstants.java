@@ -40,8 +40,6 @@ public class BotConstants {
 
     public static final String FREDBOAT_HANGOUT_ID = "174820236481134592";
 
-    public static final String HELP_TEXT = getHelpText();
-
     public static final String DEFAULT_BOT_PREFIX = ";;";
     public static final String DEFAULT_BOT_PREFIX_BETA = "¤";
     public static final String DEFAULT_SELF_PREFIX = "::";
@@ -51,26 +49,6 @@ public class BotConstants {
     public static final Color FREDBOAT_COLOR = new Color(28, 191, 226);
 
     private BotConstants() {
-    }
-
-    //Get the help text from file
-    private static String getHelpText() {
-        try {
-            String str = "";
-
-            InputStream helpIS = BotConstants.class.getClassLoader().getResourceAsStream("help.txt");
-            BufferedReader in = new BufferedReader(new InputStreamReader(helpIS));
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                str = str + inputLine + "\n";
-            }
-            in.close();
-
-            return str;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 }

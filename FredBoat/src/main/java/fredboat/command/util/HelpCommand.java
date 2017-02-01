@@ -28,7 +28,7 @@ package fredboat.command.util;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicBackupCommand;
 import fredboat.feature.I18n;
-import fredboat.util.BotConstants;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -48,8 +48,8 @@ public class HelpCommand extends Command implements IMusicBackupCommand {
                 throw new RuntimeException(e);
             }
         }
-        invoker.getUser().getPrivateChannel().sendMessage(BotConstants.HELP_TEXT).queue();
-        channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("helpSuccess"), invoker.getEffectiveName())).queue();
+        invoker.getUser().getPrivateChannel().sendMessage(I18n.get(guild).getString("helpDM")).queue();
+        TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("helpSent"));
     }
     
 }
