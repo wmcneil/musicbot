@@ -25,6 +25,7 @@
 
 package fredboat.command.moderation;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
 import fredboat.util.ArgumentUtil;
@@ -46,7 +47,7 @@ public class SoftbanCommand extends Command {
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         //Ensure we have a search term
         if(args.length == 1){
-            channel.sendMessage(I18n.get(guild).getString("softbanUsage")).queue();
+            channel.sendMessage(I18n.get(guild).getString("softbanUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix())).queue();
             return;
         }
 

@@ -24,6 +24,7 @@
  */
 package fredboat.event;
 
+import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
@@ -33,7 +34,6 @@ import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
 import fredboat.feature.I18n;
-import fredboat.util.BotConstants;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
@@ -58,8 +58,8 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     private User lastUserToReceiveHelp;
 
-    public EventListenerBoat(int scope, String defaultPrefix) {
-        super(scope, defaultPrefix);
+    public EventListenerBoat(int scope) {
+        super(scope);
     }
 
     @Override
@@ -74,11 +74,11 @@ public class EventListenerBoat extends AbstractScopedEventListener {
             return;
         }
 
-        if (event.getMessage().getContent().length() < defaultPrefix.length()) {
+        if (event.getMessage().getContent().length() < Config.CONFIG.getPrefix().length()) {
             return;
         }
 
-        if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
+        if (event.getMessage().getContent().substring(0, Config.CONFIG.getPrefix().length()).equals(Config.CONFIG.getPrefix())) {
             Command invoked = null;
             log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
             Matcher matcher = COMMAND_NAME_PREFIX.matcher(event.getMessage().getContent());
@@ -134,12 +134,12 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say ;;help"));
+        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say " + Config.CONFIG.getPrefix() + "help"));
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say ;;help"));
+        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say " + Config.CONFIG.getPrefix() + "help"));
     }
 
     /* music related */

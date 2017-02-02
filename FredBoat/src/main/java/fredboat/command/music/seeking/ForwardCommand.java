@@ -26,6 +26,7 @@
 package fredboat.command.music.seeking;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
@@ -50,7 +51,7 @@ public class ForwardCommand extends Command implements IMusicCommand {
         }
 
         if(args.length == 1) {
-            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("fwdUsage"));
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("fwdUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()));
             return;
         }
 

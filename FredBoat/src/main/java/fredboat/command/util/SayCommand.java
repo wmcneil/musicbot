@@ -24,6 +24,7 @@
  */
 package fredboat.command.util;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.event.EventListenerBoat;
 import fredboat.feature.I18n;
@@ -42,7 +43,7 @@ public class SayCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (args.length < 2) {
-            channel.sendMessage(I18n.get(guild).getString("sayUsage")).queue();
+            channel.sendMessage(I18n.get(guild).getString("sayUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix())).queue();
             return;
         }
         String res = "";

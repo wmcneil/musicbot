@@ -25,6 +25,7 @@
 
 package fredboat.command.util;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
@@ -38,7 +39,7 @@ public class AvatarCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(message.getMentionedUsers().isEmpty()){
-            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("avatarUsage"));
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("avatarUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()));
         } else {
             TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("avatarSuccess"), message.getMentionedUsers().get(0).getAvatarUrl()));
         }

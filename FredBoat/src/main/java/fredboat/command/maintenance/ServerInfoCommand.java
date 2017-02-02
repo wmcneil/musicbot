@@ -64,7 +64,6 @@ public class ServerInfoCommand extends Command{
         eb.addField(rb.getString("serverinfoGuildID"),guild.getId(),true);
         eb.addField(rb.getString("serverinfoVLv"), guild.getVerificationLevel().name(),true);
         eb.addField(rb.getString("serverinfoOwner"), guild.getOwner().getAsMention(),true);
-        //eb.setTitle("Hello world");
 
         channel.sendMessage(eb.build()).queue();
     }

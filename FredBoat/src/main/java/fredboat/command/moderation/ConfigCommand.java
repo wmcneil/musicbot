@@ -25,6 +25,7 @@
 
 package fredboat.command.moderation;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
@@ -73,7 +74,7 @@ public class ConfigCommand extends Command {
         }
 
         if(args.length != 3) {
-            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configUsage"), invoker.getEffectiveName())).queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("configUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()), invoker.getEffectiveName())).queue();
             return;
         }
 
