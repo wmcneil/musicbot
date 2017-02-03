@@ -1,5 +1,6 @@
 {
     "patron": false,
     "development": true,
-    "prefix": ">>"
+    "prefix": ">>",
+    "restServerEnabled": true
 }

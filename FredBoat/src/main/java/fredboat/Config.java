@@ -63,6 +63,7 @@ public class Config {
     private String cbUser;
     private String cbKey;
     private String prefix = DEFAULT_PREFIX;
+    private boolean restServerEnabled = true;
 
     public Config(File credentialsFile, File configFile, int scope) {
         try {
@@ -82,6 +83,7 @@ public class Config {
             log.info("Determined distribution: " + distribution);
 
             prefix = config.optString("prefix", prefix);
+            restServerEnabled = config.optBoolean("restServerEnabled", restServerEnabled);
 
             log.info("Using prefix: " + prefix);
 
@@ -198,5 +200,9 @@ public class Config {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    public boolean isRestServerEnabled() {
+        return restServerEnabled;
     }
 }

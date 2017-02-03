@@ -45,6 +45,11 @@ public class API {
     private API() {}
 
     public static void start() {
+        if(!Config.CONFIG.isRestServerEnabled()) {
+            log.warn("Rest server is not enabled. Skipping Spark ignition!");
+            return;
+        }
+
         log.info("Igniting Spark API on port: " + PORT);
 
         Spark.port(PORT);
