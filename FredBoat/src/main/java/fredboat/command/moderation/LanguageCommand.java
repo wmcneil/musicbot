@@ -25,6 +25,7 @@
 
 package fredboat.command.moderation;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
@@ -59,7 +60,7 @@ public class LanguageCommand extends Command {
 
     private void handleNoArgs(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         MessageBuilder mb = new MessageBuilder()
-                .append(I18n.get(guild).getString("langInfo"))
+                .append(I18n.get(guild).getString("langInfo").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()))
                 .append("\n\n");
 
         List<String> keys = new ArrayList<>(I18n.LANGS.keySet());

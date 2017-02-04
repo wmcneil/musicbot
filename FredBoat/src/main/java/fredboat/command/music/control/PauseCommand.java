@@ -25,6 +25,7 @@
 
 package fredboat.command.music.control;
 
+import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
@@ -33,7 +34,7 @@ import fredboat.feature.I18n;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.TextChannel;import java.text.MessageFormat;
 
 public class PauseCommand extends Command implements IMusicCommand {
 
@@ -47,7 +48,7 @@ public class PauseCommand extends Command implements IMusicCommand {
             channel.sendMessage(I18n.get(guild).getString("pauseAlreadyPaused")).queue();
         } else {
             player.pause();
-            channel.sendMessage("The player is now paused. You can unpause it with `;;unpause`.").queue();
+            channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("pauseSuccess"), Config.CONFIG.getPrefix())).queue();
         }
     }
 

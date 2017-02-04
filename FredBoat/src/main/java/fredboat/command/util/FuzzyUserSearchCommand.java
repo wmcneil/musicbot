@@ -25,6 +25,7 @@
 
 package fredboat.command.util;
 
+import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
 import fredboat.util.ArgumentUtil;
@@ -41,7 +42,7 @@ public class FuzzyUserSearchCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if(args.length == 1){
-            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("fuzzyUsage"));
+            TextUtils.replyWithName(channel, invoker, I18n.get(guild).getString("fuzzyUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()));
         } else {
             List<Member> list = ArgumentUtil.fuzzyMemberSearch(guild, args[1]);
 

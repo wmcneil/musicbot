@@ -25,6 +25,7 @@
 
 package fredboat.command.music.control;
 
+import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
@@ -111,7 +112,7 @@ public class SkipCommand extends Command implements IMusicCommand {
                 channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("skipRangeSuccess"), startTrackIndex, endTrackIndex)).queue();
             }
         } else {
-            channel.sendMessage(I18n.get(guild).getString("skipInvalidArgCount")).queue();
+            channel.sendMessage(I18n.get(guild).getString("skipInvalidArgCount").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix())).queue();
         }
     }
 

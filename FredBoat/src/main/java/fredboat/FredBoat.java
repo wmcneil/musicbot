@@ -36,7 +36,6 @@ import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
 import fredboat.feature.I18n;
-import fredboat.util.BotConstants;
 import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
 import frederikam.jca.JCA;
@@ -116,8 +115,8 @@ public abstract class FredBoat {
         );
 
         //Initialise event listeners
-        listenerBot = new EventListenerBoat(Config.CONFIG.getScope() & 0x110, Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_BOT_PREFIX_BETA : BotConstants.DEFAULT_BOT_PREFIX);
-        listenerSelf = new EventListenerSelf(Config.CONFIG.getScope() & 0x001, Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT ? BotConstants.DEFAULT_SELF_PREFIX_BETA : BotConstants.DEFAULT_SELF_PREFIX);
+        listenerBot = new EventListenerBoat(Config.CONFIG.getScope() & 0x110);
+        listenerSelf = new EventListenerSelf(Config.CONFIG.getScope() & 0x001);
 
         /* Init JDA */
 

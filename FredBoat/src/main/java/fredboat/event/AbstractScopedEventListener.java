@@ -37,15 +37,13 @@ import java.util.regex.Pattern;
 public abstract class AbstractScopedEventListener extends ListenerAdapter {
 
     public final int scope;
-    public final String defaultPrefix;
     static final Pattern COMMAND_NAME_PREFIX = Pattern.compile("(\\w+)");
     private final HashMap<String, UserListener> userListener = new HashMap<>();
 
     public static int messagesReceived = 0;
 
-    public AbstractScopedEventListener(int scope, String prefix) {
+    AbstractScopedEventListener(int scope) {
         this.scope = scope;
-        this.defaultPrefix = prefix;
     }
 
     @Override

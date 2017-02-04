@@ -47,18 +47,26 @@ public class I18n {
 
     public static void start() {
         LANGS.put("en_US", DEFAULT);
+        LANGS.put("bg_BG", new FredBoatLocale(new Locale("bg", "BG"), "bg_BG", "български език"));
+        LANGS.put("zh_TW", new FredBoatLocale(new Locale("zh", "TW"), "zh_TW", "文言"));
+        LANGS.put("cs_CZ", new FredBoatLocale(new Locale("cs", "CZ"), "cs_CZ", "Čeština"));
         LANGS.put("da_DK", new FredBoatLocale(new Locale("da", "DK"), "da_DK", "Dansk"));
         LANGS.put("nl_NL", new FredBoatLocale(new Locale("nl", "NL"), "nl_NL", "Nederlands"));
         LANGS.put("fr_FR", new FredBoatLocale(new Locale("fr", "FR"), "fr_FR", "Français"));
         LANGS.put("de_DE", new FredBoatLocale(new Locale("de", "DE"), "de_DE", "Deutsch"));
+        LANGS.put("he_IL", new FredBoatLocale(new Locale("he", "IL"), "he_IL", "עברית"));
         LANGS.put("id_ID", new FredBoatLocale(new Locale("id", "ID"), "id_ID", "Bahasa Indonesia"));
         LANGS.put("it_IT", new FredBoatLocale(new Locale("it", "IT"), "it_IT", "Italiano"));
+        LANGS.put("ko_KR", new FredBoatLocale(new Locale("ko", "KR"), "ko_KR", "한국어"));
         LANGS.put("pt_BR", new FredBoatLocale(new Locale("pt", "BR"), "pt_BR", "Português (Brazil)"));
         LANGS.put("pt_PT", new FredBoatLocale(new Locale("pt", "PT"), "pt_PT", "Português"));
         LANGS.put("ro_RO", new FredBoatLocale(new Locale("ro", "RO"), "ro_RO", "Română"));
         LANGS.put("ru_RU", new FredBoatLocale(new Locale("ru", "RU"), "ru_RU", "Русский"));
+        LANGS.put("es_ES", new FredBoatLocale(new Locale("es", "ES"), "es_ES", "Español"));
         LANGS.put("tr_TR", new FredBoatLocale(new Locale("tr", "TR"), "tr_TR", "Türkçe"));
+        LANGS.put("vi_VN", new FredBoatLocale(new Locale("vi", "VN"), "vi_VN", "Tiếng Việt"));
 
+        LANGS.put("en_PT", new FredBoatLocale(new Locale("en", "PT"), "en_PT", "Pirate English"));
         LANGS.put("en_TS", new FredBoatLocale(new Locale("en", "TS"), "en_TS", "Tsundere English"));
 
         log.info("Loaded " + LANGS.size() + " languages: " + LANGS);

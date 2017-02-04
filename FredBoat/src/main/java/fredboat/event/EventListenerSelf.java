@@ -24,6 +24,7 @@
  */
 package fredboat.event;
 
+import fredboat.Config;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
@@ -37,8 +38,8 @@ public class EventListenerSelf extends AbstractScopedEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerSelf.class);
 
-    public EventListenerSelf(int scope, String defaultPrefix) {
-        super(scope, defaultPrefix);
+    public EventListenerSelf(int scope) {
+        super(scope);
     }
 
     @Override
@@ -47,11 +48,11 @@ public class EventListenerSelf extends AbstractScopedEventListener {
             return;
         }
 
-        if (event.getMessage().getContent().length() < defaultPrefix.length()) {
+        if (event.getMessage().getContent().length() < Config.CONFIG.getPrefix().length()) {
             return;
         }
 
-        if (event.getMessage().getContent().substring(0, defaultPrefix.length()).equals(defaultPrefix)) {
+        if (event.getMessage().getContent().substring(0, Config.CONFIG.getPrefix().length()).equals(Config.CONFIG.getPrefix())) {
             Command invoked = null;
             try {
                 log.info(event.getGuild().getName() + " \t " + event.getAuthor().getName() + " \t " + event.getMessage().getRawContent());
@@ -59,7 +60,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
                 matcher.find();
 
                 invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
-            } catch (NullPointerException ex) {
+            } catch (NullPointerException ignored) {
 
             }
 
@@ -71,7 +72,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
 
             try {
                 event.getMessage().deleteMessage().queue();
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
 
         }

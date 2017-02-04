@@ -25,6 +25,7 @@
 
 package fredboat.command.music.control;
 
+import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.IdentifierContext;
@@ -41,7 +42,7 @@ public class PlaySplitCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
         if (args.length < 2) {
-            channel.sendMessage(I18n.get(guild).getString("splitProperUsage"));
+            channel.sendMessage(I18n.get(guild).getString("splitProperUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()));
             return;
         }
 

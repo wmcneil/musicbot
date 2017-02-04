@@ -46,6 +46,8 @@ public class Config {
     
     public static Config CONFIG = null;
 
+    public static String DEFAULT_PREFIX = ";;";
+
     private final DistributionEnum distribution;
     private final String botToken;
     private String oauthSecret;
@@ -60,6 +62,8 @@ public class Config {
     private String carbonKey;
     private String cbUser;
     private String cbKey;
+    private String prefix = DEFAULT_PREFIX;
+    private boolean restServerEnabled = true;
 
     public Config(File credentialsFile, File configFile, int scope) {
         try {
@@ -77,6 +81,11 @@ public class Config {
             }
 
             log.info("Determined distribution: " + distribution);
+
+            prefix = config.optString("prefix", prefix);
+            restServerEnabled = config.optBoolean("restServerEnabled", restServerEnabled);
+
+            log.info("Using prefix: " + prefix);
 
             mashapeKey = creds.optString("mashapeKey");
             malPassword = creds.optString("malPassword");
@@ -187,5 +196,13 @@ public class Config {
 
     public String getCbKey() {
         return cbKey;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public boolean isRestServerEnabled() {
+        return restServerEnabled;
     }
 }

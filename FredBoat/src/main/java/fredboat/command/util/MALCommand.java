@@ -59,7 +59,7 @@ public class MALCommand extends Command {
         try {
             matcher.find();
         } catch (IllegalStateException e) {
-            throw new MessagingException(I18n.get(guild).getString("malUsage"));
+            throw new MessagingException(I18n.get(guild).getString("malUsage").replace(Config.DEFAULT_PREFIX, Config.CONFIG.getPrefix()));
         }
         String term = matcher.group(1).replace(' ', '+').trim();
         log.debug("TERM:"+term);

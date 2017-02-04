@@ -25,11 +25,7 @@
 
 package fredboat.util;
 
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
 
 public class BotConstants {
 
@@ -39,13 +35,6 @@ public class BotConstants {
     public static final String PATRON_BOT_ID = "241950106125860865";
 
     public static final String FREDBOAT_HANGOUT_ID = "174820236481134592";
-
-    public static final String DEFAULT_BOT_PREFIX = ";;";
-    public static final String DEFAULT_BOT_PREFIX_BETA = "¤";
-    public static final String DEFAULT_SELF_PREFIX = "::";
-    public static final String DEFAULT_SELF_PREFIX_BETA = "<<";
-    public static final boolean DEBUG_BETA_USE_CUSTOM_PREFIXES = false;//TODO
-
     public static final Color FREDBOAT_COLOR = new Color(28, 191, 226);
 
     private BotConstants() {
