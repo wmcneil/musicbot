@@ -25,8 +25,6 @@
 
 package fredboat.db;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import fredboat.db.entities.GuildConfig;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
@@ -38,7 +36,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,19 +52,21 @@ public class DatabaseManager {
         state = DatabaseState.INITIALIZING;
 
         try {
-            HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(jdbcUrl);
-            DataSource dataSource = new HikariDataSource(config);
+            //HikariConfig config = new HikariConfig();
+            //config.setJdbcUrl(jdbcUrl);
+            //config.setConnectionTimeout(1000);
+            //config.setIdleTimeout(10000);
+            //DataSource dataSource = new HikariDataSource(config);
 
             //These are now located in the resources directory as XML
             Properties properties = new Properties();
-            //properties.put("configLocation", "hibernate.cfg.xml");
+            properties.put("configLocation", "hibernate.cfg.xml");
 
-            properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-            properties.put("hibernate.connection.driver_class", "org.postgresql.Driver");
+            properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+            properties.put("hibernate.connection.url", jdbcUrl);
 
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-            emfb.setDataSource(dataSource);
+            //emfb.setDataSource(dataSource);
             emfb.setPackagesToScan("fredboat.db.entities");
             emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
             emfb.setJpaProperties(properties);

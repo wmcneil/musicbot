@@ -115,9 +115,14 @@
             <version>2.5.1</version>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+            <version>4.3.8.Final</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>4.3.3.RELEASE</version>
+            <version>4.3.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -128,6 +133,11 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>1.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
