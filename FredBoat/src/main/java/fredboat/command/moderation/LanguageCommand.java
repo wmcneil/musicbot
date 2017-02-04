@@ -53,6 +53,7 @@ public class LanguageCommand extends Command {
             I18n.set(guild, args[1]);
         } catch (I18n.LanguageNotSupportedException e) {
             TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("langInvalidCode"), args[1]));
+            return;
         }
 
         TextUtils.replyWithName(channel, invoker, MessageFormat.format(I18n.get(guild).getString("langSuccess"), I18n.getLocale(guild).getNativeName()));
