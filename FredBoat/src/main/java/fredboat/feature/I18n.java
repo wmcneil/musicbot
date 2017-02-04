@@ -48,7 +48,7 @@ public class I18n {
     public static void start() {
         LANGS.put("en_US", DEFAULT);
         LANGS.put("bg_BG", new FredBoatLocale(new Locale("bg", "BG"), "bg_BG", "български език"));
-        LANGS.put("zh_TW", new FredBoatLocale(new Locale("zh", "TW"), "zh_TW", "文言"));
+        LANGS.put("zh_TW", new FredBoatLocale(new Locale("zh", "TW"), "zh_TW", "繁體中文"));
         LANGS.put("cs_CZ", new FredBoatLocale(new Locale("cs", "CZ"), "cs_CZ", "Čeština"));
         LANGS.put("da_DK", new FredBoatLocale(new Locale("da", "DK"), "da_DK", "Dansk"));
         LANGS.put("nl_NL", new FredBoatLocale(new Locale("nl", "NL"), "nl_NL", "Nederlands"));
