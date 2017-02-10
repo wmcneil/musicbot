@@ -61,7 +61,8 @@ public class FredBoatBot extends FredBoat {
                     builder.addListener(listener);
                 }
                 
-                if (!System.getProperty("os.arch").equalsIgnoreCase("arm")) {
+                if (!System.getProperty("os.arch").equalsIgnoreCase("arm")
+                        && !System.getProperty("os.arch").equalsIgnoreCase("darwin")) {
                     builder.setAudioSendFactory(new NativeAudioSendFactory());
                 }
                 if (Config.CONFIG.getNumShards() > 1) {
