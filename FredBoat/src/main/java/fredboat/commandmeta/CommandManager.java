@@ -59,7 +59,9 @@ public class CommandManager {
             return;
         }
 
-        if (Config.CONFIG.getDistribution() == DistributionEnum.PATRON && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
+        if (guild.getJDA().getSelfUser().getId().equals(BotConstants.PATRON_BOT_ID)
+                && Config.CONFIG.getDistribution() == DistributionEnum.PATRON
+                && guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is not allowed in FredBoatHangout");
             return;
         }
