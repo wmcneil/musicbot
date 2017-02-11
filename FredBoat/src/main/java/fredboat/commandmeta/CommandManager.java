@@ -54,8 +54,10 @@ public class CommandManager {
         String[] args = commandToArguments(message.getRawContent());
         commandsExecuted++;
 
-        if (invoked instanceof IMusicBackupCommand && DiscordUtil.isMusicBot() && DiscordUtil.isMainBotPresent(guild)) {
-            log.info("Ignored command because main bot is present");
+        if (invoked instanceof IMusicBackupCommand
+                && guild.getJDA().getSelfUser().getId().equals(BotConstants.MUSIC_BOT_ID)
+                && DiscordUtil.isMainBotPresent(guild)) {
+            log.info("Ignored command because main bot is present and I am the public music FredBoat");
             return;
         }
 
