@@ -51,7 +51,7 @@ public class NodesCommand extends Command implements ICommandOwnerRestricted {
         for(RemoteNode node : nodes){
             try {
                 EmbedBuilder eb = new EmbedBuilder()
-                        .setTitle("Node " + i)
+                        .setTitle("Node " + i, null)
                         .addField("Host", node.getAddress(), false)
                         .addField("State", node.getConnectionState().toString(), false)
                         .addField("Playing", node.getLastStatistics() == null ? "UNKNOWN" : Integer.toString(node.getLastStatistics().playingTrackCount), false)

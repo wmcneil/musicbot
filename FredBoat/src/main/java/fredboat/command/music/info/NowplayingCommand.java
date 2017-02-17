@@ -96,11 +96,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         }
 
         EmbedBuilder eb = new EmbedBuilder()
-                .setTitle(at.getInfo().title)
-                .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
+                .setTitle(at.getInfo().title, "https://www.youtube.com/watch?v=" + at.getIdentifier())
                 .addField("Time", timeField, true);
 
-        if(desc != null && !desc.equals("")) {
+        if(!desc.equals("")) {
                 eb.addField("Description", desc, false);
         }
 
@@ -115,7 +114,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
     private void sendSoundcloudEmbed(TextChannel channel, SoundCloudAudioTrack at) {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(at.getInfo().title, null)
                 .setDescription("["
                         + TextUtils.formatTime(at.getPosition())
                         + "/"
@@ -139,7 +138,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(at.getInfo().title, null)
                 .setDescription(desc + "\n\nLoaded from Bandcamp")
                 .setColor(new Color(99, 154, 169))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -151,7 +150,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
     private void sendTwitchEmbed(TextChannel channel, TwitchStreamAudioTrack at){
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
-                .setTitle(at.getInfo().title)
+                .setTitle(at.getInfo().title, null)
                 .setDescription("Loaded from Twitch")
                 .setColor(new Color(100, 65, 164))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -177,8 +176,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                     data.getJSONObject("MISC").getString("CIRCLELINK");
 
             EmbedBuilder eb = new EmbedBuilder()
-                    .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"))
-                    .setUrl(titleUrl)
+                    .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"), titleUrl)
                     .addField("Album", data.getJSONObject("SONGINFO").getString("ALBUM"), true)
                     .addField("Artist", data.getJSONObject("SONGINFO").getString("ARTIST"), true)
                     .addField("Circle", data.getJSONObject("SONGINFO").getString("CIRCLE"), true);
@@ -211,8 +209,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
-                .setUrl(at.getIdentifier())
+                .setTitle(at.getInfo().title, at.getIdentifier())
                 .setDescription(desc + "\n\nLoaded from " + at.getIdentifier()) //TODO: Probe data
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -232,7 +229,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(at.getInfo().title)
+                .setTitle(at.getInfo().title, null)
                 .setDescription(desc + "\n\nLoaded from " + at.getSourceManager().getSourceName())
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())

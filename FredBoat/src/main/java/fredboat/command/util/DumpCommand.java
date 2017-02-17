@@ -30,7 +30,6 @@ import fredboat.commandmeta.abs.Command;
 import fredboat.util.BotConstants;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.MessageHistory;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.entities.Message.Attachment;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
