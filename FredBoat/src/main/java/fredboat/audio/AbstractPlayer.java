@@ -41,7 +41,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import fredboat.Config;
-import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.ITrackProvider;
 import fredboat.audio.queue.SplitAudioTrackContext;
@@ -166,7 +165,9 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     public List<AudioTrackContext> getRemainingTracksOrdered() {
         List<AudioTrackContext> list = new ArrayList<>();
-        list.add(getPlayingTrack());
+        if (getPlayingTrack() != null) {
+            list.add(getPlayingTrack());
+        }
 
         list.addAll(getAudioTrackProvider().getAsListOrdered());
         return list;
