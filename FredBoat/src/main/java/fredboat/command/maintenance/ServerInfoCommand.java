@@ -47,7 +47,7 @@ public class ServerInfoCommand extends Command{
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(BotConstants.FREDBOAT_COLOR);
-        eb.setTitle(MessageFormat.format(I18n.get(guild).getString("serverinfoTitle"),guild.getName()));
+        eb.setTitle(MessageFormat.format(I18n.get(guild).getString("serverinfoTitle"),guild.getName()), null);
         eb.setThumbnail(guild.getIconUrl());
         for (Member u : guild.getMembers()) {
             if(u.getOnlineStatus() != OnlineStatus.OFFLINE) {

@@ -80,7 +80,7 @@ public class UserInfoCommand extends Command{
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(target.getColor());
         eb.setImage(target.getUser().getAvatarUrl());
-        eb.setTitle(MessageFormat.format(rb.getString("userinfoTitle"),target.getUser().getName()));
+        eb.setTitle(MessageFormat.format(rb.getString("userinfoTitle"),target.getUser().getName()), null);
         eb.addField(rb.getString("userinfoUsername"),target.getUser().getName() + "#" + target.getUser().getDiscriminator(),true);
         eb.addField(rb.getString("userinfoId"),target.getUser().getId(),true);
         eb.addField(rb.getString("userinfoNick"),target.getEffectiveName(),true); //Known Nickname
