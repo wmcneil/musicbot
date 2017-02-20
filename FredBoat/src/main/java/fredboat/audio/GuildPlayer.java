@@ -228,17 +228,11 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public boolean isRepeat() {
-        if (audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isRepeat()) {
-            return true;
-        }
-        return false;
+        return audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isRepeat();
     }
 
     public boolean isShuffle() {
-        if (audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isShuffle()) {
-            return true;
-        }
-        return false;
+        return audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isShuffle();
     }
 
     public void setRepeat(boolean repeat) {
@@ -304,7 +298,20 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     private void skipTracks(List<AudioTrackContext> list) {
-        list.forEach(this::skipTrack);
+        boolean skipCurrentTrack = false;
+
+        for (AudioTrackContext atc : list) {
+            if(atc.equals(getPlayingTrack())){
+                //Should be skipped last, in respect to PlayerEventListener
+                skipCurrentTrack = true;
+            } else {
+                skipTrack(atc);
+            }
+        }
+
+        if(skipCurrentTrack) {
+            skip();
+        }
     }
 
     private void skipTrack(AudioTrackContext atc) {

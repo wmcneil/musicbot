@@ -25,9 +25,6 @@
 
 package fredboat.db;
 
-import fredboat.db.entities.GuildConfig;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +49,6 @@ public class DatabaseManager {
         state = DatabaseState.INITIALIZING;
 
         try {
-            //HikariConfig config = new HikariConfig();
-            //config.setJdbcUrl(jdbcUrl);
-            //config.setConnectionTimeout(1000);
-            //config.setIdleTimeout(10000);
-            //DataSource dataSource = new HikariDataSource(config);
 
             //These are now located in the resources directory as XML
             Properties properties = new Properties();
@@ -66,7 +58,6 @@ public class DatabaseManager {
             properties.put("hibernate.connection.url", jdbcUrl);
 
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-            //emfb.setDataSource(dataSource);
             emfb.setPackagesToScan("fredboat.db.entities");
             emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
             emfb.setJpaProperties(properties);
