@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.command.maintenance;
+package fredboat.command.util;
 
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
