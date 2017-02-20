@@ -62,7 +62,7 @@ public class DatabaseManager {
             Properties properties = new Properties();
             properties.put("configLocation", "hibernate.cfg.xml");
 
-            properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+            //properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
             properties.put("hibernate.connection.url", jdbcUrl);
 
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
@@ -81,24 +81,6 @@ public class DatabaseManager {
             state = DatabaseState.FAILED;
             throw new RuntimeException("Failed starting database connection", ex);
         }
-    }
-
-    public static void initBotEntities(JDA jda){
-        EntityManager em = getEntityManager();
-
-        em.getTransaction().begin();
-
-        System.out.println(jda.getGuilds());
-
-        for (Guild guild : jda.getGuilds()) {
-            GuildConfig gc = em.find(GuildConfig.class, Long.parseLong(guild.getId()));
-            if (gc == null) {
-                gc = new GuildConfig();
-                em.persist(gc);
-            }
-        }
-
-        em.getTransaction().commit();
     }
 
     static EntityManager getEntityManager() {
