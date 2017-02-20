@@ -100,11 +100,10 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         }
 
         EmbedBuilder eb = new EmbedBuilder()
-                .setTitle(atc.getEffectiveTitle())
-                .setUrl("https://www.youtube.com/watch?v=" + at.getIdentifier())
+                .setTitle(atc.getEffectiveTitle(), "https://www.youtube.com/watch?v=" + at.getIdentifier())
                 .addField("Time", timeField, true);
 
-        if(desc != null && !desc.equals("")) {
+        if(!desc.equals("")) {
                 eb.addField(I18n.get(channel.getGuild()).getString("npDescription"), desc, false);
         }
 
@@ -119,7 +118,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
     private void sendSoundcloudEmbed(TextChannel channel, AudioTrackContext atc, SoundCloudAudioTrack at) {
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(atc.getEffectiveTitle())
+                .setTitle(atc.getEffectiveTitle(), null)
                 .setDescription(MessageFormat.format(
                         I18n.get(channel.getGuild()).getString("npLoadedSoundcloud"),
                         TextUtils.formatTime(atc.getEffectivePosition()), TextUtils.formatTime(atc.getEffectiveDuration()))) //TODO: Gather description, thumbnail, etc
@@ -141,7 +140,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(atc.getEffectiveTitle())
+                .setTitle(atc.getEffectiveTitle(), null)
                 .setDescription(MessageFormat.format(I18n.get(channel.getGuild()).getString("npLoadedBandcamp"), desc))
                 .setColor(new Color(99, 154, 169))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -153,7 +152,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
     private void sendTwitchEmbed(TextChannel channel, AudioTrackContext atc, TwitchStreamAudioTrack at){
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
-                .setTitle(atc.getEffectiveTitle())
+                .setTitle(atc.getEffectiveTitle(), null)
                 .setDescription(I18n.get(channel.getGuild()).getString("npLoadedTwitch"))
                 .setColor(new Color(100, 65, 164))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -179,8 +178,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                     data.getJSONObject("MISC").getString("CIRCLELINK");
 
             EmbedBuilder eb = new EmbedBuilder()
-                    .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"))
-                    .setUrl(titleUrl)
+                    .setTitle(data.getJSONObject("SONGINFO").getString("TITLE"), titleUrl)
                     .addField(I18n.get(channel.getGuild()).getString("album"), data.getJSONObject("SONGINFO").getString("ALBUM"), true)
                     .addField(I18n.get(channel.getGuild()).getString("artist"), data.getJSONObject("SONGINFO").getString("ARTIST"), true)
                     .addField(I18n.get(channel.getGuild()).getString("circle"), data.getJSONObject("SONGINFO").getString("CIRCLE"), true);
@@ -213,8 +211,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(atc.getEffectiveTitle())
-                .setUrl(at.getIdentifier())
+                .setTitle(atc.getEffectiveTitle(), at.getIdentifier())
                 .setDescription(MessageFormat.format(I18n.get(channel.getGuild()).getString("npLoadedFromHTTP"), desc, at.getIdentifier())) //TODO: Probe data
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
@@ -234,7 +231,7 @@ public class NowplayingCommand extends Command implements IMusicCommand {
 
         MessageEmbed embed = new EmbedBuilder()
                 .setAuthor(at.getInfo().author, null, null)
-                .setTitle(atc.getEffectiveTitle())
+                .setTitle(atc.getEffectiveTitle(), null)
                 .setDescription(MessageFormat.format(I18n.get(channel.getGuild()).getString("npLoadedDefault"), desc, at.getSourceManager().getSourceName()))
                 .setColor(BotConstants.FREDBOAT_COLOR)
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
