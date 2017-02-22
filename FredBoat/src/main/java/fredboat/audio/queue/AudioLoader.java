@@ -53,6 +53,7 @@ public class AudioLoader implements AudioLoadResultHandler {
 
     //Matches a timestamp and the description
     private static final Pattern SPLIT_DESCRIPTION_PATTERN = Pattern.compile("(.*?)[( \\[]*((?:\\d?\\d:)?\\d?\\d:\\d\\d)[) \\]]*(.*)");
+    private static final int QUEUE_TRACK_LIMIT = 10000;
 
     private final ITrackProvider trackProvider;
     private final AudioPlayerManager playerManager;
@@ -80,6 +81,13 @@ public class AudioLoader implements AudioLoadResultHandler {
             if (ic != null) {
                 isLoading = true;
                 context = ic;
+
+                if (gplayer.getRemainingTracks().size() >= QUEUE_TRACK_LIMIT) {
+                    TextUtils.replyWithName(gplayer.getActiveTextChannel(), context.member, "You can't add tracks to a queue with more than " + QUEUE_TRACK_LIMIT + " tracks! This is to prevent abuse.");
+                    isLoading = false;
+                    return;
+                }
+
                 playerManager.loadItem(ic.identifier, this);
             } else {
                 isLoading = false;
