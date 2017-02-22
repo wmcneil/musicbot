@@ -164,16 +164,24 @@ public class NowplayingCommand extends Command implements IMusicCommand {
         channel.sendMessage(embed).queue();
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void sendBeamEmbed(TextChannel channel, AudioTrackContext atc, BeamAudioTrack at){
-        MessageEmbed embed = new EmbedBuilder()
-                .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
-                .setTitle(atc.getEffectiveTitle(), null)
-                .setDescription(I18n.get(channel.getGuild()).getString("npLoadedBeam"))
-                .setColor(new Color(77, 144, 244))
-                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
-                .build();
+        try {
+            JSONObject json = Unirest.get("https://beam.pro/api/v1/channels/" + at.getInfo().author).asJson().getBody().getObject();
 
-        channel.sendMessage(embed).queue();
+            MessageEmbed embed = new EmbedBuilder()
+                    .setAuthor(at.getInfo().author, "https://beam.pro/" + at.getInfo().author, json.getJSONObject("user").getString("avatarUrl"))
+                    .setTitle(atc.getEffectiveTitle(), "https://beam.pro/" + at.getInfo().author)
+                    .setDescription(json.getJSONObject("user").getString("bio"))
+                    .setImage(json.getJSONObject("thumbnail").getString("url"))
+                    .setColor(new Color(77, 144, 244))
+                    .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                    .build();
+
+            channel.sendMessage(embed).queue();
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static void sendGensokyoRadioEmbed(TextChannel channel) {
