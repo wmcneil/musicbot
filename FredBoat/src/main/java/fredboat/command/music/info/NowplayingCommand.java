@@ -28,6 +28,7 @@ package fredboat.command.music.info;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioTrack;
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack;
@@ -75,6 +76,8 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 sendBandcampResponse(channel, atc, (BandcampAudioTrack) at);
             } else if (at instanceof TwitchStreamAudioTrack) {
                 sendTwitchEmbed(channel, atc, (TwitchStreamAudioTrack) at);
+            } else if (at instanceof BeamAudioTrack) {
+                sendBeamEmbed(channel, atc, (BeamAudioTrack) at);
             } else {
                 sendDefaultEmbed(channel, atc, at);
             }
@@ -155,6 +158,18 @@ public class NowplayingCommand extends Command implements IMusicCommand {
                 .setTitle(atc.getEffectiveTitle(), null)
                 .setDescription(I18n.get(channel.getGuild()).getString("npLoadedTwitch"))
                 .setColor(new Color(100, 65, 164))
+                .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
+                .build();
+
+        channel.sendMessage(embed).queue();
+    }
+
+    private void sendBeamEmbed(TextChannel channel, AudioTrackContext atc, BeamAudioTrack at){
+        MessageEmbed embed = new EmbedBuilder()
+                .setAuthor(at.getInfo().author, at.getIdentifier(), null) //TODO: Add thumb
+                .setTitle(atc.getEffectiveTitle(), null)
+                .setDescription(I18n.get(channel.getGuild()).getString("npLoadedBeam"))
+                .setColor(new Color(77, 144, 244))
                 .setFooter(channel.getJDA().getSelfUser().getName(), channel.getJDA().getSelfUser().getAvatarUrl())
                 .build();
 
