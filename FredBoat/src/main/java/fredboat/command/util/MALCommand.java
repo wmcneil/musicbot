@@ -128,7 +128,7 @@ public class MALCommand extends Command {
         msg = data.has("type") ? MessageFormat.format(I18n.get(channel.getGuild()).getString("malType"), msg, data.get("type")) : msg;
         msg = data.has("status") ? MessageFormat.format(I18n.get(channel.getGuild()).getString("malStatus"), msg, data.get("status")) : msg;
         msg = data.has("start_date") ? MessageFormat.format(I18n.get(channel.getGuild()).getString("malStartDate"), msg, data.get("start_date")) : msg;
-        msg = data.has("end_date") ? MessageFormat.format(I18n.get(channel.getGuild()).getString("malEndDate"), msg, data.get("end_date")) : msg;
+        msg = data.has("end_date") ? MessageFormat.format(I18n.get(channel.getGuild()).getString("malEndDate"), msg, data.get("end_date")) + "\n" : msg;
         
         if(data.has("synopsis")){
             Matcher m = Pattern.compile("^[^\\n\\r<]+").matcher(StringEscapeUtils.unescapeHtml4(data.getString("synopsis")));

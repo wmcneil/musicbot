@@ -133,7 +133,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        event.getJDA().getPresence().setGame(Game.of("[Say " + Config.CONFIG.getPrefix() + "help"));
+        event.getJDA().getPresence().setGame(Game.of("Say " + Config.CONFIG.getPrefix() + "help"));
     }
 
     @Override
