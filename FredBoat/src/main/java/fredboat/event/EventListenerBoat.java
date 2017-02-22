@@ -25,7 +25,6 @@
 package fredboat.event;
 
 import fredboat.Config;
-import fredboat.FredBoat;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.command.fun.TalkCommand;
@@ -134,12 +133,12 @@ public class EventListenerBoat extends AbstractScopedEventListener {
     @Override
     public void onReady(ReadyEvent event) {
         super.onReady(event);
-        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say " + Config.CONFIG.getPrefix() + "help"));
+        event.getJDA().getPresence().setGame(Game.of("[Say " + Config.CONFIG.getPrefix() + "help"));
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        event.getJDA().getPresence().setGame(Game.of("[" + FredBoat.getInstance(event.getJDA()).getShardInfo().getShardId() + "] Say " + Config.CONFIG.getPrefix() + "help"));
+        event.getJDA().getPresence().setGame(Game.of("Say " + Config.CONFIG.getPrefix() + "help"));
     }
 
     /* music related */
