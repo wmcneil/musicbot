@@ -54,8 +54,9 @@ public class DatabaseManager {
             Properties properties = new Properties();
             properties.put("configLocation", "hibernate.cfg.xml");
 
-            //properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+            properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
             properties.put("hibernate.connection.url", jdbcUrl);
+            properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
             emfb.setPackagesToScan("fredboat.db.entities");

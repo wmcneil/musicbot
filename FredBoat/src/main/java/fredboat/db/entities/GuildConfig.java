@@ -25,6 +25,9 @@
 
 package fredboat.db.entities;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,7 +35,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "guild_config")
-//@Cache(usage= CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region="guild_config")
+@Cache(usage= CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region="guild_config")
 public class GuildConfig {
 
     @Id
@@ -52,6 +55,10 @@ public class GuildConfig {
 
     public GuildConfig(String id) {
         this.guildId = id;
+    }
+
+    public String getGuildId() {
+        return guildId;
     }
 
     public boolean isTrackAnnounce() {
