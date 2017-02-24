@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
+import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -37,6 +38,8 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
 
 public class ListCommand extends Command implements IMusicCommand {
 
@@ -60,7 +63,7 @@ public class ListCommand extends Command implements IMusicCommand {
             int i = 0;
 
             if(player.isShuffle()){
-                mb.append("Showing shuffled playlist.\n\n");
+                mb.append(I18n.get(guild).getString("listShowShuffled"));
             }
 
             for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
@@ -70,13 +73,13 @@ public class ListCommand extends Command implements IMusicCommand {
                             forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
                             .append(status)
-                            .append(atc.getTrack().getInfo().title)
+                            .append(atc.getEffectiveTitle())
                             .append("\n");
                 } else {
                     mb.append("[" +
                             forceNDigits(i + 1, numberLength)
                             + "]", MessageBuilder.Formatting.BLOCK)
-                            .append(" " + atc.getTrack().getInfo().title)
+                            .append(" " + atc.getEffectiveTitle())
                             .append("\n");
                     if (i == 10) {
                         break;
@@ -96,21 +99,23 @@ public class ListCommand extends Command implements IMusicCommand {
 
             if (tracks == 0) {
                 //We are only listening to streams
-                desc = "There " + (streams == 1 ? "is" : "are") + " **" + streams +
-                        "** live " + (streams == 1 ? "stream" : "streams") + " in the queue.";
+                desc = MessageFormat.format(I18n.get(guild).getString(streams == 1 ? "listStreamsOnlySingle" : "listStreamsOnlyMultiple"),
+                        streams, streams == 1 ?
+                        I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural"));
             } else {
 
-                desc = "There " + (tracks == 1 ? "is" : "are") + " **" + tracks
-                        + "** " + (tracks == 1 ? "track" : "tracks") + " with a remaining length of **[" + timestamp + "]**"
-                        + (streams == 0 ? "" : ", as well as **" + streams + "** live " + (streams == 1 ? "stream" : "streams")) + " in the queue.";
-
+                desc = MessageFormat.format(I18n.get(guild).getString(tracks == 1 ? "listStreamsOrTracksSingle" : "listStreamsOrTracksMultiple"),
+                        tracks, tracks == 1 ?
+                        I18n.get(guild).getString("trackSingular") : I18n.get(guild).getString("trackPlural"), timestamp, streams == 0
+                        ? "" : MessageFormat.format(I18n.get(guild).getString("listAsWellAsLiveStreams"), streams, streams == 1
+                        ? I18n.get(guild).getString("streamSingular") : I18n.get(guild).getString("streamPlural")));
             }
             
             mb.append("\n" + desc);
 
             channel.sendMessage(mb.build()).queue();
         } else {
-            channel.sendMessage("Not currently playing anything.").queue();
+            channel.sendMessage(I18n.get(guild).getString("npNotPlaying")).queue();
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,6 +67,15 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         }
     }
 
+    public boolean remove(AudioTrackContext atc) {
+        if(queue.remove(atc)){
+            shouldUpdateShuffledQueue = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public AudioTrackContext removeAt(int i) {
         if(queue.size() < i){
@@ -88,6 +97,30 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
+    public List<AudioTrackContext> getInRange(int startIndex, int endIndex) {
+        if(queue.size() < endIndex){
+            return new ArrayList<>();
+        } else {
+            int remain = endIndex - startIndex + 1;
+            int i = 0;
+            List<AudioTrackContext> atl = new ArrayList<>();
+            for(AudioTrackContext obj : getAsListOrdered()){
+                if(i >= startIndex && remain > 0){
+                    shouldUpdateShuffledQueue = true;
+                    atl.add(obj);
+                    remain--;
+                }
+                else if (remain <= 0) {
+                    return atl;
+                }
+                i++;
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
     public List<AudioTrackContext> getAsList() {
         return new ArrayList<>(queue);
     }
@@ -95,9 +128,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public synchronized List<AudioTrackContext> getAsListOrdered() {
         if(!isShuffle()){
-            List<AudioTrackContext> list = getAsList();
-
-            return list;
+            return getAsList();
         }
 
         if(!shouldUpdateShuffledQueue){

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Frederik Ar. Mikkelsen
+ * Copyright (c) 2017 Frederik Ar. Mikkelsen
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ package fredboat.command.admin;
 import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
-import fredboat.util.BotConstants;
 import fredboat.util.ExitCodes;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
@@ -44,12 +43,8 @@ public class ExitCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        if (invoker.getUser().getId().equals(BotConstants.OWNER_ID)) {
-            channel.sendMessage(TextUtils.prefaceWithName(invoker, " goodbye!!")).queue();
-            FredBoat.shutdown(ExitCodes.EXIT_CODE_NORMAL);
-        } else {
-            channel.sendMessage(TextUtils.prefaceWithName(invoker, " you are not allowed to use that command!")).queue();
-        }
+        channel.sendMessage(TextUtils.prefaceWithName(invoker, " goodbye!!")).queue();
+        FredBoat.shutdown(ExitCodes.EXIT_CODE_NORMAL);
     }
 
 }
