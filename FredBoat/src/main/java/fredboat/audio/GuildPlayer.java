@@ -148,6 +148,9 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public void queue(AudioTrackContext atc){
+        if(atc.getMember() != null) {
+            joinChannel(atc.getMember());
+        }
         audioTrackProvider.add(atc);
         play();
     }
