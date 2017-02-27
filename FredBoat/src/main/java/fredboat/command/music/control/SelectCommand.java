@@ -25,13 +25,15 @@
 
 package fredboat.command.music.control;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.VideoSelection;
+import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.feature.I18n;
-import fredboat.util.YoutubeVideo;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -58,14 +60,14 @@ public class SelectCommand extends Command implements IMusicCommand {
                 if (selection.getChoices().size() < i || i < 1) {
                     throw new NumberFormatException();
                 } else {
-                    YoutubeVideo selected = selection.choices.get(i - 1);
+                    AudioTrack selected = selection.getChoices().get(i - 1);
                     player.selections.remove(invoker.getUser().getId());
-                    String msg = MessageFormat.format(I18n.get(guild).getString("selectSuccess"), i, selected.getName(), selected.getDurationFormatted());
+                    String msg = MessageFormat.format(I18n.get(guild).getString("selectSuccess"), i, selected.getInfo().title, TextUtils.formatTime(selected.getInfo().length));
                     selection.getOutMsg().editMessage(msg).complete(true);
-                    player.queue("https://www.youtube.com/watch?v=" + selected.getId(), channel, invoker);
+                    player.queue(new AudioTrackContext(selected, invoker));
                     player.setPause(false);
                     try {
-                        message.deleteMessage().queue();
+                        message.delete().queue();
                     } catch (PermissionException ignored) {
 
                     }
