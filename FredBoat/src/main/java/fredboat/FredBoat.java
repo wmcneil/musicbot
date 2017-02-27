@@ -85,6 +85,14 @@ public abstract class FredBoat {
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException, UnirestException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
 
+        log.info("\n\n" +
+                "  ______            _ ____              _   \n" +
+                " |  ____|          | |  _ \\            | |  \n" +
+                " | |__ _ __ ___  __| | |_) | ___   __ _| |_ \n" +
+                " |  __| '__/ _ \\/ _` |  _ < / _ \\ / _` | __|\n" +
+                " | |  | | |  __/ (_| | |_) | (_) | (_| | |_ \n" +
+                " |_|  |_|  \\___|\\__,_|____/ \\___/ \\__,_|\\__|\n\n");
+
         I18n.start();
 
         //Attach log adapter
