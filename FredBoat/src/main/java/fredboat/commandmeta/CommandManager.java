@@ -70,6 +70,7 @@ public class CommandManager {
 
         if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
                 && DiscordUtil.isPatronBotPresentAndOnline(guild)
+                && Config.CONFIG.getPrefix().equals(Config.DEFAULT_PREFIX)
                 && !guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
             log.info("Ignored command because patron bot is present");
             return;
@@ -99,10 +100,10 @@ public class CommandManager {
                     && !channel.getId().equals("217526705298866177")
                     && !invoker.getUser().getId().equals("203330266461110272")//Cynth
                     && !invoker.getUser().getId().equals("81011298891993088")) {
-                message.deleteMessage().queue();
+                message.delete().queue();
                 channel.sendMessage(invoker.getEffectiveName() + ": Please don't spam music commands outside of <#174821093633294338>.").queue(message1 -> {
                     RestActionScheduler.schedule(
-                            message1.deleteMessage(),
+                            message1.delete(),
                             5,
                             TimeUnit.SECONDS
                     );
