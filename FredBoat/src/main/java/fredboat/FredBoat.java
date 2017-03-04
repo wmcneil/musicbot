@@ -169,9 +169,14 @@ public abstract class FredBoat {
         }
     }
 
-    static void initBotShards(EventListener listener) {
+    private static void initBotShards(EventListener listener) {
         for(int i = 0; i < Config.CONFIG.getNumShards(); i++){
-            shards.add(i, new FredBoatBot(i, listener));
+            try {
+                shards.add(i, new FredBoatBot(i, listener));
+            } catch (Exception e) {
+                log.error("Caught an exception while starting shard " + i + "!", e);
+                numShardsReady.getAndIncrement();
+            }
             try {
                 Thread.sleep(SHARD_CREATION_SLEEP_INTERVAL);
             } catch (InterruptedException e) {
@@ -179,7 +184,7 @@ public abstract class FredBoat {
             }
         }
 
-        log.info(Config.CONFIG.getNumShards() + " shards have been constructed");
+        log.info(shards.size() + " shards have been constructed");
 
     }
 
