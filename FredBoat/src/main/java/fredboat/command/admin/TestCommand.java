@@ -25,40 +25,40 @@
 
 package fredboat.command.admin;
 
-import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput;
-import com.sedmelluq.discord.lavaplayer.tools.io.MessageOutput;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import fredboat.audio.AbstractPlayer;
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.ICommandOwnerRestricted;
+import fredboat.db.DatabaseManager;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import org.apache.commons.codec.binary.Base64;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class TestCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        try {
-            GuildPlayer player = PlayerRegistry.get(guild);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            AbstractPlayer.getPlayerManager().encodeTrack(new MessageOutput(baos), player.getPlayingTrack().getTrack());
+        TextUtils.replyWithName(channel, invoker, "Beginning stress test");
 
-            String msg = Base64.encodeBase64String(baos.toByteArray());
+        for (int i = 0; i < 20; i++) {
+            new StressTestThread().start();
+        }
+    }
 
-            ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(msg));
-            AudioTrack at = AbstractPlayer.getPlayerManager().decodeTrack(new MessageInput(bais)).decodedTrack;
-            channel.sendMessage("Loaded track " + at.getInfo().title).queue();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private class StressTestThread extends Thread {
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 2000; i++) {
+                DatabaseManager.getEntityManager().getTransaction().begin();
+
+                DatabaseManager.getEntityManager()
+                        .createNativeQuery("INSERT INTO test VALUES (:val);")
+                        .setParameter("val", (int)(Math.random() * 10000))
+                        .executeUpdate();
+
+                DatabaseManager.getEntityManager().getTransaction().commit();
+            }
         }
     }
 }

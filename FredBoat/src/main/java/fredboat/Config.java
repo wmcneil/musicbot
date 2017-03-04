@@ -47,11 +47,13 @@ public class Config {
     public static Config CONFIG = null;
 
     public static String DEFAULT_PREFIX = ";;";
+    public static int HIKARI_TIMEOUT_MILLISECONDS = 10000;
 
     private final DistributionEnum distribution;
     private final String botToken;
     private String oauthSecret;
     private final String jdbcUrl;
+    private final int hikariPoolSize;
     private final int numShards;
     private String mashapeKey;
     private String malPassword;
@@ -133,6 +135,10 @@ public class Config {
                 log.info("Discord recommends " + numShards + " shard(s)");
             }
 
+            hikariPoolSize = numShards * 2;
+
+            log.info("Hikari max pool size set to " + hikariPoolSize);
+
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
@@ -146,16 +152,20 @@ public class Config {
         return distribution;
     }
 
-    public String getBotToken() {
+    String getBotToken() {
         return botToken;
     }
 
-    public String getOauthSecret() {
+    String getOauthSecret() {
         return oauthSecret;
     }
 
-    public String getJdbcUrl() {
+    String getJdbcUrl() {
         return jdbcUrl;
+    }
+
+    public int getHikariPoolSize() {
+        return hikariPoolSize;
     }
 
     public int getNumShards() {

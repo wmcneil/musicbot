@@ -122,6 +122,23 @@ public abstract class FredBoat {
                 scope
         );
 
+
+        try {
+            API.start();
+        } catch (Exception e) {
+            log.info("Failed to ignite Spark, FredBoat API unavailable", e);
+        }
+        try {
+            if(!Config.CONFIG.getJdbcUrl().equals("") && !Config.CONFIG.getOauthSecret().equals("")) {
+                DatabaseManager.startup(Config.CONFIG.getJdbcUrl());
+                OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
+            } else {
+                log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
+            }
+        } catch (Exception e) {
+            log.info("Failed to start DatabaseManager and OAuth2 client", e);
+        }
+
         //Initialise event listeners
         listenerBot = new EventListenerBoat(Config.CONFIG.getScope() & 0x110);
         listenerSelf = new EventListenerSelf(Config.CONFIG.getScope() & 0x001);
@@ -134,23 +151,6 @@ public abstract class FredBoat {
 
         if ((Config.CONFIG.getScope() & 0x001) != 0) {
             fbClient = new FredBoatClient();
-        }
-
-        try {
-            API.start();
-        } catch (Exception e) {
-            log.info("Failed to ignite Spark, FredBoat API unavailable", e);
-        }
-
-        try {
-            if(!Config.CONFIG.getJdbcUrl().equals("") && !Config.CONFIG.getOauthSecret().equals("")) {
-                DatabaseManager.startup(Config.CONFIG.getJdbcUrl());
-                OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
-            } else {
-                log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
-            }
-        } catch (Exception e) {
-            log.info("Failed to start DatabaseManager and OAuth2 client", e);
         }
 
         //Initialise JCA

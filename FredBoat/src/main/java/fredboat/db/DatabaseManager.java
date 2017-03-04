@@ -25,6 +25,7 @@
 
 package fredboat.db;
 
+import fredboat.Config;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,9 @@ public class DatabaseManager {
             properties.put("hibernate.connection.url", jdbcUrl);
             properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
+            properties.put("hibernate.hikari.maximumPoolSize", Integer.toString(Config.CONFIG.getHikariPoolSize()));
+            properties.put("hibernate.hikari.idleTimeout", Integer.toString(Config.HIKARI_TIMEOUT_MILLISECONDS));
+
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
             emfb.setPackagesToScan("fredboat.db.entities");
             emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
@@ -75,7 +79,7 @@ public class DatabaseManager {
         }
     }
 
-    static EntityManager getEntityManager() {
+    public static EntityManager getEntityManager() {
         EntityManager em = EM_MAP.get(Thread.currentThread());
 
         if (em == null) {
