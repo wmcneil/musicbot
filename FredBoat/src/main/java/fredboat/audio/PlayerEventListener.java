@@ -48,16 +48,22 @@ class PlayerEventListener extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         AudioTrackContext next = guildPlayer.audioTrackProvider.getNext();
+
+        if((endReason == AudioTrackEndReason.FINISHED || endReason == AudioTrackEndReason.STOPPED)
+                && next != null
+                && !guildPlayer.isRepeat()
+                && isTrackAnnounceEnabled()){
+            guildPlayer.getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(guildPlayer.getGuild()).getString("trackAnnounce"), next.getEffectiveTitle())).queue();
+        }
+    }
+
+    private boolean isTrackAnnounceEnabled() {
         boolean enabled = false;
         try {
             GuildConfig config = EntityReader.getGuildConfig(guildPlayer.guildId);
             enabled = config.isTrackAnnounce();
         } catch (DatabaseNotReadyException ignored) {}
-        if(enabled
-                && (endReason == AudioTrackEndReason.FINISHED || endReason == AudioTrackEndReason.STOPPED)
-                && next != null
-                && !guildPlayer.isRepeat()){
-            guildPlayer.getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(guildPlayer.getGuild()).getString("trackAnnounce"), next.getEffectiveTitle())).queue();
-        }
+
+        return enabled;
     }
 }
