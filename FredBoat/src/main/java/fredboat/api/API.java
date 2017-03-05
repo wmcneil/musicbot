@@ -28,7 +28,7 @@ package fredboat.api;
 import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.PlayerRegistry;
-import fredboat.db.entities.UConfig;
+import fredboat.db.entity.UConfig;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;

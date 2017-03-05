@@ -32,7 +32,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
-import fredboat.db.entities.GuildConfig;
+import fredboat.db.entity.GuildConfig;
 import fredboat.feature.I18n;
 
 import java.text.MessageFormat;

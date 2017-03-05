@@ -59,11 +59,14 @@ public class DatabaseManager {
             properties.put("hibernate.connection.url", jdbcUrl);
             properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
+            properties.put("hibernate.show_sql", "true");
+
             properties.put("hibernate.hikari.maximumPoolSize", Integer.toString(Config.CONFIG.getHikariPoolSize()));
             properties.put("hibernate.hikari.idleTimeout", Integer.toString(Config.HIKARI_TIMEOUT_MILLISECONDS));
 
+
             LocalContainerEntityManagerFactoryBean emfb = new LocalContainerEntityManagerFactoryBean();
-            emfb.setPackagesToScan("fredboat.db.entities");
+            emfb.setPackagesToScan("fredboat.db.entity");
             emfb.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
             emfb.setJpaProperties(properties);
             emfb.setPersistenceUnitName("fredboat.test");

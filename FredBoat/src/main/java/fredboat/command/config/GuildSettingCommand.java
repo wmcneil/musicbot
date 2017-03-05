@@ -23,31 +23,21 @@
  *
  */
 
-package fredboat.db;
+package fredboat.command.config;
 
-import fredboat.db.entity.GuildConfig;
-import fredboat.db.entity.UConfig;
+import fredboat.commandmeta.abs.Command;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
-import javax.persistence.EntityManager;
+import java.util.ArrayList;
 
-public class EntityWriter {
+public abstract class GuildSettingCommand extends Command {
 
-    public static void mergeUConfig(UConfig config) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        em.getTransaction().begin();
-
-        em.merge(config);
-
-        em.getTransaction().commit();
+    @Override
+    public void onInvoke(JDA jda, Guild guild, TextChannel channel, Member invoker, Message message, ArrayList<String> args) {
+        super.onInvoke(jda, guild, channel, invoker, message, args);
     }
-
-    public static void mergeGuildConfig(GuildConfig config) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        em.getTransaction().begin();
-
-        em.merge(config);
-
-        em.getTransaction().commit();
-    }
-
 }

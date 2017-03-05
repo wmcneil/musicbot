@@ -29,7 +29,7 @@ import fredboat.Config;
 import fredboat.commandmeta.abs.Command;
 import fredboat.db.EntityReader;
 import fredboat.db.EntityWriter;
-import fredboat.db.entities.GuildConfig;
+import fredboat.db.entity.GuildConfig;
 import fredboat.feature.I18n;
 import fredboat.util.DiscordUtil;
 import fredboat.util.TextUtils;
