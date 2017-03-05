@@ -109,7 +109,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
         if (messagesToDeleteIfIdDeleted.containsKey(event.getMessageId())) {
             Message msg = messagesToDeleteIfIdDeleted.remove(event.getMessageId());
             if (msg.getJDA() == event.getJDA()) {
-                msg.deleteMessage().queue();
+                msg.delete().queue();
             }
         }
     }
