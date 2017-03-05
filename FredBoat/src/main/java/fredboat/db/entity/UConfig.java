@@ -23,31 +23,62 @@
  *
  */
 
-package fredboat.db;
+package fredboat.db.entity;
 
-import fredboat.db.entity.GuildConfig;
-import fredboat.db.entity.UConfig;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.EntityManager;
+@Entity
+@Table(name = "user_config")
+public class UConfig {
 
-public class EntityWriter {
+    @Id
+    private String userId;
+    private String bearer;
+    private String refresh;
+    private long bearerexpiration;
 
-    public static void mergeUConfig(UConfig config) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        em.getTransaction().begin();
-
-        em.merge(config);
-
-        em.getTransaction().commit();
+    public String getBearer() {
+        return bearer;
     }
 
-    public static void mergeGuildConfig(GuildConfig config) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        em.getTransaction().begin();
-
-        em.merge(config);
-
-        em.getTransaction().commit();
+    public String getRefresh() {
+        return refresh;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public long getBearerExpiration() {
+        return bearerexpiration;
+    }
+
+    public UConfig() {
+    }
+
+    public UConfig(String id) {
+        this.userId = id;
+    }
+
+    public UConfig setBearer(String bearer) {
+        this.bearer = bearer;
+        return this;
+    }
+
+    public UConfig setRefresh(String refresh) {
+        this.refresh = refresh;
+        return this;
+    }
+
+    public UConfig setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public UConfig setBearerExpiration(long bearerExpiration) {
+        this.bearerexpiration = bearerExpiration;
+        return this;
+    }
 }

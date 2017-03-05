@@ -25,8 +25,8 @@
 
 package fredboat.db;
 
-import fredboat.db.entities.GuildConfig;
-import fredboat.db.entities.UConfig;
+import fredboat.db.entity.GuildConfig;
+import fredboat.db.entity.UConfig;
 
 import javax.persistence.EntityManager;
 

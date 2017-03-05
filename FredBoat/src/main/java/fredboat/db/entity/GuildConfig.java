@@ -23,7 +23,7 @@
  *
  */
 
-package fredboat.db.entities;
+package fredboat.db.entity;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
