@@ -23,22 +23,62 @@
  *
  */
 
-package fredboat.command.config;
+package fredboat.db.entity;
 
-import fredboat.commandmeta.abs.Command;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import java.util.ArrayList;
+@Entity
+@Table(name = "user_config")
+public class UConfig {
 
-public abstract class GuildSettingCommand extends Command {
+    @Id
+    private String userId;
+    private String bearer;
+    private String refresh;
+    private long bearerexpiration;
 
-    //TODO: Finish this
-    @Override
-    public void onInvoke(JDA jda, Guild guild, TextChannel channel, Member invoker, Message message, ArrayList<String> args) {
-        super.onInvoke(jda, guild, channel, invoker, message, args);
+    public String getBearer() {
+        return bearer;
+    }
+
+    public String getRefresh() {
+        return refresh;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public long getBearerExpiration() {
+        return bearerexpiration;
+    }
+
+    public UConfig() {
+    }
+
+    public UConfig(String id) {
+        this.userId = id;
+    }
+
+    public UConfig setBearer(String bearer) {
+        this.bearer = bearer;
+        return this;
+    }
+
+    public UConfig setRefresh(String refresh) {
+        this.refresh = refresh;
+        return this;
+    }
+
+    public UConfig setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public UConfig setBearerExpiration(long bearerExpiration) {
+        this.bearerexpiration = bearerExpiration;
+        return this;
     }
 }
