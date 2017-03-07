@@ -55,6 +55,9 @@ Temporary Items
 # Linux Dolphin filemanager
 *.directory
 
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
 # Custom
 lib/
 dist/*
@@ -67,6 +70,7 @@ target/
 .nb-gradle/
 /dependency-reduced-pom.xml
 *credentials.json
+*credentials.yaml
 *tokens.json
 /ffmpeg.exe
 /ffplay.exe
