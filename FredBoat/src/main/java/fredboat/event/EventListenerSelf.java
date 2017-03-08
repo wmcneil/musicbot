@@ -59,7 +59,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
                 Matcher matcher = COMMAND_NAME_PREFIX.matcher(event.getMessage().getContent());
                 matcher.find();
 
-                invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
+                invoked = CommandRegistry.getCommand(matcher.group()).command;
             } catch (NullPointerException ignored) {
 
             }

@@ -31,7 +31,8 @@ import fredboat.agent.CarbonitexAgent;
 import fredboat.api.API;
 import fredboat.api.OAuthManager;
 import fredboat.audio.MusicPersistenceHandler;
-import fredboat.commandmeta.CommandInitializer;
+import fredboat.commandmeta.init.MainCommandInitializer;
+import fredboat.commandmeta.init.MusicCommandInitializer;
 import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
@@ -247,7 +248,14 @@ public abstract class FredBoat {
 
     private static void onInitFirstShard(ReadyEvent readyEvent) {
         //Commands
-        CommandInitializer.initCommands();
+        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
+                || Config.CONFIG.getDistribution() == DistributionEnum.MAIN)
+            MainCommandInitializer.initCommands();
+
+        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
+                || Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
+                || Config.CONFIG.getDistribution() == DistributionEnum.PATRON)
+            MusicCommandInitializer.initCommands();
     }
 
     //Shutdown hook
@@ -370,6 +378,7 @@ public abstract class FredBoat {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public class ShardInfo {
 
         int shardId;

@@ -84,7 +84,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
             if(matcher.find()) {
                 String cmdName = matcher.group();
-                CommandRegistry.CommandEntry entry = CommandRegistry.getCommandFromScope(scope, cmdName);
+                CommandRegistry.CommandEntry entry = CommandRegistry.getCommand(cmdName);
                 if(entry != null) {
                     invoked = entry.command;
                 } else {
