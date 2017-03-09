@@ -33,8 +33,8 @@ import fredboat.audio.VideoSelection;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.feature.I18n;
+import fredboat.util.SearchUtil;
 import fredboat.util.TextUtils;
-import fredboat.util.YoutubeAPI;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -53,6 +53,11 @@ import java.util.regex.Pattern;
 public class PlayCommand extends Command implements IMusicCommand {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayCommand.class);
+    private final SearchUtil.SearchProvider searchProvider;
+
+    public PlayCommand(SearchUtil.SearchProvider searchProvider) {
+        this.searchProvider = searchProvider;
+    }
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
@@ -129,7 +134,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
         AudioPlaylist list;
         try {
-            list = YoutubeAPI.searchForVideos(query);
+            list = SearchUtil.searchForTracks(searchProvider, query);
         } catch (JSONException e) {
             channel.sendMessage(I18n.get(guild).getString("playYoutubeSearchError")).queue();
             log.debug("YouTube search exception", e);

@@ -61,7 +61,7 @@ public class VolumeCommand extends Command implements IMusicCommand {
             }
         } else {
             channel.sendMessage(I18n.get(guild).getString("volumeApology")).queue(message1 -> RestActionScheduler.schedule(
-                            message1.deleteMessage(),
+                            message1.delete(),
                             2,
                             TimeUnit.MINUTES
                     ));

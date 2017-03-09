@@ -17,6 +17,7 @@ import fredboat.command.music.seeking.RewindCommand;
 import fredboat.command.music.seeking.SeekCommand;
 import fredboat.command.util.MusicHelpCommand;
 import fredboat.commandmeta.CommandRegistry;
+import fredboat.util.SearchUtil;
 
 public class MusicCommandInitializer {
 
@@ -24,7 +25,10 @@ public class MusicCommandInitializer {
         CommandRegistry.registerCommand("mexit", new ExitCommand());
         CommandRegistry.registerCommand("mbotrestart", new BotRestartCommand());
         CommandRegistry.registerCommand("mstats", new StatsCommand());
-        CommandRegistry.registerCommand("play", new PlayCommand());
+        CommandRegistry.registerCommand("play", new PlayCommand(SearchUtil.SearchProvider.YOUTUBE));
+        CommandRegistry.registerAlias("play", "yt");
+        CommandRegistry.registerCommand("sc", new PlayCommand(SearchUtil.SearchProvider.SOUNDCLOUD));
+        CommandRegistry.registerAlias("sc", "soundcloud");
         CommandRegistry.registerCommand("meval", new EvalCommand());
         CommandRegistry.registerCommand("skip", new SkipCommand());
         CommandRegistry.registerCommand("join", new JoinCommand());

@@ -26,12 +26,7 @@
 package fredboat.util;
 
 import com.mashape.unirest.http.Unirest;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,35 +34,6 @@ import org.json.JSONObject;
 public class YoutubeAPI {
 
     private YoutubeAPI() {
-    }
-
-    public static AudioPlaylist searchForVideos(String query) {
-
-        /*JSONObject data = null;
-        try {
-            data = Unirest.get("https://www.googleapis.com/youtube/v3/search?part=id&type=video&maxResults=5&regionCode=US&fields=items(id/videoId)")
-                    .queryString("q", URLEncoder.encode(query, "UTF-8"))
-                    .queryString("key", Config.CONFIG.getRandomGoogleKey())
-                    .asJson()
-                    .getBody()
-                    .getObject();
-
-            ArrayList<YoutubeVideo> vids = new ArrayList<>();
-
-            data.getJSONArray("items").forEach((Object t) -> {
-                JSONObject item = (JSONObject) t;
-                vids.add(getVideoFromID(item.getJSONObject("id").getString("videoId")));
-            });
-
-            return vids;
-        } catch (JSONException ex) {
-            System.err.println(data);
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }*/
-
-        return new YoutubeSearchResultHandler().searchSync(query);
     }
 
     private static YoutubeVideo getVideoFromID(String id) {
@@ -122,65 +88,6 @@ public class YoutubeAPI {
             }
         } else {
             return getVideoFromID(id);
-        }
-    }
-
-    private static class YoutubeSearchResultHandler implements AudioLoadResultHandler {
-
-        Throwable throwable;
-        AudioPlaylist result;
-        final Object toBeNotified = new Object();
-
-        AudioPlaylist searchSync(String query) {
-            DefaultAudioPlayerManager manager = new DefaultAudioPlayerManager();
-            manager.registerSourceManager(new YoutubeAudioSourceManager());
-
-            try {
-                synchronized (toBeNotified) {
-                    manager.loadItem("ytsearch:" + query, this);
-                    toBeNotified.wait(3000);
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Was interrupted while searching", e);
-            }
-
-            if(throwable != null) {
-                throw new RuntimeException("Failed to search!", throwable);
-            }
-
-            return result;
-        }
-
-        @Override
-        public void trackLoaded(AudioTrack audioTrack) {
-            throwable = new UnsupportedOperationException("Can't load a single track when we are expecting a playlist!");
-            synchronized (toBeNotified) {
-                toBeNotified.notify();
-            }
-        }
-
-        @Override
-        public void playlistLoaded(AudioPlaylist audioPlaylist) {
-            result = audioPlaylist;
-            synchronized (toBeNotified) {
-                toBeNotified.notify();
-            }
-
-        }
-
-        @Override
-        public void noMatches() {
-            synchronized (toBeNotified) {
-                toBeNotified.notify();
-            }
-        }
-
-        @Override
-        public void loadFailed(FriendlyException e) {
-            throwable = e;
-            synchronized (toBeNotified) {
-                toBeNotified.notify();
-            }
         }
     }
 
