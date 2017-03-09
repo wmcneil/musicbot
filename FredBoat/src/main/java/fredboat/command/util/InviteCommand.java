@@ -46,8 +46,5 @@ public class InviteCommand extends Command {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-
-
-        //return;
     }
 }

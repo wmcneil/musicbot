@@ -28,7 +28,7 @@ package fredboat.feature;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.FredBoat;
-import fredboat.event.AbstractScopedEventListener;
+import fredboat.event.AbstractEventListener;
 import fredboat.event.UserListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Channel;
@@ -48,14 +48,14 @@ public final class AkinatorListener extends UserListener {
     private final String channelId;
     private final String userId;
     private StepInfo stepInfo;
-    private final AbstractScopedEventListener listener;
+    private final AbstractEventListener listener;
 
     private final String signature;
     private final String session;
     private Guess guess;
     private boolean lastQuestionWasGuess = false;
 
-    public AkinatorListener(JDA jda, AbstractScopedEventListener listener, String channelId, String userId) throws UnirestException {
+    public AkinatorListener(JDA jda, AbstractEventListener listener, String channelId, String userId) throws UnirestException {
         this.jda = jda;
         this.listener = listener;
         this.channelId = channelId;
