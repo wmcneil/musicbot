@@ -34,12 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 
-public class EventListenerSelf extends AbstractScopedEventListener {
+public class EventListenerSelf extends AbstractEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerSelf.class);
 
-    public EventListenerSelf(int scope) {
-        super(scope);
+    public EventListenerSelf() {
     }
 
     @Override

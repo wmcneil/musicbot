@@ -149,8 +149,8 @@ public abstract class FredBoat {
         }
 
         //Initialise event listeners
-        listenerBot = new EventListenerBoat(Config.CONFIG.getScope() & 0x110);
-        listenerSelf = new EventListenerSelf(Config.CONFIG.getScope() & 0x001);
+        listenerBot = new EventListenerBoat();
+        listenerSelf = new EventListenerSelf();
 
         /* Init JDA */
 

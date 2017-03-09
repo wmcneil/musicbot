@@ -26,7 +26,6 @@
 package fredboat.event;
 
 import fredboat.FredBoat;
-import fredboat.util.DiscordUtil;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -41,7 +40,7 @@ public class EventLogger extends ListenerAdapter {
 
     public static final Logger log = LoggerFactory.getLogger(EventLogger.class);
 
-    public final String logChannelId;
+    private final String logChannelId;
     public JDA jda;
 
     public EventLogger(String logChannelId) {
