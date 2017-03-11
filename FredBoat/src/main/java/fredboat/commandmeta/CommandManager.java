@@ -70,9 +70,11 @@ public class CommandManager {
 
         if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
                 && DiscordUtil.isPatronBotPresentAndOnline(guild)
+                && guild.getMemberById(BotConstants.PATRON_BOT_ID) != null
+                && PermissionUtil.checkPermission(channel, guild.getMemberById(BotConstants.PATRON_BOT_ID), Permission.MESSAGE_WRITE, Permission.MESSAGE_READ)
                 && Config.CONFIG.getPrefix().equals(Config.DEFAULT_PREFIX)
                 && !guild.getId().equals(BotConstants.FREDBOAT_HANGOUT_ID)) {
-            log.info("Ignored command because patron bot is present");
+            log.info("Ignored command because patron bot is able to user that channel");
             return;
         }
 
