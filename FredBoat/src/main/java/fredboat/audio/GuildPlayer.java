@@ -25,12 +25,17 @@
 
 package fredboat.audio;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import fredboat.audio.queue.AudioLoader;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.IdentifierContext;
 import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
+import fredboat.db.DatabaseNotReadyException;
+import fredboat.db.EntityReader;
+import fredboat.db.entity.GuildConfig;
 import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDA;
@@ -69,7 +74,6 @@ public class GuildPlayer extends AbstractPlayer {
         manager.setSendingHandler(this);
         audioTrackProvider = new SimpleTrackProvider();
         audioLoader = new AudioLoader(audioTrackProvider, getPlayerManager(), this);
-        player.addListener(new PlayerEventListener(this));
     }
 
     public void joinChannel(Member usr) throws MessagingException {
@@ -323,6 +327,28 @@ public class GuildPlayer extends AbstractPlayer {
         } else {
             audioTrackProvider.remove(atc);
         }
+    }
+
+    @Override
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        super.onTrackEnd(player, track, endReason);
+
+        if((endReason == AudioTrackEndReason.FINISHED || endReason == AudioTrackEndReason.STOPPED)
+                && getPlayingTrack() != null
+                && !isRepeat()
+                && isTrackAnnounceEnabled()){
+            getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(getGuild()).getString("trackAnnounce"), getPlayingTrack().getEffectiveTitle())).queue();
+        }
+    }
+
+    private boolean isTrackAnnounceEnabled() {
+        boolean enabled = false;
+        try {
+            GuildConfig config = EntityReader.getGuildConfig(guildId);
+            enabled = config.isTrackAnnounce();
+        } catch (DatabaseNotReadyException ignored) {}
+
+        return enabled;
     }
 
 }
