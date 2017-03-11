@@ -54,7 +54,7 @@ public class PlaySplitCommand extends Command {
         player.setPause(false);
 
         try {
-            message.deleteMessage().queue();
+            message.delete().queue();
         } catch (Exception ignored) {
 
         }

@@ -50,15 +50,14 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
-public class EventListenerBoat extends AbstractScopedEventListener {
+public class EventListenerBoat extends AbstractEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerBoat.class);
 
     public static HashMap<String, Message> messagesToDeleteIfIdDeleted = new HashMap<>();
     private User lastUserToReceiveHelp;
 
-    public EventListenerBoat(int scope) {
-        super(scope);
+    public EventListenerBoat() {
     }
 
     @Override
@@ -84,7 +83,7 @@ public class EventListenerBoat extends AbstractScopedEventListener {
 
             if(matcher.find()) {
                 String cmdName = matcher.group();
-                CommandRegistry.CommandEntry entry = CommandRegistry.getCommandFromScope(scope, cmdName);
+                CommandRegistry.CommandEntry entry = CommandRegistry.getCommand(cmdName);
                 if(entry != null) {
                     invoked = entry.command;
                 } else {

@@ -34,16 +34,13 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-public abstract class AbstractScopedEventListener extends ListenerAdapter {
+public abstract class AbstractEventListener extends ListenerAdapter {
 
-    public final int scope;
     static final Pattern COMMAND_NAME_PREFIX = Pattern.compile("(\\w+)");
     private final HashMap<String, UserListener> userListener = new HashMap<>();
 
-    public static int messagesReceived = 0;
+    AbstractEventListener() {
 
-    AbstractScopedEventListener(int scope) {
-        this.scope = scope;
     }
 
     @Override

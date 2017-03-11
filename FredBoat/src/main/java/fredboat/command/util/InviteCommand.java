@@ -29,7 +29,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.commandmeta.abs.Command;
 import fredboat.feature.I18n;
 import fredboat.util.DiscordUtil;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -37,10 +36,6 @@ import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.text.MessageFormat;
 
-
-/**
- * Created by midgard/Chromaryu/knight-ryu12 on 17/01/19.
- */
 public class InviteCommand extends Command {
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args)  {
@@ -51,8 +46,5 @@ public class InviteCommand extends Command {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-
-
-        //return;
     }
 }

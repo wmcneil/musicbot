@@ -81,9 +81,9 @@ public class Config {
 
 
             // Determine distribution
-            if ((boolean) config.get("patron")) {
+            if ((boolean) config.getOrDefault("patron", false)) {
                 distribution = DistributionEnum.PATRON;
-            } else if ((boolean) config.get("development")) {//Determine distribution
+            } else if ((boolean) config.getOrDefault("development", false)) {//Determine distribution
                 distribution = DistributionEnum.DEVELOPMENT;
             } else {
                 distribution = DiscordUtil.isMainBot(this) ? DistributionEnum.MAIN : DistributionEnum.MUSIC;
@@ -122,7 +122,7 @@ public class Config {
             if(nodesArray != null) {
                 lavaplayerNodesEnabled = true;
                 log.info("Using lavaplayer nodes");
-                lavaplayerNodes = (String[]) nodesArray.toArray();
+                lavaplayerNodes = nodesArray.toArray(new String[nodesArray.size()]);
             } else {
                 lavaplayerNodesEnabled = false;
                 lavaplayerNodes = new String[0];

@@ -34,12 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 
-public class EventListenerSelf extends AbstractScopedEventListener {
+public class EventListenerSelf extends AbstractEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventListenerSelf.class);
 
-    public EventListenerSelf(int scope) {
-        super(scope);
+    public EventListenerSelf() {
     }
 
     @Override
@@ -59,7 +58,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
                 Matcher matcher = COMMAND_NAME_PREFIX.matcher(event.getMessage().getContent());
                 matcher.find();
 
-                invoked = CommandRegistry.getCommandFromScope(scope, matcher.group()).command;
+                invoked = CommandRegistry.getCommand(matcher.group()).command;
             } catch (NullPointerException ignored) {
 
             }
@@ -71,7 +70,7 @@ public class EventListenerSelf extends AbstractScopedEventListener {
             CommandManager.prefixCalled(invoked, event.getGuild(), event.getTextChannel(), event.getMember(), event.getMessage());
 
             try {
-                event.getMessage().deleteMessage().queue();
+                event.getMessage().delete().queue();
             } catch (Exception ignored) {
             }
 

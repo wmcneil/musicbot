@@ -83,7 +83,7 @@ public class FredBoatBot extends FredBoat {
 
     }
 
-    public int getShardId() {
+    int getShardId() {
         return shardId;
     }
 
