@@ -205,7 +205,7 @@ public class GuildPlayer extends AbstractPlayer {
     /**
      * @return Users who are not bots
      */
-    public List<Member> getUsersInVC() {
+    public List<Member> getHumanUsersInVC() {
         VoiceChannel vc = getChannel();
         if (vc == null) {
             return new ArrayList<>();

@@ -114,7 +114,7 @@ public class PlayCommand extends Command implements IMusicCommand {
             channel.sendMessage(I18n.get(guild).getString("playQueueEmpty")).queue();
         } else if (player.isPlaying()) {
             channel.sendMessage(I18n.get(guild).getString("playAlreadyPlaying")).queue();
-        } else if (player.getUsersInVC().isEmpty()) {
+        } else if (player.getHumanUsersInVC().isEmpty()) {
             channel.sendMessage(I18n.get(guild).getString("playVCEmpty")).queue();
         } else {
             player.play();

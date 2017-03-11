@@ -45,7 +45,7 @@ public class UnpauseCommand extends Command implements IMusicCommand {
             channel.sendMessage(I18n.get(guild).getString("unpauseQueueEmpty")).queue();
         } else if (!player.isPaused()) {
             channel.sendMessage(I18n.get(guild).getString("unpausePlayerNotPaused")).queue();
-        } else if (player.getUsersInVC().isEmpty() && player.isPaused()) {
+        } else if (player.getHumanUsersInVC().isEmpty() && player.isPaused()) {
             channel.sendMessage(I18n.get(guild).getString("unpauseNoUsers")).queue();
         } else {
             player.play();

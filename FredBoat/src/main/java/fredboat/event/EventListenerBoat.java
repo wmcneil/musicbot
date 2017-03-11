@@ -149,7 +149,7 @@ public class EventListenerBoat extends AbstractEventListener {
             return;
         }
 
-        if (player.getUsersInVC().isEmpty()
+        if (player.getHumanUsersInVC().isEmpty()
                 && player.getUserCurrentVoiceChannel(event.getGuild().getSelfMember()) == event.getChannelLeft()
                 && !player.isPaused()) {
             player.pause();
@@ -165,6 +165,7 @@ public class EventListenerBoat extends AbstractEventListener {
                 && player.isPaused()
                 && player.getPlayingTrack() != null
                 && event.getChannelJoined().getMembers().contains(event.getGuild().getSelfMember())
+                && player.getHumanUsersInVC().size() == 1
                 && EntityReader.getGuildConfig(event.getGuild().getId()).isAutoResume()
                 ) {
             player.getActiveTextChannel().sendMessage(I18n.get(event.getGuild()).getString("eventAutoResumed")).queue();
