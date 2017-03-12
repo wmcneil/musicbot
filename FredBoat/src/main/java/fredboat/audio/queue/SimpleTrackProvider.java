@@ -25,7 +25,9 @@
 
 package fredboat.audio.queue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SimpleTrackProvider extends AbstractTrackProvider {
@@ -37,7 +39,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
 
     @Override
     public AudioTrackContext getNext() {
-        if(!isShuffle()) {
+        if (!isShuffle()) {
             return queue.peek();
         } else {
             return getAsListOrdered().get(0);
@@ -46,19 +48,27 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
 
     @Override
     public AudioTrackContext provideAudioTrack(boolean skipped) {
-        if (isRepeat() && !skipped && lastTrack != null) {
+        if (getRepeatMode() == RepeatMode.SINGLE && !skipped && lastTrack != null) {
             return lastTrack.makeClone();
         }
+        if (getRepeatMode() == RepeatMode.ALL && lastTrack != null && !isShuffle()) {
+            //add a fresh copy of the last track back to the queue, if the queue is being repeated
+            queue.add(lastTrack.makeClone());
+        }
         if (isShuffle()) {
-            //Get random int from queue, remove it and then return it
-            List<AudioTrackContext> list = getAsListOrdered();
+            List<AudioTrackContext> updatedShuffledQueue = getAsListOrdered();
 
-            if (list.isEmpty()) {
+            if (updatedShuffledQueue.isEmpty()) {
                 return null;
             }
 
-            shouldUpdateShuffledQueue = true;
-            lastTrack = list.get(0);
+            if (getRepeatMode() == RepeatMode.ALL && lastTrack != null) {
+                AudioTrackContext clone = lastTrack.makeClone();
+                updatedShuffledQueue.add(clone);
+                queue.add(clone);
+            }
+
+            lastTrack = updatedShuffledQueue.remove(0);
             queue.remove(lastTrack);
             return lastTrack;
         } else {
@@ -68,7 +78,7 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     public boolean remove(AudioTrackContext atc) {
-        if(queue.remove(atc)){
+        if (queue.remove(atc)) {
             shouldUpdateShuffledQueue = true;
             return true;
         } else {
@@ -78,12 +88,12 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
 
     @Override
     public AudioTrackContext removeAt(int i) {
-        if(queue.size() < i){
+        if (queue.size() < i) {
             return null;
         } else {
             int i2 = 0;
-            for(AudioTrackContext obj : getAsListOrdered()){
-                if(i == i2){
+            for (AudioTrackContext obj : getAsListOrdered()) {
+                if (i == i2) {
                     shouldUpdateShuffledQueue = true;
                     //noinspection SuspiciousMethodCalls
                     queue.remove(obj);
@@ -98,19 +108,18 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
 
     @Override
     public List<AudioTrackContext> getInRange(int startIndex, int endIndex) {
-        if(queue.size() < endIndex){
+        if (queue.size() < endIndex) {
             return new ArrayList<>();
         } else {
             int remain = endIndex - startIndex + 1;
             int i = 0;
             List<AudioTrackContext> atl = new ArrayList<>();
-            for(AudioTrackContext obj : getAsListOrdered()){
-                if(i >= startIndex && remain > 0){
+            for (AudioTrackContext obj : getAsListOrdered()) {
+                if (i >= startIndex && remain > 0) {
                     shouldUpdateShuffledQueue = true;
                     atl.add(obj);
                     remain--;
-                }
-                else if (remain <= 0) {
+                } else if (remain <= 0) {
                     return atl;
                 }
                 i++;
@@ -126,25 +135,29 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     }
 
     @Override
+    public void setShuffle(boolean shuffle) {
+        super.setShuffle(shuffle);
+        if (shuffle) shouldUpdateShuffledQueue = true;
+    }
+
+    @Override
     public synchronized List<AudioTrackContext> getAsListOrdered() {
-        if(!isShuffle()){
+        if (!isShuffle()) {
             return getAsList();
         }
 
-        if(!shouldUpdateShuffledQueue){
+        if (!shouldUpdateShuffledQueue) {
             return cachedShuffledQueue;
         }
 
         List<AudioTrackContext> newList = new ArrayList<>();
 
         //Update the new queue
-        int i = 1;
         for (AudioTrackContext atc : getAsList()) {
             newList.add(atc);
-            i++;
         }
 
-        Collections.sort(newList);
+        Collections.shuffle(newList);
         cachedShuffledQueue = newList;
 
         shouldUpdateShuffledQueue = false;

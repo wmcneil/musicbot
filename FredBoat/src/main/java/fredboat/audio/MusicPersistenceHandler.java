@@ -31,6 +31,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
+import fredboat.audio.queue.RepeatMode;
 import fredboat.audio.queue.SplitAudioTrackContext;
 import fredboat.feature.I18n;
 import fredboat.util.DistributionEnum;
@@ -96,7 +97,7 @@ public class MusicPersistenceHandler {
                 data.put("tc", player.getActiveTextChannel().getId());
                 data.put("isPaused", player.isPaused());
                 data.put("volume", Float.toString(player.getVolume()));
-                data.put("repeat", player.isRepeat());
+                data.put("repeatMode", player.getRepeatMode());
                 data.put("shuffle", player.isShuffle());
 
                 if (player.getPlayingTrack() != null) {
@@ -172,7 +173,7 @@ public class MusicPersistenceHandler {
                 VoiceChannel vc = FredBoat.getVoiceChannelById(data.getString("vc"));
                 TextChannel tc = FredBoat.getTextChannelById(data.getString("tc"));
                 float volume = Float.parseFloat(data.getString("volume"));
-                boolean repeat = data.getBoolean("repeat");
+                RepeatMode repeatMode = data.getEnum(RepeatMode.class, "repeatMode");
                 boolean shuffle = data.getBoolean("shuffle");
 
                 GuildPlayer player = PlayerRegistry.get(vc.getJDA(), gId);
@@ -182,7 +183,7 @@ public class MusicPersistenceHandler {
                 if(Config.CONFIG.getDistribution().volumeSupported()) {
                     player.setVolume(volume);
                 }
-                player.setRepeat(repeat);
+                player.setRepeatMode(repeatMode);
                 player.setShuffle(shuffle);
 
                 final boolean[] isFirst = {true};

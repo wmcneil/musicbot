@@ -62,8 +62,18 @@ public class ListCommand extends Command implements IMusicCommand {
 
             int i = 0;
 
-            if(player.isShuffle()){
-                mb.append(I18n.get(guild).getString("listShowShuffled"));
+            if (player.isShuffle()) {
+                switch (player.getRepeatMode()) {
+                    case SINGLE:
+                        mb.append(I18n.get(guild).getString("listShowShuffledRepeatSingle"));
+                        break;
+                    case ALL:
+                        mb.append(I18n.get(guild).getString("listShowShuffledRepeatAll"));
+                        break;
+                    case OFF:
+                    default:
+                        mb.append(I18n.get(guild).getString("listShowShuffled"));
+                }
             }
 
             for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {

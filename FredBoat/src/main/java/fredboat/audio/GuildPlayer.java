@@ -28,10 +28,7 @@ package fredboat.audio;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import fredboat.audio.queue.AudioLoader;
-import fredboat.audio.queue.AudioTrackContext;
-import fredboat.audio.queue.IdentifierContext;
-import fredboat.audio.queue.SimpleTrackProvider;
+import fredboat.audio.queue.*;
 import fredboat.commandmeta.MessagingException;
 import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
@@ -234,19 +231,21 @@ public class GuildPlayer extends AbstractPlayer {
         return jda.getGuildById(guildId);
     }
 
-    public boolean isRepeat() {
-        return audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isRepeat();
+    public RepeatMode getRepeatMode() {
+        if (audioTrackProvider instanceof AbstractTrackProvider)
+            return ((AbstractTrackProvider) audioTrackProvider).getRepeatMode();
+        else return RepeatMode.OFF;
     }
 
     public boolean isShuffle() {
         return audioTrackProvider instanceof SimpleTrackProvider && ((SimpleTrackProvider) audioTrackProvider).isShuffle();
     }
 
-    public void setRepeat(boolean repeat) {
-        if (audioTrackProvider instanceof SimpleTrackProvider) {
-            ((SimpleTrackProvider) audioTrackProvider).setRepeat(repeat);
+    public void setRepeatMode(RepeatMode repeatMode) {
+        if (audioTrackProvider instanceof AbstractTrackProvider) {
+            ((AbstractTrackProvider) audioTrackProvider).setRepeatMode(repeatMode);
         } else {
-            throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
+            throw new UnsupportedOperationException("Can't repeat " + audioTrackProvider.getClass());
         }
     }
 
@@ -254,7 +253,7 @@ public class GuildPlayer extends AbstractPlayer {
         if (audioTrackProvider instanceof SimpleTrackProvider) {
             ((SimpleTrackProvider) audioTrackProvider).setShuffle(shuffle);
         } else {
-            throw new UnsupportedOperationException("Can't repeat or shuffle " + audioTrackProvider.getClass());
+            throw new UnsupportedOperationException("Can't shuffle " + audioTrackProvider.getClass());
         }
     }
 
@@ -335,7 +334,7 @@ public class GuildPlayer extends AbstractPlayer {
 
         if((endReason == AudioTrackEndReason.FINISHED || endReason == AudioTrackEndReason.STOPPED)
                 && getPlayingTrack() != null
-                && !isRepeat()
+                && getRepeatMode() != RepeatMode.SINGLE
                 && isTrackAnnounceEnabled()){
             getActiveTextChannel().sendMessage(MessageFormat.format(I18n.get(getGuild()).getString("trackAnnounce"), getPlayingTrack().getEffectiveTitle())).queue();
         }
