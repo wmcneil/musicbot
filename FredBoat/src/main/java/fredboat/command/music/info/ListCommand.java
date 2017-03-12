@@ -28,6 +28,7 @@ package fredboat.command.music.info;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.audio.queue.AudioTrackContext;
+import fredboat.audio.queue.RepeatMode;
 import fredboat.commandmeta.abs.Command;
 import fredboat.commandmeta.abs.IMusicCommand;
 import fredboat.feature.I18n;
@@ -63,18 +64,19 @@ public class ListCommand extends Command implements IMusicCommand {
             int i = 0;
 
             if (player.isShuffle()) {
-                switch (player.getRepeatMode()) {
-                    case SINGLE:
-                        mb.append(I18n.get(guild).getString("listShowShuffledRepeatSingle"));
-                        break;
-                    case ALL:
-                        mb.append(I18n.get(guild).getString("listShowShuffledRepeatAll"));
-                        break;
-                    case OFF:
-                    default:
-                        mb.append(I18n.get(guild).getString("listShowShuffled"));
-                }
+                mb.append(I18n.get(guild).getString("listShowShuffled"));
+                mb.append("\n");
+                if (player.getRepeatMode() == RepeatMode.OFF)
+                    mb.append("\n");
             }
+            if (player.getRepeatMode() == RepeatMode.SINGLE) {
+                mb.append(I18n.get(guild).getString("listShowRepeatSingle"));
+                mb.append("\n\n");
+            } else if (player.getRepeatMode() == RepeatMode.ALL) {
+                mb.append(I18n.get(guild).getString("listShowRepeatAll"));
+                mb.append("\n\n");
+            }
+
 
             for (AudioTrackContext atc : player.getRemainingTracksOrdered()) {
                 String status = " ";
