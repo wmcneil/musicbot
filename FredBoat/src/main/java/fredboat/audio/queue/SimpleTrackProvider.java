@@ -51,24 +51,24 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         if (getRepeatMode() == RepeatMode.SINGLE && !skipped && lastTrack != null) {
             return lastTrack.makeClone();
         }
-        if (getRepeatMode() == RepeatMode.ALL && lastTrack != null && !isShuffle()) {
+        if (getRepeatMode() == RepeatMode.ALL && lastTrack != null) {
             //add a fresh copy of the last track back to the queue, if the queue is being repeated
-            queue.add(lastTrack.makeClone());
+            AudioTrackContext clone = lastTrack.makeClone();
+            if (isShuffle()) {
+                clone.setRand(Integer.MAX_VALUE); //put it at the back of the shuffled queue
+                shouldUpdateShuffledQueue = true;
+            }
+            queue.add(clone);
         }
         if (isShuffle()) {
-            List<AudioTrackContext> updatedShuffledQueue = getAsListOrdered();
+            List<AudioTrackContext> list = getAsListOrdered();
 
-            if (updatedShuffledQueue.isEmpty()) {
+            if (list.isEmpty()) {
                 return null;
             }
 
-            if (getRepeatMode() == RepeatMode.ALL && lastTrack != null) {
-                AudioTrackContext clone = lastTrack.makeClone();
-                updatedShuffledQueue.add(clone);
-                queue.add(clone);
-            }
-
-            lastTrack = updatedShuffledQueue.remove(0);
+            shouldUpdateShuffledQueue = true;
+            lastTrack = list.get(0);
             queue.remove(lastTrack);
             return lastTrack;
         } else {
@@ -137,6 +137,9 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
     @Override
     public void setShuffle(boolean shuffle) {
         super.setShuffle(shuffle);
+        //this is needed because, related to the repeat all mode, turning shuffle off, skipping a track, turning shuffle
+        //on will cause an incorrect playlist to show with the list command and may lead to a bug of an
+        //IllegalStateException due to trying to play the same AudioTrack object twice
         if (shuffle) shouldUpdateShuffledQueue = true;
     }
 
@@ -153,11 +156,20 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         List<AudioTrackContext> newList = new ArrayList<>();
 
         //Update the new queue
-        for (AudioTrackContext atc : getAsList()) {
-            newList.add(atc);
+        newList.addAll(getAsList());
+
+        Collections.sort(newList);
+
+        //adjust rand values so they are evenly spread out
+        int i = 0;
+        int size = newList.size();
+        for (AudioTrackContext atc : newList) {
+            //this will calculate a value between 0.0 < rand < 1.0 multiplied by the full integer range
+            int rand = (int) (((i / (size + 1.0)) + (1.0 / (size + 1.0))) * Integer.MAX_VALUE);
+            atc.setRand(rand);
+            i++;
         }
 
-        Collections.shuffle(newList);
         cachedShuffledQueue = newList;
 
         shouldUpdateShuffledQueue = false;
