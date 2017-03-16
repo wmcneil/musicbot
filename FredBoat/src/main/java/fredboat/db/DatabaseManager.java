@@ -97,7 +97,7 @@ public class DatabaseManager {
     }
 
     static boolean isDisabled() {
-        return state == DatabaseState.DISABLED;
+        return state == DatabaseState.DISABLED || state == DatabaseState.FAILED;
     }
 
     public enum DatabaseState {
