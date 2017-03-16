@@ -155,7 +155,7 @@ public class DiscordUtil {
                     .getObject();
 
             if(user.has("id")){
-                return jda.retrieveUserById(user.getString("id")).block();
+                return jda.retrieveUserById(user.getString("id")).complete(true);
             }
         } catch (UnirestException | RateLimitedException ignored) {}
 

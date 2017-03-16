@@ -143,6 +143,7 @@ public abstract class FredBoat {
                 OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
             } else {
                 log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
+                DatabaseManager.state = DatabaseManager.DatabaseState.DISABLED;
             }
         } catch (Exception e) {
             log.info("Failed to start DatabaseManager and OAuth2 client", e);

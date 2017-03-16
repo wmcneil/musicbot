@@ -96,7 +96,12 @@ public class DatabaseManager {
         return em;
     }
 
+    static boolean isDisabled() {
+        return state == DatabaseState.DISABLED;
+    }
+
     public enum DatabaseState {
+        DISABLED, //When no JDBC URL is given
         UNINITIALIZED,
         INITIALIZING,
         FAILED,
