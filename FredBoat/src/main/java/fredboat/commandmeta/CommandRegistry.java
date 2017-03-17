@@ -46,6 +46,10 @@ public class CommandRegistry {
         return registry.get(name);
     }
 
+    public static int getSize() {
+        return registry.size();
+    }
+
     public static class CommandEntry {
 
         public Command command;
