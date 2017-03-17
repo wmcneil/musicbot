@@ -90,6 +90,8 @@ public abstract class FredBoat {
     JDA jda;
     private static FredBoatClient fbClient;
 
+    private boolean hasReadiedOnce = false;
+
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException, UnirestException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
 
@@ -244,11 +246,16 @@ public abstract class FredBoat {
 
     }
 
-    public static void onInit(ReadyEvent readyEvent) {
-        int ready = numShardsReady.incrementAndGet();
+    public void onInit(ReadyEvent readyEvent) {
+        if (!hasReadiedOnce) {
+            numShardsReady.incrementAndGet();
+            hasReadiedOnce = false;
+        }
+
         log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
 
-        if(ready == Config.CONFIG.getNumShards()) {
+        int ready = numShardsReady.get();
+        if (ready == Config.CONFIG.getNumShards()) {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
@@ -360,6 +367,10 @@ public abstract class FredBoat {
         throw new IllegalStateException("Attempted to get instance for JDA shard that is not indexed");
     }
 
+    public static FredBoat getInstance(int id) {
+        return shards.get(id);
+    }
+
     public static JDA getFirstJDA(){
         return shards.get(0).getJda();
     }
@@ -372,6 +383,11 @@ public abstract class FredBoat {
         } else {
             return new ShardInfo(sId, Config.CONFIG.getNumShards());
         }
+    }
+
+    public void revive() {
+        jda.shutdown(false);
+        shards.set(getShardInfo().getShardId(), new FredBoatBot(getShardInfo().getShardId(), listenerBot));
     }
 
     @SuppressWarnings("WeakerAccess")

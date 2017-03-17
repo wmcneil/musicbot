@@ -49,6 +49,7 @@ public class MainCommandInitializer {
         CommandRegistry.registerCommand("softban", new SoftbanCommand());
         CommandRegistry.registerCommand("catgirl", new CatgirlCommand());
         CommandRegistry.registerCommand("shards", new ShardsCommand());
+        CommandRegistry.registerCommand("revive", new ReviveCommand());
 
         /* Other Anime Discord, Sergi memes or any other memes */
         CommandRegistry.registerCommand("ram", new RemoteFileCommand("http://i.imgur.com/jeGVLk3.jpg"));
