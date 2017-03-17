@@ -257,6 +257,14 @@ public class GuildPlayer extends AbstractPlayer {
         }
     }
 
+    public void reshuffle() {
+        if (audioTrackProvider instanceof SimpleTrackProvider) {
+            ((SimpleTrackProvider) audioTrackProvider).reshuffle();
+        } else {
+            throw new UnsupportedOperationException("Can't reshuffle " + audioTrackProvider.getClass());
+        }
+    }
+
     public void setCurrentTC(TextChannel currentTC) {
         this.currentTC = currentTC;
     }

@@ -143,6 +143,11 @@ public class SimpleTrackProvider extends AbstractTrackProvider {
         if (shuffle) shouldUpdateShuffledQueue = true;
     }
 
+    public synchronized void reshuffle() {
+        queue.forEach(AudioTrackContext::randomize);
+        shouldUpdateShuffledQueue = true;
+    }
+
     @Override
     public synchronized List<AudioTrackContext> getAsListOrdered() {
         if (!isShuffle()) {
