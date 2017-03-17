@@ -59,6 +59,8 @@ public class FredBoatBot extends FredBoat {
 
                 if(listener != null) {
                     builder.addListener(listener);
+                } else {
+                    log.warn("Starting a shard without an event listener!");
                 }
                 
                 if (!System.getProperty("os.arch").equalsIgnoreCase("arm")

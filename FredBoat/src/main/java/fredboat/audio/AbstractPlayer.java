@@ -130,7 +130,6 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     public void skip() {
         player.stopTrack();
-        play0(true);
     }
 
     public boolean isQueueEmpty() {
@@ -198,9 +197,10 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        //If we *were* interrupted, we would just invoke play0()
         if (endReason == AudioTrackEndReason.FINISHED) {
             play0(false);
+        } else if(endReason == AudioTrackEndReason.STOPPED) {
+            play0(true);
         }
     }
 

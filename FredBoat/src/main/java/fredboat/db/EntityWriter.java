@@ -33,19 +33,20 @@ import javax.persistence.EntityManager;
 public class EntityWriter {
 
     public static void mergeUConfig(UConfig config) {
-        EntityManager em = DatabaseManager.getEntityManager();
-        em.getTransaction().begin();
-
-        em.merge(config);
-
-        em.getTransaction().commit();
+        merge(config);
     }
 
     public static void mergeGuildConfig(GuildConfig config) {
+        merge(config);
+    }
+
+    private static void merge(Object entity){
+        if (DatabaseManager.isDisabled()) return;
+
         EntityManager em = DatabaseManager.getEntityManager();
         em.getTransaction().begin();
 
-        em.merge(config);
+        em.merge(entity);
 
         em.getTransaction().commit();
     }

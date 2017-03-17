@@ -33,6 +33,8 @@ import javax.persistence.EntityManager;
 public class EntityReader {
 
     public static UConfig getUConfig(String id){
+        if (DatabaseManager.isDisabled()) return new UConfig(id);
+
         EntityManager em = DatabaseManager.getEntityManager();
         UConfig config = em.find(UConfig.class, id);
 
@@ -44,6 +46,8 @@ public class EntityReader {
     }
 
     public static GuildConfig getGuildConfig(String id) {
+        if (DatabaseManager.isDisabled()) return new GuildConfig(id);
+
         EntityManager em = DatabaseManager.getEntityManager();
         GuildConfig config = em.find(GuildConfig.class, id);
 

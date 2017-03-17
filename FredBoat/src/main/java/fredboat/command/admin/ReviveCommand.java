@@ -23,34 +23,29 @@
  *
  */
 
-package fredboat.command.music.control;
+package fredboat.command.admin;
 
-import fredboat.audio.GuildPlayer;
-import fredboat.audio.PlayerRegistry;
+import fredboat.FredBoat;
 import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I18n;
+import fredboat.commandmeta.abs.ICommandOwnerRestricted;
+import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class UnpauseCommand extends Command implements IMusicCommand {
+/**
+ *
+ * @author frederik
+ */
+public class ReviveCommand extends Command implements ICommandOwnerRestricted {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild);
-        player.setCurrentTC(channel);
-        if (player.isQueueEmpty()) {
-            channel.sendMessage(I18n.get(guild).getString("unpauseQueueEmpty")).queue();
-        } else if (!player.isPaused()) {
-            channel.sendMessage(I18n.get(guild).getString("unpausePlayerNotPaused")).queue();
-        } else if (player.getHumanUsersInVC().isEmpty() && player.isPaused()) {
-            channel.sendMessage(I18n.get(guild).getString("unpauseNoUsers")).queue();
-        } else {
-            player.play();
-            channel.sendMessage(I18n.get(guild).getString("unpauseSuccess")).queue();
-        }
+        int shardId = Integer.parseInt(args[1]);
+
+        channel.sendMessage(TextUtils.prefaceWithName(invoker, " Reviving shard " + shardId)).queue();
+        FredBoat.getInstance(shardId).revive();
     }
 
 }

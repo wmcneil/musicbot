@@ -31,6 +31,7 @@ import fredboat.agent.CarbonitexAgent;
 import fredboat.api.API;
 import fredboat.api.OAuthManager;
 import fredboat.audio.MusicPersistenceHandler;
+import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.init.MainCommandInitializer;
 import fredboat.commandmeta.init.MusicCommandInitializer;
 import fredboat.db.DatabaseManager;
@@ -67,7 +68,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -85,11 +85,12 @@ public abstract class FredBoat {
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
     static EventListenerBoat listenerBot;
     static EventListenerSelf listenerSelf;
-    private static AtomicBoolean firstReadyEventReceived = new AtomicBoolean(false);
     private static AtomicInteger numShardsReady = new AtomicInteger(0);
 
     JDA jda;
     private static FredBoatClient fbClient;
+
+    private boolean hasReadiedOnce = false;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException, InterruptedException, IOException, UnirestException {
         Runtime.getRuntime().addShutdownHook(new Thread(ON_SHUTDOWN));
@@ -143,6 +144,7 @@ public abstract class FredBoat {
                 OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
             } else {
                 log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
+                DatabaseManager.state = DatabaseManager.DatabaseState.DISABLED;
             }
         } catch (Exception e) {
             log.info("Failed to start DatabaseManager and OAuth2 client", e);
@@ -151,6 +153,18 @@ public abstract class FredBoat {
         //Initialise event listeners
         listenerBot = new EventListenerBoat();
         listenerSelf = new EventListenerSelf();
+
+        //Commands
+        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
+                || Config.CONFIG.getDistribution() == DistributionEnum.MAIN)
+            MainCommandInitializer.initCommands();
+
+        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
+                || Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
+                || Config.CONFIG.getDistribution() == DistributionEnum.PATRON)
+            MusicCommandInitializer.initCommands();
+
+        log.info("Loaded commands, registry size is " + CommandRegistry.getSize());
 
         /* Init JDA */
 
@@ -232,30 +246,19 @@ public abstract class FredBoat {
 
     }
 
-    public static void onInit(ReadyEvent readyEvent) {
-        int ready = numShardsReady.incrementAndGet();
-        log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
-
-        if(!firstReadyEventReceived.getAndSet(true)){
-            onInitFirstShard(readyEvent);
+    public void onInit(ReadyEvent readyEvent) {
+        if (!hasReadiedOnce) {
+            numShardsReady.incrementAndGet();
+            hasReadiedOnce = false;
         }
 
-        if(ready == Config.CONFIG.getNumShards()) {
+        log.info("Received ready event for " + FredBoat.getInstance(readyEvent.getJDA()).getShardInfo().getShardString());
+
+        int ready = numShardsReady.get();
+        if (ready == Config.CONFIG.getNumShards()) {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
-    }
-
-    private static void onInitFirstShard(ReadyEvent readyEvent) {
-        //Commands
-        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
-                || Config.CONFIG.getDistribution() == DistributionEnum.MAIN)
-            MainCommandInitializer.initCommands();
-
-        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT
-                || Config.CONFIG.getDistribution() == DistributionEnum.MUSIC
-                || Config.CONFIG.getDistribution() == DistributionEnum.PATRON)
-            MusicCommandInitializer.initCommands();
     }
 
     //Shutdown hook
@@ -364,6 +367,10 @@ public abstract class FredBoat {
         throw new IllegalStateException("Attempted to get instance for JDA shard that is not indexed");
     }
 
+    public static FredBoat getInstance(int id) {
+        return shards.get(id);
+    }
+
     public static JDA getFirstJDA(){
         return shards.get(0).getJda();
     }
@@ -376,6 +383,11 @@ public abstract class FredBoat {
         } else {
             return new ShardInfo(sId, Config.CONFIG.getNumShards());
         }
+    }
+
+    public void revive() {
+        jda.shutdown(false);
+        shards.set(getShardInfo().getShardId(), new FredBoatBot(getShardInfo().getShardId(), listenerBot));
     }
 
     @SuppressWarnings("WeakerAccess")

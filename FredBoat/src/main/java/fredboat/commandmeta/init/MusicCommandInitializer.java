@@ -62,6 +62,7 @@ public class MusicCommandInitializer {
         CommandRegistry.registerCommand("split", new PlaySplitCommand());
         CommandRegistry.registerCommand("config", new ConfigCommand());
         CommandRegistry.registerCommand("lang", new LanguageCommand());
+        CommandRegistry.registerCommand("mrevive", new ReviveCommand());
 
         CommandRegistry.registerCommand("seek", new SeekCommand());
         CommandRegistry.registerCommand("forward", new ForwardCommand());
