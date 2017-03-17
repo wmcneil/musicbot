@@ -163,6 +163,7 @@ public class DiscordUtil {
     }
 
     // https://discordapp.com/developers/docs/topics/oauth2
+    @Deprecated
     public static JSONObject getApplicationInfo(String token) throws UnirestException {
         return Unirest.get(Requester.DISCORD_API_PREFIX + "/oauth2/applications/@me")
                 .header("Authorization", "Bot " + token)

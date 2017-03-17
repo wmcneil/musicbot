@@ -34,14 +34,27 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShardsCommand extends Command {
 
+    private static final int SHARDS_PER_MESSAGE = 30;
+
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        MessageBuilder mb = new MessageBuilder()
-                .append("```diff\n");
+        MessageBuilder mb = null;
+        List<MessageBuilder> builders = new ArrayList<>();
 
+        int i = 0;
         for(FredBoat fb : FredBoat.getShards()) {
+            if(i % SHARDS_PER_MESSAGE == 0) {
+                mb = new MessageBuilder()
+                        .append("```diff\n");
+                builders.add(mb);
+            }
+
             mb.append(fb.getJda().getStatus() == JDA.Status.CONNECTED ? "+" : "-")
                     .append(" ")
                     .append(fb.getShardInfo().getShardString())
@@ -52,9 +65,13 @@ public class ShardsCommand extends Command {
                     .append(" -- Users: ")
                     .append(fb.getJda().getUsers().size())
                     .append("\n");
+            i++;
         }
 
-        mb.append("```");
-        channel.sendMessage(mb.build()).queue();
+        for(MessageBuilder builder : builders){
+            builder.append("```");
+            channel.sendMessage(builder.build()).queue();
+        }
+
     }
 }
