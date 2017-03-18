@@ -1,6 +1,7 @@
 package fredboat.util;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
@@ -9,6 +10,15 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 public class SearchUtil {
+
+    private static final AudioPlayerManager PLAYER_MANAGER = initPlayerManager();
+
+    private static AudioPlayerManager initPlayerManager() {
+        DefaultAudioPlayerManager manager = new DefaultAudioPlayerManager();
+        manager.registerSourceManager(new YoutubeAudioSourceManager());
+        manager.registerSourceManager(new SoundCloudAudioSourceManager());
+        return manager;
+    }
 
     public static AudioPlaylist searchForTracks(SearchProvider provider, String query) {
         return new SearchResultHandler().searchSync(provider, query);
@@ -37,13 +47,9 @@ public class SearchUtil {
         final Object toBeNotified = new Object();
 
         AudioPlaylist searchSync(SearchProvider provider, String query) {
-            DefaultAudioPlayerManager manager = new DefaultAudioPlayerManager();
-            manager.registerSourceManager(new YoutubeAudioSourceManager());
-            manager.registerSourceManager(new SoundCloudAudioSourceManager());
-
             try {
                 synchronized (toBeNotified) {
-                    manager.loadItem(provider.getPrefix() + query, this);
+                    PLAYER_MANAGER.loadItem(provider.getPrefix() + query, this);
                     toBeNotified.wait(3000);
                 }
             } catch (InterruptedException e) {

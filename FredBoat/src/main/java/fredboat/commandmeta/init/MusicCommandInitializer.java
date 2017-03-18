@@ -1,5 +1,6 @@
 package fredboat.commandmeta.init;
 
+import fredboat.agent.VoiceChannelCleanupAgent;
 import fredboat.command.admin.*;
 import fredboat.command.maintenance.GetIdCommand;
 import fredboat.command.maintenance.ShardsCommand;
@@ -69,6 +70,8 @@ public class MusicCommandInitializer {
         CommandRegistry.registerAlias("forward", "fwd");
         CommandRegistry.registerCommand("rewind", new RewindCommand());
         CommandRegistry.registerAlias("rewind", "rew");
+
+        new VoiceChannelCleanupAgent().start();
     }
 
 }

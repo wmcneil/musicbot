@@ -54,6 +54,7 @@ public class PlayCommand extends Command implements IMusicCommand {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(PlayCommand.class);
     private final SearchUtil.SearchProvider searchProvider;
+    private static final JoinCommand JOIN_COMMAND = new JoinCommand();
 
     public PlayCommand(SearchUtil.SearchProvider searchProvider) {
         this.searchProvider = searchProvider;
@@ -61,6 +62,11 @@ public class PlayCommand extends Command implements IMusicCommand {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
+        if (!invoker.getVoiceState().inVoiceChannel()) {
+            channel.sendMessage(I18n.get(guild).getString("playerUserNotInChannel")).queue();
+            return;
+        }
+
         if (!message.getAttachments().isEmpty()) {
             GuildPlayer player = PlayerRegistry.get(guild);
             player.setCurrentTC(channel);
@@ -114,8 +120,15 @@ public class PlayCommand extends Command implements IMusicCommand {
             channel.sendMessage(I18n.get(guild).getString("playQueueEmpty")).queue();
         } else if (player.isPlaying()) {
             channel.sendMessage(I18n.get(guild).getString("playAlreadyPlaying")).queue();
-        } else if (player.getHumanUsersInVC().isEmpty()) {
+        } else if (player.getHumanUsersInVC().isEmpty() && guild.getAudioManager().isConnected()) {
             channel.sendMessage(I18n.get(guild).getString("playVCEmpty")).queue();
+        } else if(!guild.getAudioManager().isConnected()) {
+            // When we just want to continue playing, but the user is not in a VC
+            JOIN_COMMAND.onInvoke(guild, channel, invoker, message, new String[0]);
+            if(guild.getAudioManager().isConnected() || guild.getAudioManager().isAttemptingToConnect()) {
+                player.play();
+                channel.sendMessage(I18n.get(guild).getString("playWillNowPlay")).queue();
+            }
         } else {
             player.play();
             channel.sendMessage(I18n.get(guild).getString("playWillNowPlay")).queue();
