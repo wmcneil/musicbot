@@ -33,6 +33,7 @@ import fredboat.FredBoat;
 import fredboat.audio.queue.AudioTrackContext;
 import fredboat.audio.queue.SplitAudioTrackContext;
 import fredboat.feature.I18n;
+import fredboat.util.DistributionEnum;
 import fredboat.util.ExitCodes;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -139,8 +140,22 @@ public class MusicPersistenceHandler {
     }
 
     public static void reloadPlaylists() {
-        log.info("Began reloading playlists");
         File dir = new File("music_persistence");
+
+        if(Config.CONFIG.getDistribution() == DistributionEnum.MUSIC) {
+            log.warn("Music persistence loading is currently disabled!");
+
+            for (File f : dir.listFiles()) {
+                boolean deleted = f.delete();
+                log.info(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
+            }
+
+            dir.delete();
+
+            return;
+        }
+
+        log.info("Began reloading playlists");
         if (!dir.exists()) {
             return;
         }
