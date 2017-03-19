@@ -63,6 +63,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     ITrackProvider audioTrackProvider;
     private AudioFrame lastFrame = null;
     private AudioTrackContext context;
+    private AudioLossCounter audioLossCounter = new AudioLossCounter();
 
     @SuppressWarnings("LeakingThisInConstructor")
     AbstractPlayer() {
@@ -239,7 +240,17 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     public boolean canProvide() {
         lastFrame = player.provide();
 
-        return lastFrame != null;
+        if(lastFrame == null) {
+            audioLossCounter.onLoss();
+            return false;
+        } else {
+            audioLossCounter.onSuccess();
+            return true;
+        }
+    }
+
+    public AudioLossCounter getAudioLossCounter() {
+        return audioLossCounter;
     }
 
     @Override

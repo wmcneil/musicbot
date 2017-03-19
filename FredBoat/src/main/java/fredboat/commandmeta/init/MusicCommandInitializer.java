@@ -8,10 +8,7 @@ import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.moderation.ConfigCommand;
 import fredboat.command.moderation.LanguageCommand;
 import fredboat.command.music.control.*;
-import fredboat.command.music.info.ExportCommand;
-import fredboat.command.music.info.GensokyoRadioCommand;
-import fredboat.command.music.info.ListCommand;
-import fredboat.command.music.info.NowplayingCommand;
+import fredboat.command.music.info.*;
 import fredboat.command.music.seeking.ForwardCommand;
 import fredboat.command.music.seeking.RestartCommand;
 import fredboat.command.music.seeking.RewindCommand;
@@ -64,6 +61,7 @@ public class MusicCommandInitializer {
         CommandRegistry.registerCommand("config", new ConfigCommand());
         CommandRegistry.registerCommand("lang", new LanguageCommand());
         CommandRegistry.registerCommand("mrevive", new ReviveCommand());
+        CommandRegistry.registerCommand("adebug", new AudioDebugCommand());
 
         CommandRegistry.registerCommand("seek", new SeekCommand());
         CommandRegistry.registerCommand("forward", new ForwardCommand());

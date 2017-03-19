@@ -173,7 +173,8 @@ public abstract class FredBoat {
         }
 
         if ((Config.CONFIG.getScope() & 0x001) != 0) {
-            fbClient = new FredBoatClient();
+            log.error("Selfbot support has been removed.");
+            //fbClient = new FredBoatClient();
         }
 
         //Initialise JCA
