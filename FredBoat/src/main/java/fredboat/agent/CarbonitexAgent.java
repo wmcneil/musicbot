@@ -66,9 +66,9 @@ public class CarbonitexAgent extends Thread {
                     .field("key", key)
                     .field("servercount", FredBoat.getAllGuilds().size())
                     .asString().getBody();
-            log.info("Successfully posted the botdata to carbonitex.com: " + response);
+            log.info("Successfully posted the bot data to carbonitex.com: " + response);
         } catch (Exception e) {
-            log.error("An error occured while posting the botdata to carbonitex.com", e);
+            log.error("An error occurred while posting the bot data to carbonitex.com", e);
         }
     }
 

@@ -177,7 +177,7 @@ public abstract class FredBoat {
             log.warn("Credentials not found for cleverbot authentication. Skipping...");
         }
 
-        if (Config.CONFIG.getDistribution() == DistributionEnum.MAIN && Config.CONFIG.getCarbonKey() != null) {
+        if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC && Config.CONFIG.getCarbonKey() != null) {
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(Config.CONFIG.getCarbonKey());
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
