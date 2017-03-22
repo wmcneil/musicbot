@@ -37,6 +37,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
@@ -59,7 +60,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(AbstractPlayer.class);
 
     private static AudioPlayerManager playerManager;
-    AudioPlayer player;
+    private AudioPlayer player;
     ITrackProvider audioTrackProvider;
     private AudioFrame lastFrame = null;
     private AudioTrackContext context;
@@ -227,7 +228,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         }
     }
 
-    public void destroy() {
+    void destroy() {
         player.destroy();
     }
 
@@ -266,4 +267,16 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
         return player.isPaused();
     }
 
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        if(Config.CONFIG.getLavaplayerNodes().length > 0) {
+            log.error("Lavaplayer encountered an exception during playback while playing " + track.getIdentifier(), exception);
+            log.error("Performance stats for errored track: " + audioLossCounter);
+        }
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        log.error("Lavaplayer got stuck while playing " + track.getIdentifier() + "\nPerformance stats for stuck track: " + audioLossCounter);
+    }
 }

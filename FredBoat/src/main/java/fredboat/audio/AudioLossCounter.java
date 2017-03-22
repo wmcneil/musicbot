@@ -69,4 +69,12 @@ public class AudioLossCounter {
         }
     }
 
+    @Override
+    public String toString() {
+        return "AudioLossCounter{" +
+                "lastLoss=" + lastLoss +
+                ", lastSucc=" + lastSucc +
+                ", total=" + (lastSucc + lastLoss) +
+                '}';
+    }
 }
