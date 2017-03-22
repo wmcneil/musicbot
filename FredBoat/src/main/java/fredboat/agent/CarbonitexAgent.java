@@ -26,9 +26,7 @@
 package fredboat.agent;
 
 import com.mashape.unirest.http.Unirest;
-import fredboat.Config;
 import fredboat.FredBoat;
-import fredboat.util.DistributionEnum;
 import org.slf4j.LoggerFactory;
 
 public class CarbonitexAgent extends Thread {
@@ -43,10 +41,6 @@ public class CarbonitexAgent extends Thread {
 
     @Override
     public void run() {
-        if (Config.CONFIG.getDistribution() != DistributionEnum.MAIN) {
-            return;
-        }
-
         try {
             while (true) {
                 synchronized (this) {

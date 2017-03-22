@@ -170,11 +170,15 @@ public abstract class FredBoat {
 
         //Initialise JCA
 
-        if(!Config.CONFIG.getCbUser().equals("") && !Config.CONFIG.getCbKey().equals("")) {
-            log.info("Starting CleverBot");
-            jca = new JCABuilder().setKey(Config.CONFIG.getCbKey()).setUser(Config.CONFIG.getCbUser()).buildBlocking();
-        } else {
-            log.warn("Credentials not found for cleverbot authentication. Skipping...");
+        try {
+            if (!Config.CONFIG.getCbUser().equals("") && !Config.CONFIG.getCbKey().equals("")) {
+                log.info("Starting CleverBot");
+                jca = new JCABuilder().setKey(Config.CONFIG.getCbKey()).setUser(Config.CONFIG.getCbUser()).buildBlocking();
+            } else {
+                log.warn("Credentials not found for cleverbot authentication. Skipping...");
+            }
+        } catch (Exception e) {
+            log.error("Error when starting JCA", e);
         }
 
         if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC && Config.CONFIG.getCarbonKey() != null) {
