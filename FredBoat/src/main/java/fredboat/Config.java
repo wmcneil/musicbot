@@ -119,9 +119,13 @@ public class Config {
             }
             jdbcUrl = (String) creds.getOrDefault("jdbcUrl", "");
 
-            List<String> gkeys = (List) creds.get("googleServerKeys");
-            if (gkeys != null) {
-                gkeys.forEach((Object str) -> googleKeys.add((String) str));
+            Object gkeys = creds.get("googleServerKeys");
+            if (gkeys instanceof List) {
+                ((List) gkeys).forEach((Object str) -> googleKeys.add((String) str));
+            } else if (gkeys instanceof String) {
+                googleKeys.add((String) gkeys);
+            } else {
+                log.warn("No google API keys found. Some commands may not work, check the documentation.");
             }
 
             List<String> nodesArray = (List) creds.get("lavaplayerNodes");
