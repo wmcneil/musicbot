@@ -67,6 +67,10 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
         return rand;
     }
 
+    public void setRand(int rand) {
+        this.rand = rand;
+    }
+
     public int randomize() {
         rand = new Random().nextInt();
         return rand;

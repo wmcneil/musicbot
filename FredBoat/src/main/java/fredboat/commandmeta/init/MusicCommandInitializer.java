@@ -44,6 +44,7 @@ public class MusicCommandInitializer {
         CommandRegistry.registerCommand("unpause", new UnpauseCommand());
         CommandRegistry.registerCommand("getid", new GetIdCommand());
         CommandRegistry.registerCommand("shuffle", new ShuffleCommand());
+        CommandRegistry.registerCommand("reshuffle", new ReshuffleCommand());
         CommandRegistry.registerCommand("repeat", new RepeatCommand());
         CommandRegistry.registerCommand("volume", new VolumeCommand());
         CommandRegistry.registerAlias("volume", "vol");

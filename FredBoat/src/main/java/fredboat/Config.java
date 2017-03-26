@@ -84,6 +84,9 @@ public class Config {
             configFileStr = configFileStr.replaceAll("\t", "");
             Map<String, Object> creds = (Map<String, Object>) yaml.load(credsFileStr);
             Map<String, Object> config = (Map<String, Object>) yaml.load(configFileStr);
+            //avoid null values, rather change them to empty strings
+            creds.keySet().forEach((String key) -> creds.putIfAbsent(key, ""));
+            config.keySet().forEach((String key) -> config.putIfAbsent(key, ""));
 
 
             // Determine distribution
