@@ -20,6 +20,6 @@ Code is indented with 4 spaces and without brackets on newlines. Please use the 
 * **Advanced** Means that the could be a major feature or requires a deep understanding of the bot.
 * **Docs** Means that help is wanted to improve the documentation.
 
-These 4 tags all imply that help is wanted, so feel free to contribute at whichever level.
+These 4 tags all imply that help is wanted, so feel free to contribute at whichever level. Please announce your intention to work on something so we don't accidentally try to write the same changes!
 
 Also feel free to work on your own ideas. Especially commands, we can't have too many of those.
