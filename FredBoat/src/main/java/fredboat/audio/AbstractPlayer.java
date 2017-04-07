@@ -65,6 +65,7 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     private AudioFrame lastFrame = null;
     private AudioTrackContext context;
     private AudioLossCounter audioLossCounter = new AudioLossCounter();
+    private boolean splitTrackEnded = false;
 
     @SuppressWarnings("LeakingThisInConstructor")
     AbstractPlayer() {
@@ -127,11 +128,19 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     public void stop() {
+        audioTrackProvider.clear();
+        context = null;
         player.stopTrack();
     }
 
     public void skip() {
         player.stopTrack();
+    }
+
+    //used by TrackEndMarkerHandler to differentiate between skips issued by users and tracks finishing playing
+    public void splitTrackEnded() {
+        splitTrackEnded = true;
+        skip();
     }
 
     public boolean isQueueEmpty() {
@@ -207,8 +216,13 @@ public abstract class AbstractPlayer extends AudioEventAdapter implements AudioS
     }
 
     private void play0(boolean skipped) {
+        boolean userSkip = skipped;
         if (audioTrackProvider != null) {
-            context = audioTrackProvider.provideAudioTrack(skipped);
+            if (splitTrackEnded) {
+                userSkip = false;
+                splitTrackEnded = false;
+            }
+            context = audioTrackProvider.provideAudioTrack(userSkip);
 
             if(context != null) {
                 player.playTrack(context.getTrack());
