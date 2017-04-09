@@ -34,10 +34,16 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Config {
 
@@ -65,6 +71,7 @@ public class Config {
     private String cbKey;
     private String prefix = DEFAULT_PREFIX;
     private boolean restServerEnabled = true;
+    private List<String> adminIds = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public Config(File credentialsFile, File configFile, int scope) {
@@ -78,6 +85,9 @@ public class Config {
             configFileStr = configFileStr.replaceAll("\t", "");
             Map<String, Object> creds = (Map<String, Object>) yaml.load(credsFileStr);
             Map<String, Object> config = (Map<String, Object>) yaml.load(configFileStr);
+            //avoid null values, rather change them to empty strings
+            creds.keySet().forEach((String key) -> creds.putIfAbsent(key, ""));
+            config.keySet().forEach((String key) -> config.putIfAbsent(key, ""));
 
 
             // Determine distribution
@@ -93,6 +103,13 @@ public class Config {
 
             prefix = (String) config.getOrDefault("prefix", prefix);
             restServerEnabled = (boolean) config.getOrDefault("restServerEnabled", restServerEnabled);
+
+            Object admins = config.get("admins");
+            if (admins instanceof List) {
+                ((List) admins).forEach((Object str) -> adminIds.add(str + ""));
+            } else if (admins instanceof String) {
+                adminIds.add(admins + "");
+            }
 
             log.info("Using prefix: " + prefix);
 
@@ -113,9 +130,13 @@ public class Config {
             }
             jdbcUrl = (String) creds.getOrDefault("jdbcUrl", "");
 
-            List<String> gkeys = (List) creds.get("googleServerKeys");
-            if (gkeys != null) {
-                gkeys.forEach((Object str) -> googleKeys.add((String) str));
+            Object gkeys = creds.get("googleServerKeys");
+            if (gkeys instanceof List) {
+                ((List) gkeys).forEach((Object str) -> googleKeys.add((String) str));
+            } else if (gkeys instanceof String) {
+                googleKeys.add((String) gkeys);
+            } else {
+                log.warn("No google API keys found. Some commands may not work, check the documentation.");
             }
 
             List<String> nodesArray = (List) creds.get("lavaplayerNodes");
@@ -144,6 +165,41 @@ public class Config {
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Makes sure the requested config file exists in the current format. Will attempt to migrate old formats to new ones
+     * old files will be renamed to filename.ext.old to preserve any data
+     *
+     * @param name relative name of a config file, without the file extension
+     * @return a handle on the requested file
+     */
+    static File loadConfigFile(String name) throws IOException {
+        String yamlPath = "./" + name + ".yaml";
+        String jsonPath = "./" + name + ".json";
+        File yamlFile = new File(yamlPath);
+        if (!yamlFile.exists() || yamlFile.isDirectory()) {
+            log.warn("Could not find file '" + yamlPath + "', looking for legacy '" + jsonPath + "' to rewrite");
+            File json = new File(jsonPath);
+            if (!json.exists() || json.isDirectory()) {
+                //file is missing
+                log.error("No " + name + " file is present. Bot cannot run without it. Check the documentation.");
+                throw new FileNotFoundException("Neither '" + yamlPath + "' nor '" + jsonPath + "' present");
+            } else {
+                //rewrite the json to yaml
+                Yaml yaml = new Yaml();
+                String fileStr = FileUtils.readFileToString(json, "UTF-8");
+                //remove tab character from json file to make it a valid YAML file
+                fileStr = fileStr.replaceAll("\t", "");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> configFile = (Map) yaml.load(fileStr);
+                yaml.dump(configFile, new FileWriter(yamlFile));
+                Files.move(Paths.get(jsonPath), Paths.get(jsonPath + ".old"), REPLACE_EXISTING);
+                log.info("Migrated file '" + jsonPath + "' to '" + yamlPath + "'");
+            }
+        }
+
+        return yamlFile;
     }
 
     public String getRandomGoogleKey() {
@@ -216,5 +272,9 @@ public class Config {
 
     public boolean isRestServerEnabled() {
         return restServerEnabled;
+    }
+
+    public List<String> getAdminIds() {
+        return adminIds;
     }
 }

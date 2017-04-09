@@ -14,6 +14,7 @@ public class MainCommandInitializer {
     public static void initCommands() {
         CommandRegistry.registerCommand("help", new HelpCommand());
         CommandRegistry.registerAlias("help", "info");
+
         CommandRegistry.registerCommand("version", new VersionCommand());
         CommandRegistry.registerCommand("say", new SayCommand());
         CommandRegistry.registerCommand("uptime", new StatsCommand());

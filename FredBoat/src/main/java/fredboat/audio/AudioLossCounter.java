@@ -23,33 +23,58 @@
  *
  */
 
-package fredboat.audio.queue;
+package fredboat.audio;
 
-import java.util.List;
+public class AudioLossCounter {
 
-public abstract class AbstractTrackProvider implements ITrackProvider {
+    public static final int EXPECTED_PACKET_COUNT_PER_MIN = (60 * 1000) / 20; // 20ms packets
 
-    private RepeatMode repeatMode = RepeatMode.OFF;
-    private boolean shuffle = false;
+    private long curMinute = 0;
+    private int curLoss = 0;
+    private int curSucc = 0;
 
-    public RepeatMode getRepeatMode() {
-        return repeatMode;
+    private int lastLoss = 0;
+    private int lastSucc = 0;
+
+    AudioLossCounter() {
     }
 
-    public boolean isShuffle() {
-        return shuffle;
+    void onLoss() {
+        checkTime();
+        curLoss++;
     }
 
-    public void setRepeatMode(RepeatMode repeatMode) {
-        this.repeatMode = repeatMode;
+    void onSuccess() {
+        checkTime();
+        curSucc++;
     }
 
-    public void setShuffle(boolean shuffle) {
-        this.shuffle = shuffle;
+    public int getLastMinuteLoss() {
+        return lastLoss;
     }
 
-    public List<AudioTrackContext> getAsListOrdered() {
-        return getAsList();
+    public int getLastMinuteSuccess() {
+        return lastSucc;
     }
-    
+
+    private void checkTime() {
+        long actualMinute = System.currentTimeMillis() / 60000;
+
+        if(curMinute != actualMinute) {
+            lastLoss = curLoss;
+            lastSucc = curSucc;
+            curLoss = 0;
+            curSucc = 0;
+            curMinute = actualMinute;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "AudioLossCounter{" +
+                "lastLoss=" + lastLoss +
+                ", lastSucc=" + lastSucc +
+                ", total=" + (lastSucc + lastLoss) +
+                '}';
+    }
 }

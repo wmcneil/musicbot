@@ -23,52 +23,37 @@
  *
  */
 
-package fredboat.command.music.control;
+package fredboat.command.music.info;
 
+import fredboat.audio.AudioLossCounter;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
-import fredboat.audio.queue.AudioTrackContext;
 import fredboat.commandmeta.abs.Command;
-import fredboat.commandmeta.abs.IMusicCommand;
-import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.text.MessageFormat;
-import java.util.List;
-
-public class StopCommand extends Command implements IMusicCommand {
+public class AudioDebugCommand extends Command {
 
     @Override
     public void onInvoke(Guild guild, TextChannel channel, Member invoker, Message message, String[] args) {
-        GuildPlayer player = PlayerRegistry.get(guild);
-        player.setCurrentTC(channel);
-        List<AudioTrackContext> tracks = player.getRemainingTracks();
+        String msg = "";
+        GuildPlayer guildPlayer = PlayerRegistry.getExisting(guild);
 
-        Pair<Boolean, String> pair = player.canMemberSkipTracks(invoker, tracks);
-        //skipping allowed
-        if(pair.getLeft()) {
-            player.stop();
-            switch (tracks.size()) {
-                case 0:
-                    channel.sendMessage(I18n.get(guild).getString("stopAlreadyEmpty")).queue();
-                    break;
-                case 1:
-                    channel.sendMessage(I18n.get(guild).getString("stopEmptyOne")).queue();
-                    break;
-                default:
-                    channel.sendMessage(MessageFormat.format(I18n.get(guild).getString("stopEmptySeveral"), tracks.size())).queue();
-                    break;
-            }
-            player.leaveVoiceChannelRequest(channel, true);
+        if(guildPlayer == null) {
+            msg = msg + "No GuildPlayer found.\n";
         } else {
-            //invoker is not allowed to skip all doz track
-            TextUtils.replyWithName(channel, invoker, pair.getRight());
-        }
-    }
+            int deficit = AudioLossCounter.EXPECTED_PACKET_COUNT_PER_MIN - (guildPlayer.getAudioLossCounter().getLastMinuteLoss() + guildPlayer.getAudioLossCounter().getLastMinuteSuccess());
 
+            msg = msg + "Last minute's packet stats:```\n"
+                + "Packets sent:   " + guildPlayer.getAudioLossCounter().getLastMinuteSuccess() + "\n"
+                + "Null packets:   " + guildPlayer.getAudioLossCounter().getLastMinuteLoss() + "\n"
+                + "Packet deficit: " + deficit + "\n```";
+        }
+
+        TextUtils.replyWithName(channel, invoker, msg);
+
+    }
 }

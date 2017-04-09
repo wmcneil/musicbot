@@ -23,33 +23,30 @@
  *
  */
 
-package fredboat.audio.queue;
+package fredboat.audio.source;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-public abstract class AbstractTrackProvider implements ITrackProvider {
+public class PasteServiceConstants {
 
-    private RepeatMode repeatMode = RepeatMode.OFF;
-    private boolean shuffle = false;
+    static final Pattern SERVICE_NAME_PATTERN = Pattern.compile("(?:([a-z0-9]+(?:-[a-z0-9]+)*)\\.)+[a-z]{2,}");
 
-    public RepeatMode getRepeatMode() {
-        return repeatMode;
+    static final Pattern HASTEBIN_PATTERN = Pattern
+            .compile("^(?:(?:https?://)?(?:www\\.)?)?hastebin\\.com/(?:raw/)?(\\w+)(?:\\..+)?$");
+
+    static final Pattern PASTEBIN_PATTERN = Pattern
+            .compile("^(?:(?:https?://)?(?:www\\.)?)?pastebin\\.com/(?:raw/)?(\\w+)(?:\\..+)?$");
+
+    static final Map<String, String> PASTE_SERVICE_URLS;
+
+    static {
+        Map<String, String> m = new HashMap<>();
+        m.put("hastebin", "http://hastebin.com/raw/");
+        m.put("pastebin", "http://pastebin.com/raw/");
+        PASTE_SERVICE_URLS = Collections.unmodifiableMap(m);
     }
 
-    public boolean isShuffle() {
-        return shuffle;
-    }
-
-    public void setRepeatMode(RepeatMode repeatMode) {
-        this.repeatMode = repeatMode;
-    }
-
-    public void setShuffle(boolean shuffle) {
-        this.shuffle = shuffle;
-    }
-
-    public List<AudioTrackContext> getAsListOrdered() {
-        return getAsList();
-    }
-    
 }
