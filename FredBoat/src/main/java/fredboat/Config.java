@@ -61,7 +61,9 @@ public class Config {
     private final int hikariPoolSize;
     private final int numShards;
     private String mashapeKey;
+    private String malUser;
     private String malPassword;
+    private String imgurClientId;
     private int scope;
     private List<String> googleKeys = new ArrayList<>();
     private final String[] lavaplayerNodes;
@@ -72,6 +74,10 @@ public class Config {
     private String prefix = DEFAULT_PREFIX;
     private boolean restServerEnabled = true;
     private List<String> adminIds = new ArrayList<>();
+
+    //testing related stuff
+    private String testBotToken;
+    private String testChannelId;
 
     @SuppressWarnings("unchecked")
     public Config(File credentialsFile, File configFile, int scope) {
@@ -114,6 +120,7 @@ public class Config {
             log.info("Using prefix: " + prefix);
 
             mashapeKey = (String) creds.getOrDefault("mashapeKey", "");
+            malUser = (String) creds.getOrDefault("malUser", "");
             malPassword = (String) creds.getOrDefault("malPassword", "");
             carbonKey = (String) creds.getOrDefault("carbonKey", "");
             cbUser = (String) creds.getOrDefault("cbUser", "");
@@ -159,12 +166,24 @@ public class Config {
             }
 
             hikariPoolSize = numShards * 2;
-
             log.info("Hikari max pool size set to " + hikariPoolSize);
+
+            imgurClientId = (String) creds.getOrDefault("imgurClientId", "");
+
+            testBotToken = (String) creds.getOrDefault("testToken", "");
+            testChannelId = creds.getOrDefault("testChannelId", "") + "";
 
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void loadDefaultConfig(int scope) throws IOException {
+        Config.CONFIG = new Config(
+                loadConfigFile("credentials"),
+                loadConfigFile("config"),
+                scope
+        );
     }
 
     /**
@@ -234,8 +253,16 @@ public class Config {
         return mashapeKey;
     }
 
+    public String getMalUser() {
+        return malUser;
+    }
+
     public String getMalPassword() {
         return malPassword;
+    }
+
+    public String getImgurClientId() {
+        return imgurClientId;
     }
 
     public int getScope() {
@@ -276,5 +303,13 @@ public class Config {
 
     public List<String> getAdminIds() {
         return adminIds;
+    }
+
+    public String getTestBotToken() {
+        return testBotToken;
+    }
+
+    public String getTestChannelId() {
+        return testChannelId;
     }
 }

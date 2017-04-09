@@ -84,7 +84,7 @@ public class ListCommand extends Command implements IMusicCommand {
                     status = player.isPlaying() ? " \\▶" : " \\\u23F8"; //Escaped play and pause emojis
                 }
                 mb.append("[" +
-                        forceNDigits(i + 1, numberLength)
+                        TextUtils.forceNDigits(i + 1, numberLength)
                         + "]", MessageBuilder.Formatting.BLOCK)
                         .append(status)
                         .append(MessageFormat.format(I18n.get(guild).getString("listAddedBy"), atc.getEffectiveTitle(), atc.getMember().getEffectiveName()))
@@ -128,14 +128,9 @@ public class ListCommand extends Command implements IMusicCommand {
         }
     }
 
-    private String forceNDigits(int i, int n) {
-        String str = Integer.toString(i);
-
-        while (str.length() < n) {
-            str = "0" + str;
-        }
-
-        return str;
+    @Override
+    public String help(Guild guild) {
+        String usage = "{0}{1}\n#";
+        return usage + I18n.get(guild).getString("helpListCommand");
     }
-
 }

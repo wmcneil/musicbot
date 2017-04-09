@@ -25,6 +25,8 @@
 
 package fredboat;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonitexAgent;
@@ -52,6 +54,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
 import net.dv8tion.jda.core.utils.SimpleLog;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +64,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class FredBoat {
@@ -77,6 +82,10 @@ public abstract class FredBoat {
     static EventListenerBoat listenerBot;
     static EventListenerSelf listenerSelf;
     private static AtomicInteger numShardsReady = new AtomicInteger(0);
+
+    //unlimited threads = http://i.imgur.com/H3b7H1S.gif
+    //use this executor for various small async tasks
+    public final static ExecutorService executor = Executors.newCachedThreadPool();
 
     JDA jda;
     private static FredBoatClient fbClient;
@@ -117,12 +126,7 @@ public abstract class FredBoat {
 
         log.info("JDA version:\t" + JDAInfo.VERSION);
 
-        Config.CONFIG = new Config(
-                Config.loadConfigFile("credentials"),
-                Config.loadConfigFile("config"),
-                scope
-        );
-
+        Config.loadDefaultConfig(scope);
 
         try {
             API.start();
@@ -186,6 +190,71 @@ public abstract class FredBoat {
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
+
+        //Check MAL creds
+        executor.submit(FredBoat::hasValidMALLogin);
+
+        //Check imgur creds
+        executor.submit(FredBoat::hasValidImgurCredentials);
+    }
+
+    private static boolean hasValidMALLogin() {
+        if ("".equals(Config.CONFIG.getMalUser()) || "".equals(Config.CONFIG.getMalPassword())) {
+            log.info("MAL credentials not found. MAL related commands will not be available.");
+            return false;
+        }
+        try {
+            HttpResponse<String> response = Unirest.get("https://myanimelist.net/api/account/verify_credentials.xml")
+                    .basicAuth(Config.CONFIG.getMalUser(), Config.CONFIG.getMalPassword())
+                    .asString();
+            int responseStatus = response.getStatus();
+            if (responseStatus == 200) {
+                log.info("MAL login successful");
+                return true;
+            } else {
+                log.warn("MAL login failed with " + responseStatus + ": " + response.getBody());
+            }
+        } catch (UnirestException e) {
+            log.warn("MAL login failed, it seems to be down.", e);
+        }
+        return false;
+    }
+
+    private static boolean hasValidImgurCredentials() {
+        if ("".equals(Config.CONFIG.getImgurClientId())) {
+            log.info("Imgur credentials not found. Commands relying on Imgur will not work properly.");
+            return false;
+        }
+        try {
+            HttpResponse<JsonNode> response = Unirest.get("https://api.imgur.com/3/credits")
+                    .header("Authorization", "Client-ID " + Config.CONFIG.getImgurClientId())
+                    .asJson();
+            int responseStatus = response.getStatus();
+
+
+            if (responseStatus == 200) {
+                JSONObject data = response.getBody().getObject().getJSONObject("data");
+                //https://api.imgur.com/#limits
+                //at the time of the introduction of this code imgur offers daily 12500 and hourly 500 GET requests for open source software
+                //hitting the daily limit 5 times in a month will blacklist the app for the rest of the month
+                //we use 3 requests per hour (and per restart of the bot), so there should be no problems with imgur's rate limit
+                int hourlyLimit = data.getInt("UserLimit");
+                int hourlyLeft = data.getInt("UserRemaining");
+                long seconds = data.getLong("UserReset") - (System.currentTimeMillis() / 1000);
+                String timeTillReset = String.format("%d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+                int dailyLimit = data.getInt("ClientLimit");
+                int dailyLeft = data.getInt("ClientRemaining");
+                log.info("Imgur credentials are valid. " + hourlyLeft + "/" + hourlyLimit +
+                        " requests remaining this hour, resetting in " + timeTillReset + ", " +
+                        dailyLeft + "/" + dailyLimit + " requests remaining today.");
+                return true;
+            } else {
+                log.warn("Imgur login failed with " + responseStatus + ": " + response.getBody());
+            }
+        } catch (UnirestException e) {
+            log.warn("Imgur login failed, it seems to be down.", e);
+        }
+        return false;
     }
 
     private static void initBotShards(EventListener listener) {
@@ -239,6 +308,8 @@ public abstract class FredBoat {
         try {
             Unirest.shutdown();
         } catch (IOException ignored) {}
+
+        executor.shutdown();
     };
 
     public static void shutdown(int code) {
