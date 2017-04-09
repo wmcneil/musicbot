@@ -34,15 +34,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DatabaseManager {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseManager.class);
     
-    private static final Map<Thread, EntityManager> EM_MAP = new ConcurrentHashMap<>();
     private static EntityManagerFactory emf;
     public static DatabaseState state = DatabaseState.UNINITIALIZED;
 
@@ -60,6 +57,9 @@ public class DatabaseManager {
             properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
             properties.put("hibernate.show_sql", "true");
+
+            //automatically create the tables we need
+            properties.put("hibernate.hbm2ddl.auto", "update");
 
             properties.put("hibernate.hikari.maximumPoolSize", Integer.toString(Config.CONFIG.getHikariPoolSize()));
             properties.put("hibernate.hikari.idleTimeout", Integer.toString(Config.HIKARI_TIMEOUT_MILLISECONDS));
@@ -82,18 +82,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Please call close() on the em you receive after you are done to let the pool recycle the connection and save the
+     * nature from environmental toxins like open database connections.
+     */
     public static EntityManager getEntityManager() {
-        EntityManager em = EM_MAP.get(Thread.currentThread());
-
-        if (em == null) {
-            if(emf == null) {
-                throw new DatabaseNotReadyException();
-            }
-            em = emf.createEntityManager();
-            EM_MAP.put(Thread.currentThread(), em);
-        }
-
-        return em;
+        return emf.createEntityManager();
     }
 
     static boolean isDisabled() {
