@@ -13,6 +13,7 @@ import fredboat.command.music.seeking.ForwardCommand;
 import fredboat.command.music.seeking.RestartCommand;
 import fredboat.command.music.seeking.RewindCommand;
 import fredboat.command.music.seeking.SeekCommand;
+import fredboat.command.util.HelpCommand;
 import fredboat.command.util.MusicHelpCommand;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.util.SearchUtil;
@@ -20,6 +21,9 @@ import fredboat.util.SearchUtil;
 public class MusicCommandInitializer {
 
     public static void initCommands() {
+        CommandRegistry.registerCommand("help", new HelpCommand());
+        CommandRegistry.registerAlias("help", "info");
+
         CommandRegistry.registerCommand("mexit", new ExitCommand());
         CommandRegistry.registerCommand("mbotrestart", new BotRestartCommand());
         CommandRegistry.registerCommand("mstats", new StatsCommand());
