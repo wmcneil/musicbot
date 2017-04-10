@@ -165,7 +165,10 @@ public class Config {
                 log.info("Discord recommends " + numShards + " shard(s)");
             }
 
-            hikariPoolSize = numShards * 2;
+            // hikariPoolSize = numShards * 2;
+            //more database connections don't help with performance, so use a value based on available cores
+            //http://www.dailymotion.com/video/x2s8uec_oltp-performance-concurrent-mid-tier-connections_tech
+            hikariPoolSize = Runtime.getRuntime().availableProcessors() * 2;
             log.info("Hikari max pool size set to " + hikariPoolSize);
 
             imgurClientId = (String) creds.getOrDefault("imgurClientId", "");

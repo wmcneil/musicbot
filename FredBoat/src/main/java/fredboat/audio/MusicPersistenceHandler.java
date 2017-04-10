@@ -194,6 +194,8 @@ public class MusicPersistenceHandler {
                     JSONObject json = (JSONObject) t;
                     byte[] message = Base64.decodeBase64(json.getString("message"));
                     Member member = vc.getGuild().getMember(vc.getJDA().getUserById(json.getString("user")));
+                    if (member == null)
+                        member = vc.getGuild().getSelfMember(); //member left the guild meanwhile, set ourselves as the one who added the song
 
                     AudioTrack at;
                     try {

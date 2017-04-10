@@ -63,7 +63,11 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
     }
 
     public Member getMember() {
-        return jda.getGuildById(guildId).getMember(jda.getUserById(userId));
+        Member songOwner = jda.getGuildById(guildId).getMember(jda.getUserById(userId));
+        if (songOwner == null) //member left the guild
+            //work around tons of null pointer exceptions throwing/handling by setting fredboat as the owner of the song
+            songOwner = jda.getGuildById(guildId).getSelfMember();
+        return songOwner;
     }
 
     public int getRand() {
