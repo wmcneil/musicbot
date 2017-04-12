@@ -64,7 +64,7 @@ public class DatabaseManager {
             properties.put("hibernate.connection.url", jdbcUrl);
             properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
-            properties.put("hibernate.show_sql", "true");
+            //properties.put("hibernate.show_sql", "true");
 
             //automatically create the tables we need
             properties.put("hibernate.hbm2ddl.auto", "update");
