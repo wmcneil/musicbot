@@ -39,7 +39,7 @@ public class ShardWatchdogAgent extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(ShardWatchdogAgent.class);
     private static final int INTERVAL_MILLIS = 10000; // 10 secs
-    private static final int ACCEPTABLE_SILENCE =
+    private static final int ACCEPTABLE_SILENCE = getAcceptableSilenceThreshold();
 
     @Override
     public void run() {
@@ -84,7 +84,7 @@ public class ShardWatchdogAgent extends Thread {
         }
     }
 
-    private int getAcceptableSilenceThreshold() {
+    private static int getAcceptableSilenceThreshold() {
         if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT) {
             return Integer.MAX_VALUE;
         }
