@@ -28,6 +28,7 @@ package fredboat.agent;
 import fredboat.Config;
 import fredboat.FredBoat;
 import fredboat.event.ShardWatchdogListener;
+import fredboat.util.DistributionEnum;
 import net.dv8tion.jda.core.JDA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class ShardWatchdogAgent extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(ShardWatchdogAgent.class);
     private static final int INTERVAL_MILLIS = 10000; // 10 secs
-    private static final int ACCEPTABLE_SILENCE = Config.CONFIG.getNumShards() != 1 ? 30 * 1000 : 600 * 1000; // 30 secs or 10 minutes
+    private static final int ACCEPTABLE_SILENCE =
 
     @Override
     public void run() {
@@ -69,15 +70,25 @@ public class ShardWatchdogAgent extends Thread {
             long diff = System.currentTimeMillis() - listener.getLastEventTime();
 
             if(diff > ACCEPTABLE_SILENCE) {
-                if(shard.getJda().getStatus() != JDA.Status.SHUTDOWN) {
+                if (shard.getJda().getStatus() == JDA.Status.SHUTDOWN) {
+                    log.warn("Did not revive shard " + shard.getShardInfo() + " because it was shut down!");
+                } else if(listener.getEventCount() < 100) {
+                    log.warn("Did not revive shard " + shard.getShardInfo() + " because it did not receive enough events since construction!");
+                } else {
                     log.warn("Reviving shard " + shard.getShardInfo() + " after " + (diff / 1000) +
                             " seconds of no events. Last event received was " + listener.getLastEvent());
                     shard.revive();
                     sleep(5000);
-                } else {
-                    log.warn("Did not revive shard " + shard.getShardInfo() + " because it was shut down!");
                 }
             }
         }
+    }
+
+    private int getAcceptableSilenceThreshold() {
+        if(Config.CONFIG.getDistribution() == DistributionEnum.DEVELOPMENT) {
+            return Integer.MAX_VALUE;
+        }
+
+        return Config.CONFIG.getNumShards() != 1 ? 30 * 1000 : 600 * 1000; //30 seconds or 10 minutes depending on shard count
     }
 }

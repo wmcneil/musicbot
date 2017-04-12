@@ -32,11 +32,13 @@ public class ShardWatchdogListener implements EventListener {
 
     private Event lastEvent = null;
     private long lastEventTime = System.currentTimeMillis();
+    private long eventCount = 0;
 
     @Override
     public void onEvent(Event event) {
         lastEvent = event;
         lastEventTime = System.currentTimeMillis();
+        eventCount++;
     }
 
     public Event getLastEvent() {
@@ -45,5 +47,9 @@ public class ShardWatchdogListener implements EventListener {
 
     public long getLastEventTime() {
         return lastEventTime;
+    }
+
+    public long getEventCount() {
+        return eventCount;
     }
 }
