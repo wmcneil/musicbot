@@ -60,7 +60,7 @@ public class ShardWatchdogAgent extends Thread {
         }
     }
 
-    private void inspect() {
+    private void inspect() throws InterruptedException {
         List<FredBoat> shards = FredBoat.getShards();
 
         for(FredBoat shard : shards) {
@@ -73,6 +73,7 @@ public class ShardWatchdogAgent extends Thread {
                     log.warn("Reviving shard " + shard.getShardInfo() + " after " + (diff / 1000) +
                             " seconds of no events. Last event received was " + listener.getLastEvent());
                     shard.revive();
+                    sleep(5000);
                 } else {
                     log.warn("Did not revive shard " + shard.getShardInfo() + " because it was shut down!");
                 }
