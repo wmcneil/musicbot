@@ -185,7 +185,7 @@ public class Config {
             useSshTunnel = (boolean) creds.getOrDefault("useSshTunnel", false);
             sshHost = (String) creds.getOrDefault("sshHost", "localhost:22");
             sshUser = (String) creds.getOrDefault("sshUser", "fredboat");
-            sshPrivateKeyFile = (String) creds.getOrDefault("sshPrivateKeyFile", null);
+            sshPrivateKeyFile = (String) creds.getOrDefault("sshPrivateKeyFile", "database.ppk");
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
