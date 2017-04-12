@@ -48,4 +48,8 @@ public class ReviveCommand extends Command implements ICommandAdminRestricted {
         FredBoat.getInstance(shardId).revive();
     }
 
+    @Override
+    public String help(Guild guild) {
+        return "{0}{1} <shardId>\n#Revive the specified shard.";
+    }
 }

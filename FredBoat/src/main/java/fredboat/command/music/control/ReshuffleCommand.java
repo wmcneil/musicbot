@@ -28,4 +28,11 @@ public class ReshuffleCommand extends Command implements IMusicCommand {
         player.reshuffle();
         channel.sendMessage(I18n.get(guild).getString("reshufflePlaylist")).queue();
     }
+
+    @Override
+    public String help(Guild guild) {
+        String usage = "{0}{1}\n#";
+        return usage + I18n.get(guild).getString("helpReshuffleCommand");
+    }
+
 }

@@ -61,7 +61,9 @@ public class Config {
     private final int hikariPoolSize;
     private final int numShards;
     private String mashapeKey;
+    private String malUser;
     private String malPassword;
+    private String imgurClientId;
     private int scope;
     private List<String> googleKeys = new ArrayList<>();
     private final String[] lavaplayerNodes;
@@ -72,6 +74,17 @@ public class Config {
     private String prefix = DEFAULT_PREFIX;
     private boolean restServerEnabled = true;
     private List<String> adminIds = new ArrayList<>();
+
+    //testing related stuff
+    private String testBotToken;
+    private String testChannelId;
+
+    // SSH tunnel stuff
+    private final boolean useSshTunnel;
+    private final String sshHost; //Eg localhost:22
+    private final String sshUser; //Eg fredboat
+    private final String sshPrivateKeyFile;
+    private final int forwardToPort; //port where the remote database is listening, postgres default: 5432
 
     @SuppressWarnings("unchecked")
     public Config(File credentialsFile, File configFile, int scope) {
@@ -114,6 +127,7 @@ public class Config {
             log.info("Using prefix: " + prefix);
 
             mashapeKey = (String) creds.getOrDefault("mashapeKey", "");
+            malUser = (String) creds.getOrDefault("malUser", "");
             malPassword = (String) creds.getOrDefault("malPassword", "");
             carbonKey = (String) creds.getOrDefault("carbonKey", "");
             cbUser = (String) creds.getOrDefault("cbUser", "");
@@ -158,13 +172,33 @@ public class Config {
                 log.info("Discord recommends " + numShards + " shard(s)");
             }
 
-            hikariPoolSize = numShards * 2;
-
+            // hikariPoolSize = numShards * 2;
+            //more database connections don't help with performance, so use a value based on available cores
+            //http://www.dailymotion.com/video/x2s8uec_oltp-performance-concurrent-mid-tier-connections_tech
+            hikariPoolSize = Runtime.getRuntime().availableProcessors() * 2;
             log.info("Hikari max pool size set to " + hikariPoolSize);
 
+            imgurClientId = (String) creds.getOrDefault("imgurClientId", "");
+
+            testBotToken = (String) creds.getOrDefault("testToken", "");
+            testChannelId = creds.getOrDefault("testChannelId", "") + "";
+
+            useSshTunnel = (boolean) creds.getOrDefault("useSshTunnel", false);
+            sshHost = (String) creds.getOrDefault("sshHost", "localhost:22");
+            sshUser = (String) creds.getOrDefault("sshUser", "fredboat");
+            sshPrivateKeyFile = (String) creds.getOrDefault("sshPrivateKeyFile", "database.ppk");
+            forwardToPort = (int) creds.getOrDefault("forwardToPort", 5432);
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void loadDefaultConfig(int scope) throws IOException {
+        Config.CONFIG = new Config(
+                loadConfigFile("credentials"),
+                loadConfigFile("config"),
+                scope
+        );
     }
 
     /**
@@ -234,8 +268,16 @@ public class Config {
         return mashapeKey;
     }
 
+    public String getMalUser() {
+        return malUser;
+    }
+
     public String getMalPassword() {
         return malPassword;
+    }
+
+    public String getImgurClientId() {
+        return imgurClientId;
     }
 
     public int getScope() {
@@ -276,5 +318,33 @@ public class Config {
 
     public List<String> getAdminIds() {
         return adminIds;
+    }
+
+    public String getTestBotToken() {
+        return testBotToken;
+    }
+
+    public String getTestChannelId() {
+        return testChannelId;
+    }
+
+    public boolean isUseSshTunnel() {
+        return useSshTunnel;
+    }
+
+    public String getSshHost() {
+        return sshHost;
+    }
+
+    public String getSshUser() {
+        return sshUser;
+    }
+
+    public String getSshPrivateKeyFile() {
+        return sshPrivateKeyFile;
+    }
+
+    public int getForwardToPort() {
+        return forwardToPort;
     }
 }

@@ -146,13 +146,15 @@ public class MusicPersistenceHandler {
         if(Config.CONFIG.getDistribution() == DistributionEnum.MUSIC) {
             log.warn("Music persistence loading is currently disabled!");
 
-            for (File f : dir.listFiles()) {
-                boolean deleted = f.delete();
-                log.info(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    boolean deleted = f.delete();
+                    log.info(deleted ? "Deleted persistence file: " + f : "Failed to delete persistence file: " + f);
+                }
+
+                dir.delete();
             }
-
-            dir.delete();
-
             return;
         }
 
@@ -192,6 +194,8 @@ public class MusicPersistenceHandler {
                     JSONObject json = (JSONObject) t;
                     byte[] message = Base64.decodeBase64(json.getString("message"));
                     Member member = vc.getGuild().getMember(vc.getJDA().getUserById(json.getString("user")));
+                    if (member == null)
+                        member = vc.getGuild().getSelfMember(); //member left the guild meanwhile, set ourselves as the one who added the song
 
                     AudioTrack at;
                     try {
