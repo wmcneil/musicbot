@@ -45,6 +45,7 @@ public class DatabaseManager {
     private static EntityManagerFactory emf;
     public static DatabaseState state = DatabaseState.UNINITIALIZED;
 
+    //local port, if using SSH tunnel point your jdbc to this, e.g. jdbc:postgresql://localhost:9333/...
     private static final int SSH_TUNNEL_PORT = 9333;
 
     public static void startup(String jdbcUrl) {
@@ -92,8 +93,7 @@ public class DatabaseManager {
 
     private static void connectSSH() {
         try {
-            //TODO: Make this actually work
-
+            //establish the tunnel
             log.info("Starting SSH tunnel");
 
             java.util.Properties config = new java.util.Properties();
@@ -101,12 +101,12 @@ public class DatabaseManager {
             JSch.setLogger(new JSchLogger());
 
             //Parse host:port
-            String host = Config.CONFIG.getSshHost().split(":")[0];
-            int rport = Integer.parseInt(Config.CONFIG.getSshHost().split(":")[1]);
+            String sshHost = Config.CONFIG.getSshHost().split(":")[0];
+            int sshPort = Integer.parseInt(Config.CONFIG.getSshHost().split(":")[1]);
 
             Session session = jsch.getSession(Config.CONFIG.getSshUser(),
-                    host,
-                    rport
+                    sshHost,
+                    sshPort
             );
             jsch.addIdentity(Config.CONFIG.getSshPrivateKeyFile());
             config.put("StrictHostKeyChecking", "no");
@@ -116,13 +116,14 @@ public class DatabaseManager {
 
             log.info("SSH Connected");
 
-            int assingedPort = session.setPortForwardingL(
+            //forward the port
+            int assignedPort = session.setPortForwardingL(
                     SSH_TUNNEL_PORT,
-                    host,
-                    rport
+                    "localhost",
+                    Config.CONFIG.getForwardToPort()
             );
 
-            log.info("localhost:" + assingedPort + " -> " + Config.CONFIG.getSshHost());
+            log.info("localhost:" + assignedPort + " -> " + sshHost + ":" + Config.CONFIG.getForwardToPort());
             log.info("Port Forwarded");
         } catch (Exception e) {
             throw new RuntimeException("Failed to start SSH tunnel", e);

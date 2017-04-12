@@ -84,6 +84,7 @@ public class Config {
     private final String sshHost; //Eg localhost:22
     private final String sshUser; //Eg fredboat
     private final String sshPrivateKeyFile;
+    private final int forwardToPort; //port where the remote database is listening, postgres default: 5432
 
     @SuppressWarnings("unchecked")
     public Config(File credentialsFile, File configFile, int scope) {
@@ -186,6 +187,7 @@ public class Config {
             sshHost = (String) creds.getOrDefault("sshHost", "localhost:22");
             sshUser = (String) creds.getOrDefault("sshUser", "fredboat");
             sshPrivateKeyFile = (String) creds.getOrDefault("sshPrivateKeyFile", "database.ppk");
+            forwardToPort = (int) creds.getOrDefault("forwardToPort", 5432);
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
@@ -342,4 +344,7 @@ public class Config {
         return sshPrivateKeyFile;
     }
 
+    public int getForwardToPort() {
+        return forwardToPort;
+    }
 }
