@@ -79,6 +79,12 @@ public class Config {
     private String testBotToken;
     private String testChannelId;
 
+    // SSH tunnel stuff
+    private final boolean useSshTunnel;
+    private final String sshHost; //Eg localhost:22
+    private final String sshUser; //Eg fredboat
+    private final String sshPrivateKeyFile;
+
     @SuppressWarnings("unchecked")
     public Config(File credentialsFile, File configFile, int scope) {
         try {
@@ -176,6 +182,10 @@ public class Config {
             testBotToken = (String) creds.getOrDefault("testToken", "");
             testChannelId = creds.getOrDefault("testChannelId", "") + "";
 
+            useSshTunnel = (boolean) creds.getOrDefault("useSshTunnel", false);
+            sshHost = (String) creds.getOrDefault("sshHost", "localhost:22");
+            sshUser = (String) creds.getOrDefault("sshUser", "fredboat");
+            sshPrivateKeyFile = (String) creds.getOrDefault("sshPrivateKeyFile", null);
         } catch (IOException | UnirestException e) {
             throw new RuntimeException(e);
         }
@@ -315,4 +325,21 @@ public class Config {
     public String getTestChannelId() {
         return testChannelId;
     }
+
+    public boolean isUseSshTunnel() {
+        return useSshTunnel;
+    }
+
+    public String getSshHost() {
+        return sshHost;
+    }
+
+    public String getSshUser() {
+        return sshUser;
+    }
+
+    public String getSshPrivateKeyFile() {
+        return sshPrivateKeyFile;
+    }
+
 }
