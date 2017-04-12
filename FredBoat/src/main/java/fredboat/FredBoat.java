@@ -30,6 +30,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fredboat.agent.CarbonitexAgent;
+import fredboat.agent.ShardWatchdogAgent;
 import fredboat.api.API;
 import fredboat.api.OAuthManager;
 import fredboat.audio.MusicPersistenceHandler;
@@ -39,6 +40,7 @@ import fredboat.commandmeta.init.MusicCommandInitializer;
 import fredboat.db.DatabaseManager;
 import fredboat.event.EventListenerBoat;
 import fredboat.event.EventListenerSelf;
+import fredboat.event.ShardWatchdogListener;
 import fredboat.feature.I18n;
 import fredboat.util.DistributionEnum;
 import fredboat.util.log.SimpleLogToSLF4JAdapter;
@@ -81,6 +83,7 @@ public abstract class FredBoat {
     public static int shutdownCode = UNKNOWN_SHUTDOWN_CODE;//Used when specifying the intended code for shutdown hooks
     static EventListenerBoat listenerBot;
     static EventListenerSelf listenerSelf;
+    ShardWatchdogListener shardWatchdogListener = null;
     private static AtomicInteger numShardsReady = new AtomicInteger(0);
 
     //unlimited threads = http://i.imgur.com/H3b7H1S.gif
@@ -190,6 +193,10 @@ public abstract class FredBoat {
             carbonitexAgent.setDaemon(true);
             carbonitexAgent.start();
         }
+
+        ShardWatchdogAgent shardWatchdogAgent = new ShardWatchdogAgent();
+        shardWatchdogAgent.setDaemon(true);
+        shardWatchdogAgent.start();
 
         //Check MAL creds
         executor.submit(FredBoat::hasValidMALLogin);
@@ -420,6 +427,10 @@ public abstract class FredBoat {
     public void revive() {
         jda.shutdown(false);
         shards.set(getShardInfo().getShardId(), new FredBoatBot(getShardInfo().getShardId(), listenerBot));
+    }
+
+    public ShardWatchdogListener getShardWatchdogListener() {
+        return shardWatchdogListener;
     }
 
     @SuppressWarnings("WeakerAccess")
