@@ -157,7 +157,6 @@ public class I18n {
     }
 
     public static class LanguageNotSupportedException extends Exception {
-
         public LanguageNotSupportedException(String message) {
             super(message);
         }
