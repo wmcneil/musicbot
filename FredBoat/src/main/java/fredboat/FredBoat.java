@@ -456,5 +456,9 @@ public abstract class FredBoat {
             return String.format("[%02d / %02d]", this.shardId, this.shardTotal);
         }
 
+        @Override
+        public String toString() {
+            return getShardString();
+        }
     }
 }
