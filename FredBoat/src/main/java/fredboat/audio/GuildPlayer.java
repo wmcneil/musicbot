@@ -37,8 +37,10 @@ import fredboat.feature.I18n;
 import fredboat.util.TextUtils;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.entities.impl.MemberImpl;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.PermissionUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -111,19 +113,11 @@ public class GuildPlayer extends AbstractPlayer {
         manager.closeAudioConnection();
     }
 
-    public VoiceChannel getUserCurrentVoiceChannel(User usr) {
-        return getUserCurrentVoiceChannel(new MemberImpl(getGuild(), usr));
-    }
-
+    /**
+     * May return null if the member is currently not in a channel
+     */
     public VoiceChannel getUserCurrentVoiceChannel(Member member) {
-        for (VoiceChannel chn : getGuild().getVoiceChannels()) {
-            for (Member memberInChannel : chn.getMembers()) {
-                if (member.getUser().getId().equals(memberInChannel.getUser().getId())) {
-                    return chn;
-                }
-            }
-        }
-        return null;
+        return member.getVoiceState().getChannel();
     }
 
     public void queue(String identifier, TextChannel channel) {
