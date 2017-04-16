@@ -149,6 +149,14 @@ public class EventListenerBoat extends AbstractEventListener {
             return;
         }
 
+        //we got kicked from the server while in a voice channel, do nothing and return, because onGuildLeave()
+        // should take care of destroying stuff
+        if (!event.getGuild().isMember(event.getJDA().getSelfUser())) {
+            log.warn("onGuildVoiceLeave called for a guild where we aren't a member. This line should only ever be " +
+                    "reached if we are getting kicked from that guild. Investigate if not.");
+            return;
+        }
+
         if (player.getHumanUsersInVC().isEmpty()
                 && player.getUserCurrentVoiceChannel(event.getGuild().getSelfMember()) == event.getChannelLeft()
                 && !player.isPaused()) {
