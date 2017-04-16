@@ -28,7 +28,13 @@ package fredboat.audio;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import fredboat.audio.queue.*;
+import fredboat.FredBoat;
+import fredboat.audio.queue.AbstractTrackProvider;
+import fredboat.audio.queue.AudioLoader;
+import fredboat.audio.queue.AudioTrackContext;
+import fredboat.audio.queue.IdentifierContext;
+import fredboat.audio.queue.RepeatMode;
+import fredboat.audio.queue.SimpleTrackProvider;
 import fredboat.commandmeta.MessagingException;
 import fredboat.db.DatabaseNotReadyException;
 import fredboat.db.EntityReader;
@@ -57,7 +63,7 @@ public class GuildPlayer extends AbstractPlayer {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
 
-    public final JDA jda;
+    private final FredBoat shard;
     final String guildId;
     public final Map<String, VideoSelection> selections = new HashMap<>();
     private TextChannel currentTC;
@@ -65,8 +71,8 @@ public class GuildPlayer extends AbstractPlayer {
     private final AudioLoader audioLoader;
 
     @SuppressWarnings("LeakingThisInConstructor")
-    public GuildPlayer(JDA jda, Guild guild) {
-        this.jda = jda;
+    public GuildPlayer(Guild guild) {
+        this.shard = FredBoat.getInstance(guild.getJDA());
         this.guildId = guild.getId();
 
         AudioManager manager = guild.getAudioManager();
@@ -135,8 +141,8 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public void queue(IdentifierContext ic) {
-        if (ic.member != null) {
-            joinChannel(ic.member);
+        if (ic.getMember() != null) {
+            joinChannel(ic.getMember());
         }
 
         audioLoader.loadAsync(ic);
@@ -222,7 +228,7 @@ public class GuildPlayer extends AbstractPlayer {
     }
 
     public Guild getGuild() {
-        return jda.getGuildById(guildId);
+        return getJda().getGuildById(guildId);
     }
 
     public RepeatMode getRepeatMode() {
@@ -352,4 +358,7 @@ public class GuildPlayer extends AbstractPlayer {
         return enabled;
     }
 
+    public JDA getJda() {
+        return shard.getJda();
+    }
 }

@@ -48,7 +48,7 @@ public class PlayerRegistry {
     public static GuildPlayer get(JDA jda, String k) {
         GuildPlayer player = REGISTRY.get(k);
         if (player == null) {
-            player = new GuildPlayer(jda, jda.getGuildById(k));
+            player = new GuildPlayer(jda.getGuildById(k));
             player.setVolume(DEFAULT_VOLUME);
             REGISTRY.put(k, player);
         }
