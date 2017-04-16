@@ -424,10 +424,7 @@ public abstract class FredBoat {
         }
     }
 
-    public void revive() {
-        jda.shutdown(false);
-        shards.set(getShardInfo().getShardId(), new FredBoatBot(getShardInfo().getShardId(), listenerBot));
-    }
+    public abstract void revive();
 
     public ShardWatchdogListener getShardWatchdogListener() {
         return shardWatchdogListener;
