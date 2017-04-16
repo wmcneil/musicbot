@@ -144,12 +144,13 @@ public abstract class FredBoat {
         }
         try {
             if(!Config.CONFIG.getJdbcUrl().equals("") && !Config.CONFIG.getOauthSecret().equals("")) {
-                DatabaseManager.startup(Config.CONFIG.getJdbcUrl(), null);
+                DatabaseManager.startup(Config.CONFIG.getJdbcUrl(), null, Config.CONFIG.getHikariPoolSize());
                 OAuthManager.start(Config.CONFIG.getBotToken(), Config.CONFIG.getOauthSecret());
             } else {
                 log.warn("No JDBC URL and/or secret found, skipped database connection and OAuth2 client");
                 log.warn("Falling back to internal SQLite db");
-                DatabaseManager.startup("jdbc:sqlite:fredboat.db", "org.hibernate.dialect.SQLiteDialect");
+                DatabaseManager.startup("jdbc:sqlite:fredboat.db", "org.hibernate.dialect.SQLiteDialect",
+                        Config.CONFIG.getHikariPoolSize());
             }
         } catch (Exception e) {
             log.info("Failed to start DatabaseManager and OAuth2 client", e);
@@ -338,6 +339,7 @@ public abstract class FredBoat {
         } catch (IOException ignored) {}
 
         executor.shutdown();
+        DatabaseManager.shutdown();
     };
 
     public static void shutdown(int code) {

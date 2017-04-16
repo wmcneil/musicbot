@@ -43,6 +43,7 @@ public class DatabaseManager {
     private static final Logger log = LoggerFactory.getLogger(DatabaseManager.class);
     
     private static EntityManagerFactory emf;
+    private static Session sshTunnel;
     public static DatabaseState state = DatabaseState.UNINITIALIZED;
 
     //local port, if using SSH tunnel point your jdbc to this, e.g. jdbc:postgresql://localhost:9333/...
@@ -52,7 +53,7 @@ public class DatabaseManager {
      * @param jdbcUrl connection to the database
      * @param dialect set to null or empty String to have it autodetected by Hibernate, chosen jdbc driver must support that
      */
-    public static void startup(String jdbcUrl, String dialect) {
+    public static void startup(String jdbcUrl, String dialect, int poolSize) {
         state = DatabaseState.INITIALIZING;
 
         try {
@@ -72,10 +73,11 @@ public class DatabaseManager {
 
             //properties.put("hibernate.show_sql", "true");
 
-            //automatically create the tables we need
+            //automatically update the tables we need
+            //caution: only add new columns, don't remove or alter old ones, otherwise manual db table migration needed
             properties.put("hibernate.hbm2ddl.auto", "update");
 
-            properties.put("hibernate.hikari.maximumPoolSize", Integer.toString(Config.CONFIG.getHikariPoolSize()));
+            properties.put("hibernate.hikari.maximumPoolSize", Integer.toString(poolSize));
             properties.put("hibernate.hikari.idleTimeout", Integer.toString(Config.HIKARI_TIMEOUT_MILLISECONDS));
 
 
@@ -128,6 +130,8 @@ public class DatabaseManager {
                     Config.CONFIG.getForwardToPort()
             );
 
+            sshTunnel = session;
+
             log.info("localhost:" + assignedPort + " -> " + sshHost + ":" + Config.CONFIG.getForwardToPort());
             log.info("Port Forwarded");
         } catch (Exception e) {
@@ -153,6 +157,16 @@ public class DatabaseManager {
         INITIALIZING,
         FAILED,
         READY
+    }
+
+    public static void shutdown() {
+        log.info("DatabaseManager shutdown call received, shutting down");
+        state = DatabaseState.DISABLED;
+        if (sshTunnel != null)
+            sshTunnel.disconnect();
+
+        if (emf != null && emf.isOpen())
+            emf.close();
     }
 
     private static class JSchLogger implements com.jcraft.jsch.Logger {
