@@ -33,7 +33,9 @@ import fredboat.agent.CarbonitexAgent;
 import fredboat.agent.ShardWatchdogAgent;
 import fredboat.api.API;
 import fredboat.api.OAuthManager;
+import fredboat.audio.GuildPlayer;
 import fredboat.audio.MusicPersistenceHandler;
+import fredboat.audio.PlayerRegistry;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.init.MainCommandInitializer;
 import fredboat.commandmeta.init.MusicCommandInitializer;
@@ -55,6 +57,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
+import net.dv8tion.jda.core.managers.AudioManager;
 import net.dv8tion.jda.core.utils.SimpleLog;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -85,6 +88,9 @@ public abstract class FredBoat {
     static EventListenerSelf listenerSelf;
     ShardWatchdogListener shardWatchdogListener = null;
     private static AtomicInteger numShardsReady = new AtomicInteger(0);
+
+    //For when we need to join a revived shard with it's old GuildPlayers
+    final ArrayList<String> channelsToRejoin = new ArrayList<>();
 
     //unlimited threads = http://i.imgur.com/H3b7H1S.gif
     //use this executor for various small async tasks
@@ -296,6 +302,20 @@ public abstract class FredBoat {
             log.info("All " + ready + " shards are ready.");
             MusicPersistenceHandler.reloadPlaylists();
         }
+
+        //Rejoin old channels if revived
+        channelsToRejoin.forEach(vcid -> {
+            VoiceChannel channel = jda.getVoiceChannelById(vcid);
+            if(channel == null) return;
+            GuildPlayer player = PlayerRegistry.get(channel.getGuild());
+            if(player == null) return;
+
+            AudioManager am = channel.getGuild().getAudioManager();
+            am.openAudioConnection(channel);
+            am.setSendingHandler(player);
+        });
+
+        channelsToRejoin.clear();
     }
 
     //Shutdown hook

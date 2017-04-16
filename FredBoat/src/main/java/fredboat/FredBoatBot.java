@@ -26,6 +26,7 @@
 package fredboat;
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import fredboat.audio.PlayerRegistry;
 import fredboat.event.EventLogger;
 import fredboat.event.ShardWatchdogListener;
 import net.dv8tion.jda.core.AccountType;
@@ -35,6 +36,8 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 public class FredBoatBot extends FredBoat {
 
@@ -101,6 +104,12 @@ public class FredBoatBot extends FredBoat {
     @Override
     public void revive() {
         log.info("Reviving shard " + shardId);
+
+        channelsToRejoin.clear();
+
+        PlayerRegistry.getPlayingPlayers().stream().filter(guildPlayer -> guildPlayer.getJda().equals(jda))
+                .forEach(guildPlayer -> channelsToRejoin.add(guildPlayer.getChannel().getId()));
+
         jda.shutdown(false);
         jda = buildJDA();
     }
