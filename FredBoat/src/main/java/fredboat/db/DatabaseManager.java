@@ -48,7 +48,11 @@ public class DatabaseManager {
     //local port, if using SSH tunnel point your jdbc to this, e.g. jdbc:postgresql://localhost:9333/...
     private static final int SSH_TUNNEL_PORT = 9333;
 
-    public static void startup(String jdbcUrl) {
+    /**
+     * @param jdbcUrl connection to the database
+     * @param dialect set to null or empty String to have it autodetected by Hibernate, chosen jdbc driver must support that
+     */
+    public static void startup(String jdbcUrl, String dialect) {
         state = DatabaseState.INITIALIZING;
 
         try {
@@ -63,6 +67,7 @@ public class DatabaseManager {
 
             properties.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
             properties.put("hibernate.connection.url", jdbcUrl);
+            if (dialect != null && !"".equals(dialect)) properties.put("hibernate.dialect", dialect);
             properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
 
             //properties.put("hibernate.show_sql", "true");
@@ -143,7 +148,7 @@ public class DatabaseManager {
     }
 
     public enum DatabaseState {
-        DISABLED, //When no JDBC URL is given
+        DISABLED, //When no JDBC URL is given TODO not true anymore with the fallback SQLite db
         UNINITIALIZED,
         INITIALIZING,
         FAILED,
