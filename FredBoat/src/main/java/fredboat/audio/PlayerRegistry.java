@@ -52,6 +52,12 @@ public class PlayerRegistry {
             player.setVolume(DEFAULT_VOLUME);
             REGISTRY.put(k, player);
         }
+
+        // Attempt to set the player as a sending handler. Important after a shard revive
+        if (jda.getGuildById(k) != null) {
+            jda.getGuildById(k).getAudioManager().setSendingHandler(player);
+        }
+
         return player;
     }
 

@@ -64,7 +64,7 @@ public class GuildPlayer extends AbstractPlayer {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GuildPlayer.class);
 
     private final FredBoat shard;
-    final String guildId;
+    private final String guildId;
     public final Map<String, VideoSelection> selections = new HashMap<>();
     private TextChannel currentTC;
 
