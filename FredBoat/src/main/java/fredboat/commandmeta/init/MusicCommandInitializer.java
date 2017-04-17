@@ -108,7 +108,8 @@ public class MusicCommandInitializer {
         CommandRegistry.registerCommand("rewind", new RewindCommand());
         CommandRegistry.registerAlias("rewind", "rew");
 
-        if (Config.CONFIG.getDistribution() != DistributionEnum.PATRON) {
+        // The null check is to ensure we can run this in a test run
+        if (Config.CONFIG == null || Config.CONFIG.getDistribution() != DistributionEnum.PATRON) {
             new VoiceChannelCleanupAgent().start();
         } else {
             log.info("Skipped setting up the VoiceChannelCleanupAgent since we are running as PATRON distribution.");
