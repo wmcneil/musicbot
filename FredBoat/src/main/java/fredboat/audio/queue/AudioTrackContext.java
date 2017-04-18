@@ -29,6 +29,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fredboat.FredBoat;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
 
 import java.util.Random;
 
@@ -64,9 +65,14 @@ public class AudioTrackContext implements Comparable<AudioTrackContext> {
     }
 
     public Member getMember() {
-        Member songOwner = getJda().getGuildById(guildId).getMember(getJda().getUserById(userId));
+        //if we can't find the user anymore
+        //work around tons of null pointer exceptions throwing/handling by setting fredboat as the owner of the song
+        User user = getJda().getUserById(userId);
+        if (user == null) { //the bot has no shared servers with the user
+            user = getJda().getSelfUser();
+        }
+        Member songOwner = getJda().getGuildById(guildId).getMember(user);
         if (songOwner == null) //member left the guild
-            //work around tons of null pointer exceptions throwing/handling by setting fredboat as the owner of the song
             songOwner = getJda().getGuildById(guildId).getSelfMember();
         return songOwner;
     }
