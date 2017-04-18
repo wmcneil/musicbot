@@ -172,6 +172,15 @@ public abstract class FredBoat {
 
         log.info("Loaded commands, registry size is " + CommandRegistry.getSize());
 
+        //Check MAL creds
+        executor.submit(FredBoat::hasValidMALLogin);
+
+        //Check imgur creds
+        executor.submit(FredBoat::hasValidImgurCredentials);
+
+        //Initialise JCA
+        executor.submit(FredBoat::loadJCA);
+
         /* Init JDA */
 
         if ((Config.CONFIG.getScope() & 0x110) != 0) {
@@ -183,19 +192,6 @@ public abstract class FredBoat {
             //fbClient = new FredBoatClient();
         }
 
-        //Initialise JCA
-
-        try {
-            if (!Config.CONFIG.getCbUser().equals("") && !Config.CONFIG.getCbKey().equals("")) {
-                log.info("Starting CleverBot");
-                jca = new JCABuilder().setKey(Config.CONFIG.getCbKey()).setUser(Config.CONFIG.getCbUser()).buildBlocking();
-            } else {
-                log.warn("Credentials not found for cleverbot authentication. Skipping...");
-            }
-        } catch (Exception e) {
-            log.error("Error when starting JCA", e);
-        }
-
         if (Config.CONFIG.getDistribution() == DistributionEnum.MUSIC && Config.CONFIG.getCarbonKey() != null) {
             CarbonitexAgent carbonitexAgent = new CarbonitexAgent(Config.CONFIG.getCarbonKey());
             carbonitexAgent.setDaemon(true);
@@ -205,12 +201,23 @@ public abstract class FredBoat {
         ShardWatchdogAgent shardWatchdogAgent = new ShardWatchdogAgent();
         shardWatchdogAgent.setDaemon(true);
         shardWatchdogAgent.start();
+    }
 
-        //Check MAL creds
-        executor.submit(FredBoat::hasValidMALLogin);
-
-        //Check imgur creds
-        executor.submit(FredBoat::hasValidImgurCredentials);
+    private static boolean loadJCA() {
+        boolean result = true;
+        try {
+            if (!Config.CONFIG.getCbUser().equals("") && !Config.CONFIG.getCbKey().equals("")) {
+                log.info("Starting CleverBot");
+                jca = new JCABuilder().setKey(Config.CONFIG.getCbKey()).setUser(Config.CONFIG.getCbUser()).buildBlocking();
+            } else {
+                log.warn("Credentials not found for cleverbot authentication. Skipping...");
+                result = false;
+            }
+        } catch (Exception e) {
+            log.error("Error when starting JCA", e);
+            result = false;
+        }
+        return result;
     }
 
     private static boolean hasValidMALLogin() {
