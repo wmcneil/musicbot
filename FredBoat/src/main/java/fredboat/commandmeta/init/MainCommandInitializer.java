@@ -7,6 +7,8 @@ import fredboat.command.maintenance.ShardsCommand;
 import fredboat.command.maintenance.StatsCommand;
 import fredboat.command.maintenance.VersionCommand;
 import fredboat.command.moderation.ClearCommand;
+import fredboat.command.moderation.HardbanCommand;
+import fredboat.command.moderation.KickCommand;
 import fredboat.command.moderation.SoftbanCommand;
 import fredboat.command.util.*;
 import fredboat.commandmeta.CommandRegistry;
@@ -53,8 +55,12 @@ public class MainCommandInitializer {
         CommandRegistry.registerCommand("mal", new MALCommand());
         CommandRegistry.registerCommand("akinator", new AkinatorCommand());
         CommandRegistry.registerCommand("fuzzy", new FuzzyUserSearchCommand());
+        CommandRegistry.registerCommand("hardban", new HardbanCommand());
+        CommandRegistry.registerCommand("kick", new KickCommand());
         CommandRegistry.registerCommand("softban", new SoftbanCommand());
         CommandRegistry.registerCommand("catgirl", new CatgirlCommand());
+        CommandRegistry.registerAlias("catgirl", "neko");
+        CommandRegistry.registerAlias("catgirl", "catgrill");
         CommandRegistry.registerCommand("shards", new ShardsCommand());
         CommandRegistry.registerCommand("revive", new ReviveCommand());
 
