@@ -37,8 +37,6 @@ import net.dv8tion.jda.core.hooks.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
 public class FredBoatBot extends FredBoat {
 
     private static final Logger log = LoggerFactory.getLogger(FredBoatBot.class);
@@ -105,10 +103,15 @@ public class FredBoatBot extends FredBoat {
     public void revive() {
         log.info("Reviving shard " + shardId);
 
-        channelsToRejoin.clear();
+        try {
+            channelsToRejoin.clear();
 
-        PlayerRegistry.getPlayingPlayers().stream().filter(guildPlayer -> guildPlayer.getJda().equals(jda))
-                .forEach(guildPlayer -> channelsToRejoin.add(guildPlayer.getChannel().getId()));
+            PlayerRegistry.getPlayingPlayers().stream().filter(guildPlayer -> guildPlayer.getJda().equals(jda))
+                    .forEach(guildPlayer -> channelsToRejoin.add(guildPlayer.getChannel().getId()));
+        } catch (Exception ex) {
+            log.error("Caught exception while reviving shard " + this, ex);
+        }
+
 
         jda.shutdown(false);
         jda = buildJDA();
