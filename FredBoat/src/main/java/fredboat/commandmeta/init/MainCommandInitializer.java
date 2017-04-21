@@ -35,10 +35,11 @@ public class MainCommandInitializer {
         CommandRegistry.registerCommand("test", new TestCommand());
         CommandRegistry.registerCommand("brainfuck", new BrainfuckCommand());
         CommandRegistry.registerCommand("joke", new JokeCommand());
-        CommandRegistry.registerCommand("leet", new LeetCommand());
-        CommandRegistry.registerAlias("leet", "1337");
-        CommandRegistry.registerAlias("leet", "l33t");
-        CommandRegistry.registerAlias("leet", "1ee7");
+        //TODO LeetCommand is borken. Don't throw unnecessary error reports until it's fixed or removed.
+//        CommandRegistry.registerCommand("leet", new LeetCommand());
+//        CommandRegistry.registerAlias("leet", "1337");
+//        CommandRegistry.registerAlias("leet", "l33t");
+//        CommandRegistry.registerAlias("leet", "1ee7");
         CommandRegistry.registerCommand("riot", new RiotCommand());
         CommandRegistry.registerCommand("update", new UpdateCommand());
         CommandRegistry.registerCommand("compile", new CompileCommand());
@@ -51,7 +52,8 @@ public class MainCommandInitializer {
         CommandRegistry.registerCommand("lenny", new TextCommand("( ͡° ͜ʖ ͡°)"));
         CommandRegistry.registerCommand("useless", new TextCommand("This command is useless."));
         CommandRegistry.registerCommand("clear", new ClearCommand());
-        CommandRegistry.registerCommand("talk", new TalkCommand());
+        //TODO JCA (=TalkCommand) is borken. Don't throw unnecessary error reports.
+//        CommandRegistry.registerCommand("talk", new TalkCommand());
         CommandRegistry.registerCommand("mal", new MALCommand());
         CommandRegistry.registerCommand("akinator", new AkinatorCommand());
         CommandRegistry.registerCommand("fuzzy", new FuzzyUserSearchCommand());
