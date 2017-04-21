@@ -28,6 +28,7 @@ import fredboat.Config;
 import fredboat.audio.GuildPlayer;
 import fredboat.audio.PlayerRegistry;
 import fredboat.command.fun.TalkCommand;
+import fredboat.command.util.HelpCommand;
 import fredboat.commandmeta.CommandManager;
 import fredboat.commandmeta.CommandRegistry;
 import fredboat.commandmeta.abs.Command;
@@ -125,7 +126,7 @@ public class EventListenerBoat extends AbstractEventListener {
             return;
         }
 
-        event.getChannel().sendMessage(I18n.DEFAULT.getProps().getString("helpDM")).queue();
+        event.getChannel().sendMessage(HelpCommand.getHelpDmMsg(null)).queue();
         lastUserToReceiveHelp = event.getAuthor();
     }
 
