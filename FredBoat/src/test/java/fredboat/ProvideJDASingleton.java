@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.text.DateFormat;
@@ -53,6 +55,7 @@ public abstract class ProvideJDASingleton {
     protected static JDA jda;
     protected static Guild testGuild;
     protected static TextChannel testChannel;
+    protected static Member testSelfMember;
 
     protected static int passedTests = 0;
     protected static int attemptedTests = 0;
@@ -134,8 +137,13 @@ public abstract class ProvideJDASingleton {
         try {
             startTime = System.currentTimeMillis();
             log.info("Setting up live testing environment");
-            Config.loadDefaultConfig(0x111);
-
+            try {
+                Config.loadDefaultConfig(0x111);
+            } catch (FileNotFoundException e) {
+                log.info("Credentials and/or config files not found, live tests won't be available");
+                return;
+            }
+            //TODO after moving this to integration tests, remove those catches and let it fail
             String testToken = Config.CONFIG.getTestBotToken();
             if (testToken == null || "".equals(testToken)) {
                 log.info("No testing token found, live tests won't be available");
@@ -148,6 +156,7 @@ public abstract class ProvideJDASingleton {
 
             testChannel = jda.getTextChannelById(Config.CONFIG.getTestChannelId());
             testGuild = testChannel.getGuild();
+            testSelfMember = testGuild.getSelfMember();
 
             String out = " < " + DateFormat.getDateTimeInstance().format(new Date()) +
                     "> testing started on machine <" + InetAddress.getLocalHost().getHostName() +
