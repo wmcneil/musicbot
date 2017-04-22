@@ -52,13 +52,15 @@ public abstract class ProvideJDASingleton {
 
     private static final Logger log = LoggerFactory.getLogger(ProvideJDASingleton.class);
 
-    protected static JDA jda;
-    protected static Guild testGuild;
-    protected static TextChannel testChannel;
-    protected static Member testSelfMember;
+    protected static JDA jda = null;
+    protected static Guild testGuild = null;
+    protected static TextChannel testChannel = null;
+    protected static Member testSelfMember = null;
 
     protected static int passedTests = 0;
     protected static int attemptedTests = 0;
+
+    protected static boolean initialized = false;
 
     private static long startTime;
     private static int totalPassed = 0;
@@ -167,6 +169,7 @@ public abstract class ProvideJDASingleton {
             out = TextUtils.asMarkdown(out);
             testChannel.sendMessage(out).complete();
 
+            initialized = true;
             //post final test stats and shut down the JDA instance when testing is done
             Runtime.getRuntime().addShutdownHook(SHUTDOWNHOOK);
         } catch (RateLimitedException | LoginException | InterruptedException | IOException e) {

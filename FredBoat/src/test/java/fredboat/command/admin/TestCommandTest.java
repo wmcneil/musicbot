@@ -26,6 +26,7 @@ class TestCommandTest extends ProvideJDASingleton {
     @Test
     void onInvoke() {
         Assumptions.assumeFalse(isTravisEnvironment(), () -> "Aborting test: Travis CI detected");
+        Assumptions.assumeTrue(initialized);
         String[] args = {"test", "10", "10"};
 
         //test the connection if one was specified
