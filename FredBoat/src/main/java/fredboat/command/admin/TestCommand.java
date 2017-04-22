@@ -70,7 +70,9 @@ public class TestCommand extends Command implements ICommandOwnerRestricted {
         }
         final int threads = t;
         final int operations = o;
-        TextUtils.replyWithName(channel, invoker, "Beginning stress test with " + threads + " threads each doing " + operations + " operations");
+        if (channel != null && invoker != null) {
+            TextUtils.replyWithName(channel, invoker, "Beginning stress test with " + threads + " threads each doing " + operations + " operations");
+        }
 
         prepareStressTest();
         long started = System.currentTimeMillis();
@@ -113,7 +115,9 @@ public class TestCommand extends Command implements ICommandOwnerRestricted {
         }
         out += "\n Time taken: " + ((System.currentTimeMillis() - started)) + "ms for " + (threads * operations) + " requested operations.`";
         log.info(out);
-        TextUtils.replyWithName(channel, invoker, out);
+        if (channel != null && invoker != null) {
+            TextUtils.replyWithName(channel, invoker, out);
+        }
 
         return result;
     }
